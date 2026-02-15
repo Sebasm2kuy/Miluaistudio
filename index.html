@@ -104,7 +104,7 @@
         ::-webkit-scrollbar-thumb { background: #b8860b; border-radius: 10px; }
         
         .image-bg-tint {
-            background: linear-gradient(to bottom, rgba(253, 252, 251, 0.8), rgba(253, 252, 251, 0.4) 30%, rgba(253, 252, 251, 0.4) 70%, rgba(253, 252, 251, 0.9));
+            background: linear-gradient(to bottom, rgba(253, 252, 251, 0.95), rgba(253, 252, 251, 0.6) 30%, rgba(253, 252, 251, 0.6) 70%, rgba(253, 252, 251, 0.95));
         }
         
         .parallax-portrait {
@@ -113,6 +113,16 @@
             background-repeat: no-repeat;
             background-size: cover;
         }
+
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-auto-rows: 300px;
+            gap: 20px;
+        }
+
+        .masonry-item:nth-child(3n) { grid-row: span 2; }
+        .masonry-item:nth-child(2n) { grid-row: span 1.5; }
     </style>
 
     <script type="importmap">
@@ -146,14 +156,16 @@
         const SPOTIFY_PLAYLIST_URL = "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn";
         const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0";
         
-        // Audio ambiental (Música libre de derechos, piano elegante)
+        // Audio ambiental - Piano cinematográfico elegante
         const BG_MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
 
-        // Imágenes de Placeholder elegantes (Reemplazar con fotos reales de Milu)
+        // Imágenes para el fondo y la galería (¡Reemplázalas con las fotos reales de Milu!)
         const MILU_PHOTOS = [
-          "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920", // Vestido gala
-          "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1920", // Detalle flores
-          "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1920"  // Salón
+          "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1920", 
+          "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1920", 
+          "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1920",
+          "https://images.unsplash.com/photo-1496065187959-7f07b8353c55?auto=format&fit=crop&q=80&w=1200",
+          "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1200"
         ];
 
         const App = () => {
@@ -182,11 +194,11 @@
             if (!isOpened) return;
             const photoTimer = setInterval(() => {
               setCurrentPhotoIndex(prev => (prev + 1) % MILU_PHOTOS.length);
-            }, 6000);
+            }, 8000);
             return () => clearInterval(photoTimer);
           }, [isOpened]);
 
-          // Lógica de Parallax
+          // Lógica de Parallax de estrellas y nebulosa
           useEffect(() => {
             const handleScroll = () => {
               const scrolled = window.scrollY;
@@ -197,8 +209,9 @@
             };
             window.addEventListener('scroll', handleScroll, { passive: true });
             return () => window.removeEventListener('scroll', handleScroll);
-          }, [isOpened]);
+          }, []);
 
+          // Cuenta regresiva
           useEffect(() => {
             const timer = setInterval(() => {
               const now = new Date();
@@ -217,18 +230,22 @@
 
           const handleOpenEnvelope = () => {
             setEnvelopeClosing(true);
+            
+            // Iniciar audio inmediatamente para evitar bloqueo de navegador
+            if (audioRef.current) {
+                audioRef.current.volume = 0;
+                audioRef.current.play().then(() => {
+                    let vol = 0;
+                    const fadeIn = setInterval(() => {
+                        vol += 0.02;
+                        if (vol >= 0.4) clearInterval(fadeIn);
+                        if (audioRef.current) audioRef.current.volume = vol;
+                    }, 150);
+                }).catch(e => console.log("Audio play blocked by browser"));
+            }
+
             setTimeout(() => {
               setIsOpened(true);
-              if (audioRef.current) {
-                audioRef.current.play().catch(e => console.log("Autoplay blocked"));
-                audioRef.current.volume = 0;
-                let vol = 0;
-                const fadeIn = setInterval(() => {
-                    vol += 0.05;
-                    if (vol >= 0.4) clearInterval(fadeIn);
-                    audioRef.current.volume = vol;
-                }, 200);
-              }
             }, 1100);
           };
 
@@ -256,236 +273,265 @@
             reader.readAsDataURL(file);
           };
 
-          if (!isOpened) {
-            return (
-              <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 overflow-hidden text-center envelope-bg transition-all duration-1000">
-                <audio ref={audioRef} src={BG_MUSIC_URL} loop />
-                <div className="absolute inset-0 pointer-events-none opacity-40">
-                    {[...Array(12)].map((_, i) => (
-                        <div key={i} className="absolute animate-sparkle" style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 5}s`
-                        }}>
-                            <Sparkles size={Math.random() * 10 + 5} className="text-[#b8860b]" />
-                        </div>
-                    ))}
-                </div>
-
-                <div className={`transition-all duration-1000 ease-in-out ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl rotate-2 translate-y-[-20%]' : 'scale-100 opacity-100'}`}>
-                  <p className="text-[#b8860b] uppercase tracking-[0.6em] text-[10px] md:text-sm mb-8 font-bold opacity-70">Presiona el sello para comenzar</p>
-                  
-                  <div className="relative inline-block mb-12">
-                    <div className="font-cursive text-7xl md:text-[11rem] text-[#800020] relative z-10 drop-shadow-lg select-none">Milagros</div>
-                    <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#b8860b]/30 to-transparent"></div>
-                  </div>
-
-                  <div className="relative group cursor-pointer" onClick={handleOpenEnvelope}>
-                    <div className="absolute inset-0 bg-[#b8860b] rounded-full animate-pulse-soft blur-2xl group-hover:blur-3xl transition-all duration-700"></div>
-                    <button className="relative w-28 h-28 md:w-44 md:h-44 bg-gradient-to-tr from-[#8a6b0d] via-[#b8860b] to-[#d4af37] rounded-full flex items-center justify-center border-[6px] border-[#fdfcfb] shadow-[0_20px_50px_rgba(184,134,11,0.4)] transition-transform group-hover:scale-110 active:scale-95 duration-500">
-                      <div className="absolute inset-2 border border-[#fdfcfb]/30 rounded-full"></div>
-                      <span className="font-serif font-bold text-white text-5xl md:text-8xl drop-shadow-md">M</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-
           return (
-            <div className="min-h-screen text-gray-800 pb-32 animate-fade-in">
-              {/* Botón de Sonido Flotante */}
-              <button 
-                onClick={toggleMute}
-                className="fixed top-6 right-6 z-[1000] glass w-12 h-12 rounded-full flex items-center justify-center text-[#800020] hover:scale-110 transition-all shadow-md"
-              >
-                {isMuted ? <VolumeX size={20} /> : (
-                  <div className="flex items-end gap-[2px]">
-                    <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0s'}}></div>
-                    <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.2s'}}></div>
-                    <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.4s'}}></div>
-                  </div>
-                )}
-              </button>
+            <div className="min-h-screen text-gray-800 pb-32">
+              {/* Elemento de Audio Persistente - Evita errores de null */}
+              <audio ref={audioRef} src={BG_MUSIC_URL} loop />
 
-              <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-6 py-4 flex gap-8 items-center shadow-lg bg-white/80 border border-[#b8860b]/20">
-                <button onClick={() => scrollTo(galaRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Calendar size={20}/></button>
-                <button onClick={() => scrollTo(recuerdosRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Camera size={20}/></button>
-                <button onClick={() => scrollTo(musicaRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Music size={20}/></button>
-                <button onClick={() => scrollTo(rsvpRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><CheckCircle size={20}/></button>
-              </nav>
-
-              <header className="h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
-                {/* Slideshow de fondo */}
-                <div className="absolute inset-0 z-0">
-                  {MILU_PHOTOS.map((img, idx) => (
-                    <div 
-                      key={idx}
-                      className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${currentPhotoIndex === idx ? 'opacity-100' : 'opacity-0'}`}
-                    >
-                      <div 
-                        className="w-full h-full bg-cover bg-center animate-ken-burns scale-110"
-                        style={{ backgroundImage: `url(${img})` }}
-                      ></div>
-                    </div>
-                  ))}
-                  <div className="absolute inset-0 image-bg-tint"></div>
-                </div>
-
-                <div className="z-20 animate-reveal">
-                  <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-6 font-bold drop-shadow-sm">Mis XV Años</p>
-                  <h1 className="font-cursive text-7xl md:text-[14rem] text-[#800020] leading-[0.8] mb-4 drop-shadow-md">Milagros</h1>
-                  <div className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto my-12"></div>
-                  <p className="text-gray-700 font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium">Sábado 22 de Agosto • 2026</p>
-                  <div className="mt-24 animate-bounce opacity-50 flex flex-col items-center gap-2">
-                    <ChevronDown size={32} className="text-[#800020]" />
-                  </div>
-                </div>
-              </header>
-
-              <main className="max-w-5xl mx-auto px-4 md:px-8 space-y-32 md:space-y-64 relative z-10">
-                <section ref={galaRef} className="scroll-mt-20">
-                  <div className="glass p-8 sm:p-14 md:p-24 rounded-[4rem] md:rounded-[6rem] relative overflow-hidden bg-white/40 border-[#b8860b]/20">
-                    <div className="text-center mb-20 md:mb-32">
-                      <h2 className="font-serif text-4xl sm:text-6xl md:text-8xl italic mb-10 text-[#800020]">Faltan tan solo...</h2>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-                        {Object.entries(timeLeft).map(([label, val]) => (
-                          <div key={label} className="bg-white/40 backdrop-blur-sm rounded-3xl p-6 sm:p-10 border border-[#b8860b]/10 shadow-sm flex flex-col items-center justify-center group hover:border-[#800020]/30 transition-all duration-500">
-                            <span className="text-4xl sm:text-6xl md:text-7xl font-light text-[#800020] leading-none tabular-nums">{val}</span>
-                            <span className="text-[10px] md:text-xs uppercase text-[#b8860b] tracking-[0.3em] font-bold mt-4">{label === 'D' ? 'Días' : label === 'H' ? 'Horas' : label === 'M' ? 'Min' : 'Seg'}</span>
+              {!isOpened ? (
+                /* VISTA DEL SOBRE / ENTRADA */
+                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 overflow-hidden text-center envelope-bg transition-all duration-1000">
+                  <div className="absolute inset-0 pointer-events-none opacity-40">
+                      {[...Array(12)].map((_, i) => (
+                          <div key={i} className="absolute animate-sparkle" style={{
+                              top: `${Math.random() * 100}%`,
+                              left: `${Math.random() * 100}%`,
+                              animationDelay: `${Math.random() * 5}s`
+                          }}>
+                              <Sparkles size={Math.random() * 10 + 5} className="text-[#b8860b]" />
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-b border-[#b8860b]/10 py-16">
-                      <div className="flex items-center gap-8 group">
-                        <div className="w-16 h-16 bg-white border border-[#b8860b]/20 rounded-2xl flex items-center justify-center text-[#800020] shrink-0 shadow-sm group-hover:rotate-6 transition-transform"><Clock size={28} /></div>
-                        <div>
-                            <h3 className="font-serif text-2xl md:text-3xl italic mb-1 text-[#800020]">La Fiesta</h3>
-                            <p className="text-gray-600 text-sm md:text-xl font-medium tracking-tight">Sábado 22 de Agosto, 21:00 hs.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-8 group">
-                        <div className="w-16 h-16 bg-white border border-[#b8860b]/20 rounded-2xl flex items-center justify-center text-[#800020] shrink-0 shadow-sm group-hover:-rotate-6 transition-transform"><Shirt size={28} /></div>
-                        <div>
-                            <h3 className="font-serif text-2xl md:text-3xl italic mb-1 text-[#800020]">Dress Code</h3>
-                            <p className="text-gray-600 text-sm md:text-xl uppercase font-bold tracking-[0.1em]">Elegante / Gala</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-20">
-                      <div className="flex items-center justify-between mb-8 flex-wrap gap-6">
-                        <div className="flex items-center gap-4"><MapPin size={28} className="text-[#800020]" /><span className="text-2xl md:text-4xl font-serif italic">Salón My Father</span></div>
-                        <button onClick={() => window.open(`https://maps.app.goo.gl/uXq5HCuF54u8DqJj8`, '_blank')} className="bg-[#800020] hover:bg-[#b8860b] text-white px-8 py-3 rounded-full text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-lg font-bold">Cómo llegar <ExternalLink size={14} /></button>
-                      </div>
-                      <div className="h-[300px] md:h-[500px] rounded-[3rem] overflow-hidden border-2 border-white shadow-2xl"><iframe src={MAPS_EMBED} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000" allowFullScreen loading="lazy"></iframe></div>
-                    </div>
+                      ))}
                   </div>
-                </section>
 
-                <section ref={recuerdosRef} className="scroll-mt-20">
-                  <div className="text-center mb-16">
-                    <h2 className="font-serif text-5xl md:text-8xl italic mb-6 text-[#800020]">Recuerdos</h2>
-                    <p className="text-[#b8860b] uppercase text-[10px] sm:text-xs tracking-[0.4em] font-bold">Comparte tu foto favorita conmigo</p>
+                  <div className={`transition-all duration-1000 ease-in-out ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl rotate-2 translate-y-[-20%]' : 'scale-100 opacity-100'}`}>
+                    <p className="text-[#b8860b] uppercase tracking-[0.6em] text-[10px] md:text-sm mb-8 font-bold opacity-70 italic">Una invitación especial te espera</p>
+                    
+                    <div className="relative inline-block mb-12">
+                      <div className="font-cursive text-7xl md:text-[11rem] text-[#800020] relative z-10 drop-shadow-lg select-none">Milagros</div>
+                      <div className="absolute -bottom-4 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#b8860b]/30 to-transparent"></div>
+                    </div>
+
+                    <div className="relative group cursor-pointer" onClick={handleOpenEnvelope}>
+                      <div className="absolute inset-0 bg-[#b8860b] rounded-full animate-pulse-soft blur-2xl group-hover:blur-3xl transition-all duration-700"></div>
+                      <button className="relative w-28 h-28 md:w-44 md:h-44 bg-gradient-to-tr from-[#8a6b0d] via-[#b8860b] to-[#d4af37] rounded-full flex items-center justify-center border-[6px] border-[#fdfcfb] shadow-[0_20px_50px_rgba(184,134,11,0.4)] transition-transform group-hover:scale-110 active:scale-95 duration-500">
+                        <div className="absolute inset-2 border border-[#fdfcfb]/30 rounded-full"></div>
+                        <span className="font-serif font-bold text-white text-5xl md:text-8xl drop-shadow-md">M</span>
+                      </button>
+                    </div>
+                    <p className="mt-16 text-[#800020]/60 text-[10px] uppercase tracking-[0.8em] font-bold">Toca para abrir</p>
                   </div>
-                  <div className="glass p-8 md:p-20 rounded-[4rem] text-center bg-white/40 border-[#b8860b]/20">
-                    {!selectedImage ? (
-                      <div className="py-20 md:py-40 border-2 border-dashed border-[#b8860b]/20 rounded-[3rem] hover:border-[#800020] transition-all cursor-pointer flex flex-col items-center group bg-white/20" onClick={() => fileInputRef.current?.click()}>
-                        <Camera size={60} className="text-[#b8860b]/50 mb-8" />
-                        <p className="text-[#b8860b] font-bold uppercase tracking-[0.2em] text-xs px-4">Toca para subir una foto juntos</p>
-                        <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-                      </div>
-                    ) : (
-                      <div className="animate-reveal max-w-lg mx-auto">
-                        <div className="bg-white p-5 pb-16 shadow-2xl rounded-sm transform -rotate-1 border border-gray-100 mb-12">
-                          <img src={selectedImage} className="w-full aspect-[4/5] object-cover mb-8" />
-                          <textarea value={userCaption} onChange={(e) => setUserCaption(e.target.value)} placeholder="Escribe un deseo..." className="w-full font-cursive text-3xl text-[#800020] text-center bg-transparent border-none focus:ring-0 resize-none h-24 placeholder:opacity-30" />
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          <button onClick={() => setSelectedImage(null)} className="flex-1 bg-white border border-[#b8860b]/20 py-5 rounded-2xl text-[10px] uppercase font-bold text-[#b8860b]">Cambiar foto</button>
-                          <button onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Milu! Mira este recuerdo: ${userCaption}`)}`, '_blank')} className="flex-[2] bg-[#800020] text-white py-5 rounded-2xl font-bold text-[10px] uppercase flex items-center justify-center gap-3"><Send size={18} /> Enviar a Milu</button>
-                        </div>
+                </div>
+              ) : (
+                /* VISTA PRINCIPAL DE LA INVITACIÓN */
+                <div className="animate-fade-in relative z-10">
+                  {/* Botón de Sonido Flotante Mejorado */}
+                  <button 
+                    onClick={toggleMute}
+                    className="fixed top-6 right-6 z-[1000] glass w-14 h-14 rounded-full flex items-center justify-center text-[#800020] hover:scale-110 transition-all shadow-xl bg-white/90"
+                  >
+                    {isMuted ? <VolumeX size={24} /> : (
+                      <div className="flex items-end gap-[3px] h-5">
+                        <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0s'}}></div>
+                        <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.4s'}}></div>
+                        <div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.1s'}}></div>
                       </div>
                     )}
-                  </div>
-                </section>
+                  </button>
 
-                {/* Sección Parallax Destacada */}
-                <div 
-                    className="h-[60vh] md:h-[80vh] w-full parallax-portrait rounded-[4rem] overflow-hidden shadow-2xl"
-                    style={{ backgroundImage: `url(${MILU_PHOTOS[0]})` }}
-                >
-                    <div className="w-full h-full flex items-center justify-center bg-black/30 backdrop-blur-[2px]">
-                        <div className="text-white text-center p-8">
-                            <h2 className="font-cursive text-6xl md:text-9xl drop-shadow-lg">Mágica Noche</h2>
-                            <p className="font-serif italic text-xl md:text-3xl tracking-widest mt-4 opacity-90">Te espero para crear recuerdos inolvidables</p>
-                        </div>
-                    </div>
-                </div>
+                  <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-8 py-5 flex gap-10 items-center shadow-2xl bg-white/90 border border-[#b8860b]/20">
+                    <button onClick={() => scrollTo(galaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Calendar size={22}/></button>
+                    <button onClick={() => scrollTo(recuerdosRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Camera size={22}/></button>
+                    <button onClick={() => scrollTo(musicaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Music size={22}/></button>
+                    <button onClick={() => scrollTo(rsvpRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><CheckCircle size={22}/></button>
+                  </nav>
 
-                <section ref={musicaRef} className="scroll-mt-20">
-                  <div className="glass p-8 sm:p-14 md:p-24 rounded-[4rem] bg-white/40 border-[#b8860b]/20">
-                    <div className="text-center mb-16">
-                        <h2 className="font-serif text-5xl md:text-8xl italic mb-6 text-[#800020]">Música</h2>
-                        <p className="text-[#b8860b] font-bold uppercase text-[10px] tracking-[0.4em]">¿Qué canción no puede faltar?</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div className="spotify-container">
-                            <iframe src={SPOTIFY_EMBED_URL} width="100%" height="500" frameBorder="0" allowFullScreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" className="rounded-[1.5rem]"></iframe>
+                  <header className="h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
+                    {/* Slideshow de fondo persistente y suave */}
+                    <div className="absolute inset-0 z-0">
+                      {MILU_PHOTOS.slice(0, 3).map((img, idx) => (
+                        <div 
+                          key={idx}
+                          className={`absolute inset-0 transition-opacity duration-3000 ease-in-out ${currentPhotoIndex % 3 === idx ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                          <div 
+                            className="w-full h-full bg-cover bg-center animate-ken-burns scale-110"
+                            style={{ backgroundImage: `url(${img})` }}
+                          ></div>
                         </div>
-                        <div className="space-y-10">
-                            <div className="bg-white/60 p-8 rounded-[3rem] border border-[#b8860b]/10 shadow-sm text-center lg:text-left">
-                                <h3 className="font-serif text-3xl italic text-[#800020] mb-4">Playlist Colaborativa</h3>
-                                <p className="text-gray-600 mb-8">Añade tus temas favoritos directamente a mi lista oficial de los 15.</p>
-                                <button onClick={() => window.open(SPOTIFY_PLAYLIST_URL, '_blank')} className="w-full bg-[#1DB954] text-white font-bold py-6 rounded-2xl flex items-center justify-center gap-4 shadow-xl hover:scale-105 transition-all"><PlusCircle size={28} /><span className="uppercase tracking-[0.1em] text-sm">Abrir Spotify y Añadir</span></button>
+                      ))}
+                      <div className="absolute inset-0 image-bg-tint"></div>
+                    </div>
+
+                    <div className="z-20 animate-reveal">
+                      <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-6 font-bold drop-shadow-sm">Mis XV Años</p>
+                      <h1 className="font-cursive text-7xl md:text-[14rem] text-[#800020] leading-[0.8] mb-4 drop-shadow-md">Milagros</h1>
+                      <div className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto my-12"></div>
+                      <p className="text-gray-700 font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium">Sábado 22 de Agosto • 2026</p>
+                      <div className="mt-24 animate-bounce opacity-50">
+                        <ChevronDown size={32} className="text-[#800020]" />
+                      </div>
+                    </div>
+                  </header>
+
+                  <main className="max-w-6xl mx-auto px-4 md:px-8 space-y-32 md:space-y-64 relative z-10">
+                    {/* SECCIÓN CUENTA REGRESIVA Y EVENTO */}
+                    <section ref={galaRef} className="scroll-mt-20">
+                      <div className="glass p-8 sm:p-14 md:p-24 rounded-[4rem] md:rounded-[6rem] relative overflow-hidden bg-white/60">
+                        <div className="text-center mb-20 md:mb-32">
+                          <h2 className="font-serif text-4xl sm:text-6xl md:text-8xl italic mb-10 text-[#800020]">Comienza la cuenta atrás...</h2>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+                            {Object.entries(timeLeft).map(([label, val]) => (
+                              <div key={label} className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 sm:p-10 border border-[#b8860b]/10 shadow-sm flex flex-col items-center justify-center group hover:border-[#800020]/30 transition-all duration-500">
+                                <span className="text-4xl sm:text-6xl md:text-7xl font-light text-[#800020] leading-none tabular-nums group-hover:scale-110 transition-transform">{val}</span>
+                                <span className="text-[10px] md:text-xs uppercase text-[#b8860b] tracking-[0.3em] font-bold mt-4">{label === 'D' ? 'Días' : label === 'H' ? 'Horas' : label === 'M' ? 'Min' : 'Seg'}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-b border-[#b8860b]/10 py-16">
+                          <div className="flex items-center gap-8 group">
+                            <div className="w-16 h-16 bg-white border border-[#b8860b]/20 rounded-2xl flex items-center justify-center text-[#800020] shrink-0 shadow-sm group-hover:rotate-6 transition-transform"><Clock size={28} /></div>
+                            <div>
+                                <h3 className="font-serif text-2xl md:text-3xl italic mb-1 text-[#800020]">La Fiesta</h3>
+                                <p className="text-gray-600 text-sm md:text-xl font-medium tracking-tight">Sábado 22 de Agosto, 21:00 hs.</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-8 group">
+                            <div className="w-16 h-16 bg-white border border-[#b8860b]/20 rounded-2xl flex items-center justify-center text-[#800020] shrink-0 shadow-sm group-hover:-rotate-6 transition-transform"><Shirt size={28} /></div>
+                            <div>
+                                <h3 className="font-serif text-2xl md:text-3xl italic mb-1 text-[#800020]">Dress Code</h3>
+                                <p className="text-gray-600 text-sm md:text-xl uppercase font-bold tracking-[0.1em]">Elegante / Gala</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-20">
+                          <div className="flex items-center justify-between mb-8 flex-wrap gap-6">
+                            <div className="flex items-center gap-4"><MapPin size={28} className="text-[#800020]" /><span className="text-2xl md:text-4xl font-serif italic">Salón My Father</span></div>
+                            <button onClick={() => window.open(`https://maps.app.goo.gl/uXq5HCuF54u8DqJj8`, '_blank')} className="bg-[#800020] hover:bg-[#b8860b] text-white px-8 py-3 rounded-full text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-lg font-bold">Cómo llegar <ExternalLink size={14} /></button>
+                          </div>
+                          <div className="h-[300px] md:h-[500px] rounded-[3rem] overflow-hidden border-2 border-white shadow-2xl">
+                            <iframe src={MAPS_EMBED} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000" allowFullScreen loading="lazy"></iframe>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* GALERÍA DE FOTOS "MIS MOMENTOS" */}
+                    <section className="scroll-mt-20">
+                        <div className="text-center mb-16">
+                            <h2 className="font-serif text-5xl md:text-8xl italic mb-6 text-[#800020]">Mis Momentos</h2>
+                            <p className="text-[#b8860b] uppercase text-[10px] tracking-[0.4em] font-bold">Un viaje a través de mis 15 años</p>
+                        </div>
+                        <div className="masonry-grid px-2">
+                            {MILU_PHOTOS.map((img, i) => (
+                                <div key={i} className="masonry-item rounded-[2rem] overflow-hidden shadow-lg group relative">
+                                    <img src={img} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <Heart className="text-white scale-0 group-hover:scale-100 transition-transform duration-500" size={40} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* RECUERDOS COMPARTIDOS */}
+                    <section ref={recuerdosRef} className="scroll-mt-20">
+                      <div className="text-center mb-16">
+                        <h2 className="font-serif text-5xl md:text-8xl italic mb-6 text-[#800020]">Recuerdos</h2>
+                        <p className="text-[#b8860b] uppercase text-[10px] tracking-[0.4em] font-bold">Comparte tu foto favorita conmigo</p>
+                      </div>
+                      <div className="glass p-8 md:p-20 rounded-[4rem] text-center bg-white/50">
+                        {!selectedImage ? (
+                          <div className="py-20 md:py-40 border-2 border-dashed border-[#b8860b]/20 rounded-[3rem] hover:border-[#800020] transition-all cursor-pointer flex flex-col items-center group bg-white/30" onClick={() => fileInputRef.current?.click()}>
+                            <div className="relative mb-8">
+                                <div className="absolute inset-0 bg-[#b8860b]/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+                                <Camera size={60} className="text-[#b8860b]/50 relative z-10 group-hover:scale-110 transition-transform" />
+                            </div>
+                            <p className="text-[#b8860b] font-bold uppercase tracking-[0.2em] text-xs px-4">Toca para subir una foto juntos</p>
+                            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+                          </div>
+                        ) : (
+                          <div className="animate-reveal max-w-lg mx-auto">
+                            <div className="bg-white p-5 pb-16 shadow-2xl rounded-sm transform -rotate-1 border border-gray-100 mb-12 relative">
+                              <img src={selectedImage} className="w-full aspect-[4/5] object-cover mb-8" />
+                              <textarea value={userCaption} onChange={(e) => setUserCaption(e.target.value)} placeholder="Escribe un deseo para Milu..." className="w-full font-cursive text-3xl text-[#800020] text-center bg-transparent border-none focus:ring-0 resize-none h-24 placeholder:opacity-30" />
+                              <Heart className="absolute bottom-4 right-4 text-[#800020]/20" size={32} />
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                              <button onClick={() => setSelectedImage(null)} className="flex-1 bg-white border border-[#b8860b]/20 py-5 rounded-2xl text-[10px] uppercase font-bold text-[#b8860b] hover:bg-gray-50 transition-all">Cambiar foto</button>
+                              <button onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Milu! Mira este recuerdo: ${userCaption}`)}`, '_blank')} className="flex-[2] bg-[#800020] text-white py-5 rounded-2xl font-bold text-[10px] uppercase flex items-center justify-center gap-3 shadow-xl hover:bg-[#b8860b] transition-all"><Send size={18} /> Enviar a Milu</button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+
+                    {/* SECCIÓN MÚSICA */}
+                    <section ref={musicaRef} className="scroll-mt-20">
+                      <div className="glass p-8 sm:p-14 md:p-24 rounded-[4rem] bg-white/50 border-[#b8860b]/20">
+                        <div className="text-center mb-16">
+                            <h2 className="font-serif text-5xl md:text-8xl italic mb-6 text-[#800020]">Música</h2>
+                            <p className="text-[#b8860b] font-bold uppercase text-[10px] tracking-[0.4em]">¿Qué canción no puede faltar?</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            <div className="relative group">
+                                <div className="absolute -inset-4 bg-gradient-to-tr from-[#1DB954]/10 to-transparent rounded-[2.5rem] blur-2xl group-hover:opacity-100 transition-opacity"></div>
+                                <iframe src={SPOTIFY_EMBED_URL} width="100%" height="500" frameBorder="0" allowFullScreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" className="rounded-[2rem] relative z-10 shadow-2xl"></iframe>
+                            </div>
+                            <div className="space-y-10">
+                                <div className="bg-white/80 p-10 rounded-[3rem] border border-[#b8860b]/10 shadow-sm text-center lg:text-left">
+                                    <h3 className="font-serif text-3xl italic text-[#800020] mb-4">Playlist Colaborativa</h3>
+                                    <p className="text-gray-600 mb-8 leading-relaxed">¡Tú eres el DJ! Abre la lista directamente en tu App de Spotify y añade las canciones que quieres bailar.</p>
+                                    <button onClick={() => window.open(SPOTIFY_PLAYLIST_URL, '_blank')} className="w-full bg-[#1DB954] text-white font-bold py-6 rounded-2xl flex items-center justify-center gap-4 shadow-xl hover:scale-[1.02] transition-all active:scale-95 group">
+                                        <PlusCircle size={28} className="group-hover:rotate-90 transition-transform duration-500" />
+                                        <span className="uppercase tracking-[0.1em] text-sm">Añadir Canción en Spotify</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                  </div>
-                </section>
+                      </div>
+                    </section>
 
-                <section ref={rsvpRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-40">
-                  <div className="glass p-10 md:p-16 rounded-[4rem] flex flex-col justify-between min-h-[550px] bg-white/60 border-[#b8860b]/20 text-center">
-                    <div>
-                      <h2 className="font-serif text-5xl md:text-7xl italic mb-10 text-[#800020]">Confirmar</h2>
-                      {!isConfirmed ? (
-                        <div className="space-y-6">
-                          <input type="text" value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="Nombre Completo" className="w-full bg-white border border-[#b8860b]/10 rounded-2xl px-6 py-5 text-lg outline-none focus:border-[#800020]" />
-                          <input type="text" value={dietaryInfo} onChange={(e) => setDietaryInfo(e.target.value)} placeholder="Menú Especial" className="w-full bg-white border border-[#b8860b]/10 rounded-2xl px-6 py-5 text-sm outline-none" />
-                          <button onClick={() => { if(guestName.length < 3) return; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Confirmo! Soy ${guestName}. ${dietaryInfo}`)}`, '_blank'); setIsConfirmed(true); }} className="w-full bg-[#800020] text-white font-bold py-6 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-xl">Confirmar Asistencia</button>
+                    {/* CONFIRMACIÓN Y REGALO */}
+                    <section ref={rsvpRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-40">
+                      <div className="glass p-10 md:p-16 rounded-[4rem] flex flex-col justify-between min-h-[550px] bg-white/70 border-[#b8860b]/20 text-center">
+                        <div>
+                          <h2 className="font-serif text-5xl md:text-7xl italic mb-10 text-[#800020]">Confirmar</h2>
+                          {!isConfirmed ? (
+                            <div className="space-y-6 max-w-xs mx-auto">
+                              <input type="text" value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="Tu Nombre Completo" className="w-full bg-white border border-[#b8860b]/10 rounded-2xl px-6 py-5 text-lg outline-none focus:border-[#800020] transition-all" />
+                              <input type="text" value={dietaryInfo} onChange={(e) => setDietaryInfo(e.target.value)} placeholder="Menú Especial (Opcional)" className="w-full bg-white border border-[#b8860b]/10 rounded-2xl px-6 py-5 text-sm outline-none" />
+                              <button onClick={() => { if(guestName.length < 3) return; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola Milu! Confirmo mi asistencia. Soy ${guestName}. ${dietaryInfo}`)}`, '_blank'); setIsConfirmed(true); }} className="w-full bg-[#800020] text-white font-bold py-6 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-[#b8860b] transition-all active:scale-95">Confirmar por WhatsApp</button>
+                            </div>
+                          ) : (
+                            <div className="py-20 flex flex-col items-center text-[#800020] animate-reveal">
+                                <CheckCircle size={80} className="mb-6 opacity-30" />
+                                <p className="text-4xl font-serif italic">¡Nos vemos allí!</p>
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <div className="py-20 flex flex-col items-center text-[#800020] animate-reveal">
-                            <CheckCircle size={60} className="mb-4" />
-                            <p className="text-3xl font-serif italic">¡Gracias por confirmar!</p>
+                        <div className="pt-10 border-t border-[#b8860b]/10">
+                            <p className="text-[#800020] text-xs font-bold uppercase tracking-widest">Confirmar antes del 10 de Agosto</p>
                         </div>
-                      )}
-                    </div>
-                  </div>
+                      </div>
 
-                  <div className="glass p-10 md:p-16 rounded-[4rem] text-center flex flex-col justify-center bg-white/60 border-[#b8860b]/20">
-                    <h2 className="font-serif text-5xl md:text-7xl italic mb-8 text-[#800020]">El Regalo</h2>
-                    <p className="text-gray-500 text-lg mb-12 italic leading-relaxed px-6">"Tu presencia es mi mejor regalo, pero si deseas hacerme un presente..."</p>
-                    <div className="bg-white/80 p-10 rounded-[3rem] border border-[#b8860b]/10">
-                      <p className="text-[10px] text-[#b8860b] uppercase tracking-[0.5em] mb-4 font-bold">Colectivo Abitab</p>
-                      <p className="text-5xl md:text-7xl font-light mb-10 text-[#800020]">145920</p>
-                      <button onClick={() => { navigator.clipboard.writeText("145920"); setCopiedAbitab(true); setTimeout(() => setCopiedAbitab(false), 2000); }} className="text-[#b8860b] font-bold text-xs uppercase tracking-[0.2em] border border-[#b8860b]/20 px-8 py-4 rounded-full">{copiedAbitab ? "¡Copiado!" : "Copiar número"}</button>
-                    </div>
-                  </div>
-                </section>
-              </main>
+                      <div className="glass p-10 md:p-16 rounded-[4rem] text-center flex flex-col justify-center bg-white/70 border-[#b8860b]/20">
+                        <h2 className="font-serif text-5xl md:text-7xl italic mb-8 text-[#800020]">El Regalo</h2>
+                        <p className="text-gray-500 text-lg mb-12 italic leading-relaxed px-6">"Tu presencia es mi mejor regalo, pero si deseas hacerme un presente..."</p>
+                        <div className="bg-white/90 p-10 rounded-[3rem] border border-[#b8860b]/10 shadow-inner">
+                          <p className="text-[10px] text-[#b8860b] uppercase tracking-[0.5em] mb-4 font-bold">Colectivo Abitab</p>
+                          <p className="text-5xl md:text-7xl font-light mb-10 text-[#800020] tracking-tighter">145920</p>
+                          <button onClick={() => { navigator.clipboard.writeText("145920"); setCopiedAbitab(true); setTimeout(() => setCopiedAbitab(false), 2000); }} className="text-[#b8860b] font-bold text-[10px] uppercase tracking-[0.2em] border border-[#b8860b]/20 px-8 py-5 rounded-full hover:bg-white transition-all active:scale-90">{copiedAbitab ? "¡Copiado con éxito!" : "Copiar número"}</button>
+                        </div>
+                      </div>
+                    </section>
+                  </main>
 
-              <footer className="text-center py-40 bg-white/20">
-                <div className="flex items-center justify-center gap-10 mb-12 opacity-30">
-                    <div className="h-px w-24 bg-[#b8860b]"></div>
-                    <Sparkles className="text-[#b8860b]" />
-                    <div className="h-px w-24 bg-[#b8860b]"></div>
+                  <footer className="text-center py-40 bg-white/30 border-t border-[#b8860b]/10">
+                    <div className="flex items-center justify-center gap-10 mb-12 opacity-30">
+                        <div className="h-px w-24 bg-[#b8860b]"></div>
+                        <Sparkles className="text-[#b8860b]" />
+                        <div className="h-px w-24 bg-[#b8860b]"></div>
+                    </div>
+                    <p className="text-[#b8860b] text-[11px] uppercase tracking-[1.5em] font-bold mb-4">Milagros Cabrera • XV Años</p>
+                    <p className="text-[#800020]/40 text-[9px] uppercase tracking-[0.5em] font-semibold italic">Creado con amor para Milu • 2026</p>
+                  </footer>
                 </div>
-                <p className="text-[#b8860b] text-[11px] uppercase tracking-[1.5em] font-bold">Milu • XV Años • 2026</p>
-              </footer>
+              )}
             </div>
           );
         };
