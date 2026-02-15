@@ -4,11 +4,9 @@ import {
   MapPin, 
   Calendar, 
   Clock, 
-  Heart, 
   CheckCircle,
   Shirt,
   Music,
-  PlusCircle,
   Send,
   ImageIcon,
   Copy,
@@ -16,7 +14,7 @@ import {
   ExternalLink,
   Sparkles,
   Utensils,
-  X
+  Camera
 } from 'lucide-react';
 
 const EVENT_DATE = new Date('2026-08-22T21:00:00'); 
@@ -32,7 +30,6 @@ const App = () => {
   const [guestName, setGuestName] = useState('');
   const [dietaryInfo, setDietaryInfo] = useState('');
   const [copiedAbitab, setCopiedAbitab] = useState(false);
-  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [userCaption, setUserCaption] = useState('');
@@ -81,7 +78,7 @@ const App = () => {
   const handleSuggestSong = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    const msg = `¡Hola Milu! Te sugiero esta canción para la fiesta: ${searchQuery}`;
+    const msg = `¡Hola Milu! Te sugiero esta canción para bailar: ${searchQuery}`;
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
     setSearchQuery('');
   };
@@ -110,12 +107,12 @@ const App = () => {
   return (
     <div className="min-h-screen text-gray-800 pb-32">
       
-      {/* NAVEGACIÓN */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-6 py-4 flex gap-8 items-center shadow-lg animate-fade-in bg-white/70 backdrop-blur-md border border-[#b8860b]/20">
-        <button onClick={() => scrollTo(galaRef)} className="text-gray-400 hover:text-[#800020] transition-colors"><Calendar size={20}/></button>
-        <button onClick={() => scrollTo(recuerdosRef)} className="text-gray-400 hover:text-[#800020] transition-colors"><ImageIcon size={20}/></button>
-        <button onClick={() => scrollTo(musicaRef)} className="text-gray-400 hover:text-[#800020] transition-colors"><Music size={20}/></button>
-        <button onClick={() => scrollTo(rsvpRef)} className="text-gray-400 hover:text-[#800020] transition-colors"><CheckCircle size={20}/></button>
+      {/* NAVEGACIÓN ESTACIONARIA */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-6 py-4 flex gap-8 items-center shadow-lg bg-white/80 border border-[#b8860b]/20">
+        <button onClick={() => scrollTo(galaRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Calendar size={20}/></button>
+        <button onClick={() => scrollTo(recuerdosRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Camera size={20}/></button>
+        <button onClick={() => scrollTo(musicaRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><Music size={20}/></button>
+        <button onClick={() => scrollTo(rsvpRef)} className="text-[#b8860b] hover:text-[#800020] transition-colors"><CheckCircle size={20}/></button>
       </nav>
 
       {/* HERO */}
@@ -133,19 +130,19 @@ const App = () => {
 
       <main className="max-w-5xl mx-auto px-4 md:px-8 space-y-32 md:space-y-64">
         
-        {/* LA GALA */}
+        {/* LA GALA / CONTADOR */}
         <section ref={galaRef} className="scroll-mt-20">
-          <div className="glass p-6 sm:p-12 md:p-20 rounded-[3rem] md:rounded-[5rem] relative overflow-hidden bg-white/60">
+          <div className="glass p-6 sm:p-12 md:p-20 rounded-[3rem] md:rounded-[5rem] relative overflow-hidden bg-white/60 border-[#b8860b]/30">
             <div className="text-center mb-16 md:mb-24">
               <h2 className="font-serif text-3xl sm:text-5xl md:text-7xl italic mb-8 text-[#800020]">Faltan tan solo...</h2>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
                 {Object.entries(timeLeft).map(([label, val]) => (
-                  <div key={label} className="bg-white/50 rounded-2xl p-4 sm:p-8 md:p-10 border border-[#b8860b]/10 shadow-sm flex flex-col items-center justify-center">
-                    <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[#800020] leading-none block tabular-nums">
+                  <div key={label} className="bg-white/50 rounded-2xl p-4 sm:p-8 border border-[#b8860b]/20 shadow-sm flex flex-col items-center justify-center overflow-hidden">
+                    <span className="text-3xl sm:text-5xl md:text-6xl font-light text-[#800020] leading-none block tabular-nums">
                       {val}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] md:text-sm uppercase text-[#b8860b] tracking-[0.2em] font-bold mt-3 block">
+                    <span className="text-[10px] md:text-xs uppercase text-[#b8860b] tracking-[0.2em] font-bold mt-3 block">
                       {label === 'D' ? 'Días' : label === 'H' ? 'Horas' : label === 'M' ? 'Min' : 'Seg'}
                     </span>
                   </div>
@@ -153,94 +150,84 @@ const App = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20">
-              <div className="flex items-start gap-6 group">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-24 md:h-24 bg-[#fdfcfb] border border-[#b8860b]/20 rounded-full flex items-center justify-center text-[#800020] shrink-0 group-hover:bg-[#800020] group-hover:text-white transition-all duration-500 shadow-sm">
-                  <Clock size={28} className="md:w-12 md:h-12" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-[#fdfcfb] border border-[#b8860b]/20 rounded-full flex items-center justify-center text-[#800020] shrink-0 shadow-sm">
+                  <Clock size={24} />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl sm:text-2xl md:text-4xl italic mb-2 text-[#800020]">El Evento</h3>
-                  <p className="text-gray-600 text-sm sm:text-base md:text-xl leading-relaxed">
-                    Sábado 22 de Agosto a las 21:00 hs. <br/> Tu presencia es mi mejor regalo.
-                  </p>
+                  <h3 className="font-serif text-xl md:text-2xl italic mb-1 text-[#800020]">El Evento</h3>
+                  <p className="text-gray-600 text-sm md:text-lg">Sábado 22 de Agosto, 21:00 hs.</p>
                 </div>
               </div>
-
-              <div className="flex items-start gap-6 group">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-24 md:h-24 bg-[#fdfcfb] border border-[#b8860b]/20 rounded-full flex items-center justify-center text-[#800020] shrink-0 group-hover:bg-[#800020] group-hover:text-white transition-all duration-500 shadow-sm">
-                  <Shirt size={28} className="md:w-12 md:h-12" />
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 bg-[#fdfcfb] border border-[#b8860b]/20 rounded-full flex items-center justify-center text-[#800020] shrink-0 shadow-sm">
+                  <Shirt size={24} />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl sm:text-2xl md:text-4xl italic mb-2 text-[#800020]">Dress Code</h3>
-                  <p className="text-gray-600 text-sm sm:text-base md:text-xl leading-relaxed uppercase font-semibold tracking-wide">
-                    Elegante / Gala
-                  </p>
+                  <h3 className="font-serif text-xl md:text-2xl italic mb-1 text-[#800020]">Dress Code</h3>
+                  <p className="text-gray-600 text-sm md:text-lg uppercase font-semibold tracking-wide">Elegante / Gala</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-16 md:mt-32">
-              <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-                <div className="flex items-center gap-4">
+            <div className="mt-16">
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div className="flex items-center gap-3">
                   <MapPin size={24} className="text-[#800020]" />
-                  <span className="text-xl sm:text-2xl md:text-3xl font-serif italic text-gray-800">Salón My Father</span>
+                  <span className="text-xl md:text-2xl font-serif italic">Salón My Father</span>
                 </div>
                 <button 
                   onClick={() => window.open(`https://maps.app.goo.gl/uXq5HCuF54u8DqJj8`, '_blank')}
-                  className="bg-[#fdfcfb] hover:bg-[#b8860b] hover:text-white px-5 py-2.5 rounded-full text-[10px] sm:text-xs md:text-sm uppercase tracking-widest flex items-center gap-2 transition-all border border-[#b8860b]/20 text-[#b8860b] font-bold shadow-sm"
+                  className="bg-[#fdfcfb] hover:bg-[#b8860b] hover:text-white px-5 py-2 rounded-full text-xs uppercase tracking-widest flex items-center gap-2 transition-all border border-[#b8860b]/20 text-[#b8860b] font-bold"
                 >
-                  Ver Mapa <ExternalLink size={14} />
+                  Abrir Mapa <ExternalLink size={14} />
                 </button>
               </div>
-              <div className="h-60 sm:h-80 md:h-[500px] rounded-[2rem] md:rounded-[4rem] overflow-hidden border border-[#b8860b]/20 shadow-md">
-                <iframe src={MAPS_EMBED} className="w-full h-full border-0" allowFullScreen loading="lazy"></iframe>
+              <div className="h-60 sm:h-80 md:h-[450px] rounded-[2rem] overflow-hidden border border-[#b8860b]/20 shadow-inner">
+                <iframe src={MAPS_EMBED} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" allowFullScreen loading="lazy"></iframe>
               </div>
             </div>
           </div>
         </section>
 
-        {/* RECUERDOS - VERSIÓN MANUAL */}
+        {/* RECUERDOS - POLAROID */}
         <section ref={recuerdosRef} className="scroll-mt-20">
-          <div className="text-center mb-16 px-4">
-            <h2 className="font-serif text-4xl md:text-7xl italic mb-4 text-[#800020]">Momentos Compartidos</h2>
-            <p className="text-[#b8860b] uppercase text-[10px] sm:text-xs md:text-sm tracking-[0.3em] font-bold">Sube una foto y deja un mensaje para Milu</p>
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-4xl md:text-7xl italic mb-4 text-[#800020]">Recuerdos</h2>
+            <p className="text-[#b8860b] uppercase text-[10px] sm:text-xs tracking-[0.3em] font-bold">Sube una foto y déjame un mensaje especial</p>
           </div>
 
-          <div className="glass p-6 md:p-20 rounded-[3rem] md:rounded-[5rem] text-center bg-white/40">
+          <div className="glass p-6 md:p-16 rounded-[3rem] text-center bg-white/50 border-[#b8860b]/20">
             {!selectedImage ? (
               <div 
-                className="py-20 md:py-40 border-2 border-dashed border-[#b8860b]/30 rounded-[2rem] md:rounded-[4rem] hover:border-[#800020] transition-all cursor-pointer flex flex-col items-center group" 
+                className="py-16 md:py-32 border-2 border-dashed border-[#b8860b]/30 rounded-[2rem] hover:border-[#800020] transition-all cursor-pointer flex flex-col items-center group bg-white/30" 
                 onClick={() => fileInputRef.current?.click()}
               >
-                <div className="w-20 h-20 md:w-32 md:h-32 bg-[#fdfcfb] rounded-full flex items-center justify-center mb-8 border border-[#b8860b]/10 group-hover:scale-110 transition-transform shadow-sm">
-                   <ImageIcon size={40} className="text-[#b8860b] md:w-16 md:h-16" />
-                </div>
-                <p className="text-gray-500 text-sm md:text-xl mb-10 font-medium px-4">Toca para elegir una foto con ella</p>
+                <ImageIcon size={48} className="text-[#b8860b]/40 mb-6 group-hover:scale-110 transition-transform" />
+                <p className="text-gray-500 font-medium px-4">Toca para seleccionar una foto juntos</p>
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-                <button className="bg-[#800020] text-white px-10 py-4 rounded-full text-xs md:text-sm uppercase tracking-widest font-bold hover:bg-[#b8860b] transition-colors shadow-lg">
-                  Seleccionar Imagen
-                </button>
               </div>
             ) : (
-              <div className="space-y-8 md:space-y-12 animate-fade-in max-w-xl mx-auto">
-                <div className="bg-white p-4 pb-12 shadow-2xl rounded-sm transform -rotate-1 border border-gray-100">
-                  <img src={selectedImage} className="w-full aspect-[4/5] object-cover mb-6" alt="Recuerdo" />
+              <div className="animate-fade-in max-w-sm mx-auto">
+                <div className="bg-white p-4 pb-12 shadow-2xl rounded-sm transform -rotate-1 border border-gray-100 mb-10">
+                  <img src={selectedImage} className="w-full aspect-[4/5] object-cover mb-6 border border-gray-50" alt="Recuerdo" />
                   <textarea 
                     value={userCaption}
                     onChange={(e) => setUserCaption(e.target.value)}
-                    placeholder="Escribe algo lindo aquí..."
-                    className="w-full font-cursive text-2xl md:text-4xl text-[#800020] text-center bg-transparent border-none focus:ring-0 resize-none h-24 placeholder:opacity-30"
+                    placeholder="Escribe tu dedicatoria aquí..."
+                    className="w-full font-cursive text-2xl text-[#800020] text-center bg-transparent border-none focus:ring-0 resize-none h-20 placeholder:opacity-30"
                   />
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex gap-3">
                   <button onClick={() => {setSelectedImage(null); setUserCaption('');}} 
-                    className="flex-1 bg-white border border-[#b8860b]/20 py-4 rounded-2xl text-xs uppercase tracking-widest font-bold text-[#b8860b]">
-                    Cambiar Foto
+                    className="flex-1 bg-white border border-[#b8860b]/20 py-4 rounded-xl text-[10px] uppercase tracking-widest font-bold text-[#b8860b]">
+                    Cambiar
                   </button>
                   <button onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Milu! Mira este recuerdo que subí a tu web: "${userCaption || '¡Feliz cumple!'}"`)}`, '_blank')} 
-                    className="flex-[2] bg-[#800020] text-white py-4 rounded-2xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg hover:bg-[#b8860b] transition-all">
-                    <Send size={18} /> Enviar a Milu
+                    className="flex-[2] bg-[#800020] text-white py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg hover:bg-[#b8860b] transition-all">
+                    <Send size={16} /> Enviar a Milu
                   </button>
                 </div>
               </div>
@@ -248,104 +235,98 @@ const App = () => {
           </div>
         </section>
 
-        {/* PLAYLIST - VERSIÓN MANUAL */}
+        {/* PLAYLIST */}
         <section ref={musicaRef} className="scroll-mt-20">
-          <div className="glass p-6 sm:p-10 md:p-20 rounded-[3rem] md:rounded-[5rem] bg-white/50">
-            <div className="text-center mb-16 px-4">
-              <h2 className="font-serif text-4xl md:text-7xl italic mb-4 text-[#800020]">Ritmo & Fiesta</h2>
-              <p className="text-[#b8860b] font-bold uppercase text-xs md:text-sm tracking-[0.4em]">¿Qué canciones no pueden faltar?</p>
+          <div className="glass p-6 sm:p-10 md:p-16 rounded-[3rem] bg-white/50 border-[#b8860b]/20">
+            <div className="text-center mb-10">
+              <h2 className="font-serif text-4xl md:text-6xl italic mb-4 text-[#800020]">¿Qué bailamos?</h2>
+              <p className="text-[#b8860b] font-bold uppercase text-xs tracking-[0.3em]">Sugiere tus canciones favoritas</p>
             </div>
 
-            <form onSubmit={handleSuggestSong} className="relative mb-16">
+            <form onSubmit={handleSuggestSong} className="relative mb-12">
               <input 
                 type="text" 
                 value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)} 
-                placeholder="Escribe el nombre de tu canción..." 
-                className="w-full bg-white border border-[#b8860b]/20 rounded-full px-6 sm:px-8 py-5 sm:py-6 md:py-8 focus:outline-none focus:border-[#800020] text-gray-800 text-sm sm:text-base md:text-2xl shadow-sm" 
+                placeholder="Nombre de la canción y artista..." 
+                className="w-full bg-white border border-[#b8860b]/20 rounded-full px-6 py-5 focus:outline-none focus:border-[#800020] text-gray-800 text-sm shadow-sm" 
               />
-              <button type="submit" className="absolute right-2 top-2 sm:right-3 sm:top-3 md:top-4 w-11 h-11 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-[#800020] rounded-full flex items-center justify-center text-white shadow-md hover:bg-[#b8860b] transition-all">
-                 <Send size={24} className="md:w-7 md:h-7" />
+              <button type="submit" className="absolute right-2 top-2 w-11 h-11 bg-[#800020] rounded-full flex items-center justify-center text-white shadow-md hover:bg-[#b8860b] transition-all">
+                 <Send size={20} />
               </button>
-              <p className="mt-4 text-center text-[10px] text-gray-400 uppercase tracking-widest">Al enviarla, Milu la recibirá por WhatsApp</p>
             </form>
 
-            <div className="rounded-[2.5rem] overflow-hidden shadow-lg border border-[#b8860b]/10">
-                <iframe src={SPOTIFY_EMBED_URL} width="100%" height="380" frameBorder="0" allowFullScreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div className="rounded-[2rem] overflow-hidden shadow-lg border border-[#b8860b]/10">
+                <iframe src={SPOTIFY_EMBED_URL} width="100%" height="350" frameBorder="0" allowFullScreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
           </div>
         </section>
 
         {/* RSVP Y REGALO */}
-        <section ref={rsvpRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-16 pb-32">
+        <section ref={rsvpRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-32">
           {/* CONFIRMACIÓN */}
-          <div className="glass p-8 sm:p-10 md:p-20 rounded-[3rem] md:rounded-[5rem] flex flex-col justify-between min-h-[480px] bg-white/60">
+          <div className="glass p-8 md:p-12 rounded-[3rem] flex flex-col justify-between min-h-[450px] bg-white/70 border-[#b8860b]/20">
             <div className="text-center">
-              <h2 className="font-serif text-4xl md:text-7xl italic mb-10 text-[#800020]">RSVP</h2>
+              <h2 className="font-serif text-4xl md:text-6xl italic mb-8 text-[#800020]">Confirmar</h2>
               {!isConfirmed ? (
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-[#b8860b] font-bold block ml-4 text-left">Tu Nombre</label>
+                <div className="space-y-5">
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase tracking-widest text-[#b8860b] font-bold block ml-4 text-left">Nombre Completo</label>
                     <input 
                       type="text" 
                       value={guestName} 
                       onChange={(e) => setGuestName(e.target.value)} 
-                      placeholder="Nombre y Apellido" 
-                      className="w-full bg-white border border-[#b8860b]/20 rounded-2xl px-5 py-4 text-base outline-none focus:border-[#800020] shadow-sm" 
+                      className="w-full bg-white border border-[#b8860b]/20 rounded-xl px-5 py-4 text-base outline-none focus:border-[#800020]" 
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <label className="text-[10px] uppercase tracking-widest text-[#b8860b] font-bold block ml-4 text-left flex items-center gap-2">
-                      <Utensils size={12}/> Menú Especial (Opcional)
+                      <Utensils size={12}/> Menú Especial
                     </label>
                     <input 
                       type="text" 
                       value={dietaryInfo} 
                       onChange={(e) => setDietaryInfo(e.target.value)} 
-                      placeholder="Vegetariano, Celíaco, etc." 
-                      className="w-full bg-white border border-[#b8860b]/20 rounded-2xl px-5 py-4 text-sm outline-none focus:border-[#800020] shadow-sm" 
+                      placeholder="Ej: Celíaco, Vegetariano..." 
+                      className="w-full bg-white border border-[#b8860b]/20 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#800020]" 
                     />
                   </div>
                   <button 
                     onClick={() => { 
                       if(guestName.length < 3) return; 
-                      const msg = `¡Hola Milu! Confirmo mi lugar. Soy ${guestName}. ${dietaryInfo ? `Nota de menú: ${dietaryInfo}` : ''}`;
+                      const msg = `¡Hola Milu! Confirmo mi asistencia. Soy ${guestName}. ${dietaryInfo ? `Nota de menú: ${dietaryInfo}` : ''}`;
                       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank'); 
                       setIsConfirmed(true); 
                     }} 
-                    className="w-full bg-[#800020] text-white font-bold py-5 rounded-2xl text-xs md:text-lg uppercase tracking-[0.2em] hover:bg-[#b8860b] transition-all shadow-lg active:scale-95"
+                    className="w-full bg-[#800020] text-white font-bold py-5 rounded-xl text-xs uppercase tracking-widest hover:bg-[#b8860b] transition-all shadow-lg active:scale-95"
                   >
-                    Confirmar Asistencia
+                    Confirmar por WhatsApp
                   </button>
                 </div>
               ) : (
-                <div className="py-20 flex flex-col items-center animate-fade-in text-[#800020]">
-                  <CheckCircle size={50} className="mb-6" />
-                  <p className="text-xl md:text-3xl font-serif italic">¡Lugar Reservado!</p>
+                <div className="py-16 flex flex-col items-center animate-fade-in text-[#800020]">
+                  <CheckCircle size={48} className="mb-4" />
+                  <p className="text-xl font-serif italic">¡Nos vemos pronto!</p>
                 </div>
               )}
             </div>
-            <p className="text-[#b8860b]/60 text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest pt-10 border-t border-[#b8860b]/10 text-center font-bold">Agradecemos confirmar antes del 10.08</p>
+            <p className="text-[#b8860b]/60 text-[10px] uppercase tracking-widest pt-8 border-t border-[#b8860b]/10 text-center font-bold">Confirmar antes del 10.08</p>
           </div>
 
           {/* REGALO */}
-          <div className="glass p-8 sm:p-10 md:p-20 rounded-[3rem] md:rounded-[5rem] text-center flex flex-col justify-center relative overflow-hidden bg-white/60 min-h-[480px]">
-            <h2 className="font-serif text-4xl md:text-7xl italic mb-10 text-[#800020]">Presente</h2>
-            <p className="text-gray-500 text-sm sm:text-base md:text-2xl mb-12 italic leading-relaxed px-4 font-light max-w-sm mx-auto">
-              "Mi mayor regalo es compartir mi noche contigo, pero si deseas colaborar con mis sueños de futuro..."
+          <div className="glass p-8 md:p-12 rounded-[3rem] text-center flex flex-col justify-center bg-white/70 border-[#b8860b]/20">
+            <h2 className="font-serif text-4xl md:text-6xl italic mb-6 text-[#800020]">Presente</h2>
+            <p className="text-gray-500 text-sm md:text-lg mb-10 italic leading-relaxed px-4">
+              "Mi mayor regalo es compartir mi noche contigo, pero si deseas colaborar con mis sueños..."
             </p>
-            <div className="bg-[#fdfcfb] p-6 sm:p-10 rounded-[2.5rem] border border-[#b8860b]/20 relative z-10 shadow-sm w-full">
-              <p className="text-[10px] text-[#b8860b] uppercase tracking-[0.6em] mb-4 font-bold">Colectivo Abitad</p>
-              <p className="text-3xl sm:text-4xl md:text-6xl font-light mb-8 tracking-widest text-[#800020]">145920</p>
+            <div className="bg-[#fdfcfb] p-6 rounded-[2rem] border border-[#b8860b]/10 shadow-sm w-full">
+              <p className="text-[10px] text-[#b8860b] uppercase tracking-[0.4em] mb-3 font-bold">Colectivo Abitab</p>
+              <p className="text-3xl md:text-5xl font-light mb-6 tracking-widest text-[#800020]">145920</p>
               <button 
                 onClick={() => { navigator.clipboard.writeText("145920"); setCopiedAbitab(true); setTimeout(() => setCopiedAbitab(false), 2000); }} 
-                className="flex items-center justify-center gap-3 mx-auto text-[#b8860b] font-bold text-[10px] sm:text-xs md:text-lg hover:text-[#800020] transition-all uppercase tracking-widest"
+                className="flex items-center justify-center gap-2 mx-auto text-[#b8860b] font-bold text-xs hover:text-[#800020] transition-all uppercase tracking-widest"
               >
-                {copiedAbitab ? (
-                  <span className="text-[#800020] flex items-center gap-2 font-bold">¡Copiado! <CheckCircle size={18}/></span>
-                ) : (
-                  <><Copy size={20} /> Copiar Número</>
-                )}
+                {copiedAbitab ? "¡Copiado!" : <><Copy size={16} /> Copiar Número</>}
               </button>
             </div>
           </div>
@@ -353,14 +334,14 @@ const App = () => {
 
       </main>
 
-      <footer className="text-center py-24 md:py-64 border-t border-[#b8860b]/10 relative">
-        <h2 className="font-cursive text-7xl sm:text-8xl md:text-[14rem] text-[#800020] opacity-5 mb-8 leading-none select-none">Milagros</h2>
-        <div className="flex items-center justify-center gap-6 sm:gap-10 mb-8 sm:mb-10">
-           <div className="h-px w-14 sm:w-20 md:w-64 bg-[#b8860b]/20"></div>
-           <Sparkles className="text-[#b8860b]/40 w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12" />
-           <div className="h-px w-14 sm:w-20 md:w-64 bg-[#b8860b]/20"></div>
+      <footer className="text-center py-32 border-t border-[#b8860b]/10 relative">
+        <h2 className="font-cursive text-7xl md:text-[12rem] text-[#800020] opacity-5 mb-8 leading-none select-none">Milagros</h2>
+        <div className="flex items-center justify-center gap-6 mb-8">
+           <div className="h-px w-20 bg-[#b8860b]/20"></div>
+           <Sparkles className="text-[#b8860b]/30 w-8 h-8" />
+           <div className="h-px w-20 bg-[#b8860b]/20"></div>
         </div>
-        <p className="text-[#b8860b] text-[9px] sm:text-[10px] md:text-sm uppercase tracking-[1.5em] sm:tracking-[2em] md:tracking-[4em] font-semibold">Montevideo • Uruguay</p>
+        <p className="text-[#b8860b] text-[10px] uppercase tracking-[1.5em] font-semibold">Montevideo • Uruguay</p>
       </footer>
     </div>
   );
