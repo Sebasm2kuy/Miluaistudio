@@ -73,7 +73,7 @@
 
         .bg-photo {
             position: absolute;
-            /* Tamaño ajustado para que se vean grandes y bien */
+            /* Tamaño optimizado para impacto visual */
             width: 85%;
             height: 85%;
             background-size: contain; 
@@ -92,7 +92,7 @@
         }
 
         .bg-photo.active {
-            opacity: 0.85; /* Un poco de transparencia para que el texto sea legible */
+            opacity: 0.85; 
         }
 
         .stars-overlay { 
@@ -144,7 +144,7 @@
         const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0";
         const BG_MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
 
-        // RUTA ACTUALIZADA A LA CARPETA /fotos/
+        // RUTA APUNTANDO A TU CARPETA /fotos/
         const MILU_PHOTOS = ["fotos/foto1.jpg", "fotos/foto2.jpg"];
 
         const App = () => {
@@ -162,7 +162,6 @@
           const musicaRef = useRef(null);
           const rsvpRef = useRef(null);
 
-          // Cambio de fotos de fondo
           useEffect(() => {
             if (!isOpened) return;
             const interval = setInterval(() => {
@@ -171,7 +170,6 @@
             return () => clearInterval(interval);
           }, [isOpened]);
 
-          // Cuenta regresiva
           useEffect(() => {
             const timer = setInterval(() => {
               const now = new Date();
@@ -221,7 +219,6 @@
             <div className="min-h-screen">
               <audio ref={audioRef} src={BG_MUSIC_URL} loop />
 
-              {/* Fondo Dinámico con tus fotos en /fotos/ */}
               <div className="fixed-bg-container">
                 {MILU_PHOTOS.map((src, idx) => (
                   <div 
@@ -271,7 +268,6 @@
 
                   <main className="max-w-4xl mx-auto px-4 space-y-32 md:space-y-64 relative z-10 py-32">
                     
-                    {/* CUENTA REGRESIVA */}
                     <section ref={galaRef} className="scroll-mt-24">
                       <div className="glass p-8 md:p-16 rounded-[4rem] text-center">
                         <h2 className="font-serif text-3xl md:text-5xl italic mb-12 text-[#800020]">Cada segundo cuenta...</h2>
@@ -301,7 +297,6 @@
                       </div>
                     </section>
 
-                    {/* AGRADECIMIENTO */}
                     <section className="text-center px-6">
                         <div className="max-w-2xl mx-auto glass p-10 md:p-20 rounded-[4rem] italic">
                             <h2 className="font-cursive text-6xl text-[#800020] mb-8">Gracias por venir</h2>
@@ -314,7 +309,6 @@
                         </div>
                     </section>
 
-                    {/* SPOTIFY */}
                     <section ref={musicaRef} className="scroll-mt-24">
                       <div className="glass p-8 md:p-12 rounded-[4rem]">
                         <div className="text-center mb-12"><h2 className="font-serif text-4xl md:text-6xl italic text-[#800020]">La Música</h2><p className="text-[#b8860b] font-bold uppercase text-[10px] tracking-widest mt-2 italic">¿Qué vamos a bailar?</p></div>
@@ -329,7 +323,6 @@
                       </div>
                     </section>
 
-                    {/* CONFIRMACIÓN Y REGALO */}
                     <section ref={rsvpRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-40">
                       <div className="glass p-10 rounded-[4rem] text-center flex flex-col justify-between h-[500px]">
                         <div>
