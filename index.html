@@ -27,7 +27,7 @@
             animation: {
               'reveal': 'reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               'fade-in': 'fadeIn 1.5s ease-out forwards',
-              'ken-burns': 'kenBurns 20s linear infinite alternate',
+              'ken-burns': 'kenBurns 15s ease-in-out infinite alternate',
               'bars': 'soundBars 1.2s ease-in-out infinite',
             },
             keyframes: {
@@ -40,8 +40,8 @@
                 '100%': { opacity: '1' }
               },
               kenBurns: {
-                '0%': { transform: 'scale(1)' },
-                '100%': { transform: 'scale(1.2)' }
+                '0%': { transform: 'scale(1.02)' },
+                '100%': { transform: 'scale(1.1)' }
               },
               soundBars: {
                 '0%, 100%': { height: '4px' },
@@ -71,10 +71,11 @@
             position: absolute;
             inset: 0;
             background-size: cover;
-            background-position: center;
+            /* Priorizamos la parte superior de la foto para que se vea el rostro */
+            background-position: center 15%; 
             opacity: 0;
             transition: opacity 2.5s ease-in-out;
-            filter: opacity(0.35) saturate(0.9);
+            filter: opacity(0.45) saturate(0.95);
         }
 
         .bg-photo.active {
@@ -83,15 +84,15 @@
 
         .stars-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(253, 252, 251, 0.4) 100%);
+            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(253, 252, 251, 0.5) 100%);
             z-index: -5; 
         }
         
         .glass { 
-            background: rgba(255, 255, 255, 0.8); 
-            backdrop-filter: blur(10px); 
+            background: rgba(255, 255, 255, 0.82); 
+            backdrop-filter: blur(12px); 
             border: 1px solid rgba(184, 134, 11, 0.15); 
-            box-shadow: 0 8px 32px rgba(184, 134, 11, 0.05); 
+            box-shadow: 0 8px 32px rgba(184, 134, 11, 0.08); 
         }
 
         .envelope-bg { background: radial-gradient(circle at center, #fdfcfb 0%, #f1e1d2 100%); }
