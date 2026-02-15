@@ -8,11 +8,9 @@
     <meta property="og:description" content="Te invito a celebrar mis 15 años. ¡Una noche inolvidable en Salón My Father!">
     <meta property="og:type" content="website">
     
-    <!-- Scripts de Producción (UMD) -->
+    <!-- Scripts de Producción -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Tailwind & Babel Standalone -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
@@ -25,31 +23,25 @@
             colors: {
               bordeaux: '#800020',
               gold: '#b8860b',
-              pearl: '#fdfcfb',
             },
             animation: {
               'reveal': 'reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               'fade-in': 'fadeIn 1.5s ease-out forwards',
-              'ken-burns': 'kenBurns 12s ease-in-out infinite alternate',
-              'float-slow': 'float 8s ease-in-out infinite',
+              'ken-burns': 'kenBurns 20s linear infinite alternate',
               'bars': 'soundBars 1.2s ease-in-out infinite',
             },
             keyframes: {
               reveal: {
-                '0%': { opacity: '0', transform: 'translateY(40px) scale(0.95)' },
-                '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                '0%': { opacity: '0', transform: 'translateY(30px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
               },
               fadeIn: {
                 '0%': { opacity: '0' },
                 '100%': { opacity: '1' }
               },
-              float: {
-                '0%, 100%': { transform: 'translateY(0) translateX(0)' },
-                '50%': { transform: 'translateY(-20px) translateX(10px)' },
-              },
               kenBurns: {
-                '0%': { transform: 'scale(1.1)' },
-                '100%': { transform: 'scale(1.3)' }
+                '0%': { transform: 'scale(1)' },
+                '100%': { transform: 'scale(1.2)' }
               },
               soundBars: {
                 '0%, 100%': { height: '4px' },
@@ -65,7 +57,6 @@
         .font-cursive { font-family: 'Alex Brush', cursive; }
         .font-serif { font-family: 'Playfair Display', serif; }
         
-        /* Contenedor de Fondos Dinámicos */
         .fixed-bg-container {
             position: fixed;
             top: 0;
@@ -73,7 +64,6 @@
             width: 100%;
             height: 100%;
             z-index: -10;
-            overflow: hidden;
             background-color: #fdfcfb;
         }
 
@@ -83,8 +73,8 @@
             background-size: cover;
             background-position: center;
             opacity: 0;
-            transition: opacity 3s ease-in-out;
-            filter: opacity(0.4) saturate(0.8); /* Efecto semi-transparente */
+            transition: opacity 2.5s ease-in-out;
+            filter: opacity(0.35) saturate(0.9);
         }
 
         .bg-photo.active {
@@ -93,44 +83,21 @@
 
         .stars-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(135deg, rgba(253, 252, 251, 0.4) 0%, rgba(247, 233, 221, 0.5) 100%); 
+            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(253, 252, 251, 0.4) 100%);
             z-index: -5; 
         }
         
-        .particle {
-            position: fixed;
-            background: #b8860b;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.15;
-            filter: blur(1px);
-        }
-
         .glass { 
-            background: rgba(255, 255, 255, 0.75); 
-            backdrop-filter: blur(12px); 
+            background: rgba(255, 255, 255, 0.8); 
+            backdrop-filter: blur(10px); 
             border: 1px solid rgba(184, 134, 11, 0.15); 
-            box-shadow: 0 10px 30px rgba(184, 134, 11, 0.05); 
+            box-shadow: 0 8px 32px rgba(184, 134, 11, 0.05); 
         }
 
         .envelope-bg { background: radial-gradient(circle at center, #fdfcfb 0%, #f1e1d2 100%); }
-        
-        .timeline-line {
-            position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
-            background: linear-gradient(to bottom, transparent, #b8860b33, #b8860b33, transparent);
-            transform: translateX(-50%);
-        }
-
-        @media (max-width: 768px) {
-            .timeline-line { left: 32px; transform: none; }
-        }
     </style>
 </head>
 <body>
-    <div id="fixed-background" class="fixed-bg-container"></div>
-    <div class="stars-overlay"></div>
-    <div id="particles-container"></div>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -145,12 +112,8 @@
             Shirt: "M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.62 1.96V20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5.42a2 2 0 0 0-1.62-1.96z",
             Music: "M9 18V5l12-2v13 M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
             ChevronDown: "M6 9l6 6 6-6",
-            Heart: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z",
             PlusCircle: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 8v8 M8 12h8",
-            VolumeX: "M11 5L6 9H2v6h4l5 4V5z M23 9l-6 6 M17 9l6 6",
-            Utensils: "M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2 M7 2v20 M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3z M19 15v7",
-            Star: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z",
-            Users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+            VolumeX: "M11 5L6 9H2v6h4l5 4V5z M23 9l-6 6 M17 9l6 6"
           };
           return (
             <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -168,19 +131,6 @@
 
         const MILU_PHOTOS = ["foto1.jpg", "foto2.jpg"];
 
-        const TimelineItem = ({ time, title, iconName, side }) => (
-          <div className={`relative flex items-center justify-between mb-16 w-full ${side === 'left' ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
-            <div className="hidden md:block w-[45%]" />
-            <div className="z-10 flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full bg-white border-2 border-[#b8860b]/30 text-[#800020] shadow-xl shrink-0">
-              <Icon name={iconName} size={window.innerWidth < 768 ? 20 : 28} />
-            </div>
-            <div className={`w-full md:w-[45%] pl-16 md:pl-0 ${side === 'left' ? 'md:text-right' : 'md:text-left'}`}>
-              <span className="font-serif text-[#b8860b] text-sm md:text-lg font-bold tracking-widest">{time}</span>
-              <h4 className="font-serif text-xl md:text-4xl text-[#800020] mt-1 italic">{title}</h4>
-            </div>
-          </div>
-        );
-
         const App = () => {
           const [isOpened, setIsOpened] = useState(false);
           const [envelopeClosing, setEnvelopeClosing] = useState(false);
@@ -196,48 +146,16 @@
           const musicaRef = useRef(null);
           const rsvpRef = useRef(null);
 
-          // Inicializar efectos visuales
-          useEffect(() => {
-            const container = document.getElementById('particles-container');
-            const bgContainer = document.getElementById('fixed-background');
-            
-            if (container) {
-                container.innerHTML = '';
-                for(let i = 0; i < 20; i++) {
-                    const p = document.createElement('div');
-                    p.className = 'particle';
-                    const size = Math.random() * 5 + 2;
-                    p.style.width = `${size}px`; p.style.height = `${size}px`;
-                    p.style.left = `${Math.random() * 100}vw`; p.style.top = `${Math.random() * 100}vh`;
-                    p.style.animation = `float-slow ${Math.random() * 10 + 10}s linear infinite`;
-                    container.appendChild(p);
-                }
-            }
-
-            if (bgContainer) {
-                bgContainer.innerHTML = '';
-                MILU_PHOTOS.forEach((src, idx) => {
-                    const div = document.createElement('div');
-                    div.className = `bg-photo ${idx === 0 ? 'active' : ''} animate-ken-burns`;
-                    div.style.backgroundImage = `url(${src})`;
-                    div.id = `bg-photo-${idx}`;
-                    bgContainer.appendChild(div);
-                });
-            }
-          }, []);
-
-          // Rotación de Fotos
+          // Cambio de fotos de fondo
           useEffect(() => {
             if (!isOpened) return;
             const interval = setInterval(() => {
-                const nextIndex = (bgIndex + 1) % MILU_PHOTOS.length;
-                document.getElementById(`bg-photo-${bgIndex}`).classList.remove('active');
-                document.getElementById(`bg-photo-${nextIndex}`).classList.add('active');
-                setBgIndex(nextIndex);
+              setBgIndex(prev => (prev + 1) % MILU_PHOTOS.length);
             }, 8000);
             return () => clearInterval(interval);
-          }, [isOpened, bgIndex]);
+          }, [isOpened]);
 
+          // Cuenta regresiva
           useEffect(() => {
             const timer = setInterval(() => {
               const now = new Date();
@@ -265,7 +183,7 @@
                   vol += 0.02;
                   if (vol >= 0.3) { audio.volume = 0.3; clearInterval(fadeIn); } else { audio.volume = vol; }
                 }, 100);
-              }).catch(() => console.log("Interacción requerida para audio"));
+              }).catch(e => console.log("Audio play blocked", e));
             }
             setTimeout(() => setIsOpened(true), 1100);
           };
@@ -287,10 +205,22 @@
             <div className="min-h-screen">
               <audio ref={audioRef} src={BG_MUSIC_URL} loop />
 
+              {/* Fondo Dinámico */}
+              <div className="fixed-bg-container">
+                {MILU_PHOTOS.map((src, idx) => (
+                  <div 
+                    key={idx}
+                    className={`bg-photo animate-ken-burns ${bgIndex === idx ? 'active' : ''}`}
+                    style={{ backgroundImage: `url('${src}')` }}
+                  />
+                ))}
+              </div>
+              <div className="stars-overlay"></div>
+
               {!isOpened ? (
                 <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center envelope-bg transition-all duration-1000">
                   <div className={`transition-all duration-1000 ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl' : 'scale-100'}`}>
-                    <p className="text-[#b8860b] uppercase tracking-[0.8em] text-[10px] mb-8 font-bold italic opacity-70">Para alguien muy especial</p>
+                    <p className="text-[#b8860b] uppercase tracking-[0.8em] text-[10px] mb-8 font-bold italic opacity-70">Invitación Especial</p>
                     <h1 className="font-cursive text-8xl md:text-[12rem] text-[#800020] mb-12 drop-shadow-lg">Milagros</h1>
                     <div className="relative group cursor-pointer mx-auto" onClick={handleOpenEnvelope}>
                       <div className="absolute inset-0 bg-[#b8860b] rounded-full animate-pulse blur-3xl opacity-30 group-hover:opacity-60 transition-opacity"></div>
@@ -298,7 +228,7 @@
                         <span className="font-serif font-bold text-white text-6xl md:text-9xl">M</span>
                       </button>
                     </div>
-                    <p className="mt-16 text-[#800020]/50 text-[10px] uppercase tracking-[0.5em] font-bold">Toca para descubrir</p>
+                    <p className="mt-16 text-[#800020]/50 text-[10px] uppercase tracking-[0.5em] font-bold">Pulsa para abrir</p>
                   </div>
                 </div>
               ) : (
@@ -352,21 +282,6 @@
                             <iframe src={MAPS_EMBED} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000" loading="lazy"></iframe>
                           </div>
                         </div>
-                      </div>
-                    </section>
-
-                    {/* CRONOGRAMA */}
-                    <section className="relative px-4">
-                      <div className="text-center mb-24">
-                        <h2 className="font-serif text-5xl md:text-7xl italic text-[#800020]">El Cronograma</h2>
-                      </div>
-                      <div className="relative max-w-4xl mx-auto">
-                        <div className="timeline-line" />
-                        <TimelineItem time="21:00" title="Recepción" iconName="Users" side="left" />
-                        <TimelineItem time="22:30" title="Entrada" iconName="Star" side="right" />
-                        <TimelineItem time="23:30" title="Cena de Gala" iconName="Utensils" side="left" />
-                        <TimelineItem time="01:00" title="El Vals" iconName="Heart" side="right" />
-                        <TimelineItem time="01:30" title="Fiesta" iconName="Music" side="left" />
                       </div>
                     </section>
 
