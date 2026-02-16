@@ -27,7 +27,7 @@
             animation: {
               'reveal': 'reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               'fade-in': 'fadeIn 1.5s ease-out forwards',
-              'ken-burns': 'kenBurns 25s ease-in-out infinite alternate',
+              'ken-burns': 'kenBurns 30s ease-in-out infinite alternate',
               'bars': 'soundBars 1.2s ease-in-out infinite',
             },
             keyframes: {
@@ -40,8 +40,8 @@
                 '100%': { opacity: '1' }
               },
               kenBurns: {
-                '0%': { transform: 'scale(1)' },
-                '100%': { transform: 'scale(1.15)' }
+                '0%': { transform: 'scale(1.0)' },
+                '100%': { transform: 'scale(1.2)' }
               },
               soundBars: {
                 '0%, 100%': { height: '4px' },
@@ -53,7 +53,7 @@
       }
     </script>
     <style>
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: #fdfcfb; color: #1a1a1a; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: #000; color: #1a1a1a; overflow-x: hidden; }
         .font-cursive { font-family: 'Alex Brush', cursive; }
         .font-serif { font-family: 'Playfair Display', serif; }
         
@@ -61,47 +61,55 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             z-index: -10;
-            background-color: #fdfcfb;
+            overflow: hidden;
             pointer-events: none;
         }
 
         .bg-photo {
             position: absolute;
-            /* Ahora ocupan exactamente el 100% del contenedor */
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            /* 'cover' asegura que se llene todo el fondo recortando lo necesario */
-            background-size: cover; 
+            /* 'cover' es vital aquí para llenar todo sin importar la proporción */
+            background-size: cover !important; 
             background-repeat: no-repeat;
             background-position: center center;
             opacity: 0;
-            transition: opacity 2.5s ease-in-out;
-            filter: saturate(1.05) brightness(0.95); /* Un pelín más oscuras para legibilidad */
+            transition: opacity 3s ease-in-out;
+            filter: saturate(1.1) brightness(0.85); /* Ajuste para que el texto resalte */
         }
 
         .bg-photo.active {
-            opacity: 0.85; 
+            opacity: 1; 
         }
 
+        /* Overlay para asegurar que el texto sea legible sobre cualquier foto */
         .stars-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            /* Gradiente más suave para que la foto luzca en todo su esplendor */
-            background: linear-gradient(180deg, rgba(253, 252, 251, 0.4) 0%, rgba(253, 252, 251, 0.95) 100%);
+            background: linear-gradient(180deg, 
+                rgba(0,0,0,0.3) 0%, 
+                transparent 30%, 
+                transparent 70%, 
+                rgba(253, 252, 251, 0.98) 95%
+            );
             z-index: -5; 
             pointer-events: none;
         }
         
         .glass { 
-            background: rgba(255, 255, 255, 0.94); 
-            backdrop-filter: blur(20px); 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(15px); 
             border: 1px solid rgba(184, 134, 11, 0.1); 
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.05); 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); 
         }
 
-        .envelope-bg { background: radial-gradient(circle at center, #fdfcfb 0%, #f1e1d2 100%); }
+        .text-shadow-elegant {
+            text-shadow: 0 2px 15px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -222,7 +230,7 @@
               <div className="stars-overlay"></div>
 
               {!isOpened ? (
-                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center envelope-bg transition-all duration-1000">
+                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-white transition-all duration-1000">
                   <div className={`transition-all duration-1000 ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl' : 'scale-100'}`}>
                     <p className="text-[#b8860b] uppercase tracking-[0.8em] text-[10px] mb-8 font-bold italic opacity-70">Invitación Especial</p>
                     <h1 className="font-cursive text-8xl md:text-[12rem] text-[#800020] mb-12 drop-shadow-lg">Milagros</h1>
@@ -249,11 +257,11 @@
 
                   <header className="h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
                     <div className="z-20 animate-reveal">
-                      <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-8 font-bold drop-shadow-sm">Mis XV Años</p>
-                      <h1 className="font-cursive text-7xl md:text-[15rem] text-[#800020] leading-none mb-4 drop-shadow-md">Milagros</h1>
+                      <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-8 font-bold drop-shadow-sm text-shadow-elegant">Mis XV Años</p>
+                      <h1 className="font-cursive text-8xl md:text-[16rem] text-[#800020] leading-none mb-4 drop-shadow-2xl">Milagros</h1>
                       <div className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto my-14"></div>
-                      <p className="text-gray-700 font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium">Sábado 22 de Agosto • 2026</p>
-                      <div className="mt-24 animate-bounce opacity-40"><Icon name="ChevronDown" size={32} className="text-[#800020]" /></div>
+                      <p className="text-white md:text-gray-800 font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium text-shadow-elegant">Sábado 22 de Agosto • 2026</p>
+                      <div className="mt-24 animate-bounce opacity-40"><Icon name="ChevronDown" size={32} className="text-white md:text-[#800020]" /></div>
                     </div>
                   </header>
 
