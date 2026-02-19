@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis XV - Milagros Cabrera</title>
-    <meta property="og:title" content="Mis XV - Milagros Cabrera">
-    <meta property="og:description" content="Te invito a celebrar mis 15 años. ¡Una noche inolvidable en Salón My Father!">
-    <meta property="og:type" content="website">
     
     <!-- Scripts de Producción -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -14,33 +11,45 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              bordeaux: '#800020',
+              bordeaux: '#3d0202',
               gold: '#b8860b',
+              goldLight: '#d4af37',
+              ivory: '#fdfcfb',
             },
             animation: {
-              'reveal': 'reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'fade-in': 'fadeIn 1.5s ease-out forwards',
-              'ken-burns': 'kenBurns 20s ease-in-out infinite alternate',
+              'reveal': 'reveal 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards',
+              'fade-in': 'fadeIn 2.5s ease-out forwards',
+              'ken-burns': 'kenBurns 30s ease-in-out infinite alternate',
+              'float': 'float 5s ease-in-out infinite',
+              'shimmer': 'shimmer 2s infinite linear',
             },
             keyframes: {
               reveal: {
-                '0%': { opacity: '0', transform: 'translateY(30px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
+                '0%': { opacity: '0', transform: 'scale(0.95) translateY(50px)', filter: 'blur(10px)' },
+                '100%': { opacity: '1', transform: 'scale(1) translateY(0)', filter: 'blur(0px)' },
               },
               fadeIn: {
                 '0%': { opacity: '0' },
                 '100%': { opacity: '1' }
               },
               kenBurns: {
-                '0%': { transform: 'scale(1.0)' },
-                '100%': { transform: 'scale(1.1)' }
+                '0%': { transform: 'scale(1) rotate(0deg)' },
+                '100%': { transform: 'scale(1.18) rotate(1deg)' }
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-15px)' }
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' }
               }
             }
           }
@@ -48,7 +57,7 @@
       }
     </script>
     <style>
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: #0a0a0a; color: #1a1a1a; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: #050505; color: #1a1a1a; overflow-x: hidden; }
         .font-cursive { font-family: 'Alex Brush', cursive; }
         .font-serif { font-family: 'Playfair Display', serif; }
         
@@ -62,24 +71,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events: none;
-            background: radial-gradient(circle at center, #1a0005 0%, #000 100%);
+            background: #000;
         }
 
         .bg-photo-wrapper {
             position: relative;
-            width: 50vw;
-            height: 50vh;
+            width: 70vw;
+            height: 75vh;
             overflow: hidden;
-            border-radius: 1rem;
-            box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(184, 134, 11, 0.2);
+            border-radius: 3rem;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8), 0 0 30px rgba(184, 134, 11, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         @media (max-width: 768px) {
-            .bg-photo-wrapper {
-                width: 80vw;
-                height: 40vh;
-            }
+            .bg-photo-wrapper { width: 95vw; height: 65vh; border-radius: 2rem; }
         }
 
         .bg-photo {
@@ -88,40 +94,60 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover !important; 
-            background-repeat: no-repeat;
-            background-position: center center;
+            background-size: cover;
+            background-position: center;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
-            filter: saturate(1.1) brightness(0.9);
+            transition: opacity 3s ease-in-out;
+            filter: contrast(1.1) brightness(0.85);
         }
 
-        .bg-photo.active {
-            opacity: 1; 
-        }
+        .bg-photo.active { opacity: 1; }
 
-        .stars-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.4) 100%);
-            z-index: -5; 
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #fcf6ba 0%, transparent 80%);
+            border-radius: 50%;
             pointer-events: none;
+            filter: blur(1px);
         }
         
         .glass { 
-            background: rgba(255, 255, 255, 0.96); 
+            background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(15px); 
-            border: 1px solid rgba(184, 134, 11, 0.1); 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
+            border: 1px solid rgba(184, 134, 11, 0.15); 
         }
 
-        .text-shadow-elegant {
-            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        .gold-shimmer {
+            background: linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
         }
-        
-        /* Asegurar que el contenido principal sea legible sobre el fondo oscuro */
-        .content-section {
-            background-color: #fdfcfb;
-            color: #1a1a1a;
+
+        .gold-button {
+            background: linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(138, 107, 13, 0.3);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+        }
+
+        .gold-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(138, 107, 13, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+            color: #b8860b;
+        }
+        .nav-item:hover {
+            transform: scale(1.2);
+            color: #3d0202;
         }
     </style>
 </head>
@@ -135,213 +161,26 @@
           const paths = {
             MapPin: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
             Calendar: "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18",
-            Clock: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 6v6l4 2",
-            CheckCircle: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
-            Shirt: "M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.62 1.96V20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5.42a2 2 0 0 0-1.62-1.96z",
             Music: "M9 18V5l12-2v13 M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
-            ChevronDown: "M6 9l6 6 6-6",
-            PlusCircle: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 8v8 M8 12h8",
-            VolumeX: "M11 5L6 9H2v6h4l5 4V5z M23 9l-6 6 M17 9l6 6"
+            CheckCircle: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
+            Shirt: "M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.62 1.96V20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5.42a2 2 0 0 0-1.62-1.96z"
           };
           return (
-            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
               <path d={paths[name] || ""} />
             </svg>
           );
         };
 
         const EVENT_DATE = new Date('2026-08-22T21:00:00'); 
-        const WHATSAPP_NUMBER = "59895239386"; 
-        const MAPS_EMBED = "https://maps.google.com/maps?q=Salón%20My+Father%2C+Granaderos+3875%2C+Montevideo&t=&z=17&ie=UTF8&iwloc=&output=embed";
-        const SPOTIFY_PLAYLIST_URL = "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn";
-        const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0";
-
-        // Asegúrate de que la carpeta 'fotos' exista en GitHub y los nombres sean exactos (minúsculas)
-        const MILU_PHOTOS = ["./fotos/foto1.jpg", "./fotos/foto2.jpg"];
-
-        const App = () => {
-          const [isOpened, setIsOpened] = useState(false);
-          const [envelopeClosing, setEnvelopeClosing] = useState(false);
-          const [timeLeft, setTimeLeft] = useState({ D: 0, H: 0, M: 0, S: 0 });
-          const [isConfirmed, setIsConfirmed] = useState(false);
-          const [guestName, setGuestName] = useState('');
-          const [bgIndex, setBgIndex] = useState(0);
-          const [copiedAbitab, setCopiedAbitab] = useState(false);
-          
-          const galaRef = useRef(null);
-          const musicaRef = useRef(null);
-          const rsvpRef = useRef(null);
-
-          useEffect(() => {
-            if (!isOpened) return;
-            const interval = setInterval(() => {
-              setBgIndex(prev => (prev + 1) % MILU_PHOTOS.length);
-            }, 8000);
-            return () => clearInterval(interval);
-          }, [isOpened]);
-
-          useEffect(() => {
-            const timer = setInterval(() => {
-              const now = new Date();
-              const diff = EVENT_DATE.getTime() - now.getTime();
-              if (diff > 0) {
-                setTimeLeft({
-                  D: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                  H: Math.floor((diff / (1000 * 60 * 60)) % 24),
-                  M: Math.floor((diff / 1000 / 60) % 60),
-                  S: Math.floor((diff / 1000) % 60),
-                });
-              }
-            }, 1000);
-            return () => clearInterval(timer);
-          }, []);
-
-          const handleOpenEnvelope = () => {
-            setEnvelopeClosing(true);
-            setTimeout(() => setIsOpened(true), 1100);
-          };
-
-          const scrollTo = (ref) => {
-            if (ref?.current) {
-              window.scrollTo({ top: ref.current.offsetTop - 80, behavior: 'smooth' });
-            }
-          };
-
-          return (
-            <div className="min-h-screen">
-              <div className="fixed-bg-container">
-                <div className="bg-photo-wrapper">
-                  {MILU_PHOTOS.map((src, idx) => (
-                    <div 
-                      key={idx}
-                      className={`bg-photo animate-ken-burns ${bgIndex === idx ? 'active' : ''}`}
-                      style={{ backgroundImage: `url('${src}')` }}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="stars-overlay"></div>
-
-              {!isOpened ? (
-                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-[#fdfcfb] transition-all duration-1000">
-                  <div className={`transition-all duration-1000 ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl' : 'scale-100'}`}>
-                    <p className="text-[#b8860b] uppercase tracking-[0.8em] text-[10px] mb-8 font-bold italic opacity-70">Invitación Especial</p>
-                    <h1 className="font-cursive text-8xl md:text-[12rem] text-[#800020] mb-12 drop-shadow-lg">Milagros</h1>
-                    <div className="relative group cursor-pointer mx-auto" onClick={handleOpenEnvelope}>
-                      <div className="absolute inset-0 bg-[#b8860b] rounded-full animate-pulse blur-3xl opacity-30 group-hover:opacity-60 transition-opacity"></div>
-                      <button className="relative w-32 h-32 md:w-48 md:h-48 bg-gradient-to-tr from-[#8a6b0d] via-[#b8860b] to-[#d4af37] rounded-full flex items-center justify-center border-8 border-white shadow-2xl transition-transform group-hover:scale-110 active:scale-95 duration-500">
-                        <span className="font-serif font-bold text-white text-6xl md:text-9xl">M</span>
-                      </button>
-                    </div>
-                    <p className="mt-16 text-[#800020]/50 text-[10px] uppercase tracking-[0.5em] font-bold">Pulsa para abrir</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="animate-fade-in">
-                  
-                  <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-8 py-5 flex gap-10 items-center shadow-2xl bg-white/95 border border-[#b8860b]/20">
-                    <button onClick={() => scrollTo(galaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="Calendar" size={22}/></button>
-                    <button onClick={() => scrollTo(musicaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="Music" size={22}/></button>
-                    <button onClick={() => scrollTo(rsvpRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="CheckCircle" size={22}/></button>
-                  </nav>
-
-                  <header className="h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
-                    <div className="z-20 animate-reveal">
-                      <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-8 font-bold text-shadow-elegant">Mis XV Años</p>
-                      <h1 className="font-cursive text-8xl md:text-[16rem] text-white leading-none mb-4 drop-shadow-2xl">Milagros</h1>
-                      <div className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto my-14"></div>
-                      <p className="text-[#b8860b] font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium text-shadow-elegant">Sábado 22 de Agosto • 2026</p>
-                      <div className="mt-24 animate-bounce opacity-40"><Icon name="ChevronDown" size={32} className="text-white" /></div>
-                    </div>
-                  </header>
-
-                  <main className="max-w-4xl mx-auto px-4 space-y-32 md:space-y-64 relative z-10 py-32">
-                    
-                    <section ref={galaRef} className="scroll-mt-24">
-                      <div className="glass p-8 md:p-16 rounded-[4rem] text-center content-section">
-                        <h2
-        .stars-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            /* Gradiente que oscurece los bordes para centrar la vista en el 50% central */
-            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.4) 100%);
-            z-index: -5; 
-            pointer-events: none;
-        }
-        
-        .glass { 
-            background: rgba(255, 255, 255, 0.96); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(184, 134, 11, 0.1); 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
-        }
-
-        .text-shadow-elegant {
-            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
-        
-        /* Asegurar que el contenido principal sea legible sobre el fondo oscuro */
-        .content-section {
-            background-color: #fdfcfb;
-            color: #1a1a1a;
-        }
-    </style>
-</head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        const Icon = ({ name, size = 24, className = "" }) => {
-          const paths = {
-            MapPin: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
-            Calendar: "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18",
-            Clock: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 6v6l4 2",
-            CheckCircle: "M22 11.08V12a10 10 0 1 1-5.93-9.14 M22 4L12 14.01l-3-3",
-            Shirt: "M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.62 1.96V20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5.42a2 2 0 0 0-1.62-1.96z",
-            Music: "M9 18V5l12-2v13 M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M18 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
-            ChevronDown: "M6 9l6 6 6-6",
-            PlusCircle: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 8v8 M8 12h8",
-            VolumeX: "M11 5L6 9H2v6h4l5 4V5z M23 9l-6 6 M17 9l6 6"
-          };
-          return (
-            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-              <path d={paths[name] || ""} />
-            </svg>
-          );
-        };
-
-        const EVENT_DATE = new Date('2026-08-22T21:00:00'); 
-        const WHATSAPP_NUMBER = "59895239386"; 
-        const MAPS_EMBED = "https://maps.google.com/maps?q=Salón%20My+Father%2C+Granaderos+3875%2C+Montevideo&t=&z=17&ie=UTF8&iwloc=&output=embed";
-        const SPOTIFY_PLAYLIST_URL = "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn";
-        const SPOTIFY_EMBED_URL = "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0";
-        const BG_MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; 
-
         const MILU_PHOTOS = ["fotos/foto1.jpg", "fotos/foto2.jpg"];
 
         const App = () => {
           const [isOpened, setIsOpened] = useState(false);
           const [envelopeClosing, setEnvelopeClosing] = useState(false);
-          const [timeLeft, setTimeLeft] = useState({ D: 0, H: 0, M: 0, S: 0 });
-          const [isConfirmed, setIsConfirmed] = useState(false);
-          const [guestName, setGuestName] = useState('');
-          const [isMuted, setIsMuted] = useState(false);
           const [bgIndex, setBgIndex] = useState(0);
-          const [copiedAbitab, setCopiedAbitab] = useState(false);
-          
-          const audioRef = useRef(null);
-          const galaRef = useRef(null);
-          const musicaRef = useRef(null);
-          const rsvpRef = useRef(null);
-
-          useEffect(() => {
-            if (!isOpened) return;
-            const interval = setInterval(() => {
-              setBgIndex(prev => (prev + 1) % MILU_PHOTOS.length);
-            }, 8000);
-            return () => clearInterval(interval);
-          }, [isOpened]);
+          const [timeLeft, setTimeLeft] = useState({ D: 0, H: 0, M: 0, S: 0 });
+          const [copied, setCopied] = useState(false);
 
           useEffect(() => {
             const timer = setInterval(() => {
@@ -359,175 +198,183 @@
             return () => clearInterval(timer);
           }, []);
 
-          const handleOpenEnvelope = () => {
+          useEffect(() => {
+            if (!isOpened) return;
+            const interval = setInterval(() => {
+              setBgIndex(prev => (prev + 1) % MILU_PHOTOS.length);
+            }, 9000);
+            return () => clearInterval(interval);
+          }, [isOpened]);
+
+          const handleOpen = () => {
             setEnvelopeClosing(true);
-            const audio = audioRef.current;
-            if (audio) {
-              audio.volume = 0;
-              audio.play().then(() => {
-                let vol = 0;
-                const fadeIn = setInterval(() => {
-                  vol += 0.02;
-                  if (vol >= 0.3) { audio.volume = 0.3; clearInterval(fadeIn); } else { audio.volume = vol; }
-                }, 100);
-              }).catch(e => console.log("Audio play blocked", e));
-            }
-            setTimeout(() => setIsOpened(true), 1100);
-          };
-
-          const toggleMute = () => {
-            if (audioRef.current) {
-              audioRef.current.muted = !audioRef.current.muted;
-              setIsMuted(audioRef.current.muted);
-            }
-          };
-
-          const scrollTo = (ref) => {
-            if (ref?.current) {
-              window.scrollTo({ top: ref.current.offsetTop - 80, behavior: 'smooth' });
-            }
+            setTimeout(() => setIsOpened(true), 1500);
           };
 
           return (
-            <div className="min-h-screen">
-              <audio ref={audioRef} src={BG_MUSIC_URL} loop />
-
-              <div className="fixed-bg-container">
-                <div className="bg-photo-wrapper">
-                  {MILU_PHOTOS.map((src, idx) => (
-                    <div 
-                      key={idx}
-                      className={`bg-photo animate-ken-burns ${bgIndex === idx ? 'active' : ''}`}
-                      style={{ backgroundImage: `url('${src}')` }}
-                    />
-                  ))}
-                </div>
+            <div className="min-h-screen selection:bg-goldLight/30">
+              {/* Gold Dust Overlay */}
+              <div className="fixed inset-0 pointer-events-none z-[-5] overflow-hidden">
+                {[...Array(50)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="particle"
+                    style={{
+                      width: Math.random() * 4 + 1 + 'px',
+                      height: Math.random() * 4 + 1 + 'px',
+                      left: Math.random() * 100 + '%',
+                      top: Math.random() * 100 + '%',
+                      opacity: Math.random() * 0.6,
+                      animation: `float ${Math.random() * 10 + 5}s linear infinite`,
+                      animationDelay: `${Math.random() * 10}s`
+                    }}
+                  />
+                ))}
               </div>
-              <div className="stars-overlay"></div>
 
               {!isOpened ? (
-                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-[#fdfcfb] transition-all duration-1000">
-                  <div className={`transition-all duration-1000 ${envelopeClosing ? 'scale-[2.5] opacity-0 blur-2xl' : 'scale-100'}`}>
-                    <p className="text-[#b8860b] uppercase tracking-[0.8em] text-[10px] mb-8 font-bold italic opacity-70">Invitación Especial</p>
-                    <h1 className="font-cursive text-8xl md:text-[12rem] text-[#800020] mb-12 drop-shadow-lg">Milagros</h1>
-                    <div className="relative group cursor-pointer mx-auto" onClick={handleOpenEnvelope}>
-                      <div className="absolute inset-0 bg-[#b8860b] rounded-full animate-pulse blur-3xl opacity-30 group-hover:opacity-60 transition-opacity"></div>
-                      <button className="relative w-32 h-32 md:w-48 md:h-48 bg-gradient-to-tr from-[#8a6b0d] via-[#b8860b] to-[#d4af37] rounded-full flex items-center justify-center border-8 border-white shadow-2xl transition-transform group-hover:scale-110 active:scale-95 duration-500">
-                        <span className="font-serif font-bold text-white text-6xl md:text-9xl">M</span>
-                      </button>
+                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-ivory overflow-hidden">
+                  <div className={`transition-all duration-[1500ms] ease-in-out ${envelopeClosing ? 'scale-[5] opacity-0 blur-3xl' : 'scale-100'}`}>
+                    <p className="text-gold uppercase tracking-[1em] text-[10px] mb-10 font-bold italic opacity-60">Invitación Especial</p>
+                    <h1 className="font-cursive text-9xl md:text-[14rem] text-bordeaux mb-16 drop-shadow-2xl">Milagros</h1>
+                    <div className="relative group cursor-pointer" onClick={handleOpen}>
+                        <div className="absolute inset-0 bg-goldLight rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse"></div>
+                        <button className="relative w-36 h-36 md:w-56 md:h-56 gold-button rounded-full border-8 border-white flex items-center justify-center text-6xl md:text-9xl font-serif italic">
+                          M
+                        </button>
                     </div>
-                    <p className="mt-16 text-[#800020]/50 text-[10px] uppercase tracking-[0.5em] font-bold">Pulsa para abrir</p>
+                    <p className="mt-16 text-bordeaux/40 text-[10px] uppercase tracking-[0.6em] font-bold animate-bounce">Toca para descubrir</p>
                   </div>
                 </div>
               ) : (
-                <div className="animate-fade-in">
-                  <button onClick={toggleMute} className="fixed top-6 right-6 z-[1000] glass w-14 h-14 rounded-full flex items-center justify-center text-[#800020] hover:scale-110 transition-all shadow-xl bg-white/95">
-                    {isMuted ? <Icon name="VolumeX" size={24} /> : <div className="flex items-end gap-[3px] h-4"><div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0s'}}></div><div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.2s'}}></div><div className="w-[3px] bg-[#800020] animate-bars" style={{animationDelay: '0.4s'}}></div></div>}
-                  </button>
+                <div className="animate-fade-in relative z-10">
+                  <div className="fixed-bg-container">
+                    <div className="bg-photo-wrapper">
+                      {MILU_PHOTOS.map((src, idx) => (
+                        <div 
+                          key={idx}
+                          className={`bg-photo animate-ken-burns ${bgIndex === idx ? 'active' : ''}`}
+                          style={{ backgroundImage: `url('${src}')` }}
+                        />
+                      ))}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+                    </div>
+                  </div>
 
-                  <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] glass rounded-full px-8 py-5 flex gap-10 items-center shadow-2xl bg-white/95 border border-[#b8860b]/20">
-                    <button onClick={() => scrollTo(galaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="Calendar" size={22}/></button>
-                    <button onClick={() => scrollTo(musicaRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="Music" size={22}/></button>
-                    <button onClick={() => scrollTo(rsvpRef)} className="text-[#b8860b] hover:text-[#800020] transition-all hover:scale-125"><Icon name="CheckCircle" size={22}/></button>
+                  <nav className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] glass rounded-full px-10 py-5 flex gap-12 items-center shadow-2xl border border-goldLight/20">
+                    <a href="#detalles" className="nav-item"><Icon name="Calendar" size={24} /></a>
+                    <a href="#ubicacion" className="nav-item"><Icon name="MapPin" size={24} /></a>
+                    <a href="#confirmar" className="nav-item"><Icon name="CheckCircle" size={24} /></a>
                   </nav>
 
-                  <header className="h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
-                    <div className="z-20 animate-reveal">
-                      <p className="text-[#b8860b] uppercase tracking-[1em] text-xs md:text-2xl mb-8 font-bold text-shadow-elegant">Mis XV Años</p>
-                      <h1 className="font-cursive text-8xl md:text-[16rem] text-white leading-none mb-4 drop-shadow-2xl">Milagros</h1>
-                      <div className="h-px w-32 md:w-64 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto my-14"></div>
-                      <p className="text-[#b8860b] font-serif italic text-xl md:text-4xl tracking-widest uppercase font-medium text-shadow-elegant">Sábado 22 de Agosto • 2026</p>
-                      <div className="mt-24 animate-bounce opacity-40"><Icon name="ChevronDown" size={32} className="text-white" /></div>
+                  <header className="h-screen flex flex-col items-center justify-center text-center px-4">
+                    <div className="animate-reveal">
+                      <p className="text-goldLight uppercase tracking-[1.8em] text-xs md:text-2xl mb-8 font-bold drop-shadow-lg">Mis XV Años</p>
+                      <h2 className="font-cursive text-9xl md:text-[18rem] text-white leading-none mb-6 drop-shadow-2xl">Milagros</h2>
+                      <div className="w-64 md:w-96 h-px bg-gradient-to-r from-transparent via-gold to-transparent mx-auto my-16 opacity-60"></div>
+                      <p className="font-serif italic text-2xl md:text-5xl text-goldLight tracking-[0.3em] drop-shadow-lg uppercase">Sábado 22 de Agosto • 2026</p>
                     </div>
                   </header>
 
-                  <main className="max-w-4xl mx-auto px-4 space-y-32 md:space-y-64 relative z-10 py-32">
+                  <main className="max-w-5xl mx-auto px-4 pb-60 space-y-40 md:space-y-64">
                     
-                    <section ref={galaRef} className="scroll-mt-24">
-                      <div className="glass p-8 md:p-16 rounded-[4rem] text-center content-section">
-                        <h2 className="font-serif text-3xl md:text-5xl italic mb-12 text-[#800020]">Cada segundo cuenta...</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {Object.entries(timeLeft).map(([label, val]) => (
-                            <div key={label} className="bg-white/60 rounded-3xl p-6 border border-[#b8860b]/10 shadow-sm flex flex-col items-center">
-                              <span className="text-3xl md:text-5xl font-light text-[#800020] tabular-nums">{val}</span>
-                              <span className="text-[10px] uppercase text-[#b8860b] tracking-[0.2em] font-bold mt-2">{label === 'D' ? 'Días' : label === 'H' ? 'Horas' : label === 'M' ? 'Min' : 'Seg'}</span>
-                            </div>
-                          ))}
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 border-y border-[#b8860b]/10 py-12 mt-16">
-                          <div className="flex items-center justify-center gap-6"><Icon name="Clock" size={32} className="text-[#800020]"/><h3 className="font-serif text-2xl italic text-[#800020]">La Fiesta: <span className="text-gray-600 not-italic font-sans text-xl ml-2">21:00 hs.</span></h3></div>
-                          <div className="flex items-center justify-center gap-6"><Icon name="Shirt" size={32} className="text-[#800020]"/><h3 className="font-serif text-2xl italic text-[#800020]">Vestimenta: <span className="text-[#b8860b] not-italic font-sans text-xs tracking-widest uppercase font-bold ml-2">Elegante / Gala</span></h3></div>
-                        </div>
-
-                        <div className="mt-16">
-                          <div className="flex items-center justify-between mb-8 flex-wrap gap-4 px-4">
-                            <div className="flex items-center gap-4"><Icon name="MapPin" size={32} className="text-[#800020]" /><div className="font-serif italic text-2xl md:text-3xl text-[#800020]">Salón My Father</div></div>
-                            <button onClick={() => window.open(`https://maps.app.goo.gl/uXq5HCuF54u8DqJj8`, '_blank')} className="bg-[#800020] text-white px-8 py-3 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-lg hover:bg-[#b8860b] transition-all">Ver ubicación</button>
+                    {/* Countdown */}
+                    <section id="detalles" className="glass rounded-[4rem] p-12 md:p-24 text-center relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-40"></div>
+                      <h3 className="font-serif italic text-4xl md:text-6xl text-bordeaux mb-16">El tiempo vuela...</h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+                        {Object.entries(timeLeft).map(([label, val]) => (
+                          <div key={label} className="bg-ivory/80 p-8 rounded-[2.5rem] border border-gold/10 shadow-sm">
+                            <div className="text-5xl md:text-8xl font-light text-bordeaux tracking-tighter tabular-nums">{val}</div>
+                            <div className="text-[10px] md:text-xs uppercase text-gold tracking-[0.4em] font-bold mt-4 italic">{label === 'D' ? 'Días' : label === 'H' ? 'Horas' : label === 'M' ? 'Min' : 'Seg'}</div>
                           </div>
-                          <div className="h-[350px] rounded-[3rem] overflow-hidden border-2 border-white shadow-xl bg-gray-100">
-                            <iframe src={MAPS_EMBED} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-1000" loading="lazy"></iframe>
+                        ))}
+                      </div>
+                    </section>
+
+                    {/* Event Info */}
+                    <section id="ubicacion" className="glass rounded-[4rem] p-12 md:p-24 text-center">
+                      <div className="grid md:grid-cols-2 gap-20 items-center">
+                        <div className="text-left space-y-16">
+                          <div className="space-y-6">
+                            <div className="flex items-center gap-6">
+                                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center text-gold"><Icon name="Calendar" size={32} /></div>
+                                <div>
+                                    <h4 className="font-serif text-3xl text-bordeaux italic">La Gran Noche</h4>
+                                    <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">22 de Agosto • 21:00 hs</p>
+                                </div>
+                            </div>
+                          </div>
+                          <div className="space-y-6">
+                            <div className="flex items-center gap-6">
+                                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center text-gold"><Icon name="MapPin" size={32} /></div>
+                                <div>
+                                    <h4 className="font-serif text-3xl text-bordeaux italic">Salón My Father</h4>
+                                    <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">Granaderos 3875, Montevideo</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
+                                className="gold-button w-full py-6 rounded-2xl mt-8"
+                            >
+                                Cómo llegar
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-6 p-8 bg-gold/5 rounded-3xl border border-gold/10">
+                             <Icon name="Shirt" size={32} className="text-gold" />
+                             <div>
+                                <h5 className="font-bold text-[10px] uppercase tracking-[0.3em] text-gold mb-1">Código de Vestimenta</h5>
+                                <p className="font-serif italic text-xl text-bordeaux">Gala / Elegante</p>
+                             </div>
                           </div>
                         </div>
-                      </div>
-                    </section>
-
-                    <section className="text-center px-6">
-                        <div className="max-w-2xl mx-auto glass p-10 md:p-20 rounded-[4rem] italic content-section">
-                            <h2 className="font-cursive text-6xl text-[#800020] mb-8">Gracias por venir</h2>
-                            <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-serif">
-                                "A mis padres por darme la vida y este sueño. 
-                                A mis amigos por cada risa y momento. 
-                                Los espero para vivir la noche más linda de mi vida."
-                            </p>
-                            <div className="mt-10 font-cursive text-4xl text-[#b8860b]">Milu</div>
-                        </div>
-                    </section>
-
-                    <section ref={musicaRef} className="scroll-mt-24">
-                      <div className="glass p-8 md:p-12 rounded-[4rem] content-section">
-                        <div className="text-center mb-12"><h2 className="font-serif text-4xl md:text-6xl italic text-[#800020]">La Música</h2><p className="text-[#b8860b] font-bold uppercase text-[10px] tracking-widest mt-2 italic">¿Qué vamos a bailar?</p></div>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                            <iframe src={SPOTIFY_EMBED_URL} width="100%" height="300" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" className="rounded-[2.5rem] shadow-xl"></iframe>
-                            <div className="bg-white/40 p-8 rounded-[3rem] text-center">
-                                <h3 className="font-serif text-2xl italic text-[#800020] mb-4">Añade tus temas</h3>
-                                <p className="text-gray-600 mb-8 text-sm">Ingresa a la playlist de la fiesta y suma tus canciones favoritas.</p>
-                                <button onClick={() => window.open(SPOTIFY_PLAYLIST_URL, '_blank')} className="w-full bg-[#1DB954] text-white font-bold py-5 rounded-2xl flex items-center justify-center gap-4 shadow-xl hover:scale-105 transition-all"><Icon name="PlusCircle" size={24} className="text-white"/><span className="uppercase tracking-widest text-[10px]">Abrir Spotify</span></button>
-                            </div>
+                        <div className="h-[500px] rounded-[3rem] overflow-hidden border-4 border-white shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000">
+                           <iframe 
+                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3272.775837651817!2d-56.1706!3d-34.8878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x959f81ca99f2b8f3%3A0x6a1f893e3e3e3e3e!2sSal%C3%B3n%20My%20Father!5e0!3m2!1ses!2suy!4v1710000000000!5m2!1ses!2suy" 
+                             width="100%" height="100%" style={{border:0}} allowFullScreen="" loading="lazy">
+                           </iframe>
                         </div>
                       </div>
                     </section>
 
-                    <section ref={rsvpRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 pb-40">
-                      <div className="glass p-10 rounded-[4rem] text-center flex flex-col justify-between h-[500px] content-section">
-                        <div>
-                          <h2 className="font-serif text-4xl italic mb-10 text-[#800020]">Confirmar</h2>
-                          {!isConfirmed ? (
-                            <div className="space-y-6 max-w-sm mx-auto">
-                              <input type="text" value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="Tu nombre" className="w-full bg-white/60 border-b border-[#b8860b]/30 px-4 py-4 text-center outline-none focus:border-[#800020] italic transition-all" />
-                              <button onClick={() => { if(guestName.length < 3) return; window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola Milu! Confirmo mi asistencia: ${guestName}.`)}`, '_blank'); setIsConfirmed(true); }} className="w-full bg-[#800020] text-white font-bold py-5 rounded-full text-[10px] uppercase tracking-widest shadow-xl hover:bg-black transition-all">Confirmar WhatsApp</button>
-                            </div>
-                          ) : (
-                            <div className="py-20 animate-reveal text-[#800020]"><Icon name="CheckCircle" size={60} className="mx-auto mb-4 opacity-30"/><p className="text-3xl font-serif italic">¡Nos vemos allí!</p></div>
-                          )}
-                        </div>
-                        <p className="text-[#800020] text-[10px] font-bold uppercase tracking-widest opacity-60">Confirmar antes del 10/08</p>
-                      </div>
-                      <div className="glass p-10 rounded-[4rem] text-center flex flex-col justify-center h-[500px] content-section">
-                        <h2 className="font-serif text-4xl italic mb-8 text-[#800020]">Obsequio</h2>
-                        <p className="text-gray-500 mb-10 italic text-sm">"Tu presencia es mi mejor regalo, pero si deseas colaborar con mi sueño de viaje..."</p>
-                        <div className="bg-white/50 p-8 rounded-[3rem] border border-white/50">
-                          <p className="text-[10px] text-[#b8860b] uppercase tracking-widest mb-2 font-bold italic">Colectivo Abitab</p>
-                          <p className="text-5xl font-light mb-8 text-[#800020] tracking-tight">145920</p>
-                          <button onClick={() => { navigator.clipboard.writeText("145920"); setCopiedAbitab(true); setTimeout(() => setCopiedAbitab(false), 2000); }} className="text-[#b8860b] font-bold text-[10px] uppercase tracking-widest border border-[#b8860b]/20 px-8 py-3 rounded-full hover:bg-white transition-all">{copiedAbitab ? "¡Copiado!" : "Copiar número"}</button>
-                        </div>
-                      </div>
+                    {/* RSVP & Gift */}
+                    <section id="confirmar" className="grid md:grid-cols-2 gap-10">
+                       <div className="glass rounded-[4rem] p-16 text-center flex flex-col justify-between h-[600px] border-b-8 border-gold">
+                         <div>
+                            <h4 className="font-serif text-5xl text-bordeaux italic mb-10">Confirmar</h4>
+                            <p className="text-gray-500 mb-12 italic leading-relaxed">Espero poder contar contigo para hacer de esta noche algo inolvidable.</p>
+                         </div>
+                         <button 
+                           onClick={() => window.open('https://wa.me/59895239386?text=¡Hola%20Milu!%20Confirmo%20con%20mucha%20alegría%20mi%20asistencia%20a%20tus%2015.', '_blank')}
+                           className="gold-button w-full py-8 rounded-full shadow-2xl flex items-center justify-center gap-4"
+                         >
+                           Confirmar Asistencia
+                         </button>
+                         <p className="mt-8 text-[10px] uppercase tracking-[0.3em] font-bold text-gold/60 italic">Favor confirmar antes del 10/08</p>
+                       </div>
+
+                       <div className="glass rounded-[4rem] p-16 text-center h-[600px] flex flex-col justify-center bg-gradient-to-br from-ivory to-white">
+                         <h4 className="font-serif text-4xl text-bordeaux italic mb-8">Colaboración</h4>
+                         <p className="text-gray-400 mb-10 italic text-sm px-6">"Tu presencia es mi mayor regalo. Si deseas ayudarme con mi viaje de sueños..."</p>
+                         <div className="bg-white p-12 rounded-[3.5rem] border border-gold/15 shadow-inner relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 p-6 text-gold opacity-10 font-serif text-8xl">A</div>
+                           <p className="text-gold font-bold uppercase text-[10px] tracking-[0.5em] mb-4 italic">Colectivo Abitab</p>
+                           <p className="text-6xl md:text-7xl font-light text-bordeaux tracking-tighter mb-12 tabular-nums">145920</p>
+                           <button 
+                             onClick={() => { navigator.clipboard.writeText("145920"); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                             className="text-gold font-bold text-xs uppercase tracking-widest border-2 border-gold/30 px-10 py-4 rounded-full hover:bg-gold/5 transition-all"
+                           >
+                             {copied ? "¡Copiado!" : "Copiar número"}
+                           </button>
+                         </div>
+                       </div>
                     </section>
                   </main>
 
-                  <footer className="text-center py-40 border-t border-[#b8860b]/10 opacity-70">
-                    <p className="text-[#b8860b] text-xs uppercase tracking-[2em] font-bold mb-4">Milagros Cabrera</p>
-                    <p className="text-gray-400 text-[10px] uppercase tracking-widest italic">Montevideo • 2026</p>
+                  <footer className="text-center py-40 bg-black/5 flex flex-col items-center">
+                    <div className="w-px h-24 bg-gradient-to-b from-transparent via-gold to-transparent mb-12"></div>
+                    <p className="font-cursive text-7xl text-goldLight mb-6">Milu</p>
+                    <p className="text-[11px] uppercase tracking-[0.8em] text-gold font-bold">Montevideo • Uruguay • 2026</p>
                   </footer>
                 </div>
               )}
