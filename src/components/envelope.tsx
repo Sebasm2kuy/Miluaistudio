@@ -13,7 +13,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
   const handleOpen = useCallback(() => {
     if (opened) return
     setOpened(true)
-    setTimeout(onOpen, 800)
+    setTimeout(onOpen, 700)
   }, [opened, onOpen])
 
   return (
@@ -21,26 +21,14 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
       {!opened && (
         <motion.div
           key="envelope"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          exit={{ opacity: 0, scale: 1.08 }}
+          transition={{ duration: 0.7, ease: 'easeInOut' }}
           className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-ivory overflow-hidden"
         >
-          {/* Zooming circle overlay */}
-          <motion.div
-            exit={{
-              scale: 30,
-              opacity: 1,
-            }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute w-36 h-36 md:w-56 md:h-56 rounded-full z-[201] pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
-            }}
-          />
-
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
             <p className="text-gold uppercase tracking-[1em] text-[10px] mb-10 font-bold italic opacity-60">
