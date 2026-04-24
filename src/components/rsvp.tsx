@@ -2,44 +2,23 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { toast } from 'sonner'
 import { Heart } from 'lucide-react'
 
 export default function Rsvp() {
   const [formData, setFormData] = useState({ name: '', guests: '1', message: '' })
-  const [submitting, setSubmitting] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.name.trim()) {
-      toast.error('Por favor ingresá tu nombre')
-      return
-    }
+    if (!formData.name.trim()) return
 
-    setSubmitting(true)
-    try {
-      const res = await fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          guests: parseInt(formData.guests),
-          message: formData.message || undefined,
-        }),
-      })
+    const msg = formData.message.trim()
+      ? `¡Hola Milu! Confirmo mi asistencia a tus 15. Nombre: ${formData.name.trim()}. Invitados: ${formData.guests}. Mensaje: ${formData.message.trim()}`
+      : `¡Hola Milu! Confirmo mi asistencia a tus 15. Nombre: ${formData.name.trim()}. Invitados: ${formData.guests}.`
 
-      if (res.ok) {
-        toast.success('¡Confirmación recibida! Gracias por ser parte de esta noche especial.')
-        setFormData({ name: '', guests: '1', message: '' })
-      } else {
-        throw new Error('Error al enviar')
-      }
-    } catch {
-      toast.error('Hubo un error. Intentá de nuevo o confirmá por WhatsApp.')
-    } finally {
-      setSubmitting(false)
-    }
+    const encoded = encodeURIComponent(msg)
+    window.open(`https://wa.me/59895239386?text=${encoded}`, '_blank')
+    setFormData({ name: '', guests: '1', message: '' })
   }
 
   const copyNumber = () => {
@@ -126,25 +105,16 @@ export default function Rsvp() {
           <div className="mt-6 space-y-4">
             <button
               onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full py-5 md:py-8 rounded-full shadow-2xl flex items-center justify-center gap-3 text-white font-semibold uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-500 hover:-translate-y-1 disabled:opacity-60 disabled:cursor-not-allowed"
+              type="submit"
+              className="w-full py-5 md:py-8 rounded-full shadow-2xl flex items-center justify-center gap-3 text-white font-semibold uppercase tracking-[0.15em] text-xs md:text-sm transition-all duration-500 hover:-translate-y-1"
               style={{
                 background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
                 boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4)',
               }}
             >
               <Heart size={16} />
-              {submitting ? 'Enviando...' : 'Confirmar Asistencia'}
+              Confirmar por WhatsApp
             </button>
-
-            <a
-              href="https://wa.me/59895239386?text=%C2%A1Hola%20Milu!%20Confirmo%20con%20mucha%20alegr%C3%ADa%20mi%20asistencia%20a%20tus%2015."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-center text-gold font-bold text-[10px] uppercase tracking-[0.3em] hover:text-bordeaux transition-colors"
-            >
-              O confirmá por WhatsApp
-            </a>
 
             <p className="text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-gold/50 italic">
               Favor confirmar antes del 10/08
