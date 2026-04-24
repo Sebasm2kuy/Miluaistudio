@@ -56,7 +56,7 @@ export default function Countdown() {
           El tiempo vuela...
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
           {Object.entries(timeLeft).map(([label, val], idx) => (
             <motion.div
               key={label}
@@ -64,13 +64,13 @@ export default function Countdown() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border shadow-sm"
+              className="p-4 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] border shadow-sm min-w-0"
               style={{
                 background: 'rgba(253, 252, 251, 0.8)',
                 borderColor: 'rgba(184, 134, 11, 0.1)',
               }}
             >
-              <div className="text-4xl md:text-8xl font-light text-bordeaux tracking-tighter tabular-nums">
+              <div className="text-3xl md:text-7xl font-light text-bordeaux tracking-tight tabular-nums truncate">
                 {String(val).padStart(2, '0')}
               </div>
               <div className="text-[9px] md:text-xs uppercase text-gold tracking-[0.3em] md:tracking-[0.4em] font-bold mt-3 md:mt-4 italic">
