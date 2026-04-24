@@ -1,123 +1,95 @@
 'use client'
 
-import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
 
 interface EnvelopeProps {
-  isOpen: boolean
   onOpen: () => void
 }
 
-export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
-  const [isAnimating, setIsAnimating] = useState(false)
+export default function Envelope({ onOpen }: EnvelopeProps) {
+  const [closing, setClosing] = useState(false)
 
   const handleOpen = () => {
-    if (isAnimating) return
-    setIsAnimating(true)
-    onOpen()
+    setClosing(true)
+    setTimeout(onOpen, 1800)
   }
 
   return (
     <AnimatePresence>
-      {!isOpen && (
+      {!closing ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: '#fdfcfb' }}
-          exit={{
-            scale: 5,
-            opacity: 0,
-            filter: 'blur(20px)',
-          }}
-          transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          key="envelope"
+          exit={{ scale: 5, opacity: 0, filter: 'blur(40px)' }}
+          transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1] }}
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-ivory overflow-hidden"
         >
-          {/* Decorative border lines */}
-          <div className="absolute inset-6 sm:inset-12 border border-gold/20 rounded-sm pointer-events-none" />
-          <div className="absolute inset-8 sm:inset-14 border border-gold/10 rounded-sm pointer-events-none" />
-
-          {/* Decorative corner flourishes */}
-          <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-gold/30" />
-          <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-gold/30" />
-          <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-gold/30" />
-          <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-gold/30" />
-
-          {/* Content */}
           <motion.div
-            className="flex flex-col items-center gap-6 px-6"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={{ duration: 1, delay: 0.3 }}
           >
-            {/* Top text */}
-            <motion.p
-              className="font-[family-name:var(--font-montserrat)] text-gold text-xs sm:text-sm uppercase tracking-[0.35em] font-light"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            >
+            <p className="text-gold uppercase tracking-[1em] text-[10px] mb-10 font-bold italic opacity-60">
               Invitación Especial
-            </motion.p>
-
-            {/* Decorative line */}
-            <motion.div
-              className="w-16 gold-line"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            />
-
-            {/* Name */}
-            <motion.h1
-              className="font-[family-name:var(--font-alex-brush)] text-bordeaux text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-center leading-tight"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1, duration: 1, ease: 'easeOut' }}
-            >
-              Milagros
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              className="font-[family-name:var(--font-playfair)] text-bordeaux/60 text-sm sm:text-base italic text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.3, duration: 0.8 }}
-            >
-              Te invita a celebrar
-            </motion.p>
-
-            {/* Decorative line */}
-            <motion.div
-              className="w-16 gold-line"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 1.5, duration: 0.6 }}
-            />
+            </p>
           </motion.div>
 
-          {/* Gold circle button */}
-          <motion.button
-            onClick={handleOpen}
-            className="mt-12 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gold flex items-center justify-center cursor-pointer bg-transparent hover:bg-gold/5 transition-colors animate-pulse-gold"
-            initial={{ opacity: 0, scale: 0 }}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.8, duration: 0.6, type: 'spring' }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 1.2, delay: 0.6, ease: [0.19, 1, 0.22, 1] }}
+            className="font-cursive text-8xl md:text-[14rem] text-bordeaux mb-16 drop-shadow-2xl"
           >
-            <span className="font-[family-name:var(--font-playfair)] text-gold text-3xl sm:text-4xl font-bold">
-              M
-            </span>
-          </motion.button>
+            Milagros
+          </motion.h1>
 
-          {/* Bouncing CTA text */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 1.2, ease: [0.19, 1, 0.22, 1] }}
+            className="relative group cursor-pointer"
+            onClick={handleOpen}
+          >
+            <div className="absolute inset-0 bg-goldLight rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
+            <button className="relative w-36 h-36 md:w-56 md:h-56 rounded-full border-8 border-white flex items-center justify-center text-6xl md:text-9xl font-serif italic text-white transition-all duration-500 hover:scale-110 hover:shadow-2xl"
+              style={{
+                background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
+                boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4)',
+              }}
+            >
+              M
+            </button>
+          </motion.div>
+
           <motion.p
-            className="absolute bottom-10 font-[family-name:var(--font-montserrat)] text-bordeaux/40 text-xs uppercase tracking-[0.2em] animate-gentle-bounce"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.2, duration: 0.8 }}
+            transition={{ duration: 1, delay: 2 }}
+            className="mt-16 text-bordeaux/40 text-[10px] uppercase tracking-[0.6em] font-bold animate-bounce"
           >
             Toca para descubrir
           </motion.p>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="envelope-closing"
+          initial={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+          animate={{ scale: 5, opacity: 0, filter: 'blur(40px)' }}
+          transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1] }}
+          className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-ivory overflow-hidden"
+        >
+          <h1 className="font-cursive text-8xl md:text-[14rem] text-bordeaux mb-16 drop-shadow-2xl">
+            Milagros
+          </h1>
+          <div
+            className="relative w-36 h-36 md:w-56 md:h-56 rounded-full border-8 border-white flex items-center justify-center text-6xl md:text-9xl font-serif italic text-white"
+            style={{
+              background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
+              boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4)',
+            }}
+          >
+            M
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

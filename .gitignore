@@ -30,25 +30,39 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+!.env.example
 
 # vercel
 .vercel
 
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local development
 local-*
-.claude
-.z-ai-config
 *.log
 dev.log
 dev.out.log
+server.log
 test
 prompt
 
-server.log
 # Skills directory
 /skills/
+
+# z-ai config
+.claude
+.z-ai-config
+
+# Prisma database
+db/custom.db
+db/custom.db-journal
+
+# Miluaistudio old project (migrated to Next.js)
+Miluaistudio/
+
+# Z scripts
+.zscripts/

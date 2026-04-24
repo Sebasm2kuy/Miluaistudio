@@ -1,42 +1,50 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db } from '@/lib/db'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, guests, message } = body;
+    const body = await request.json()
+    const { name, guests, message } = body
 
-    if (!name || typeof name !== "string" || name.trim().length === 0) {
+    if (!name || !guests) {
       return NextResponse.json(
-        { error: "El nombre es obligatorio" },
+        { error: 'Nombre y cantidad de invitados son obligatorios' },
         { status: 400 }
-      );
-    }
-
-    if (!guests || typeof guests !== "number" || guests < 1 || guests > 10) {
-      return NextResponse.json(
-        { error: "La cantidad de invitados debe ser entre 1 y 10" },
-        { status: 400 }
-      );
+      )
     }
 
     const rsvp = await db.rsvp.create({
       data: {
-        name: name.trim(),
-        guests,
-        message: message?.trim() || null,
+        name: String(name).trim(),
+        guests: Number(guests),
+        message: message ? String(message).trim() : null,
       },
-    });
+    })
 
     return NextResponse.json(
-      { message: "Confirmación registrada exitosamente", id: rsvp.id },
+      { success: true, data: rsvp },
       { status: 201 }
-    );
+    )
   } catch (error) {
-    console.error("Error saving RSVP:", error);
+    console.error('Error saving RSVP:', error)
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: 'Error al guardar la confirmación' },
       { status: 500 }
-    );
+    )
+  }
+}
+
+export async function GET() {
+  try {
+    const rsvps = await db.rsvp.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
+    return NextResponse.json({ data: rsvps })
+  } catch (error) {
+    console.error('Error fetching RSVPs:', error)
+    return NextResponse.json(
+      { error: 'Error al obtener confirmaciones' },
+      { status: 500 }
+    )
   }
 }
