@@ -56,13 +56,13 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           >
             <div className="absolute inset-0 bg-goldLight rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
             <button
-              className="relative w-36 h-36 md:w-56 md:h-56 rounded-full border-8 border-white flex items-center justify-center text-6xl md:text-9xl text-white transition-transform duration-300 hover:scale-110"
+              className="relative w-36 h-36 md:w-56 md:h-56 rounded-full border-8 border-white flex items-center justify-center transition-transform duration-500 hover:scale-105"
               style={{
                 background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
-                boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4)',
+                boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4), inset 0 2px 4px rgba(255,255,255,0.3)',
               }}
             >
-              <span className="translate-x-[0.04em]">M</span>
+              <span className="font-cursive text-7xl md:text-[8rem] text-white leading-none drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>M</span>
             </button>
           </motion.div>
 
