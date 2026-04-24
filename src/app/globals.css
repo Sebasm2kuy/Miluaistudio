@@ -1,0 +1,263 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-montserrat);
+  --font-serif: var(--font-playfair);
+  --font-cursive: var(--font-alex-brush);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-bordeaux: #3d0202;
+  --color-gold: #b8860b;
+  --color-gold-light: #d4af37;
+  --color-ivory: #fdfcfb;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: #050505;
+  --foreground: #fdfcfb;
+  --card: rgba(255, 255, 255, 0.05);
+  --card-foreground: #fdfcfb;
+  --popover: rgba(253, 252, 251, 0.95);
+  --popover-foreground: #050505;
+  --primary: #3d0202;
+  --primary-foreground: #fdfcfb;
+  --secondary: rgba(255, 255, 255, 0.1);
+  --secondary-foreground: #fdfcfb;
+  --muted: rgba(255, 255, 255, 0.08);
+  --muted-foreground: #d4af37;
+  --accent: rgba(184, 134, 11, 0.15);
+  --accent-foreground: #d4af37;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: rgba(212, 175, 55, 0.15);
+  --input: rgba(253, 252, 251, 0.1);
+  --ring: #d4af37;
+  --chart-1: #d4af37;
+  --chart-2: #3d0202;
+  --chart-3: #b8860b;
+  --chart-4: #fdfcfb;
+  --chart-5: #050505;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8860b44;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+/* Gold shimmer text effect */
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.text-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #f5e6a3 25%,
+    #d4af37 50%,
+    #b8860b 75%,
+    #d4af37 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 4s linear infinite;
+}
+
+/* Ken Burns animation */
+@keyframes ken-burns {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.18) rotate(1.5deg);
+  }
+}
+
+.ken-burns {
+  animation: ken-burns 12s ease-in-out forwards;
+}
+
+/* Floating particles animation */
+@keyframes float-up {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(var(--drift, 20px));
+    opacity: 0;
+  }
+}
+
+.particle-float {
+  animation: float-up var(--duration, 15s) var(--delay, 0s) infinite ease-in-out;
+}
+
+/* Bounce animation for envelope CTA */
+@keyframes gentle-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-gentle-bounce {
+  animation: gentle-bounce 2s ease-in-out infinite;
+}
+
+/* Pulse glow for gold button */
+@keyframes pulse-gold {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.6), 0 0 60px rgba(184, 134, 11, 0.3);
+  }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+/* Fade in up animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* Gold gradient line */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, #b8860b, #d4af37, transparent);
+}
+
+/* Nav pill glass */
+.nav-pill {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Map grayscale */
+.map-grayscale {
+  filter: grayscale(1);
+  transition: filter 0.5s ease;
+}
+
+.map-grayscale:hover {
+  filter: grayscale(0);
+}
+
+/* Section spacing */
+.section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
