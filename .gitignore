@@ -66,3 +66,6 @@ Miluaistudio/
 
 # Z scripts
 .zscripts/
+
+# Upload folder
+upload/
