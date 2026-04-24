@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Alex_Brush, Playfair_Display, Montserrat } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const alexBrush = Alex_Brush({
@@ -51,7 +50,6 @@ export default function RootLayout({
         }}
       >
         {children}
-        <Toaster />
       </body>
     </html>
   );
