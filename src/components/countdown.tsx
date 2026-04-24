@@ -70,7 +70,7 @@ export default function Countdown() {
                 borderColor: 'rgba(184, 134, 11, 0.1)',
               }}
             >
-              <div className="text-3xl md:text-7xl font-light text-bordeaux tracking-tight tabular-nums truncate">
+              <div style={{ fontSize: 'clamp(1.4rem, 5.5vw, 4.5rem)' }} className="font-light text-bordeaux tracking-tight tabular-nums leading-none">
                 {String(val).padStart(2, '0')}
               </div>
               <div className="text-[9px] md:text-xs uppercase text-gold tracking-[0.3em] md:tracking-[0.4em] font-bold mt-3 md:mt-4 italic">
