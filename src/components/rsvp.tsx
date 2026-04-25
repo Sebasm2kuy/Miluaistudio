@@ -1,16 +1,22 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
+import { Heart, Copy, Check, Send, Loader2, MessageCircle, Bell } from 'lucide-react'
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOPx5jE1vcgW4nUfXWDkbKqQU8Ejex9RLI4rv64yZweZLFEiKrCoDj_8b7fryti3Sn/exec'
-
-// Pegá acá el link de invitación del grupo de WhatsApp
-const GRUPO_WHATSAPP = 'https://chat.whatsapp.com/ACA_PEGA_TU_LINK_DE_GRUPO'
+const HOST_PHONE = '59895239386'
 
 function generarCodigo() {
   const num = Math.floor(1000 + Math.random() * 9000)
   return `MIL-${num}`
+}
+
+function limpiarTelefono(tel: string) {
+  const solo = tel.replace(/[^0-9]/g, '')
+  if (solo.startsWith('0')) return '598' + solo.slice(1)
+  if (solo.startsWith('598')) return solo
+  if (solo.length === 9) return '598' + solo
+  return solo
 }
 
 export default function Rsvp() {
@@ -48,33 +54,27 @@ export default function Rsvp() {
     }
   }
 
-  const guardarComprobante = () => {
+  const enviarConfirmacion = () => {
     const msg = encodeURIComponent(
-      `✅ *Confirmación registrada*\n\n` +
+      `✅ Confirmación de asistencia\n\n` +
       `🎀 XV Años de Milagros\n` +
-      `📅 Sábado 22/08/2026\n` +
-      `📍 Salón My Father\n\n` +
-      `👤 ${nombre.trim()}\n` +
-      `📱 ${telefono.trim()}\n` +
-      `🎫 Código: *${codigo}*\n\n` +
-      `¡Te esperamos! 💛`
-    )
-    window.open(`https://wa.me/?text=${msg}`, '_blank')
-  }
-
-  const avisarGrupo = () => {
-    const msg =
-      `✅ Confirmación de asistencia\n` +
       `👤 ${nombre.trim()}\n` +
       `📱 ${telefono.trim()}\n` +
       `🎫 ${codigo}`
+    )
+    window.open(`https://wa.me/${HOST_PHONE}?text=${msg}`, '_blank')
+  }
 
-    navigator.clipboard.writeText(msg)
-    setCopied(true)
-    setTimeout(() => {
-      window.open(GRUPO_WHATSAPP, '_blank')
-      setCopied(false)
-    }, 500)
+  const guardarComprobante = () => {
+    const telefonoLimpio = limpiarTelefono(telefono)
+    const msg = encodeURIComponent(
+      `✅ Mi asistencia a los XV de Milagros quedó registrada.\n\n` +
+      `🎫 Código: ${codigo}\n` +
+      `📅 22/08/2026\n` +
+      `📍 Salón My Father, Montevideo\n\n` +
+      `¡Nos vemos! 💛`
+    )
+    window.open(`https://wa.me/${telefonoLimpio}?text=${msg}`, '_blank')
   }
 
   const copyNumber = () => {
@@ -109,14 +109,14 @@ export default function Rsvp() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
-              className="py-6 sm:py-10"
+              className="py-4 sm:py-8"
             >
               {/* Check animado */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center"
+                className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-5 rounded-full flex items-center justify-center"
                 style={{
                   background: 'linear-gradient(135deg, #d4af37, #b8860b)',
                   boxShadow: '0 8px 32px rgba(184,134,11,0.3)',
@@ -137,7 +137,7 @@ export default function Rsvp() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-gold font-bold text-sm sm:text-base mb-4 sm:mb-6"
+                className="text-gold font-bold text-sm sm:text-base mb-4 sm:mb-5"
               >
                 {nombre.trim()}
               </motion.p>
@@ -147,7 +147,7 @@ export default function Rsvp() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="inline-block px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl mb-5 sm:mb-8"
+                className="inline-block px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl mb-5 sm:mb-6"
                 style={{
                   background: 'linear-gradient(135deg, rgba(184,134,11,0.08), rgba(212,175,55,0.08))',
                   border: '1px solid rgba(184,134,11,0.2)',
@@ -165,6 +165,14 @@ export default function Rsvp() {
                 className="space-y-2.5 sm:space-y-3"
               >
                 <button
+                  onClick={enviarConfirmacion}
+                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-all duration-300 hover:scale-[1.02]"
+                >
+                  <Send size={14} strokeWidth={1.5} />
+                  Enviar confirmación
+                </button>
+
+                <button
                   onClick={guardarComprobante}
                   className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-all duration-300 hover:scale-[1.02]"
                   style={{
@@ -173,20 +181,7 @@ export default function Rsvp() {
                   }}
                 >
                   <MessageCircle size={14} strokeWidth={1.5} />
-                  Guardar comprobante en WhatsApp
-                </button>
-
-                <button
-                  onClick={avisarGrupo}
-                  className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-all duration-300 hover:scale-[1.02] border-2"
-                  style={{
-                    borderColor: 'rgba(184, 134, 11, 0.25)',
-                    color: '#b8860b',
-                    background: 'rgba(184,134,11,0.04)',
-                  }}
-                >
-                  <Send size={13} strokeWidth={1.5} />
-                  {copied ? 'Abriendo grupo...' : 'Avisar al grupo de confirmaciones'}
+                  Guardar mi comprobante
                 </button>
               </motion.div>
 
