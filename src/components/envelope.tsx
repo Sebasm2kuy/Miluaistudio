@@ -62,7 +62,24 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
                 boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4), inset 0 2px 4px rgba(255,255,255,0.3)',
               }}
             >
-              <span className="font-cursive text-7xl md:text-[8rem] text-white leading-none drop-shadow-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>M</span>
+              <svg viewBox="0 0 100 100" className="w-28 h-28 md:w-44 md:h-44" aria-label="M">
+                <defs>
+                  <filter id="mShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="rgba(0,0,0,0.35)" />
+                  </filter>
+                </defs>
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="white"
+                  fontSize="58"
+                  fontFamily="'Alex Brush', cursive"
+                  dx="1"
+                  filter="url(#mShadow)"
+                >M</text>
+              </svg>
             </button>
           </motion.div>
 
