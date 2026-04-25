@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const BACKGROUND_PHOTOS = ['/fotos/foto1.jpg', '/fotos/foto2.jpg']
+const BACKGROUND_PHOTOS = ['/Miluaistudio/fotos/foto1.jpg', '/Miluaistudio/fotos/foto2.jpg']
 
 export default function BackgroundSlideshow() {
   const [currentIdx, setCurrentIdx] = useState(0)

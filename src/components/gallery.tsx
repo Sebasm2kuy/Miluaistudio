@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const GALLERY_PHOTOS = [
-  '/gallery/gallery1.jpg',
-  '/gallery/gallery2.jpg',
-  '/gallery/gallery3.jpg',
-  '/gallery/gallery4.jpg',
+  '/Miluaistudio/gallery/gallery1.jpg',
+  '/Miluaistudio/gallery/gallery2.jpg',
+  '/Miluaistudio/gallery/gallery3.jpg',
+  '/Miluaistudio/gallery/gallery4.jpg',
 ]
 
 export default function Gallery() {
