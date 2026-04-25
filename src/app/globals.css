@@ -129,6 +129,23 @@
   }
 }
 
+/* ===== Invitation Screen - Orientation Switch ===== */
+/* Default: horizontal (desktop) */
+.invitacion-h { display: block; }
+.invitacion-v { display: none; }
+
+/* Mobile portrait: use vertical image */
+@media (max-width: 767px) {
+  .invitacion-h { display: none; }
+  .invitacion-v { display: block; }
+}
+
+/* Tablet portrait: use vertical image */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  .invitacion-h { display: none; }
+  .invitacion-v { display: block; }
+}
+
 /* ===== Animation Utilities ===== */
 .animate-ken-burns {
   animation: kenBurns 30s ease-in-out infinite alternate;
