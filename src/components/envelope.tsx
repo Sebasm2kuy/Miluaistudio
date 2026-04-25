@@ -10,8 +10,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
   const handleOpen = useCallback(() => {
     if (opened) return
     setOpened(true)
-    // Esperar a que termine completamente el exit antes de mostrar contenido
-    setTimeout(onOpen, 1200)
+    setTimeout(onOpen, 1000)
   }, [opened, onOpen])
 
   return (
@@ -19,20 +18,20 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
       {!opened && (
         <motion.div
           key="envelope"
-          exit={{ opacity: 0, scale: 1.03, filter: 'blur(8px)' }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
           className="fixed inset-0 z-[200] cursor-pointer overflow-hidden"
           onClick={handleOpen}
         >
-          {/* Fondo negro limpio */}
+          {/* Fondo negro */}
           <div className="absolute inset-0 bg-black" />
 
-          {/* Imagen de invitacion */}
+          {/* Imagen de invitacion — entrada cinematica lenta */}
           <motion.div
-            initial={{ opacity: 0, scale: 1.02 }}
+            initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 flex items-center justify-center p-4 sm:p-8 md:p-12"
           >
             <picture>
@@ -54,7 +53,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 2.5, ease: 'easeOut' }}
+            transition={{ duration: 1, delay: 3, ease: 'easeOut' }}
             className="absolute bottom-8 sm:bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 text-center"
           >
             <p className="text-goldLight/60 text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.3em] sm:tracking-[0.5em] font-light animate-slide-hint">

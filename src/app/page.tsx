@@ -37,11 +37,21 @@ export default function Home() {
         {!isOpened && <Envelope onOpen={() => setIsOpened(true)} />}
       </AnimatePresence>
 
+      {/* Black overlay que se desvanece despues del envelope para transicion suave */}
+      {isOpened && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
+          className="fixed inset-0 bg-black z-[50] pointer-events-none"
+        />
+      )}
+
       {isOpened && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.1 }}
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.8 }}
           className="relative z-10"
         >
           <ScrollProgress />

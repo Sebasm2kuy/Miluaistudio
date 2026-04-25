@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const BACKGROUND_PHOTOS = [
   '/Miluaistudio/gallery/gallery1.webp',
@@ -10,40 +10,48 @@ const BACKGROUND_PHOTOS = [
 
 export default function BackgroundSlideshow() {
   const [currentIdx, setCurrentIdx] = useState(0)
-  const [fadeIn, setFadeIn] = useState(true)
-  const [started, setStarted] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [imageReady, setImageReady] = useState(false)
+  const imgRef = useRef<HTMLImageElement>(null)
 
-  // Esperar 3s antes de arrancar el ciclo para no pisar la animacion del hero
+  // Precargar primera imagen, cuando este lista arrancar la animacion
   useEffect(() => {
-    const t = setTimeout(() => setStarted(true), 3000)
-    return () => clearTimeout(t)
+    const img = new Image()
+    img.onload = () => {
+      // Esperar a que el envelope termine de salir + margen
+      setTimeout(() => setImageReady(true), 600)
+      setTimeout(() => setVisible(true), 1200)
+    }
+    img.src = BACKGROUND_PHOTOS[0]
   }, [])
 
+  // Ciclo del slideshow
   useEffect(() => {
-    if (!started) return
+    if (!visible) return
     const interval = setInterval(() => {
-      setFadeIn(false)
+      setVisible(false)
       setTimeout(() => {
         setCurrentIdx((prev) => (prev + 1) % BACKGROUND_PHOTOS.length)
-        setFadeIn(true)
-      }, 700)
+        setTimeout(() => setVisible(true), 200)
+      }, 600)
     }, 9000)
     return () => clearInterval(interval)
-  }, [started])
+  }, [visible])
 
   return (
     <div className="fixed inset-0 z-[-10] flex items-center justify-center bg-black">
       <img
         key={currentIdx}
+        ref={imgRef}
         src={BACKGROUND_PHOTOS[currentIdx]}
         alt=""
         draggable={false}
         className="max-w-[95vw] sm:max-w-[90vw] max-h-[80vh] sm:max-h-[85vh] object-contain rounded-2xl sm:rounded-3xl md:rounded-[3rem]"
         style={{
           filter: 'contrast(1.05) brightness(0.75) saturate(0.85)',
-          opacity: fadeIn ? 1 : 0,
-          transform: fadeIn ? 'scale(1)' : 'scale(1.015)',
-          transition: 'opacity 700ms ease, transform 700ms ease',
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'scale(1)' : 'scale(1.02)',
+          transition: 'opacity 1s ease, transform 1s ease',
           boxShadow: '0 0 80px rgba(0,0,0,0.9)',
           border: '1px solid rgba(212, 175, 55, 0.06)',
         }}
