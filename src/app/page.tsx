@@ -26,66 +26,50 @@ function Divider() {
 }
 
 export default function Home() {
-  // Estados: envelope → loading → ready
-  const [phase, setPhase] = useState<'envelope' | 'loading' | 'ready'>('envelope')
+  const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>('envelope')
 
   const handleOpen = useCallback(() => setPhase('loading'), [])
-  const handleReady = useCallback(() => setPhase('ready'), [])
+  const handleDone = useCallback(() => setPhase('done'), [])
 
   return (
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
 
-      {/* Fase 1: Sello / Invitacion */}
+      {/* --- CONTENIDO: SIEMPRE RENDERIZADO pero invisible hasta 'done' --- */}
+      <BackgroundSlideshow visible={phase === 'done'} />
+
+      <div style={{ visibility: phase === 'done' ? 'visible' : 'hidden' }}>
+        <ScrollProgress />
+        <Navigation />
+        <Hero />
+
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Countdown />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <EventInfo />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Gallery />
+        </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <SpotifyPlayer />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Rsvp />
+        </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Footer />
+        </div>
+        <div className="pb-28 sm:pb-36 md:pb-44" />
+      </div>
+
+      {/* --- CAPAS SUPERIORES --- */}
       {phase === 'envelope' && <Envelope onOpen={handleOpen} />}
-
-      {/* Fase 2: Pantalla de carga */}
-      {phase === 'loading' && <LoadingScreen onReady={handleReady} />}
-
-      {/* Fase 3: Contenido (solo cuando ya esta todo cargado) */}
-      {phase === 'ready' && (
-        <>
-          <BackgroundSlideshow />
-
-          <div className="relative z-10" style={{ animation: 'fadeIn 1.2s ease forwards' }}>
-            <ScrollProgress />
-            <Navigation />
-            <Hero />
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <Countdown />
-            </div>
-
-            <Divider />
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <EventInfo />
-            </div>
-
-            <Divider />
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <Gallery />
-            </div>
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <SpotifyPlayer />
-            </div>
-
-            <Divider />
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <Rsvp />
-            </div>
-
-            <div className="mt-24 sm:mt-32 md:mt-40">
-              <Footer />
-            </div>
-
-            <div className="pb-28 sm:pb-36 md:pb-44" />
-          </div>
-        </>
-      )}
+      {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
     </div>
   )
 }

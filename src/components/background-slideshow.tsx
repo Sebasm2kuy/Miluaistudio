@@ -8,18 +8,20 @@ const PHOTOS = [
   '/Miluaistudio/gallery/gallery4.webp',
 ]
 
-export default function BackgroundSlideshow() {
+export default function BackgroundSlideshow({ visible }: { visible: boolean }) {
   const [idx, setIdx] = useState(0)
   const [show, setShow] = useState(false)
 
+  // Cuando se hace visible, mostrar la primera imagen
   useEffect(() => {
-    const img = new Image()
-    img.onload = () => setTimeout(() => setShow(true), 1200)
-    img.src = PHOTOS[0]
-  }, [])
+    if (visible) {
+      setTimeout(() => setShow(true), 300)
+    }
+  }, [visible])
 
+  // Ciclo
   useEffect(() => {
-    if (!show) return
+    if (!show || !visible) return
     const t = setInterval(() => {
       setShow(false)
       setTimeout(() => {
@@ -28,7 +30,7 @@ export default function BackgroundSlideshow() {
       }, 600)
     }, 9000)
     return () => clearInterval(t)
-  }, [show])
+  }, [show, visible])
 
   return (
     <div className="fixed inset-0 z-[-10] bg-black flex items-center justify-center">
@@ -39,7 +41,7 @@ export default function BackgroundSlideshow() {
         draggable={false}
         className="w-[90vw] sm:w-[85vw] max-h-[78vh] sm:max-h-[84vh] object-contain rounded-2xl"
         style={{
-          opacity: show ? 1 : 0,
+          opacity: (show && visible) ? 1 : 0,
           transition: 'opacity 800ms ease',
           filter: 'brightness(0.75) saturate(0.85)',
           boxShadow: '0 0 80px rgba(0,0,0,0.9)',
