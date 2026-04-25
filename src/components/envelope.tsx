@@ -33,10 +33,12 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
             transition={{ duration: 1.4, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
             className="absolute inset-0 flex items-center justify-center bg-black"
           >
+            {/* On mobile: width fills screen, height auto → image adapts naturally */}
+            {/* On desktop/tablet landscape: contained within viewport */}
             <img
               src="/Miluaistudio/invitacion.png"
               alt="Invitación XV Años - Milagros"
-              className="w-full h-full object-contain"
+              className="w-full sm:w-auto sm:h-full sm:max-w-full object-contain"
               draggable={false}
             />
           </motion.div>
