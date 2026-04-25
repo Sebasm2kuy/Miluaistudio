@@ -19,24 +19,35 @@ export default function Footer() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             animation: 'shimmer 6s ease-in-out 1',
-            filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.8))',
+            filter: 'drop-shadow(0 0 30px rgba(0,0,0,0.95)) drop-shadow(0 0 60px rgba(0,0,0,0.6)) drop-shadow(0 0 80px rgba(184,134,11,0.25))',
           }}
         >
           Milu
         </p>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
-          <div className="h-px w-8 sm:w-12 md:w-16" style={{ background: 'linear-gradient(90deg, transparent, #b8860b)' }} />
-          <div className="w-1.5 h-1.5 rotate-45 bg-goldLight/40" />
-          <div className="h-px w-8 sm:w-12 md:w-16" style={{ background: 'linear-gradient(90deg, #b8860b, transparent)' }} />
+          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, transparent, #fcf6ba, #d4af37)', boxShadow: '0 0 8px rgba(252,246,186,0.3)' }} />
+          <div className="w-1.5 h-1.5 rotate-45 bg-goldLight/70" style={{ boxShadow: '0 0 6px rgba(212,175,55,0.4)' }} />
+          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, #d4af37, #fcf6ba, transparent)', boxShadow: '0 0 8px rgba(252,246,186,0.3)' }} />
         </div>
 
-        <p className="text-[8px] sm:text-[9px] md:text-[11px] uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-gold/50 font-bold">
+        <p className="text-[9px] sm:text-[11px] md:text-xs uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] font-bold"
+          style={{
+            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728)',
+            backgroundSize: '200% auto',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: 'shimmer 6s ease-in-out 1',
+            filter: 'drop-shadow(0 1px 6px rgba(0,0,0,0.9)) drop-shadow(0 0 12px rgba(184,134,11,0.3))',
+          }}
+        >
           Montevideo &bull; Uruguay &bull; 2026
         </p>
 
-        <p className="mt-4 sm:mt-5 md:mt-6 text-[9px] sm:text-[10px] md:text-xs text-gold/25 italic font-serif">
-          Con amor, para un día inolvidable
+        <p className="mt-4 sm:mt-5 md:mt-6 text-[10px] sm:text-xs md:text-sm text-gold/50 italic font-serif"
+          style={{ textShadow: '0 1px 6px rgba(0,0,0,0.9)' }}
+        >
+          Con amor, para un dia inolvidable
         </p>
       </motion.div>
     </footer>
