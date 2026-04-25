@@ -31,21 +31,28 @@ export default function Footer() {
           <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, #d4af37, #fcf6ba, transparent)', boxShadow: '0 0 8px rgba(252,246,186,0.3)' }} />
         </div>
 
-        <p className="text-[9px] sm:text-[11px] md:text-xs uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] font-bold"
+        <p className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-xs sm:text-sm md:text-base font-bold"
           style={{
-            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728)',
+            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
             backgroundSize: '200% auto',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             animation: 'shimmer 6s ease-in-out 1',
-            filter: 'drop-shadow(0 1px 6px rgba(0,0,0,0.9)) drop-shadow(0 0 12px rgba(184,134,11,0.3))',
+            filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.95)) drop-shadow(0 0 40px rgba(0,0,0,0.6)) drop-shadow(0 0 60px rgba(184,134,11,0.35))',
           }}
         >
           Montevideo &bull; Uruguay &bull; 2026
         </p>
 
-        <p className="mt-4 sm:mt-5 md:mt-6 text-[10px] sm:text-xs md:text-sm text-gold/50 italic font-serif"
-          style={{ textShadow: '0 1px 6px rgba(0,0,0,0.9)' }}
+        <p className="mt-5 sm:mt-6 md:mt-8 text-sm sm:text-base md:text-lg font-serif italic"
+          style={{
+            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
+            backgroundSize: '200% auto',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: 'shimmer 6s ease-in-out 1',
+            filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.95)) drop-shadow(0 0 40px rgba(0,0,0,0.6)) drop-shadow(0 0 60px rgba(184,134,11,0.35))',
+          }}
         >
           Con amor, para un dia inolvidable
         </p>
