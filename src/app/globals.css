@@ -10,9 +10,13 @@
   --font-cursive: var(--font-cursive);
   --font-serif: var(--font-serif);
   --color-bordeaux: #3d0202;
+  --color-bordeauxSoft: #5c1010;
   --color-gold: #b8860b;
   --color-goldLight: #d4af37;
+  --color-goldPale: #f5e6b8;
   --color-ivory: #fdfcfb;
+  --color-blush: #f0d6d0;
+  --color-rose: #c4727a;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -46,6 +50,46 @@
   100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
 }
 
+@keyframes goldenPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(184, 134, 11, 0.2), 0 0 60px rgba(184, 134, 11, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(184, 134, 11, 0.4), 0 0 80px rgba(184, 134, 11, 0.1); }
+}
+
+@keyframes gentleRise {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes drawLine {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes slideHint {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-5px); }
+}
+
 @layer base {
   body {
     background-color: #050505;
@@ -69,6 +113,13 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(184, 134, 11, 0.15);
+}
+
+.glass-dark {
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 134, 11, 0.1);
 }
 
 /* ===== Gold Shimmer Text ===== */
@@ -95,6 +146,58 @@
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(138, 107, 13, 0.5);
   filter: brightness(1.1);
+}
+
+/* ===== Ornamental Divider ===== */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  opacity: 0.5;
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b8860b, transparent);
+}
+
+.ornament-divider-icon {
+  color: #d4af37;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+/* ===== Section Title Style ===== */
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.75rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+/* ===== Glass Card Improved ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(184, 134, 11, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
 }
 
 /* ===== Selection ===== */
@@ -130,44 +233,75 @@
 }
 
 /* ===== Invitation Screen - Orientation Switch ===== */
-/* Default: horizontal (desktop) */
 .invitacion-h { display: block; }
 .invitacion-v { display: none; }
 
-/* Mobile portrait: use vertical image */
 @media (max-width: 767px) {
   .invitacion-h { display: none; }
   .invitacion-v { display: block; }
 }
 
-/* Tablet portrait: use vertical image */
 @media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
   .invitacion-h { display: none; }
   .invitacion-v { display: block; }
 }
 
 /* ===== Animation Utilities ===== */
-.animate-ken-burns {
-  animation: kenBurns 30s ease-in-out infinite alternate;
+.animate-ken-burns { animation: kenBurns 30s ease-in-out infinite alternate; }
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-shimmer { animation: shimmer 2s infinite linear; }
+.animate-reveal { animation: reveal 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+.animate-fade-in { animation: fadeIn 2.5s ease-out forwards; }
+.animate-golden-pulse { animation: goldenPulse 3s ease-in-out infinite; }
+.animate-gentle-rise { animation: gentleRise 1s ease-out forwards; }
+.animate-breathe { animation: breathe 3s ease-in-out infinite; }
+.animate-slide-hint { animation: slideHint 2.5s ease-in-out infinite; }
+
+/* ===== Gold Gradient Border Effect ===== */
+.gold-border-glow {
+  position: relative;
 }
 
-.animate-float {
-  animation: float 5s ease-in-out infinite;
+.gold-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.3), rgba(212, 175, 55, 0.1), rgba(184, 134, 11, 0.3));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
+.gold-border-glow:hover::before {
+  opacity: 1;
 }
 
-.animate-reveal {
-  animation: reveal 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+/* ===== Elegant Input Focus ===== */
+.elegant-input {
+  transition: all 0.3s ease;
 }
 
-.animate-fade-in {
-  animation: fadeIn 2.5s ease-out forwards;
+.elegant-input:focus {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1), 0 0 20px rgba(212, 175, 55, 0.05);
 }
 
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+/* ===== Flourish Ornaments ===== */
+.flourish-top::before {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 1px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.flourish-bottom::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 1px;
+  margin: 1.5rem auto 0;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
 }

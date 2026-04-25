@@ -1,8 +1,7 @@
 'use client'
-
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
 
 const GALLERY_PHOTOS = [
   '/Miluaistudio/gallery/gallery1.jpg',
@@ -17,21 +16,14 @@ export default function Gallery() {
 
   const openLightbox = (idx: number) => setLightboxIdx(idx)
   const closeLightbox = () => setLightboxIdx(null)
-  const prev = () =>
-    setLightboxIdx((prev) => (prev !== null ? (prev - 1 + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length : null))
-  const next = () =>
-    setLightboxIdx((prev) => (prev !== null ? (prev + 1) % GALLERY_PHOTOS.length : null))
+  const prev = () => setLightboxIdx((prev) => (prev !== null ? (prev - 1 + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length : null))
+  const next = () => setLightboxIdx((prev) => (prev !== null ? (prev + 1) % GALLERY_PHOTOS.length : null))
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.touches[0].clientX)
-  }
-
+  const handleTouchStart = (e: React.TouchEvent) => { setTouchStart(e.touches[0].clientX) }
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStart === null) return
     const diff = touchStart - e.changedTouches[0].clientX
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? next() : prev()
-    }
+    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev() }
     setTouchStart(null)
   }
 
@@ -42,44 +34,70 @@ export default function Gallery() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-        className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center"
-        style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(184, 134, 11, 0.15)',
-        }}
+        className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden"
       >
-        <h2 className="font-serif italic text-2xl sm:text-3xl md:text-6xl text-bordeaux mb-3 sm:mb-4">
-          Momentos Especiales
-        </h2>
-        <p className="text-gray-400 italic mb-6 sm:mb-10 md:mb-16 text-xs sm:text-sm md:text-base">
-          Un vistazo a los momentos que hacen esta celebración inolvidable
-        </p>
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 w-full h-1 opacity-30"
+          style={{ background: 'linear-gradient(90deg, transparent, #b8860b, #d4af37, #b8860b, transparent)' }} />
 
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-6">
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+        >
+          <p className="text-gold/60 text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.4em] sm:tracking-[0.6em] font-bold mb-3 sm:mb-4">
+            Recuerdos que perduran
+          </p>
+          <h2 className="font-serif italic text-2xl sm:text-3xl md:text-6xl text-bordeaux mb-2 sm:mb-3">
+            Momentos Especiales
+          </h2>
+          <p className="text-gray-400 italic mb-2 sm:mb-3 md:mb-4 text-xs sm:text-sm md:text-base px-2">
+            Un vistazo a los momentos que hacen esta celebración inolvidable
+          </p>
+          <div className="w-10 sm:w-14 h-px mx-auto mb-6 sm:mb-10 md:mb-16"
+            style={{ background: 'linear-gradient(90deg, transparent, #d4af37, transparent)' }} />
+        </motion.div>
+
+        {/* Photo grid */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-5">
           {GALLERY_PHOTOS.map((src, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.15 }}
+              transition={{ duration: 0.6, delay: idx * 0.12 }}
               className="relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4]"
               onClick={() => openLightbox(idx)}
             >
+              {/* Photo */}
               <img
                 src={src}
                 alt={`Momento especial ${idx + 1}`}
-                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-contain transition-all duration-700 group-hover:scale-105"
+                style={{ background: 'linear-gradient(135deg, rgba(253,252,251,0.02), rgba(253,252,251,0.05))' }}
               />
-              <div className="absolute inset-0 bg-bordeaux/0 group-hover:bg-bordeaux/20 transition-all duration-500" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                  </svg>
+
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-bordeaux/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+
+              {/* Golden border on hover */}
+              <div className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-transparent group-hover:border-goldLight/30 transition-all duration-500" />
+
+              {/* Expand icon */}
+              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
+                  <Maximize2 size={14} className="sm:w-4 sm:h-4 text-white" strokeWidth={1.5} />
                 </div>
+              </div>
+
+              {/* Photo number */}
+              <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                <span className="text-white/80 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
               </div>
             </motion.div>
           ))}
@@ -94,46 +112,64 @@ export default function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[300] bg-black/95 flex items-center justify-center p-2 sm:p-4 md:p-10"
+            className="fixed inset-0 z-[300] flex items-center justify-center p-2 sm:p-4 md:p-10"
+            style={{ background: 'rgba(0, 0, 0, 0.96)' }}
             onClick={closeLightbox}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
+            {/* Close button */}
             <button
               onClick={closeLightbox}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-8 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-10"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-8 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10"
             >
-              <X size={20} className="sm:w-6 sm:h-6" />
+              <X size={18} className="sm:w-5 sm:h-5" />
             </button>
 
+            {/* Prev button */}
             <button
               onClick={(e) => { e.stopPropagation(); prev() }}
-              className="absolute left-1 sm:left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-10"
+              className="absolute left-1 sm:left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10"
             >
-              <ChevronLeft size={20} className="sm:w-7 sm:h-7" />
+              <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
             </button>
 
+            {/* Next button */}
             <button
               onClick={(e) => { e.stopPropagation(); next() }}
-              className="absolute right-1 sm:right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all z-10"
+              className="absolute right-1 sm:right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10"
             >
-              <ChevronRight size={20} className="sm:w-7 sm:h-7" />
+              <ChevronRight size={20} className="sm:w-6 sm:h-6" />
             </button>
 
+            {/* Image */}
             <motion.img
               key={lightboxIdx}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
               src={GALLERY_PHOTOS[lightboxIdx]}
               alt={`Momento especial ${lightboxIdx + 1}`}
-              className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg sm:rounded-lg shadow-2xl"
+              className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
 
-            <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-xs sm:text-sm font-bold tracking-widest">
-              {lightboxIdx + 1} / {GALLERY_PHOTOS.length}
+            {/* Counter */}
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3">
+              <span className="text-white/40 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase">
+                {lightboxIdx + 1} / {GALLERY_PHOTOS.length}
+              </span>
+            </div>
+
+            {/* Progress dots */}
+            <div className="absolute bottom-10 sm:bottom-12 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {GALLERY_PHOTOS.map((_, i) => (
+                <div
+                  key={i}
+                  className={`rounded-full transition-all duration-300 ${i === lightboxIdx ? 'w-6 h-1 bg-goldLight' : 'w-1 h-1 bg-white/30'}`}
+                />
+              ))}
             </div>
           </motion.div>
         )}
