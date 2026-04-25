@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 
 const BACKGROUND_PHOTOS = [
   '/Miluaistudio/gallery/gallery1.jpg',
@@ -22,21 +21,16 @@ export default function BackgroundSlideshow() {
 
   return (
     <div className="fixed inset-0 z-[-10] flex items-center justify-center bg-black">
-      <div
+      <img
         key={currentIdx}
-        className="relative overflow-hidden rounded-[3rem] shadow-[0_0_100px_rgba(0,0,0,0.8),0_0_30px_rgba(184,134,11,0.3)] border border-goldLight/20 transition-all duration-[3000ms] ease-in-out max-w-[90vw] max-h-[85vh]"
+        src={BACKGROUND_PHOTOS[currentIdx]}
+        alt=""
+        draggable={false}
+        className="max-w-[90vw] max-h-[85vh] object-contain rounded-[3rem] shadow-[0_0_100px_rgba(0,0,0,0.8),0_0_30px_rgba(184,134,11,0.3)] border border-goldLight/20 animate-fade-in"
         style={{ filter: 'contrast(1.1) brightness(0.85)' }}
-      >
-        <Image
-          src={BACKGROUND_PHOTOS[currentIdx]}
-          alt=""
-          fill
-          sizes="90vw"
-          className="object-contain transition-opacity duration-[3000ms] ease-in-out"
-          priority={false}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none rounded-[3rem]" />
-      </div>
+      />
+      {/* Gradient overlay - positioned fixed to cover viewport */}
+      <div className="fixed bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
     </div>
   )
 }
