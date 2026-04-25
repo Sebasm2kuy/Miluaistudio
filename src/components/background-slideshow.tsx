@@ -26,9 +26,11 @@ export default function BackgroundSlideshow() {
         {BACKGROUND_PHOTOS.map((src, idx) => (
           <div
             key={idx}
-            className="absolute inset-0 bg-cover bg-center transition-opacity duration-[3000ms] ease-in-out"
+            className="absolute inset-0 transition-opacity duration-[3000ms] ease-in-out"
             style={{
               backgroundImage: `url('${src}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center center',
               opacity: currentIdx === idx ? 1 : 0,
               filter: 'contrast(1.1) brightness(0.85)',
               animation: currentIdx === idx ? 'kenBurns 30s ease-in-out infinite alternate' : 'none',

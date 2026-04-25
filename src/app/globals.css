@@ -27,8 +27,8 @@
 
 /* ===== Custom Animations ===== */
 @keyframes kenBurns {
-  0% { transform: scale(1) rotate(0deg); }
-  100% { transform: scale(1.18) rotate(1deg); }
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-1%, -1%); }
 }
 
 @keyframes float {
