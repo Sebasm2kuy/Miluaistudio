@@ -51,13 +51,13 @@ export default function Gallery() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.15 }}
-              className="relative group cursor-pointer overflow-hidden rounded-xl md:rounded-2xl aspect-[3/4] bg-gradient-to-br from-bordeaux/10 to-gold/10"
+              className="relative group cursor-pointer overflow-hidden rounded-xl md:rounded-2xl aspect-[3/4]"
               onClick={() => openLightbox(idx)}
             >
               <img
                 src={src}
                 alt={`Momento especial ${idx + 1}`}
-                className="w-full h-full object-contain object-center p-1 transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-bordeaux/0 group-hover:bg-bordeaux/20 transition-all duration-500" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">

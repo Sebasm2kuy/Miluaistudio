@@ -30,7 +30,7 @@ export default function BackgroundSlideshow() {
             style={{
               backgroundImage: `url('${src}')`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center center',
+              backgroundPosition: 'center top',
               opacity: currentIdx === idx ? 1 : 0,
               filter: 'contrast(1.1) brightness(0.85)',
               animation: currentIdx === idx ? 'kenBurns 30s ease-in-out infinite alternate' : 'none',
