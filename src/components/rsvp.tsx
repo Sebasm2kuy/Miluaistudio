@@ -1,23 +1,41 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Copy, Check, ChevronDown } from 'lucide-react'
+import { Heart, Copy, Check, Send, Loader2 } from 'lucide-react'
+
+const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOPx5jE1vcgW4nUfXWDkbKqQU8Ejex9RLI4rv64yZweZLFEiKrCoDj_8b7fryti3Sn/exec'
 
 export default function Rsvp() {
-  const [formData, setFormData] = useState({ name: '', guests: '1', message: '' })
+  const [nombre, setNombre] = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle')
   const [copied, setCopied] = useState(false)
 
-  const buildMessage = () => {
-    const base = `¡Hola Milu! Confirmo mi asistencia a tus 15. Nombre: ${formData.name.trim()}. Invitados: ${formData.guests}.`
-    return formData.message.trim() ? `${base} Mensaje: ${formData.message.trim()}` : base
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formData.name.trim()) return
-    const encoded = encodeURIComponent(buildMessage())
-    window.open(`https://wa.me/59895239386?text=${encoded}`, '_blank')
-    setFormData({ name: '', guests: '1', message: '' })
+    if (!nombre.trim() || !telefono.trim()) return
+
+    setStatus('sending')
+    try {
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          nombre: nombre.trim(),
+          telefono: telefono.trim(),
+        }),
+      })
+      if (res.ok) {
+        setStatus('ok')
+        setNombre('')
+        setTelefono('')
+      } else {
+        setStatus('error')
+      }
+    } catch {
+      setStatus('error')
+    }
+    setTimeout(() => setStatus('idle'), 4000)
   }
 
   const copyNumber = () => {
@@ -37,22 +55,39 @@ export default function Rsvp() {
   return (
     <section id="confirmar" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
-        {/* RSVP Form — fixed double submit */}
+
+        {/* Confirmar Asistencia */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-between min-h-[400px] sm:min-h-[450px] md:h-auto md:min-h-0 relative overflow-hidden"
+          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
           style={{ ...glassCard, borderBottomWidth: '3px', borderBottomColor: '#b8860b' }}
         >
-          <div>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">Confirmar</h2>
-            <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-xs sm:text-sm md:text-base">
-              Espero poder contar contigo para hacer de esta noche algo inolvidable.
-            </p>
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">Confirmar</h2>
+          <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-xs sm:text-sm md:text-base">
+            Espero poder contar contigo para hacer de esta noche algo inolvidable.
+          </p>
 
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 text-left">
+          {status === 'ok' ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="py-10 sm:py-16"
+            >
+              <div className="text-5xl sm:text-6xl mb-4">
+                <Heart className="inline text-bordeaux" fill="currentColor" size={48} strokeWidth={1} />
+              </div>
+              <p className="text-bordeaux font-serif text-xl sm:text-2xl italic mb-2">
+                ¡Gracias, {nombre}!
+              </p>
+              <p className="text-gray-400 text-xs sm:text-sm italic">
+                Tu confirmación quedó registrada
+              </p>
+            </motion.div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
               <div>
                 <label className="block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
                   Tu nombre *
@@ -60,67 +95,62 @@ export default function Rsvp() {
                 <input
                   type="text"
                   required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="elegant-input w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
                   style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
                   placeholder="Ej: María González"
                 />
               </div>
-              <div className="relative">
-                <label className="block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
-                  Cantidad de invitados
-                </label>
-                <select
-                  value={formData.guests}
-                  onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                  className="elegant-input w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none appearance-none pr-10"
-                  style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
-                >
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <option key={n} value={n}>{n} {n === 1 ? 'persona' : 'personas'}</option>
-                  ))}
-                </select>
-                <ChevronDown size={14} className="absolute right-3 bottom-3 sm:bottom-3.5 md:bottom-4 text-gold/50 pointer-events-none" />
-              </div>
+
               <div>
                 <label className="block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
-                  Mensaje (opcional)
+                  Tu teléfono *
                 </label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  rows={2}
-                  className="elegant-input w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none resize-none placeholder:text-gray-300"
+                <input
+                  type="tel"
+                  required
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
                   style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
-                  placeholder="Un mensaje especial para Milu..."
+                  placeholder="Ej: 099 123 456"
                 />
               </div>
 
-              {/* Single submit button — no onClick, only form submit */}
               <button
                 type="submit"
-                className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-[11px] sm:text-xs md:text-sm mt-2"
+                disabled={status === 'sending'}
+                className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-[11px] sm:text-xs md:text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ boxShadow: '0 10px 30px rgba(138, 107, 13, 0.35)' }}
               >
-                <Heart size={14} className="sm:w-4 sm:h-4" strokeWidth={1.5} />
-                Confirmar por WhatsApp
+                {status === 'sending' ? (
+                  <><Loader2 size={14} className="animate-spin" /> Enviando...</>
+                ) : (
+                  <><Send size={14} className="sm:w-4 sm:h-4" strokeWidth={1.5} /> Confirmar asistencia</>
+                )}
               </button>
-            </form>
-          </div>
 
-          <p className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-3">
+              {status === 'error' && (
+                <p className="text-red-500 text-[10px] sm:text-xs text-center italic">
+                  Hubo un error, intentá de nuevo
+                </p>
+              )}
+            </form>
+          )}
+
+          <p className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
             Favor confirmar antes del 10/08
           </p>
         </motion.div>
 
-        {/* Gift / Collaboration — without useless 'A' */}
+        {/* Colaboración */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center min-h-[400px] sm:min-h-[450px] md:h-auto md:min-h-0 relative overflow-hidden"
+          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
           style={{
             ...glassCard,
             background: 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(253,252,251,0.98))',
