@@ -13,14 +13,14 @@ interface Particle {
   delay: number
 }
 
-function generateParticles(): Particle[] {
-  return Array.from({ length: 50 }, (_, i) => ({
+function generateParticles(count: number): Particle[] {
+  return Array.from({ length: count }, (_, i) => ({
     id: i,
     width: Math.random() * 4 + 1,
     height: Math.random() * 4 + 1,
     left: Math.random() * 100,
     top: Math.random() * 100,
-    opacity: Math.random() * 0.6,
+    opacity: Math.random() * 0.5,
     duration: Math.random() * 10 + 5,
     delay: Math.random() * 10,
   }))
@@ -30,7 +30,9 @@ export default function Particles() {
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
-    setParticles(generateParticles())
+    // Fewer particles on mobile for performance
+    const count = window.innerWidth < 768 ? 20 : 50
+    setParticles(generateParticles(count))
   }, [])
 
   if (particles.length === 0) return null

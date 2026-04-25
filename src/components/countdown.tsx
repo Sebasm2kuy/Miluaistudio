@@ -32,13 +32,13 @@ export default function Countdown() {
   }, [])
 
   return (
-    <section id="detalles" className="max-w-5xl mx-auto px-4 relative z-10">
+    <section id="detalles" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-        className="rounded-[2rem] md:rounded-[4rem] p-8 md:p-24 text-center relative overflow-hidden"
+        className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden"
         style={{
           background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
@@ -52,11 +52,11 @@ export default function Countdown() {
           }}
         />
 
-        <h2 className="font-serif italic text-3xl md:text-6xl text-bordeaux mb-12 md:mb-16">
+        <h2 className="font-serif italic text-2xl sm:text-3xl md:text-6xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
           El tiempo vuela...
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+        <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6">
           {Object.entries(timeLeft).map(([label, val], idx) => (
             <motion.div
               key={label}
@@ -64,16 +64,16 @@ export default function Countdown() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="p-4 md:p-6 rounded-[1.5rem] md:rounded-[2.5rem] border shadow-sm min-w-0"
+              className="p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border shadow-sm min-w-0"
               style={{
                 background: 'rgba(253, 252, 251, 0.8)',
                 borderColor: 'rgba(184, 134, 11, 0.1)',
               }}
             >
-              <div style={{ fontSize: 'clamp(1.4rem, 5.5vw, 4.5rem)' }} className="font-light text-bordeaux tracking-tight tabular-nums leading-none">
+              <div style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }} className="font-light text-bordeaux tracking-tight tabular-nums leading-none">
                 {String(val).padStart(2, '0')}
               </div>
-              <div className="text-[9px] md:text-xs uppercase text-gold tracking-[0.3em] md:tracking-[0.4em] font-bold mt-3 md:mt-4 italic">
+              <div className="text-[7px] sm:text-[9px] md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4 italic">
                 {labels[label]}
               </div>
             </motion.div>

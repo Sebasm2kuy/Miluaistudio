@@ -11,21 +11,22 @@ const navItems = [
 
 export default function Navigation() {
   return (
-    <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-6 md:px-10 py-4 md:py-5 flex gap-6 md:gap-12 items-center shadow-2xl border border-goldLight/20"
+    <nav className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-5 flex gap-4 sm:gap-6 md:gap-12 items-center shadow-2xl border border-goldLight/20"
       style={{
         background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
+        paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
       }}
     >
       {navItems.map(({ icon: Icon, href, label }) => (
         <a
           key={href}
           href={href}
-          className="text-gold hover:text-bordeaux transition-all duration-300 hover:scale-125"
+          className="text-gold hover:text-bordeaux transition-all duration-300 hover:scale-125 p-1 sm:p-0"
           aria-label={label}
         >
-          <Icon size={22} strokeWidth={1.5} />
+          <Icon size={20} strokeWidth={1.5} className="sm:w-[22px] sm:h-[22px]" />
         </a>
       ))}
     </nav>
