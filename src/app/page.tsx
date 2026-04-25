@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useCallback } from 'react'
 import Envelope from '@/components/envelope'
+import LoadingScreen from '@/components/loading-screen'
 import ScrollProgress from '@/components/scroll-progress'
 import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
@@ -26,68 +26,66 @@ function Divider() {
 }
 
 export default function Home() {
-  const [isOpened, setIsOpened] = useState(false)
-  const [contentReady, setContentReady] = useState(false)
+  // Estados: envelope → loading → ready
+  const [phase, setPhase] = useState<'envelope' | 'loading' | 'ready'>('envelope')
 
-  useEffect(() => {
-    if (isOpened) {
-      const t = setTimeout(() => setContentReady(true), 300)
-      return () => clearTimeout(t)
-    }
-  }, [isOpened])
+  const handleOpen = useCallback(() => setPhase('loading'), [])
+  const handleReady = useCallback(() => setPhase('ready'), [])
 
   return (
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
 
-      {!isOpened && <Envelope onOpen={() => setIsOpened(true)} />}
+      {/* Fase 1: Sello / Invitacion */}
+      {phase === 'envelope' && <Envelope onOpen={handleOpen} />}
 
-      {/* Contenido principal */}
-      {contentReady && <BackgroundSlideshow />}
+      {/* Fase 2: Pantalla de carga */}
+      {phase === 'loading' && <LoadingScreen onReady={handleReady} />}
 
-      <div
-        className="relative z-10"
-        style={{
-          opacity: contentReady ? 1 : 0,
-          transition: 'opacity 1.2s ease',
-        }}
-      >
-        <ScrollProgress />
-        <Navigation />
-        <Hero />
+      {/* Fase 3: Contenido (solo cuando ya esta todo cargado) */}
+      {phase === 'ready' && (
+        <>
+          <BackgroundSlideshow />
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Countdown />
-        </div>
+          <div className="relative z-10" style={{ animation: 'fadeIn 1.2s ease forwards' }}>
+            <ScrollProgress />
+            <Navigation />
+            <Hero />
 
-        <Divider />
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <Countdown />
+            </div>
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <EventInfo />
-        </div>
+            <Divider />
 
-        <Divider />
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <EventInfo />
+            </div>
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Gallery />
-        </div>
+            <Divider />
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <SpotifyPlayer />
-        </div>
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <Gallery />
+            </div>
 
-        <Divider />
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <SpotifyPlayer />
+            </div>
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Rsvp />
-        </div>
+            <Divider />
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Footer />
-        </div>
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <Rsvp />
+            </div>
 
-        <div className="pb-28 sm:pb-36 md:pb-44" />
-      </div>
+            <div className="mt-24 sm:mt-32 md:mt-40">
+              <Footer />
+            </div>
+
+            <div className="pb-28 sm:pb-36 md:pb-44" />
+          </div>
+        </>
+      )}
     </div>
   )
 }
