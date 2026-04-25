@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Envelope from '@/components/envelope'
 import ScrollProgress from '@/components/scroll-progress'
 import Navigation from '@/components/navigation'
@@ -27,70 +27,67 @@ function Divider() {
 
 export default function Home() {
   const [isOpened, setIsOpened] = useState(false)
+  const [contentReady, setContentReady] = useState(false)
+
+  useEffect(() => {
+    if (isOpened) {
+      const t = setTimeout(() => setContentReady(true), 300)
+      return () => clearTimeout(t)
+    }
+  }, [isOpened])
 
   return (
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
-      {isOpened && <BackgroundSlideshow />}
 
-      <AnimatePresence>
-        {!isOpened && <Envelope onOpen={() => setIsOpened(true)} />}
-      </AnimatePresence>
+      {!isOpened && <Envelope onOpen={() => setIsOpened(true)} />}
 
-      {/* Black overlay que se desvanece despues del envelope para transicion suave */}
-      {isOpened && (
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
-          className="fixed inset-0 bg-black z-[50] pointer-events-none"
-        />
-      )}
+      {/* Contenido principal */}
+      {contentReady && <BackgroundSlideshow />}
 
-      {isOpened && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, ease: 'easeOut', delay: 0.8 }}
-          className="relative z-10"
-        >
-          <ScrollProgress />
-          <Navigation />
-          <Hero />
+      <div
+        className="relative z-10"
+        style={{
+          opacity: contentReady ? 1 : 0,
+          transition: 'opacity 1.2s ease',
+        }}
+      >
+        <ScrollProgress />
+        <Navigation />
+        <Hero />
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <Countdown />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Countdown />
+        </div>
 
-          <Divider />
+        <Divider />
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <EventInfo />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <EventInfo />
+        </div>
 
-          <Divider />
+        <Divider />
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <Gallery />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Gallery />
+        </div>
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <SpotifyPlayer />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <SpotifyPlayer />
+        </div>
 
-          <Divider />
+        <Divider />
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <Rsvp />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Rsvp />
+        </div>
 
-          <div className="mt-24 sm:mt-32 md:mt-40">
-            <Footer />
-          </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Footer />
+        </div>
 
-          <div className="pb-28 sm:pb-36 md:pb-44" />
-        </motion.div>
-      )}
+        <div className="pb-28 sm:pb-36 md:pb-44" />
+      </div>
     </div>
   )
 }
