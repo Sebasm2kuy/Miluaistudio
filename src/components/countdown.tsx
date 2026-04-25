@@ -25,54 +25,31 @@ export default function Countdown() {
   }, [])
 
   return (
-    <section id="detalles" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
+    <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
         className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden"
       >
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 w-full h-1 opacity-30"
-          style={{ background: 'linear-gradient(90deg, transparent, #b8860b, #d4af37, #b8860b, transparent)' }} />
-
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <p className="text-gold/60 text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.4em] sm:tracking-[0.6em] font-bold mb-3 sm:mb-4">
-            La cuenta regresiva
-          </p>
-          <h2 className="font-serif italic text-2xl sm:text-3xl md:text-6xl text-bordeaux mb-2 sm:mb-3">
-            El tiempo vuela...
-          </h2>
-          <div className="w-10 sm:w-14 h-px mx-auto mb-8 sm:mb-12 md:mb-16"
-            style={{ background: 'linear-gradient(90deg, transparent, #d4af37, transparent)' }} />
-        </motion.div>
-
-        {/* Countdown grid */}
+        <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
+          El tiempo vuela...
+        </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6">
           {Object.entries(timeLeft).map(([label, val], idx) => (
             <motion.div
               key={label}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="group relative p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border overflow-hidden min-w-0"
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border min-w-0"
               style={{
-                background: 'linear-gradient(180deg, rgba(253,252,251,0.9) 0%, rgba(253,252,251,0.7) 100%)',
+                background: 'rgba(253,252,251,0.8)',
                 borderColor: 'rgba(184, 134, 11, 0.08)',
               }}
             >
-              {/* Subtle gold top accent on each card */}
-              <div className="absolute top-0 left-0 w-full h-0.5 opacity-40"
-                style={{ background: 'linear-gradient(90deg, transparent, #d4af37, transparent)' }} />
-
               <div
                 style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
                 className="font-light text-bordeaux tracking-tight tabular-nums leading-none"

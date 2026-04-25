@@ -45,7 +45,7 @@ export default function RootLayout({
           margin: 0,
           fontFamily: "'Montserrat', sans-serif",
           backgroundColor: '#050505',
-          color: '#1a1a1a',
+          color: '#fdfcfb',
           overflowX: 'hidden',
         }}
       >

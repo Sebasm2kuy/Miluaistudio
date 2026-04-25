@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Envelope from '@/components/envelope'
+import ScrollProgress from '@/components/scroll-progress'
 import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
 import Particles from '@/components/particles'
@@ -13,14 +14,12 @@ import Gallery from '@/components/gallery'
 import Rsvp from '@/components/rsvp'
 import Footer from '@/components/footer'
 
-function OrnamentalDivider() {
+function Divider() {
   return (
-    <div className="flex items-center justify-center gap-3 sm:gap-4 py-2 opacity-40">
-      <div className="h-px w-12 sm:w-20 md:w-32" style={{ background: 'linear-gradient(90deg, transparent, #b8860b)' }} />
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-goldLight">
-        <path d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5L6 0Z" fill="currentColor" opacity="0.6" />
-      </svg>
-      <div className="h-px w-12 sm:w-20 md:w-32" style={{ background: 'linear-gradient(90deg, #b8860b, transparent)' }} />
+    <div className="flex items-center justify-center py-1 opacity-30">
+      <div className="h-px w-16 sm:w-28 md:w-44" style={{ background: 'linear-gradient(90deg, transparent, #b8860b)' }} />
+      <div className="w-1 h-1 rotate-45 bg-goldLight/60 mx-3 sm:mx-4" />
+      <div className="h-px w-16 sm:w-28 md:w-44" style={{ background: 'linear-gradient(90deg, #b8860b, transparent)' }} />
     </div>
   )
 }
@@ -41,43 +40,40 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
+          transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
           className="relative z-10"
         >
+          <ScrollProgress />
           <Navigation />
           <Hero />
 
-          <OrnamentalDivider />
-
-          <div className="mt-20 sm:mt-28 md:mt-36">
+          <div className="mt-24 sm:mt-32 md:mt-40">
             <Countdown />
           </div>
 
-          <OrnamentalDivider />
+          <Divider />
 
-          <div className="mt-20 sm:mt-28 md:mt-36">
+          <div className="mt-24 sm:mt-32 md:mt-40">
             <EventInfo />
           </div>
 
-          <OrnamentalDivider />
+          <Divider />
 
-          <div className="mt-20 sm:mt-28 md:mt-36">
+          <div className="mt-24 sm:mt-32 md:mt-40">
             <Gallery />
           </div>
 
-          <OrnamentalDivider />
-
-          <div className="mt-20 sm:mt-28 md:mt-36">
+          <div className="mt-24 sm:mt-32 md:mt-40">
             <Rsvp />
           </div>
 
-          <OrnamentalDivider />
+          <Divider />
 
-          <div className="mt-20 sm:mt-28 md:mt-36">
+          <div className="mt-24 sm:mt-32 md:mt-40">
             <Footer />
           </div>
 
-          <div className="pb-24 sm:pb-32 md:pb-40" />
+          <div className="pb-28 sm:pb-36 md:pb-44" />
         </motion.div>
       )}
     </div>
