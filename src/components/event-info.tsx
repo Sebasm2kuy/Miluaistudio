@@ -103,7 +103,7 @@ export default function EventInfo() {
             onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3272.7!2d-56.1706!3d-34.8878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x959f81ca99f2b8f3%3A0x6a1f893e3e3e3e3e!2sSal%C3%B3n%20My%20Father!5e0!3m2!1ses!2suy!4v1710000000000!5m2!1ses!2suy"
+              src="https://maps.google.com/maps?q=Salon+My+Father+Granaderos+3875+Montevideo+Uruguay&t=&z=16&ie=UTF8&iwloc=&output=embed"
               width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
