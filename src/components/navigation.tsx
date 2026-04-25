@@ -1,10 +1,11 @@
 'use client'
-import { Calendar, MapPin, CheckCircle, Images, ArrowUp } from 'lucide-react'
+import { Calendar, MapPin, CheckCircle, Images, Music, ArrowUp } from 'lucide-react'
 
 const navItems = [
   { icon: Calendar, href: '#detalles', label: 'Detalles' },
   { icon: MapPin, href: '#ubicacion', label: 'Ubicación' },
   { icon: Images, href: '#galeria', label: 'Galería' },
+  { icon: Music, href: '#musica', label: 'Música' },
   { icon: CheckCircle, href: '#confirmar', label: 'Confirmar' },
 ]
 

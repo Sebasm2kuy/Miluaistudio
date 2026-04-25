@@ -11,7 +11,17 @@ export default function Footer() {
         transition={{ duration: 1.2 }}
         className="flex flex-col items-center"
       >
-        <p className="font-cursive text-4xl sm:text-6xl md:text-8xl text-goldLight mb-4 sm:mb-6">
+        <p
+          className="font-cursive text-4xl sm:text-6xl md:text-8xl mb-4 sm:mb-6"
+          style={{
+            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
+            backgroundSize: '200% auto',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: 'shimmer 6s ease-in-out 1',
+            filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.8))',
+          }}
+        >
           Milu
         </p>
 

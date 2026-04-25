@@ -12,6 +12,7 @@ import Countdown from '@/components/countdown'
 import EventInfo from '@/components/event-info'
 import Gallery from '@/components/gallery'
 import Rsvp from '@/components/rsvp'
+import SpotifyPlayer from '@/components/spotify-player'
 import Footer from '@/components/footer'
 
 function Divider() {
@@ -64,10 +65,14 @@ export default function Home() {
           </div>
 
           <div className="mt-24 sm:mt-32 md:mt-40">
-            <Rsvp />
+            <SpotifyPlayer />
           </div>
 
           <Divider />
+
+          <div className="mt-24 sm:mt-32 md:mt-40">
+            <Rsvp />
+          </div>
 
           <div className="mt-24 sm:mt-32 md:mt-40">
             <Footer />
