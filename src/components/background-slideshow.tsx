@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 const BACKGROUND_PHOTOS = [
   '/Miluaistudio/gallery/gallery1.webp',
@@ -11,47 +11,50 @@ const BACKGROUND_PHOTOS = [
 export default function BackgroundSlideshow() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [visible, setVisible] = useState(false)
-  const [imageReady, setImageReady] = useState(false)
-  const imgRef = useRef<HTMLImageElement>(null)
 
-  // Precargar primera imagen, cuando este lista arrancar la animacion
+  // Precargar + esperar a que termine la transicion del envelope
   useEffect(() => {
     const img = new Image()
     img.onload = () => {
-      // Esperar a que el envelope termine de salir + margen
-      setTimeout(() => setImageReady(true), 600)
-      setTimeout(() => setVisible(true), 1200)
+      setTimeout(() => setVisible(true), 1500)
     }
     img.src = BACKGROUND_PHOTOS[0]
   }, [])
 
-  // Ciclo del slideshow
+  // Ciclo
   useEffect(() => {
     if (!visible) return
     const interval = setInterval(() => {
       setVisible(false)
       setTimeout(() => {
         setCurrentIdx((prev) => (prev + 1) % BACKGROUND_PHOTOS.length)
-        setTimeout(() => setVisible(true), 200)
+        // Esperar un poco a que la nueva imagen decodifique
+        const nextImg = new Image()
+        nextImg.onload = () => setVisible(true)
+        nextImg.onerror = () => setVisible(true)
+        nextImg.src = BACKGROUND_PHOTOS[(currentIdx + 1) % BACKGROUND_PHOTOS.length]
+        // Fallback por si ya estaba en cache
+        setTimeout(() => setVisible(true), 400)
       }, 600)
     }, 9000)
     return () => clearInterval(interval)
-  }, [visible])
+  }, [visible, currentIdx])
 
   return (
-    <div className="fixed inset-0 z-[-10] flex items-center justify-center bg-black">
+    <div className="fixed inset-0 z-[-10] bg-black">
+      {/* Imagen centrada con absolute desde el frame 1 */}
       <img
         key={currentIdx}
-        ref={imgRef}
         src={BACKGROUND_PHOTOS[currentIdx]}
         alt=""
         draggable={false}
-        className="max-w-[95vw] sm:max-w-[90vw] max-h-[80vh] sm:max-h-[85vh] object-contain rounded-2xl sm:rounded-3xl md:rounded-[3rem]"
+        decoding="async"
+        className="absolute left-1/2 top-1/2 w-[92vw] sm:w-[85vw] max-h-[78vh] sm:max-h-[84vh] object-contain rounded-2xl sm:rounded-3xl md:rounded-[3rem]"
         style={{
+          transform: 'translate(-50%, -50%)',
           filter: 'contrast(1.05) brightness(0.75) saturate(0.85)',
           opacity: visible ? 1 : 0,
-          transform: visible ? 'scale(1)' : 'scale(1.02)',
-          transition: 'opacity 1s ease, transform 1s ease',
+          transition: 'opacity 800ms ease',
           boxShadow: '0 0 80px rgba(0,0,0,0.9)',
           border: '1px solid rgba(212, 175, 55, 0.06)',
         }}
