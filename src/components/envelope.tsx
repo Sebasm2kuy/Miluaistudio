@@ -54,32 +54,19 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
             className="relative group cursor-pointer"
             onClick={handleOpen}
           >
-            <div className="absolute inset-0 bg-goldLight rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
+            <div className="absolute inset-0 bg-bordeaux/30 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
             <button
-              className="relative w-36 h-36 md:w-56 md:h-56 rounded-full border-8 border-white flex items-center justify-center transition-transform duration-500 hover:scale-105"
+              className="relative w-44 h-44 md:w-72 md:h-72 rounded-full flex items-center justify-center transition-transform duration-500 hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%)',
-                boxShadow: '0 10px 30px rgba(138, 107, 13, 0.4), inset 0 2px 4px rgba(255,255,255,0.3)',
+                filter: 'drop-shadow(0 8px 24px rgba(61, 2, 2, 0.4))',
               }}
             >
-              <svg viewBox="0 0 100 100" className="w-28 h-28 md:w-44 md:h-44" aria-label="M">
-                <defs>
-                  <filter id="mShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="rgba(0,0,0,0.35)" />
-                  </filter>
-                </defs>
-                <text
-                  x="50"
-                  y="50"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill="white"
-                  fontSize="58"
-                  fontFamily="'Alex Brush', cursive"
-                  dx="1"
-                  filter="url(#mShadow)"
-                >M</text>
-              </svg>
+              <img
+                src="/Miluaistudio/sello.png"
+                alt="Sello Milagros XV Años"
+                className="w-full h-full object-contain"
+                draggable={false}
+              />
             </button>
           </motion.div>
 
