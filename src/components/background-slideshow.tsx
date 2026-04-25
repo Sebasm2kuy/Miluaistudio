@@ -11,8 +11,16 @@ const BACKGROUND_PHOTOS = [
 export default function BackgroundSlideshow() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [fadeIn, setFadeIn] = useState(true)
+  const [started, setStarted] = useState(false)
+
+  // Esperar 3s antes de arrancar el ciclo para no pisar la animacion del hero
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), 3000)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
+    if (!started) return
     const interval = setInterval(() => {
       setFadeIn(false)
       setTimeout(() => {
@@ -21,7 +29,7 @@ export default function BackgroundSlideshow() {
       }, 700)
     }, 9000)
     return () => clearInterval(interval)
-  }, [])
+  }, [started])
 
   return (
     <div className="fixed inset-0 z-[-10] flex items-center justify-center bg-black">

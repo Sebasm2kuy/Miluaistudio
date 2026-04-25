@@ -10,7 +10,8 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
   const handleOpen = useCallback(() => {
     if (opened) return
     setOpened(true)
-    setTimeout(onOpen, 900)
+    // Esperar a que termine completamente el exit antes de mostrar contenido
+    setTimeout(onOpen, 1200)
   }, [opened, onOpen])
 
   return (
@@ -18,20 +19,20 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
       {!opened && (
         <motion.div
           key="envelope"
-          exit={{ opacity: 0, scale: 1.06, filter: 'blur(12px)' }}
-          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+          exit={{ opacity: 0, scale: 1.03, filter: 'blur(8px)' }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           className="fixed inset-0 z-[200] cursor-pointer overflow-hidden"
           onClick={handleOpen}
         >
           {/* Fondo negro limpio */}
           <div className="absolute inset-0 bg-black" />
 
-          {/* Imagen de invitación — sin goldenPulse */}
+          {/* Imagen de invitacion */}
           <motion.div
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={{ opacity: 0, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 1.6, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
+            exit={{ opacity: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
             className="absolute inset-0 flex items-center justify-center p-4 sm:p-8 md:p-12"
           >
             <picture>
