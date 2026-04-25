@@ -21,64 +21,33 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
       {!opened && (
         <motion.div
           key="envelope"
-          exit={{ opacity: 0, scale: 1.08 }}
-          transition={{ duration: 0.7, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-6 text-center bg-ivory overflow-hidden"
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[200] cursor-pointer overflow-hidden"
+          onClick={handleOpen}
         >
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          >
-            <p className="text-gold uppercase tracking-[1em] text-[10px] mb-10 font-bold italic opacity-60">
-              Invitación Especial
-            </p>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: [0.19, 1, 0.22, 1] }}
-            className="font-cursive text-8xl md:text-[14rem] text-bordeaux mb-16 drop-shadow-2xl"
+            transition={{ duration: 1.4, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
+            className="absolute inset-0 flex items-center justify-center bg-black"
           >
-            Milagros
-          </motion.h1>
+            <img
+              src="/Miluaistudio/invitacion.png"
+              alt="Invitación XV Años - Milagros"
+              className="w-full h-full object-contain"
+              draggable={false}
+            />
+          </motion.div>
 
+          {/* Subtle pulse hint */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.8, delay: 1.2, ease: [0.19, 1, 0.22, 1] }}
-            className="relative group cursor-pointer"
-            onClick={handleOpen}
-          >
-            <div className="absolute inset-0 bg-bordeaux/30 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
-            <button
-              className="relative w-44 h-44 md:w-72 md:h-72 rounded-full flex items-center justify-center transition-transform duration-500 hover:scale-105"
-              style={{
-                filter: 'drop-shadow(0 8px 24px rgba(61, 2, 2, 0.4))',
-              }}
-            >
-              <img
-                src="/Miluaistudio/sello.png"
-                alt="Sello Milagros XV Años"
-                className="w-full h-full object-contain"
-                draggable={false}
-              />
-            </button>
-          </motion.div>
-
-          <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, delay: 2 }}
-            className="mt-16 text-bordeaux/40 text-[10px] uppercase tracking-[0.6em] font-bold animate-bounce"
-          >
-            Toca para descubrir
-          </motion.p>
+            animate={{ opacity: [0, 0.15, 0] }}
+            transition={{ duration: 2.5, delay: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 bg-white pointer-events-none"
+          />
         </motion.div>
       )}
     </AnimatePresence>
