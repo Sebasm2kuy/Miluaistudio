@@ -48,7 +48,7 @@ export default function Home() {
       >
         <ScrollProgress />
         <Navigation />
-        <Hero />
+        <Hero active={phase === 'done'} />
 
         <div className="mt-24 sm:mt-32 md:mt-40">
           <Countdown />
@@ -75,7 +75,6 @@ export default function Home() {
       </div>
 
       {/* Capas superiores */}
-      {/* Envelope se queda renderizado durante 'loading' pero atras del loader (z-200 < z-300) */}
       {phase !== 'done' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
     </div>
