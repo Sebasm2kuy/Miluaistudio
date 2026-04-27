@@ -52,10 +52,13 @@
 }
 
 @layer base {
+  html {
+    overflow-x: clip;
+  }
   body {
     background-color: #050505;
     color: #fdfcfb;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 }
 

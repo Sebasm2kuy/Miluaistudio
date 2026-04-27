@@ -35,39 +35,48 @@ export default function Home() {
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
 
-      {/* Slideshow SIEMPRE renderizado y visible - el loader lo cubre */}
+      {/* Slideshow SIEMPRE renderizado - el loader (z-300) lo tapa */}
       <BackgroundSlideshow />
 
-      {/* Contenido SIEMPRE visible - el loader (z-300) lo tapa durante loading */}
-      <ScrollProgress />
-      <Navigation />
-      <Hero />
+      {/* Contenido SIEMPRE en el DOM - invisible detras del loader */}
+      <div
+        style={{
+          opacity: phase === 'done' ? 1 : 0,
+          transition: 'opacity 1.2s ease',
+          pointerEvents: phase === 'done' ? 'auto' : 'none',
+        }}
+      >
+        <ScrollProgress />
+        <Navigation />
+        <Hero />
 
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <Countdown />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Countdown />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <EventInfo />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Gallery />
+        </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <SpotifyPlayer />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Rsvp />
+        </div>
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Footer />
+        </div>
+        <div className="pb-28 sm:pb-36 md:pb-44" />
       </div>
-      <Divider />
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <EventInfo />
-      </div>
-      <Divider />
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <Gallery />
-      </div>
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <SpotifyPlayer />
-      </div>
-      <Divider />
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <Rsvp />
-      </div>
-      <div className="mt-24 sm:mt-32 md:mt-40">
-        <Footer />
-      </div>
-      <div className="pb-28 sm:pb-36 md:pb-44" />
 
       {/* Capas superiores */}
-      {phase === 'envelope' && <Envelope onOpen={handleOpen} />}
+      {/* Envelope se queda renderizado durante 'loading' pero atras del loader (z-200 < z-300) */}
+      {phase !== 'done' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
     </div>
   )

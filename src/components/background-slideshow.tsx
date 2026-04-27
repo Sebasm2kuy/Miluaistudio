@@ -10,9 +10,8 @@ const PHOTOS = [
 
 export default function BackgroundSlideshow() {
   const [idx, setIdx] = useState(0)
-  const [show, setShow] = useState(true) // siempre arranca visible
+  const [show, setShow] = useState(true)
 
-  // Ciclo de crossfade
   useEffect(() => {
     const t = setInterval(() => {
       setShow(false)
@@ -26,15 +25,20 @@ export default function BackgroundSlideshow() {
 
   return (
     <div className="fixed inset-0 z-[-10] bg-black flex items-center justify-center overflow-hidden">
-      {/* Contenedor centrado con max-width en vez de vw para evitar overflow */}
-      <div className="flex items-center justify-center w-full h-full p-[5vw]">
+      <div className="flex items-center justify-center w-full h-full" style={{ padding: '5vw' }}>
         <img
           key={idx}
           src={PHOTOS[idx]}
           alt=""
           draggable={false}
-          className="max-w-full max-h-full object-contain rounded-2xl"
           style={{
+            display: 'block',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain',
+            borderRadius: '1rem',
             opacity: show ? 1 : 0,
             transition: 'opacity 800ms ease',
             filter: 'brightness(0.75) saturate(0.85)',
