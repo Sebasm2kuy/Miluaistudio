@@ -1,10 +1,22 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CalendarPlus } from 'lucide-react'
 
-const EVENT_DATE = new Date('2026-08-22T21:00:00')
+// Fecha del evento: 22 de Agosto 2026, 21:00 hs (hora de Uruguay, GMT-3)
+const EVENT_MS = Date.UTC(2026, 7, 23, 0, 0, 0) // 22 Ago 21:00 UY = 23 Ago 00:00 UTC
 const labels: Record<string, string> = { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' }
+
+function calcTimeLeft() {
+  const diff = EVENT_MS - Date.now()
+  if (diff <= 0) return { D: 0, H: 0, M: 0, S: 0 }
+  return {
+    D: Math.floor(diff / 86400000),
+    H: Math.floor((diff / 3600000) % 24),
+    M: Math.floor((diff / 60000) % 60),
+    S: Math.floor((diff / 1000) % 60),
+  }
+}
 
 function FlipUnit({ value, label }: { value: number; label: string }) {
   const display = String(value).padStart(2, '0')
@@ -43,25 +55,17 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
 }
 
 export default function Countdown() {
-  const [timeLeft, setTimeLeft] = useState({ D: 0, H: 0, M: 0, S: 0 })
+  const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
 
   useEffect(() => {
+    setTimeLeft(calcTimeLeft()) // Sync immediately on mount
     const timer = setInterval(() => {
-      const now = new Date()
-      const diff = EVENT_DATE.getTime() - now.getTime()
-      if (diff > 0) {
-        setTimeLeft({
-          D: Math.floor(diff / (1000 * 60 * 60 * 24)),
-          H: Math.floor((diff / (1000 * 60 * 60)) % 24),
-          M: Math.floor((diff / 1000 / 60) % 60),
-          S: Math.floor((diff / 1000) % 60),
-        })
-      }
+      setTimeLeft(calcTimeLeft())
     }, 1000)
     return () => clearInterval(timer)
   }, [])
 
-  const addToCalendar = () => {
+  const addToCalendar = useCallback(() => {
     const url = new URL('https://www.google.com/calendar/render')
     url.searchParams.set('action', 'TEMPLATE')
     url.searchParams.set('text', 'XV Años de Milagros')
@@ -69,7 +73,7 @@ export default function Countdown() {
     url.searchParams.set('location', 'Salón My Father, Granaderos 3875, Montevideo, Uruguay')
     url.searchParams.set('details', 'XV Años de Milagros Cabrera\nSalón My Father - Granaderos 3875, Montevideo\n21:00 hs\n\n¡Nos vemos!')
     window.open(url.toString(), '_blank')
-  }
+  }, [])
 
   return (
     <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
