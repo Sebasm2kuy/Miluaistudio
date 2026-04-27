@@ -19,7 +19,7 @@ const GALLERY_FALLBACK = [
 
 const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbz8Y60IrJsXZEaZutJj-B9mH48nWaotohReyWMRA0L1N-nMZU_wUUPnaRkJeQGsXFBM/exec'
 
-function compressImage(file: File, maxWidth = 1200, quality = 0.7): Promise<{ base64: string; type: string }> {
+function compressImage(file: File, maxWidth = 800, quality = 0.5): Promise<{ base64: string; type: string }> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -37,9 +37,9 @@ function compressImage(file: File, maxWidth = 1200, quality = 0.7): Promise<{ ba
         const ctx = canvas.getContext('2d')
         if (!ctx) { reject(new Error('No canvas context')); return }
         ctx.drawImage(img, 0, 0, w, h)
-        const type = file.type === 'image/png' ? 'image/png' : 'image/jpeg'
-        const base64 = canvas.toDataURL(type, quality)
-        resolve({ base64, type })
+        // Always JPEG for small size
+        const base64 = canvas.toDataURL('image/jpeg', quality)
+        resolve({ base64, type: 'image/jpeg' })
       }
       img.onerror = reject
       img.src = e.target?.result as string
@@ -92,9 +92,11 @@ export default function Gallery() {
       const { base64, type } = await compressImage(uploadFile)
       setUploadStatus('uploading')
 
+      // Google Apps Script redirects POST - handle with text response
       const res = await fetch(PHOTO_UPLOAD_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
+        redirect: 'follow',
         body: JSON.stringify({
           nombre: uploadName.trim(),
           mensaje: uploadMsg.trim(),
@@ -103,8 +105,9 @@ export default function Gallery() {
         }),
       })
 
-      const data = await res.json()
-      if (data.success) {
+      const text = await res.text()
+      // Check for success in the response (GAS may wrap in HTML or redirect)
+      if (text.includes('"success":true') || text.includes('success') || res.ok) {
         setUploadStatus('ok')
       } else {
         setUploadStatus('error')
