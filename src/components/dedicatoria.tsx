@@ -3,84 +3,61 @@ import { motion } from 'framer-motion'
 
 export default function Dedicatoria() {
   return (
-    <section id="dedicatoria" className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
+    <section className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-        className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-6 sm:p-10 md:p-20 text-center relative overflow-hidden"
+        className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-6 sm:p-8 md:p-16 text-center relative overflow-hidden"
       >
-        {/* Decorativa superior */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-20 sm:w-28 mx-auto mb-6 sm:mb-8 h-px"
-          style={{
-            background: 'linear-gradient(90deg, transparent, #d4af37, #fcf6ba, #d4af37, transparent)',
-            boxShadow: '0 0 12px rgba(212,175,55,0.3)',
-          }}
-        />
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-l-2 rounded-tl-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-r-2 rounded-tr-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
+        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-l-2 rounded-bl-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
+        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-r-2 rounded-br-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
 
         <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-cursive text-2xl sm:text-3xl md:text-4xl text-bordeaux mb-6 sm:mb-8"
+          transition={{ duration: 1, delay: 0.3 }}
+          className="font-serif italic text-xl sm:text-2xl md:text-4xl text-bordeaux mb-6 sm:mb-8 leading-relaxed"
         >
-          Queridos familiares y amigos
+          &ldquo;Hay momentos que no se repiten, personas que no se olvidan y recuerdos que se guardan para siempre en el corazón.&rdquo;
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="text-gray-500 text-xs sm:text-sm md:text-base leading-relaxed mb-6 sm:mb-8 px-2 sm:px-4"
+        >
+          Cada persona que está leyendo esto es parte importante de mi historia. Los esperamos con toda la emoción del mundo para compartir juntos esta noche tan especial.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="space-y-4 sm:space-y-5 md:space-y-6 text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed sm:leading-relaxed md:leading-loose font-light"
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex items-center justify-center gap-3"
         >
-          <p>
-            Hay momentos en la vida que soñamos desde pequeñas, y esta noche es una de ellos. Mis XV años no son solo una celebración, son el inicio de una etapa nueva llena de sueños, risas y recuerdos que quiero compartir con cada uno de ustedes.
+          <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
+          <p
+            className="font-cursive text-2xl sm:text-3xl md:text-4xl"
+            style={{
+              background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              animation: 'shimmer 5s ease-in-out infinite',
+            }}
+          >
+            Milagros
           </p>
-          <p>
-            Cada persona que lee esta invitación tiene un lugar especial en mi corazón. Su presencia es el mejor regalo que me pueden hacer, y que juntos hagamos de esta noche algo verdaderamente inolvidable.
-          </p>
-          <p>
-            Los espero con el corazón abierto y una sonrisa enorme.
-          </p>
+          <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, #d4af37, transparent)' }} />
         </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="font-cursive text-xl sm:text-2xl md:text-3xl mt-6 sm:mt-8 md:mt-10"
-          style={{
-            background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
-            backgroundSize: '200% auto',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            animation: 'shimmer 6s ease-in-out infinite',
-          }}
-        >
-          Con todo mi amor, Milagros
-        </motion.p>
-
-        {/* Decorativa inferior */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="w-20 sm:w-28 mx-auto mt-6 sm:mt-8 h-px"
-          style={{
-            background: 'linear-gradient(90deg, transparent, #d4af37, #fcf6ba, #d4af37, transparent)',
-            boxShadow: '0 0 12px rgba(212,175,55,0.3)',
-          }}
-        />
       </motion.div>
     </section>
   )

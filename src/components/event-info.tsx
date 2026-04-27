@@ -13,7 +13,6 @@ export default function EventInfo() {
         className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden"
       >
         <div className="grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-20 items-start">
-          {/* Left column */}
           <div className="text-left space-y-6 sm:space-y-10 md:space-y-14">
             {/* Date */}
             <motion.div
@@ -55,7 +54,7 @@ export default function EventInfo() {
               </div>
             </motion.div>
 
-            {/* Dress Code */}
+            {/* Dress Code - aligned same as other items, no frame */}
             <motion.div
               initial={{ opacity: 0, x: -25 }}
               whileInView={{ opacity: 1, x: 0 }}

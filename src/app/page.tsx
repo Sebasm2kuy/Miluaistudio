@@ -36,11 +36,8 @@ export default function Home() {
   return (
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
-
-      {/* Slideshow SIEMPRE renderizado - el loader (z-300) lo tapa */}
       <BackgroundSlideshow />
 
-      {/* Contenido SIEMPRE en el DOM - invisible detras del loader */}
       <div
         style={{
           opacity: phase === 'done' ? 1 : 0,
@@ -50,7 +47,7 @@ export default function Home() {
       >
         <ScrollProgress />
         <Navigation />
-        <Hero active={phase === 'done'} />
+        <Hero />
 
         <div className="mt-24 sm:mt-32 md:mt-40">
           <Dedicatoria />
@@ -85,7 +82,6 @@ export default function Home() {
         <div className="pb-28 sm:pb-36 md:pb-44" />
       </div>
 
-      {/* Capas superiores */}
       {phase !== 'done' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
     </div>

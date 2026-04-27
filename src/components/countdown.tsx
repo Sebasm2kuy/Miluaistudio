@@ -8,7 +8,6 @@ const labels: Record<string, string> = { D: 'Días', H: 'Horas', M: 'Min', S: 'S
 
 function FlipUnit({ value, label }: { value: number; label: string }) {
   const display = String(value).padStart(2, '0')
-
   return (
     <div className="flex flex-col items-center">
       <div
@@ -19,12 +18,7 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
           boxShadow: '0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
         }}
       >
-        {/* Divider line in the middle */}
-        <div
-          className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10"
-          style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }}
-        />
-
+        <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
         <div style={{ perspective: '400px' }}>
           <AnimatePresence mode="wait">
             <motion.div
@@ -89,7 +83,6 @@ export default function Countdown() {
         <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
           El tiempo vuela...
         </h2>
-
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6">
           {Object.entries(timeLeft).map(([label, val]) => (
             <motion.div
@@ -103,8 +96,6 @@ export default function Countdown() {
             </motion.div>
           ))}
         </div>
-
-        {/* Calendar button */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
