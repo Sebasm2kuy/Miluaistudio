@@ -35,39 +35,38 @@ export default function Home() {
     <div className="min-h-screen selection:bg-goldLight/30">
       <Particles />
 
-      {/* --- CONTENIDO: SIEMPRE RENDERIZADO pero invisible hasta 'done' --- */}
-      <BackgroundSlideshow visible={phase === 'done'} />
+      {/* Slideshow SIEMPRE renderizado y visible - el loader lo cubre */}
+      <BackgroundSlideshow />
 
-      <div style={{ visibility: phase === 'done' ? 'visible' : 'hidden' }}>
-        <ScrollProgress />
-        <Navigation />
-        <Hero />
+      {/* Contenido SIEMPRE visible - el loader (z-300) lo tapa durante loading */}
+      <ScrollProgress />
+      <Navigation />
+      <Hero />
 
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Countdown />
-        </div>
-        <Divider />
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <EventInfo />
-        </div>
-        <Divider />
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Gallery />
-        </div>
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <SpotifyPlayer />
-        </div>
-        <Divider />
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Rsvp />
-        </div>
-        <div className="mt-24 sm:mt-32 md:mt-40">
-          <Footer />
-        </div>
-        <div className="pb-28 sm:pb-36 md:pb-44" />
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <Countdown />
       </div>
+      <Divider />
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <EventInfo />
+      </div>
+      <Divider />
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <Gallery />
+      </div>
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <SpotifyPlayer />
+      </div>
+      <Divider />
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <Rsvp />
+      </div>
+      <div className="mt-24 sm:mt-32 md:mt-40">
+        <Footer />
+      </div>
+      <div className="pb-28 sm:pb-36 md:pb-44" />
 
-      {/* --- CAPAS SUPERIORES --- */}
+      {/* Capas superiores */}
       {phase === 'envelope' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
     </div>

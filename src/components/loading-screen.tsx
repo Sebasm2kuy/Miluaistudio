@@ -1,61 +1,58 @@
 'use client'
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface LoadingScreenProps { onDone: () => void }
 
-const IMAGES = [
-  '/Miluaistudio/gallery/gallery1.webp',
-  '/Miluaistudio/gallery/gallery2.webp',
-  '/Miluaistudio/gallery/gallery3.webp',
-  '/Miluaistudio/gallery/gallery4.webp',
-  '/Miluaistudio/invitacion-vertical.webp',
-  '/Miluaistudio/invitacion.webp',
-]
+// Solo precargamos la primera imagen del slideshow (la critica)
+const CRITICAL_IMAGE = '/Miluaistudio/gallery/gallery1.webp'
 
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
-  const loadedRef = useRef(0)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const doneRef = useRef(false)
 
   useEffect(() => {
-    loadedRef.current = 0
-    const total = IMAGES.length
+    let imageReady = false
 
-    IMAGES.forEach((src) => {
-      const img = new Image()
-      img.onload = img.onerror = () => {
-        loadedRef.current++
-        // Solo actualizar progreso si esta por delante del auto-advance
-        setProgress(prev => {
-          const real = Math.round((loadedRef.current / total) * 100)
-          return Math.max(prev, real)
+    // Precargar imagen critica
+    const img = new Image()
+    img.onload = () => { imageReady = true }
+    img.onerror = () => { imageReady = true } // seguir aunque falle
+    img.src = CRITICAL_IMAGE
+
+    // Barra de progreso: avanza suavemente hasta 85, espera la imagen, luego 100
+    let current = 0
+    const interval = setInterval(() => {
+      current += 1
+      if (imageReady && current >= 85) {
+        current = 100
+        clearInterval(interval)
+        // Esperar a que el browser termine de renderizar y centrar
+        // antes de avisar que terminó
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                if (doneRef.current) return
+                doneRef.current = true
+                setProgress(100)
+              }, 400)
+            })
+          })
         })
-        if (loadedRef.current >= total && intervalRef.current) {
-          clearInterval(intervalRef.current)
-          intervalRef.current = null
-        }
+      } else if (current > 84) {
+        current = 84 // esperar la imagen
       }
-      img.src = src
-    })
+      setProgress(Math.min(current, 100))
+    }, 40)
 
-    // Auto-advance lento para que se vea elegante
-    intervalRef.current = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) return prev
-        const real = Math.round((loadedRef.current / IMAGES.length) * 100)
-        return Math.min(prev + 1, real)
-      })
-    }, 55)
-
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+    return () => { clearInterval(interval) }
   }, [])
 
   useEffect(() => {
     if (progress >= 100) {
-      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null }
-      const t1 = setTimeout(() => setFading(true), 350)
-      const t2 = setTimeout(onDone, 1000)
+      const t1 = setTimeout(() => setFading(true), 300)
+      const t2 = setTimeout(onDone, 900)
       return () => { clearTimeout(t1); clearTimeout(t2) }
     }
   }, [progress, onDone])
@@ -63,7 +60,17 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   return (
     <div
       className="fixed inset-0 z-[300] bg-black flex flex-col items-center justify-center"
-      style={{ opacity: fading ? 0 : 1, transition: 'opacity 0.65s ease' }}
+      style={{
+        opacity: fading ? 0 : 1,
+        transition: 'opacity 0.6s ease',
+        // Asegurar que cubre TODO incluso si hay overflow horizontal
+        left: '-5px',
+        right: '-5px',
+        top: '-5px',
+        bottom: '-5px',
+        width: 'calc(100% + 10px)',
+        height: 'calc(100% + 10px)',
+      }}
     >
       <p
         className="font-cursive text-3xl sm:text-5xl mb-8 sm:mb-10"
@@ -85,7 +92,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             style={{
               width: `${progress}%`,
               background: 'linear-gradient(90deg, #b38728, #d4af37, #fcf6ba)',
-              transition: 'width 0.12s linear',
+              transition: 'width 0.1s linear',
               boxShadow: '0 0 8px rgba(212,175,55,0.4)',
             }}
           />
