@@ -10,18 +10,20 @@ interface Particle {
   opacity: number
   duration: number
   delay: number
+  glow: boolean
 }
 
 function generateParticles(count: number): Particle[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
-    width: Math.random() * 2.5 + 0.5,
-    height: Math.random() * 2.5 + 0.5,
+    width: Math.random() * 3 + 1,
+    height: Math.random() * 3 + 1,
     left: Math.random() * 100,
     top: Math.random() * 100,
-    opacity: Math.random() * 0.25 + 0.05,
-    duration: Math.random() * 14 + 8,
-    delay: Math.random() * 14,
+    opacity: Math.random() * 0.4 + 0.15,
+    duration: Math.random() * 16 + 10,
+    delay: Math.random() * 16,
+    glow: i < Math.ceil(count * 0.35), // 35% con glow brillante
   }))
 }
 
@@ -30,10 +32,9 @@ export default function Particles() {
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768
-    // Retrasar en mobile para no afectar la carga inicial
-    const delay = isMobile ? 2000 : 0
+    const delay = isMobile ? 3000 : 0
     const t = setTimeout(() => {
-      setParticles(generateParticles(isMobile ? 8 : 30))
+      setParticles(generateParticles(isMobile ? 15 : 35))
     }, delay)
     return () => clearTimeout(t)
   }, [])
@@ -52,7 +53,12 @@ export default function Particles() {
             left: `${p.left}%`,
             top: `${p.top}%`,
             opacity: p.opacity,
-            background: 'radial-gradient(circle, #fcf6ba 0%, transparent 80%)',
+            background: p.glow
+              ? 'radial-gradient(circle, #fcf6ba 0%, rgba(212,175,55,0.6) 40%, transparent 80%)'
+              : 'radial-gradient(circle, #fcf6ba 0%, transparent 80%)',
+            boxShadow: p.glow
+              ? '0 0 6px 1px rgba(212,175,55,0.3), 0 0 12px rgba(252,246,186,0.15)'
+              : 'none',
             animation: `float ${p.duration}s linear infinite`,
             animationDelay: `${p.delay}s`,
           }}

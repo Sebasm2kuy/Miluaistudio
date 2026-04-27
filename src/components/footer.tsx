@@ -56,6 +56,24 @@ export default function Footer() {
         >
           Con amor, para un dia inolvidable
         </p>
+
+        {/* Hashtag elegante */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="mt-8 sm:mt-10 md:mt-14"
+        >
+          <p
+            className="font-light tracking-[0.15em] sm:tracking-[0.25em] text-xs sm:text-sm md:text-base"
+            style={{
+              color: 'rgba(184,134,11,0.5)',
+            }}
+          >
+            #MilagrosXV2026
+          </p>
+        </motion.div>
       </motion.div>
     </footer>
   )

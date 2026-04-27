@@ -8,8 +8,10 @@ import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
 import Particles from '@/components/particles'
 import Hero from '@/components/hero'
+import Dedicatoria from '@/components/dedicatoria'
 import Countdown from '@/components/countdown'
 import EventInfo from '@/components/event-info'
+import Timeline from '@/components/timeline'
 import Gallery from '@/components/gallery'
 import Rsvp from '@/components/rsvp'
 import SpotifyPlayer from '@/components/spotify-player'
@@ -51,11 +53,19 @@ export default function Home() {
         <Hero active={phase === 'done'} />
 
         <div className="mt-24 sm:mt-32 md:mt-40">
+          <Dedicatoria />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
           <Countdown />
         </div>
         <Divider />
         <div className="mt-24 sm:mt-32 md:mt-40">
           <EventInfo />
+        </div>
+        <Divider />
+        <div className="mt-24 sm:mt-32 md:mt-40">
+          <Timeline />
         </div>
         <Divider />
         <div className="mt-24 sm:mt-32 md:mt-40">

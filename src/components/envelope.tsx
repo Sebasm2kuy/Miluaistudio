@@ -9,7 +9,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
   const handleOpen = useCallback(() => {
     if (exiting) return
     setExiting(true)
-    onOpen() // INMEDIATO - sin delay, el loader (z-300) cubre todo
+    onOpen()
   }, [exiting, onOpen])
 
   return (
@@ -22,18 +22,47 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
         padding: 'clamp(12px, 3vw, 48px)',
       }}
     >
-      <img
-        src="/Miluaistudio/invitacion-vertical.png"
-        alt="Invitación XV Años - Milagros"
-        draggable={false}
-        className="object-contain rounded-lg"
+      {/* Contenedor con glow pulsante */}
+      <div
+        className="relative"
         style={{
           animation: 'fadeIn 1.5s ease forwards',
-          display: 'block',
-          maxWidth: 'calc(100vw - 24px)',
-          maxHeight: 'calc(100vh - 24px)',
         }}
-      />
+      >
+        {/* Glow dorado pulsante detras de la imagen */}
+        <div
+          className="absolute inset-0 rounded-2xl"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(212,175,55,0.25) 0%, rgba(184,134,11,0.1) 40%, transparent 70%)',
+            animation: 'breathe 3s ease-in-out infinite',
+            transform: 'scale(1.15)',
+            filter: 'blur(15px)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Borde dorado pulsante */}
+        <div
+          className="absolute inset-[-2px] rounded-2xl"
+          style={{
+            border: '1px solid rgba(212,175,55,0.3)',
+            animation: 'breathe 3s ease-in-out infinite',
+            pointerEvents: 'none',
+          }}
+        />
+
+        <img
+          src="/Miluaistudio/invitacion-vertical.png"
+          alt="Invitación XV Años - Milagros"
+          draggable={false}
+          className="object-contain rounded-lg relative z-10"
+          style={{
+            display: 'block',
+            maxWidth: 'calc(100vw - 24px)',
+            maxHeight: 'calc(100vh - 24px)',
+          }}
+        />
+      </div>
 
       <p
         className="fixed bottom-6 sm:bottom-12 left-0 right-0 text-center text-goldLight/60 text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-light"
