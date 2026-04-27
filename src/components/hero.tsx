@@ -115,20 +115,32 @@ export default function Hero({ active }: HeroProps) {
         </motion.p>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator + texto */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={active ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1, delay: 4.8 }}
-        className="absolute bottom-8 sm:bottom-12"
+        transition={{ duration: 1.5, delay: 5.5 }}
+        className="absolute bottom-8 sm:bottom-12 flex flex-col items-center gap-2.5"
       >
+        <motion.p
+          animate={active ? { opacity: [0.4, 0.85, 0.4] } : { opacity: 0 }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-[10px] sm:text-xs uppercase tracking-[0.35em] sm:tracking-[0.45em] font-light"
+          style={{ color: '#e8d48b' }}
+        >
+          Desliza
+        </motion.p>
         <motion.div
           animate={active ? { y: [0, 6, 0] } : { y: 0 }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
         >
           <div className="w-5 h-8 sm:w-6 sm:h-9 border border-goldLight/40 rounded-full flex justify-center pt-1.5"
             style={{ boxShadow: '0 0 12px rgba(0,0,0,0.6), 0 0 6px rgba(212,175,55,0.15)' }}>
-            <div className="w-1 h-2 bg-goldLight/80 rounded-full" />
+            <motion.div
+              animate={active ? { opacity: [0.3, 1, 0.3] } : { opacity: 0 }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-1 h-2 bg-goldLight/80 rounded-full"
+            />
           </div>
         </motion.div>
       </motion.div>
