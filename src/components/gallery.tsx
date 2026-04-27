@@ -59,14 +59,30 @@ export default function Gallery() {
   const [preview, setPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  // Helper: Google Apps Script wraps responses in HTML, so we need to extract JSON from text
+  const parseGasResponse = async (res: Response): Promise<any> => {
+    const text = await res.text()
+    try {
+      // Try direct JSON first
+      return JSON.parse(text)
+    } catch {
+      // Try to find JSON in the HTML wrapper (Google Apps Script redirect page)
+      const match = text.match(/\{[\s\S]*\}/)
+      if (match) {
+        try { return JSON.parse(match[0]) } catch { /* ignore */ }
+      }
+      return null
+    }
+  }
+
   // Fetch uploaded photos on mount
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
         const res = await fetch(`${PHOTO_UPLOAD_URL}?action=getPhotos`)
         if (res.ok) {
-          const data = await res.json()
-          if (Array.isArray(data.photos)) {
+          const data = await parseGasResponse(res)
+          if (data && Array.isArray(data.photos)) {
             const uploaded: Photo[] = data.photos.map((url: string, i: number) => ({
               id: `srv-${i}`,
               src: url,
@@ -130,12 +146,12 @@ export default function Gallery() {
         }
         setPhotos(prev => [...prev, newPhoto])
         setUploadState('ok')
-        // Also try fetching from server
+        // Also try fetching from server to get the persistent URL
         try {
           const serverRes = await fetch(`${PHOTO_UPLOAD_URL}?action=getPhotos`)
           if (serverRes.ok) {
-            const data = await serverRes.json()
-            if (Array.isArray(data.photos) && data.photos.length > 0) {
+            const data = await parseGasResponse(serverRes)
+            if (data && Array.isArray(data.photos) && data.photos.length > 0) {
               const latestUrl = data.photos[data.photos.length - 1]
               setPhotos(prev => {
                 const updated = [...prev]

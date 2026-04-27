@@ -47,7 +47,7 @@ export default function Home() {
       >
         <ScrollProgress />
         <Navigation />
-        <Hero />
+        <Hero active={phase === 'done'} />
 
         <div className="mt-24 sm:mt-32 md:mt-40">
           <Dedicatoria />
