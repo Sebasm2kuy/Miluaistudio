@@ -120,7 +120,7 @@ export default function Gallery() {
           </p>
 
           <button
-            onClick={() => window.open('GOOGLE_FORM_URL_HERE', '_blank')}
+            onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeULPv1Zu68YhJxZi2XDJCb_Rvt_MmLsC8Dy1zC86QYzaNY6Q/viewform', '_blank')}
             className="gold-button inline-flex items-center gap-2 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-full text-white font-semibold text-[10px] sm:text-xs md:text-sm"
           >
             <ImagePlus size={14} strokeWidth={1.5} />
