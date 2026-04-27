@@ -120,7 +120,7 @@ export default function Hero({ active }: HeroProps) {
         initial={{ opacity: 0 }}
         animate={active ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 1.5, delay: 5.5 }}
-        className="absolute bottom-24 sm:bottom-28 flex flex-col items-center gap-2.5"
+        className="absolute bottom-32 sm:bottom-36 flex flex-col items-center gap-2.5"
       >
         <motion.p
           animate={active ? { opacity: [0.4, 0.85, 0.4] } : { opacity: 0 }}
