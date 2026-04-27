@@ -17,7 +17,7 @@ const GALLERY_FALLBACK = [
   '/Miluaistudio/gallery/gallery4.jpg',
 ]
 
-const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'
+const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbz8Y60IrJsXZEaZutJj-B9mH48nWaotohReyWMRA0L1N-nMZU_wUUPnaRkJeQGsXFBM/exec'
 
 function compressImage(file: File, maxWidth = 1200, quality = 0.7): Promise<{ base64: string; type: string }> {
   return new Promise((resolve, reject) => {
