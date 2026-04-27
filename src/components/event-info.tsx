@@ -55,21 +55,6 @@ export default function EventInfo() {
               </div>
             </motion.div>
 
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.45 }}
-            >
-              <button
-                onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
-                className="gold-button w-full py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-[11px] sm:text-xs md:text-sm"
-              >
-                Cómo llegar
-              </button>
-            </motion.div>
-
             {/* Dress Code */}
             <motion.div
               initial={{ opacity: 0, x: -25 }}
@@ -89,6 +74,21 @@ export default function EventInfo() {
                 </h4>
                 <p className="font-serif italic text-base sm:text-lg md:text-xl text-bordeaux">Gala / Elegante</p>
               </div>
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.45 }}
+            >
+              <button
+                onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
+                className="gold-button w-full py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-[11px] sm:text-xs md:text-sm"
+              >
+                Cómo llegar
+              </button>
             </motion.div>
           </div>
 
