@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Maximize2, ImagePlus, Heart } from 'lucide-react'
 
 const GALLERY_PHOTOS = [
   '/Miluaistudio/gallery/gallery1.webp',
@@ -87,6 +87,50 @@ export default function Gallery() {
             </motion.div>
           ))}
         </div>
+
+        {/* Foto como regalo para Milu */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-8 sm:mt-12 md:mt-16 p-4 sm:p-6 md:p-10 rounded-2xl sm:rounded-3xl md:rounded-[2rem] border text-center relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(184,134,11,0.04), rgba(253,252,251,0.6), rgba(184,134,11,0.04))',
+            borderColor: 'rgba(184, 134, 11, 0.1)',
+          }}
+        >
+          {/* Decorative corners */}
+          <div className="absolute top-3 left-3 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 border-t-2 border-l-2 rounded-tl-lg" style={{ borderColor: 'rgba(212,175,55,0.25)' }} />
+          <div className="absolute top-3 right-3 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 border-t-2 border-r-2 rounded-tr-lg" style={{ borderColor: 'rgba(212,175,55,0.25)' }} />
+          <div className="absolute bottom-3 left-3 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 border-b-2 border-l-2 rounded-bl-lg" style={{ borderColor: 'rgba(212,175,55,0.25)' }} />
+          <div className="absolute bottom-3 right-3 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 border-b-2 border-r-2 rounded-br-lg" style={{ borderColor: 'rgba(212,175,55,0.25)' }} />
+
+          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+            <Heart size={16} className="text-gold" fill="currentColor" strokeWidth={0} />
+            <ImagePlus size={20} className="sm:w-6 sm:h-6 text-gold" strokeWidth={1.5} />
+            <Heart size={16} className="text-gold" fill="currentColor" strokeWidth={0} />
+          </div>
+
+          <h3 className="font-serif italic text-xl sm:text-2xl md:text-3xl text-bordeaux mb-2 sm:mb-3">
+            Tu foto como regalo
+          </h3>
+          <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm italic mb-5 sm:mb-6 max-w-md mx-auto px-4 leading-relaxed">
+            Regalale a Milu tu mejor momento. Subí una foto especial y formá parte de esta celebración inolvidable
+          </p>
+
+          <button
+            onClick={() => window.open('GOOGLE_FORM_URL_HERE', '_blank')}
+            className="gold-button inline-flex items-center gap-2 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 rounded-full text-white font-semibold text-[10px] sm:text-xs md:text-sm"
+          >
+            <ImagePlus size={14} strokeWidth={1.5} />
+            Subir mi foto
+          </button>
+
+          <p className="text-[8px] sm:text-[9px] text-gray-300 mt-3 italic">
+            Tu foto será parte del álbum de recuerdos de Milu
+          </p>
+        </motion.div>
       </motion.div>
 
       {/* Lightbox */}

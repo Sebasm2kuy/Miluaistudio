@@ -54,7 +54,7 @@ export default function Footer() {
             filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.95)) drop-shadow(0 0 40px rgba(0,0,0,0.6)) drop-shadow(0 0 60px rgba(184,134,11,0.35))',
           }}
         >
-          Con amor, para un dia inolvidable
+          Con amor, para un día inolvidable
         </p>
 
         {/* Hashtag elegante */}
@@ -68,7 +68,11 @@ export default function Footer() {
           <p
             className="font-light tracking-[0.15em] sm:tracking-[0.25em] text-xs sm:text-sm md:text-base"
             style={{
-              color: 'rgba(184,134,11,0.5)',
+              background: 'linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f)',
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              animation: 'shimmer 4s ease-in-out infinite',
             }}
           >
             #MilagrosXV2026

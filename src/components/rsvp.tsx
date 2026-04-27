@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Heart, Copy, Check, Send, Loader2, MessageCircle, Bell } from 'lucide-react'
+import { Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOPx5jE1vcgW4nUfXWDkbKqQU8Ejex9RLI4rv64yZweZLFEiKrCoDj_8b7fryti3Sn/exec'
 const HOST_PHONE = '59895239386'

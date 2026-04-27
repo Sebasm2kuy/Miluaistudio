@@ -71,6 +71,7 @@ export default function Home() {
         <div className="mt-24 sm:mt-32 md:mt-40">
           <Gallery />
         </div>
+        <Divider />
         <div className="mt-24 sm:mt-32 md:mt-40">
           <SpotifyPlayer />
         </div>
