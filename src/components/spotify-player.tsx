@@ -39,7 +39,7 @@ export default function SpotifyPlayer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="mt-5 sm:mt-6 text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-goldLight/40 font-light"
+          className="mt-5 sm:mt-6 text-xs sm:text-sm md:text-base uppercase tracking-[0.15em] sm:tracking-[0.2em] text-goldLight/70 font-light"
         >
           Abre en Spotify y suma tus temas favoritos
         </motion.p>
