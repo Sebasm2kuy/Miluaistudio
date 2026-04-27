@@ -10,7 +10,6 @@ const goldShimmer: React.CSSProperties = {
   WebkitTextFillColor: 'transparent',
 }
 
-/* Drop shadows para la entrada — simple, sin shimmer */
 const goldGlow: React.CSSProperties = {
   color: '#fcf6ba',
   textShadow: '0 0 30px rgba(0,0,0,0.95), 0 0 60px rgba(0,0,0,0.5), 0 0 80px rgba(184,134,11,0.2)',
@@ -21,12 +20,15 @@ const textGlow: React.CSSProperties = {
   textShadow: '0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(184,134,11,0.3)',
 }
 
+/* Easing elegante para cada linea */
+const ELEGANT_EASE = [0.22, 1, 0.36, 1] as const
+
 export default function Hero() {
   const [shimmerOn, setShimmerOn] = useState(false)
 
   useEffect(() => {
-    // Activar shimmer despues de que termine la entrada (2.5s de delay + 1s de anim)
-    const t = setTimeout(() => setShimmerOn(true), 3500)
+    // Activar shimmer despues de la ultima linea + su animacion
+    const t = setTimeout(() => setShimmerOn(true), 5500)
     return () => clearTimeout(t)
   }, [])
 
@@ -42,30 +44,25 @@ export default function Hero() {
         }}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1], delay: 0.5 }}
-        className="flex flex-col items-center relative z-10"
-      >
-        {/* Mis XV Años */}
+      <div className="flex flex-col items-center relative z-10">
+
+        {/* LINEA 1: Mis XV Años */}
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 1.2, delay: 0.3, ease: ELEGANT_EASE }}
           className="uppercase tracking-[0.5em] sm:tracking-[0.7em] md:tracking-[1.4em] text-xs sm:text-base md:text-xl mb-5 sm:mb-8 md:mb-10 font-bold"
           style={shimmerOn ? { ...goldShimmer, animation: 'shimmer 6s ease-in-out 1', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.9))' } : textGlow}
         >
           Mis XV Años
         </motion.p>
 
-        {/* Nombre */}
+        {/* LINEA 2: Milagros */}
         <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 1, ease: [0.19, 1, 0.22, 1] }}
+          initial={{ opacity: 0, y: 25, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.4, delay: 1.3, ease: ELEGANT_EASE }}
           className="font-cursive text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] leading-none mb-5 sm:mb-8 md:mb-10"
-          style={{ willChange: 'transform, opacity' }}
         >
           <span
             style={
@@ -78,11 +75,11 @@ export default function Hero() {
           </span>
         </motion.h1>
 
-        {/* Linea decorativa */}
+        {/* LINEA 3: Linea decorativa — se expanda desde el centro */}
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.8, delay: 1.5, ease: 'easeOut' }}
+          transition={{ duration: 1.2, delay: 2.3, ease: ELEGANT_EASE }}
           className="w-28 sm:w-44 md:w-72 h-px mx-auto mb-5 sm:mb-8 md:mb-10"
           style={{
             background: 'linear-gradient(90deg, transparent, #fcf6ba, #d4af37, #fcf6ba, transparent)',
@@ -90,11 +87,11 @@ export default function Hero() {
           }}
         />
 
-        {/* Fecha */}
+        {/* LINEA 4: Fecha */}
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.8, ease: 'easeOut' }}
+          transition={{ duration: 1.2, delay: 3.0, ease: ELEGANT_EASE }}
           className="font-serif italic text-base sm:text-xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
           style={shimmerOn ? { ...goldShimmer, animation: 'shimmer 6s ease-in-out 1', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(184,134,11,0.3))' } : textGlow}
         >
@@ -103,23 +100,23 @@ export default function Hero() {
           2026
         </motion.p>
 
-        {/* Subtitulo */}
+        {/* LINEA 5: Salón My Father */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.85 }}
-          transition={{ duration: 1, delay: 2.2 }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 0.85, y: 0 }}
+          transition={{ duration: 1.2, delay: 3.8, ease: ELEGANT_EASE }}
           className="mt-3 sm:mt-5 md:mt-6 text-[11px] sm:text-sm md:text-base uppercase tracking-[0.35em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
           style={shimmerOn ? { ...goldShimmer, animation: 'shimmer 6s ease-in-out 1', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.9)) drop-shadow(0 0 16px rgba(184,134,11,0.3))' } : textGlow}
         >
           Salón My Father &bull; Montevideo
         </motion.p>
-      </motion.div>
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 3 }}
+        transition={{ duration: 1, delay: 4.8 }}
         className="absolute bottom-8 sm:bottom-12"
       >
         <motion.div
