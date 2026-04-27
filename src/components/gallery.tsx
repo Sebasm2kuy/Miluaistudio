@@ -17,7 +17,7 @@ const GALLERY_FALLBACK = [
   '/Miluaistudio/gallery/gallery4.jpg',
 ]
 
-const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbz8Y60IrJsXZEaZutJj-B9mH48nWaotohReyWMRA0L1N-nMZU_wUUPnaRkJeQGsXFBM/exec'
+const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbx6fEZPcwLsAVF8Dj2FkFYdrcnhBz0Y9e_I4qJLf5UOZY6PvWTHo7RTvelBIdqtYIkK/exec'
 
 interface UploadedPhoto {
   url: string
