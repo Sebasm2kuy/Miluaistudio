@@ -23,7 +23,7 @@ export default function SpotifyPlayer() {
         </p>
 
         <motion.a
-          href="https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn"
+          href="https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0"
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.03 }}
@@ -37,7 +37,7 @@ export default function SpotifyPlayer() {
 
         <div className="rounded-xl sm:rounded-2xl overflow-hidden shadow-lg" style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.15)' }}>
           <iframe
-            src="https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0"
+            src="https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0&si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0"
             width="100%"
             height="352"
             frameBorder="0"
