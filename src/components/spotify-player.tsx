@@ -43,6 +43,7 @@ export default function SpotifyPlayer() {
             frameBorder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
             style={{ borderRadius: '12px' }}
           />
         </div>
