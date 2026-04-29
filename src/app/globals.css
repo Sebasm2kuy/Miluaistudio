@@ -59,12 +59,22 @@
 @layer base {
   html {
     overflow-x: clip;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     background-color: #050505;
     color: #fdfcfb;
     overflow-x: clip;
   }
+}
+
+/* ===== Page Reveal (GPU-composited) ===== */
+.page-reveal {
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+  backface-visibility: hidden;
 }
 
 /* ===== Fonts ===== */
@@ -78,6 +88,9 @@
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(184, 134, 11, 0.12);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 /* ===== Gold Button ===== */
@@ -85,10 +98,14 @@
   background: linear-gradient(135deg, #8a6b0d 0%, #b8860b 50%, #d4af37 100%);
   color: white;
   box-shadow: 0 10px 20px rgba(138, 107, 13, 0.3);
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+              filter 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-weight: 600;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .gold-button:hover {
@@ -99,7 +116,8 @@
 
 /* ===== Elegant Input ===== */
 .elegant-input {
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: border-color, box-shadow;
 }
 
 .elegant-input:focus {
@@ -122,3 +140,11 @@
 .animate-fade-in { animation: fadeIn 2.5s ease-out forwards; }
 .animate-breathe { animation: breathe 3s ease-in-out infinite; }
 .animate-slide-hint { animation: slideHint 2.5s ease-in-out infinite; }
+
+/* ===== GPU Acceleration Hints ===== */
+header,
+section,
+nav,
+footer {
+  contain: layout style;
+}

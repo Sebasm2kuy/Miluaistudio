@@ -33,7 +33,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   }, [show, visible])
 
   return (
-    <div className="fixed inset-0 z-[-10] bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-[-10] bg-black flex items-center justify-center" style={{ contain: 'strict' }}>
       <img
         key={idx}
         src={PHOTOS[idx]}
@@ -46,6 +46,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
           filter: 'brightness(0.75) saturate(0.85)',
           boxShadow: '0 0 80px rgba(0,0,0,0.9)',
           border: '1px solid rgba(212,175,55,0.06)',
+          willChange: 'opacity',
         }}
       />
       <div className="fixed bottom-0 left-0 right-0 h-40 sm:h-56 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none" />

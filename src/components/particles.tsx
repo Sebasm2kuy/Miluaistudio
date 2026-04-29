@@ -20,10 +20,10 @@ function generateParticles(count: number): Particle[] {
     height: Math.random() * 3 + 1,
     left: Math.random() * 100,
     top: Math.random() * 100,
-    opacity: Math.random() * 0.4 + 0.15,
+    opacity: Math.random() * 0.35 + 0.1,
     duration: Math.random() * 16 + 10,
     delay: Math.random() * 16,
-    glow: i < Math.ceil(count * 0.35), // 35% con glow brillante
+    glow: i < Math.ceil(count * 0.25), // 25% con glow (reducido de 35%)
   }))
 }
 
@@ -34,7 +34,7 @@ export default function Particles() {
     const isMobile = window.innerWidth < 768
     const delay = isMobile ? 3000 : 0
     const t = setTimeout(() => {
-      setParticles(generateParticles(isMobile ? 15 : 35))
+      setParticles(generateParticles(isMobile ? 12 : 28)) // reducido de 15/35
     }, delay)
     return () => clearTimeout(t)
   }, [])
@@ -42,7 +42,7 @@ export default function Particles() {
   if (particles.length === 0) return null
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[-5] overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-[-5] overflow-hidden" style={{ contain: 'strict' }}>
       {particles.map((p) => (
         <div
           key={p.id}
@@ -57,10 +57,11 @@ export default function Particles() {
               ? 'radial-gradient(circle, #fcf6ba 0%, rgba(212,175,55,0.6) 40%, transparent 80%)'
               : 'radial-gradient(circle, #fcf6ba 0%, transparent 80%)',
             boxShadow: p.glow
-              ? '0 0 6px 1px rgba(212,175,55,0.3), 0 0 12px rgba(252,246,186,0.15)'
+              ? '0 0 4px 1px rgba(212,175,55,0.2)'
               : 'none',
-            animation: `float ${p.duration}s linear infinite`,
+            animation: `float ${p.duration}s ease-in-out infinite`,
             animationDelay: `${p.delay}s`,
+            willChange: 'transform',
           }}
         />
       ))}

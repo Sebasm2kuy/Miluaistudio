@@ -45,11 +45,12 @@ export default function Home() {
       <Particles />
       <BackgroundSlideshow />
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={phase === 'done' ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
-        style={{ pointerEvents: phase === 'done' ? 'auto' : 'none' }}
+      <div
+        className="page-reveal"
+        style={{
+          opacity: phase === 'done' ? 1 : 0,
+          pointerEvents: phase === 'done' ? 'auto' : 'none',
+        }}
       >
         <ScrollProgress />
         <Navigation />
@@ -86,7 +87,7 @@ export default function Home() {
           <Footer />
         </div>
         <div className="pb-28 sm:pb-36 md:pb-44" />
-      </motion.div>
+      </div>
 
       {phase !== 'done' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
