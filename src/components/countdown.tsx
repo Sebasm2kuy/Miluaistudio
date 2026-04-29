@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useInView } from '@/hooks/useInView'
 import { CalendarPlus } from 'lucide-react'
 
 // Fecha del evento: 22 de Agosto 2026, 21:00 hs (hora de Uruguay, GMT-3)
@@ -65,7 +64,6 @@ import { useRef } from 'react'
 
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
-  const { ref, isInView } = useInView()
 
   useEffect(() => {
     setTimeLeft(calcTimeLeft())
@@ -84,8 +82,8 @@ export default function Countdown() {
   }, [])
 
   return (
-    <section id="detalles" ref={ref} className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
-      <div className={`css-fade-up ${isInView ? 'visible' : ''} glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
+    <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
+      <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
           El tiempo vuela...
         </h2>
@@ -96,7 +94,7 @@ export default function Countdown() {
             </div>
           ))}
         </div>
-        <div className={`css-fade-up ${isInView ? 'visible' : ''} mt-8 sm:mt-12 md:mt-16`} style={{ transitionDelay: '0.6s' }}>
+        <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
           <button
             onClick={addToCalendar}
             className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-all duration-200"

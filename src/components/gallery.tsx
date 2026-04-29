@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useInView } from '@/hooks/useInView'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
 const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbx6fEZPcwLsAVF8Dj2FkFYdrcnhBz0Y9e_I4qJLf5UOZY6PvWTHo7RTvelBIdqtYIkK/exec'
@@ -43,7 +42,6 @@ function compressImage(file: File, maxSize = 800, quality = 0.5): Promise<string
 }
 
 export default function Gallery() {
-  const { ref, isInView } = useInView()
   const [photos, setPhotos] = useState<Photo[]>(
     ORIGINAL_PHOTOS.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
   )
@@ -132,8 +130,8 @@ export default function Gallery() {
   }
 
   return (
-    <section id="galeria" ref={ref} className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
-      <div className={`css-fade-up ${isInView ? 'visible' : ''} glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
+    <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
+      <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">Galería</h2>
         <p className="text-gray-400 italic mb-6 sm:mb-10 md:mb-16 text-xs sm:text-sm md:text-base px-2">
           Momentos que hacen esta celebración inolvidable
@@ -146,8 +144,8 @@ export default function Gallery() {
             return (
               <div
                 key={photo.id}
-                className={`css-fade-up ${isInView ? 'visible' : ''} relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4]`}
-                style={{ background: '#f5f0eb', transitionDelay: `${Math.min(idx, 7) * 0.08}s` }}
+                className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4]`}
+                style={{ background: '#f5f0eb' }}
                 onClick={() => openLightbox(idx)}
               >
                 {isOriginal ? (
@@ -171,8 +169,8 @@ export default function Gallery() {
 
           {/* Upload card */}
           <div
-            className={`css-fade-up ${isInView ? 'visible' : ''} relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/40 transition-all duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
-            style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)', transitionDelay: `${Math.min(photos.length, 7) * 0.08}s` }}
+            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/40 transition-all duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
+            style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)' }}
             onClick={() => setUploadModal(true)}
           >
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/60 group-hover:text-gold transition-colors duration-300" style={{ background: 'rgba(184, 134, 11, 0.06)' }}>

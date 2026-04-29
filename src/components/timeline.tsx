@@ -1,5 +1,4 @@
 'use client'
-import { useInView } from '@/hooks/useInView'
 
 const TIMELINE = [
   { time: '21:00', title: 'Recepción', desc: 'Ingreso de invitados', icon: '🥂' },
@@ -8,15 +7,13 @@ const TIMELINE = [
 ]
 
 export default function Timeline() {
-  const { ref, isInView } = useInView()
-
   return (
-    <section id="horarios" ref={ref} className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
-      <div className={`css-fade-up ${isInView ? 'visible' : ''} glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden`}>
-        <p className={`css-fade-up ${isInView ? 'visible' : ''} font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`} style={{ transitionDelay: '0.2s' }}>
+    <section id="horarios" className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
+      <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden`}>
+        <p className={`css-fade-up font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`}>
           La Noche
         </p>
-        <p className={`css-fade ${isInView ? 'visible' : ''} text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-xs sm:text-sm md:text-base`} style={{ transitionDelay: '0.3s' }}>
+        <p className={`css-fade text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-xs sm:text-sm md:text-base`}>
           Cada momento cuenta
         </p>
 
@@ -29,8 +26,7 @@ export default function Timeline() {
             {TIMELINE.map((item, idx) => (
               <div
                 key={item.time}
-                className={`${idx % 2 === 0 ? 'css-fade-left' : 'css-fade-right'} ${isInView ? 'visible' : ''} relative flex items-start gap-4 sm:gap-5`}
-                style={{ transitionDelay: `${0.2 + idx * 0.15}s` }}
+                className={`${idx % 2 === 0 ? 'css-fade-left' : 'css-fade-right'} relative flex items-start gap-4 sm:gap-5`}
               >
                 <div className="absolute left-5 sm:left-6 md:left-1/2 -translate-x-1/2 top-1 z-10">
                   <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-2 border-goldLight bg-white" style={{ boxShadow: '0 0 10px rgba(212,175,55,0.3)' }} />

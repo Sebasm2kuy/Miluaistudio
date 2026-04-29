@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { useInView } from '@/hooks/useInView'
 import { Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOPx5jE1vcgW4nUfXWDkbKqQU8Ejex9RLI4rv64yZweZLFEiKrCoDj_8b7fryti3Sn/exec'
@@ -19,7 +18,6 @@ function limpiarTelefono(tel: string) {
 }
 
 export default function Rsvp() {
-  const { ref, isInView } = useInView()
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle')
@@ -66,12 +64,12 @@ export default function Rsvp() {
   }
 
   return (
-    <section id="confirmar" ref={ref} className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
+    <section id="confirmar" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
 
         {/* Confirmar Asistencia */}
         <div
-          className={`css-fade-left ${isInView ? 'visible' : ''} rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden`}
+          className={`css-fade-left rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden`}
           style={{ ...glassCard, borderBottomWidth: '3px', borderBottomColor: '#b8860b' }}
         >
           {status === 'ok' ? (
@@ -127,7 +125,7 @@ export default function Rsvp() {
 
         {/* Colaboración */}
         <div
-          className={`css-fade-right ${isInView ? 'visible' : ''} rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden`}
+          className={`css-fade-right rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden`}
           style={{ ...glassCard, background: 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(253,252,251,0.98))' }}
         >
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">Colaboración</h2>

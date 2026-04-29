@@ -1,12 +1,9 @@
 'use client'
-import { useInView } from '@/hooks/useInView'
 
 export default function Footer() {
-  const { ref, isInView } = useInView()
-
   return (
-    <footer ref={ref} className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
-      <div className={`css-fade-up ${isInView ? 'visible' : ''} flex flex-col items-center`}>
+    <footer className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
+      <div className={`css-fade-up flex flex-col items-center`}>
         <p className="font-cursive text-4xl sm:text-6xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once" style={{ filter: 'drop-shadow(0 0 30px rgba(0,0,0,0.95))' }}>
           Milu
         </p>
@@ -25,7 +22,7 @@ export default function Footer() {
           Con amor, para un día inolvidable
         </p>
 
-        <div className={`css-fade ${isInView ? 'visible' : ''} mt-8 sm:mt-10 md:mt-14`} style={{ transitionDelay: '0.4s' }}>
+        <div className={`css-fade mt-8 sm:mt-10 md:mt-14`}>
           <p className="font-light tracking-[0.15em] sm:tracking-[0.25em] text-xs sm:text-sm md:text-base text-shimmer text-shimmer-infinite">
             #MilagrosXV2026
           </p>
