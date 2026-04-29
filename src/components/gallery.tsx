@@ -258,10 +258,13 @@ export default function Gallery() {
             style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)' }}
             onClick={() => setUploadModal(true)}
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/60 group-hover:text-gold transition-colors duration-300"
+            <motion.div
+              animate={{ y: [0, -5, 0], rotate: [0, 2, -2, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/60 group-hover:text-gold transition-colors duration-300"
               style={{ background: 'rgba(184, 134, 11, 0.06)' }}>
               <Camera size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-            </div>
+            </motion.div>
             <p className="text-gold/50 group-hover:text-gold font-bold text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
               Subir tu foto
             </p>

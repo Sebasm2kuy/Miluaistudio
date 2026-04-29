@@ -1,4 +1,5 @@
 'use client'
+import { motion } from 'framer-motion'
 import { Calendar, MapPin, CheckCircle, Images, Music, ArrowUp } from 'lucide-react'
 
 const navItems = [
@@ -26,7 +27,10 @@ export default function Navigation() {
   }
 
   return (
-    <nav
+    <motion.nav
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-3 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 flex items-center shadow-2xl border border-goldLight/12"
       style={{
         background: 'rgba(255, 255, 255, 0.95)',
@@ -37,14 +41,17 @@ export default function Navigation() {
       }}
     >
       {navItems.map(({ icon: Icon, href, label }) => (
-        <a
+        <motion.a
           key={href}
           href={href}
           onClick={(e) => handleClick(e, href)}
-          className="group relative flex items-center gap-1.5 text-gold/70 hover:text-bordeaux transition-all duration-300 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5"
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+          className="group relative flex items-center gap-1.5 text-gold/70 hover:text-bordeaux transition-colors duration-300 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5"
           aria-label={label}
         >
-          <Icon size={17} strokeWidth={1.5} className="sm:w-[18px] sm:h-[18px] transition-transform duration-300 group-hover:scale-110" />
+          <Icon size={17} strokeWidth={1.5} className="sm:w-[18px] sm:h-[18px]" />
           {/* Mobile/tablet tooltip */}
           <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-semibold text-white/80 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap md:hidden">
             {label}
@@ -53,20 +60,23 @@ export default function Navigation() {
           <span className="hidden md:block text-[9px] uppercase tracking-[0.15em] font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
             {label}
           </span>
-        </a>
+        </motion.a>
       ))}
 
       {/* Separator */}
       <div className="w-px h-4 bg-goldLight/15 mx-0.5" />
 
       {/* Back to top */}
-      <button
+      <motion.button
         onClick={scrollToTop}
-        className="text-gold/50 hover:text-bordeaux transition-all duration-300 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5"
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+        className="text-gold/50 hover:text-bordeaux transition-colors duration-300 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5"
         aria-label="Volver arriba"
       >
-        <ArrowUp size={15} strokeWidth={1.5} className="transition-transform duration-300 hover:-translate-y-0.5" />
-      </button>
-    </nav>
+        <ArrowUp size={15} strokeWidth={1.5} />
+      </motion.button>
+    </motion.nav>
   )
 }

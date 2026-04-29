@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import Envelope from '@/components/envelope'
 import LoadingScreen from '@/components/loading-screen'
 import ScrollProgress from '@/components/scroll-progress'
@@ -19,11 +20,17 @@ import Footer from '@/components/footer'
 
 function Divider() {
   return (
-    <div className="flex items-center justify-center py-1 opacity-30">
+    <motion.div
+      initial={{ opacity: 0, scaleX: 0.6 }}
+      whileInView={{ opacity: 0.3, scaleX: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+      className="flex items-center justify-center py-1"
+    >
       <div className="h-px w-16 sm:w-28 md:w-44" style={{ background: 'linear-gradient(90deg, transparent, #b8860b)' }} />
       <div className="w-1 h-1 rotate-45 bg-goldLight/60 mx-3 sm:mx-4" />
       <div className="h-px w-16 sm:w-28 md:w-44" style={{ background: 'linear-gradient(90deg, #b8860b, transparent)' }} />
-    </div>
+    </motion.div>
   )
 }
 
@@ -38,12 +45,11 @@ export default function Home() {
       <Particles />
       <BackgroundSlideshow />
 
-      <div
-        style={{
-          opacity: phase === 'done' ? 1 : 0,
-          transition: 'opacity 1.2s ease',
-          pointerEvents: phase === 'done' ? 'auto' : 'none',
-        }}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={phase === 'done' ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{ pointerEvents: phase === 'done' ? 'auto' : 'none' }}
       >
         <ScrollProgress />
         <Navigation />
@@ -80,7 +86,7 @@ export default function Home() {
           <Footer />
         </div>
         <div className="pb-28 sm:pb-36 md:pb-44" />
-      </div>
+      </motion.div>
 
       {phase !== 'done' && <Envelope onOpen={handleOpen} />}
       {phase === 'loading' && <LoadingScreen onDone={handleDone} />}

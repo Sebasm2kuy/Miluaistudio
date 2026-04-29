@@ -13,7 +13,12 @@ export default function SpotifyPlayer() {
         className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center relative overflow-hidden"
       >
         <div className="flex items-center justify-center gap-2.5 mb-2 sm:mb-3">
-          <Music size={18} strokeWidth={1.5} className="text-goldLight/60 sm:w-5 sm:h-5" />
+          <motion.div
+            animate={{ y: [0, -5, 0], rotate: [0, 2, -2, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <Music size={18} strokeWidth={1.5} className="text-goldLight/60 sm:w-5 sm:h-5" />
+          </motion.div>
           <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux">
             Nuestra Playlist
           </h2>
