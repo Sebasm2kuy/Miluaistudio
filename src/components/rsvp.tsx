@@ -84,9 +84,7 @@ export default function Rsvp() {
   }
 
   const glassCard: React.CSSProperties = {
-    background: 'rgba(255, 255, 255, 0.96)',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
+    background: 'rgba(255, 255, 255, 0.98)',
     border: '1px solid rgba(184, 134, 11, 0.12)',
     boxShadow: '0 8px 32px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset',
   }

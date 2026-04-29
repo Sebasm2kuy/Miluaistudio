@@ -22,13 +22,11 @@ export default function EventInfo() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="group flex items-start gap-3 sm:gap-4 md:gap-6"
             >
-              <motion.div
-                animate={{ y: [0, -6, 0], rotate: [0, 1.5, -1.5, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              <div
                 className="w-11 h-11 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-gold shrink-0"
                 style={{ background: 'rgba(184, 134, 11, 0.08)' }}>
                 <Calendar size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </motion.div>
+              </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">La Gran Noche</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
@@ -45,13 +43,11 @@ export default function EventInfo() {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="group flex items-start gap-3 sm:gap-4 md:gap-6"
             >
-              <motion.div
-                animate={{ y: [0, -6, 0], rotate: [0, -1.5, 1.5, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+              <div
                 className="w-11 h-11 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-gold shrink-0"
                 style={{ background: 'rgba(184, 134, 11, 0.08)' }}>
                 <MapPin size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </motion.div>
+              </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Salón My Father</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
@@ -68,13 +64,11 @@ export default function EventInfo() {
               transition={{ duration: 0.8, delay: 0.55 }}
               className="group flex items-start gap-3 sm:gap-4 md:gap-6"
             >
-              <motion.div
-                animate={{ y: [0, -6, 0], rotate: [0, 1.5, -1.5, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              <div
                 className="w-11 h-11 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-gold shrink-0"
                 style={{ background: 'rgba(184, 134, 11, 0.08)' }}>
                 <Shirt size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </motion.div>
+              </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Gala / Elegante</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
@@ -90,15 +84,12 @@ export default function EventInfo() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.45 }}
             >
-              <motion.button
+              <button
                 onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 className="gold-button w-full py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-[11px] sm:text-xs md:text-sm"
               >
                 Cómo llegar
-              </motion.button>
+              </button>
             </motion.div>
           </div>
 

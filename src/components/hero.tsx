@@ -37,7 +37,6 @@ export default function Hero({ active }: HeroProps) {
 
   return (
     <header className="h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 relative z-10"
-      style={{ willChange: 'auto' }}
     >
       {/* Dark radial vignette */}
       <div

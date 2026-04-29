@@ -58,11 +58,7 @@ export default function Timeline() {
                   <div className={`inline-block px-4 sm:px-5 py-3 sm:py-4 md:py-5 rounded-2xl sm:rounded-2xl md:rounded-3xl border text-left ${idx % 2 === 0 ? 'md:text-right' : ''}`}
                     style={{ background: 'rgba(253,252,251,0.85)', borderColor: 'rgba(184, 134, 11, 0.1)', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
                     <div className="flex items-center gap-2 sm:gap-3 mb-1">
-                      <motion.span
-                        animate={{ y: [0, -5, 0], rotate: [0, 2, -2, 0] }}
-                        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: idx * 0.8 }}
-                        className="text-lg sm:text-xl md:text-2xl"
-                      >{item.icon}</motion.span>
+                      <span className="text-lg sm:text-xl md:text-2xl">{item.icon}</span>
                       <span className="font-bold text-bordeaux tabular-nums" style={{ fontSize: 'clamp(0.85rem, 3vw, 1.4rem)' }}>{item.time} hs</span>
                     </div>
                     <p className="font-serif italic text-bordeaux text-sm sm:text-base md:text-lg">{item.title}</p>

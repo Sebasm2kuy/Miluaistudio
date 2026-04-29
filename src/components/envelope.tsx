@@ -31,9 +31,8 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           className="absolute rounded-2xl"
           style={{
             inset: '-20px',
-            background: 'radial-gradient(ellipse, rgba(212,175,55,0.2) 0%, transparent 65%)',
+            background: 'radial-gradient(ellipse, rgba(212,175,55,0.15) 0%, transparent 60%)',
             animation: 'breathe 3s ease-in-out infinite',
-            filter: 'blur(18px)',
           }}
         />
 

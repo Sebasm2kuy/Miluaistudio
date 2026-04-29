@@ -240,7 +240,7 @@ export default function Gallery() {
                 <div className="absolute inset-0 bg-gradient-to-t from-bordeaux/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
                 <div className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-transparent group-hover:border-goldLight/25 transition-all duration-500" />
                 <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 flex items-center justify-center border border-white/30">
                     <Maximize2 size={14} className="sm:w-4 sm:h-4 text-white" strokeWidth={1.5} />
                   </div>
                 </div>
@@ -258,13 +258,11 @@ export default function Gallery() {
             style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)' }}
             onClick={() => setUploadModal(true)}
           >
-            <motion.div
-              animate={{ y: [0, -5, 0], rotate: [0, 2, -2, 0] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            <div
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/60 group-hover:text-gold transition-colors duration-300"
               style={{ background: 'rgba(184, 134, 11, 0.06)' }}>
               <Camera size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-            </motion.div>
+            </div>
             <p className="text-gold/50 group-hover:text-gold font-bold text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
               Subir tu foto
             </p>
@@ -298,8 +296,7 @@ export default function Gallery() {
               transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
               className="w-full max-w-md rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
               style={{
-                background: 'rgba(255, 255, 255, 0.97)',
-                backdropFilter: 'blur(24px)',
+                background: 'rgba(255, 255, 255, 0.98)',
                 border: '1px solid rgba(184, 134, 11, 0.15)',
                 boxShadow: '0 24px 80px rgba(0,0,0,0.3)',
               }}
