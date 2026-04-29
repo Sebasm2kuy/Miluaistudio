@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-interface HeroProps { active: boolean }
+interface HeroProps { active: boolean; scrollToTop?: () => void }
 
-export default function Hero({ active }: HeroProps) {
+export default function Hero({ active, scrollToTop }: HeroProps) {
   return (
-    <header className={`h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 relative z-10 ${active ? 'hero-active' : ''}`}>
+    <header className={`min-h-[100dvh] flex flex-col items-center justify-center text-center px-4 sm:px-6 relative z-10 ${active ? 'hero-active' : ''}`}>
       {/* Dark radial vignette */}
       <div
         className="absolute inset-0 pointer-events-none"

@@ -1,5 +1,6 @@
 'use client'
 import { Calendar, MapPin, CheckCircle, Images, Music, ArrowUp } from 'lucide-react'
+import { type RefObject } from 'react'
 
 const navItems = [
   { icon: Calendar, href: '#detalles', label: 'Detalles' },
@@ -9,19 +10,33 @@ const navItems = [
   { icon: CheckCircle, href: '#confirmar', label: 'Confirmar' },
 ]
 
-export default function Navigation() {
+interface NavigationProps {
+  hidden?: boolean
+  scrollContainer?: RefObject<HTMLDivElement | null>
+}
+
+export default function Navigation({ hidden = false, scrollContainer }: NavigationProps) {
+  const getScrollEl = () => scrollContainer?.current ?? window
+
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const el = getScrollEl()
+    if (el instanceof HTMLElement) {
+      el.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
-    const el = document.querySelector(href)
-    if (el) {
+    const el = getScrollEl()
+    const target = document.querySelector(href)
+    if (target) {
       const navHeight = 80
-      const y = el.getBoundingClientRect().top + window.scrollY - navHeight
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      const scrollEl = el instanceof HTMLElement ? el : document.documentElement
+      const y = target.getBoundingClientRect().top + scrollEl.scrollTop - navHeight
+      scrollEl.scrollTo({ top: y, behavior: 'smooth' })
     }
   }
 
@@ -32,6 +47,8 @@ export default function Navigation() {
         background: 'rgba(255, 255, 255, 0.98)',
         paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))',
         boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.5) inset',
+        transform: hidden ? 'translateX(-50%) translateY(120px)' : 'translateX(-50%) translateY(0)',
+        transition: 'transform 0.3s ease',
       }}
     >
       {navItems.map(({ icon: Icon, href, label }) => (
