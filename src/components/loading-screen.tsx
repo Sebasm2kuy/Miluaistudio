@@ -3,26 +3,17 @@ import { useEffect, useState, useRef } from 'react'
 
 interface LoadingScreenProps { onDone: () => void }
 
-// ALL assets the page needs — the bar doesn't reach 100% until these are loaded
+// Solo pre-cargamos las imágenes que realmente usa la página (sin duplicados JPG)
 const ASSETS_TO_PRELOAD = [
-  // Slideshow images (the big ones)
   '/Miluaistudio/gallery/gallery1.webp',
   '/Miluaistudio/gallery/gallery2.webp',
   '/Miluaistudio/gallery/gallery3.webp',
   '/Miluaistudio/gallery/gallery4.webp',
-  // Fallback JPGs for older browsers
-  '/Miluaistudio/gallery/gallery1.jpg',
-  '/Miluaistudio/gallery/gallery2.jpg',
-  '/Miluaistudio/gallery/gallery3.jpg',
-  '/Miluaistudio/gallery/gallery4.jpg',
-  // Envelope image
   '/Miluaistudio/invitacion-vertical.webp',
-  '/Miluaistudio/invitacion-vertical.png',
 ]
 
 /**
- * Returns a Promise that resolves when ALL images are loaded (or errored).
- * Tracks progress as each image finishes.
+ * Pre-carga imágenes y reporta progreso por cada una.
  */
 function preloadImages(
   urls: string[],
@@ -31,10 +22,9 @@ function preloadImages(
   return new Promise((resolve) => {
     let loaded = 0
     const total = urls.length
-
     if (total === 0) { resolve(); return }
 
-    const done = () => {
+    const next = () => {
       loaded++
       onProgress(loaded)
       if (loaded >= total) resolve()
@@ -42,85 +32,124 @@ function preloadImages(
 
     for (const url of urls) {
       const img = new Image()
-      img.onload = done
-      img.onerror = done // continue even if one fails
+      img.onload = next
+      img.onerror = next // si falla una, seguimos
       img.src = url
     }
   })
 }
 
 /**
- * Returns a Promise that resolves when all fonts are loaded.
- * Falls back to resolving after 3s if the API isn't available.
+ * Espera a que las fuentes estén listas, con timeout de seguridad.
  */
-function waitForFonts(): Promise<void> {
+function waitForFonts(timeoutMs = 5000): Promise<void> {
   if (typeof document === 'undefined') return Promise.resolve()
-  return document.fonts?.ready?.() ?? new Promise((r) => setTimeout(r, 3000))
+  const fontsReady = document.fonts?.ready?.() ?? Promise.resolve()
+  return Promise.race([
+    fontsReady,
+    new Promise<void>((r) => setTimeout(r, timeoutMs)),
+  ])
+}
+
+/**
+ * Espera un frame de render del browser.
+ */
+function nextPaint(): Promise<void> {
+  return new Promise((r) => {
+    requestAnimationFrame(() => requestAnimationFrame(r))
+  })
 }
 
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
   const doneRef = useRef(false)
+  const targetRef = useRef(0)
+  const animRef = useRef(0)
 
   useEffect(() => {
     let cancelled = false
 
-    const run = async () => {
-      // Phase 1: Load images (accounts for 0-90% of the bar)
-      const totalAssets = ASSETS_TO_PRELOAD.length
-      let imagesLoaded = 0
+    /**
+     * Suaviza el valor mostrado hacia el target.
+     * Nunca baja, solo sube lentamente hacia donde debería estar.
+     */
+    const easeTo = (target: number) => {
+      targetRef.current = Math.max(targetRef.current, target)
+      if (animRef.current) return // ya está animando
 
-      // Start a gentle progress ramp while images load
-      let ramp = 0
-      const rampInterval = setInterval(() => {
+      const step = () => {
         if (cancelled) return
-        ramp = Math.min(ramp + 0.5, 88) // never exceed 88 on ramp alone
-        setProgress(Math.round(ramp))
-      }, 100)
+        setProgress((prev) => {
+          const goal = targetRef.current
+          if (prev >= goal) {
+            animRef.current = 0
+            return goal
+          }
+          // Sube al menos 0.4% por frame, o el 6% de lo que falta
+          const increment = Math.max(0.4, (goal - prev) * 0.06)
+          const next = Math.min(prev + increment, goal)
+          if (next < goal) {
+            animRef.current = requestAnimationFrame(step)
+          } else {
+            animRef.current = 0
+          }
+          return Math.round(next)
+        })
+      }
+      animRef.current = requestAnimationFrame(step)
+    }
 
+    const run = async () => {
+      const totalAssets = ASSETS_TO_PRELOAD.length
+
+      // Ramp suave de fondo: sube 0.3% cada 120ms → tarda ~35s en llegar a 88%
+      // Esto evita que la barra parezca muerta mientras cargan imágenes grandes
+      let ramp = 0
+      const rampTimer = setInterval(() => {
+        if (cancelled) return
+        ramp = Math.min(ramp + 0.3, 82)
+        easeTo(ramp)
+      }, 120)
+
+      // Fase 1: Cargar imágenes (0% → 85%)
       await preloadImages(ASSETS_TO_PRELOAD, (loaded) => {
         if (cancelled) return
-        imagesLoaded = loaded
-        // Image-based progress: each image = ~9% (9 images × ~9 = ~81)
-        const imageProgress = (loaded / totalAssets) * 81
-        setProgress(Math.round(Math.max(ramp, imageProgress)))
+        // Cada imagen = 17% (5 imágenes × 17 = 85%)
+        const imageTarget = (loaded / totalAssets) * 85
+        easeTo(imageTarget)
       })
 
-      clearInterval(rampInterval)
-
+      clearInterval(rampTimer)
       if (cancelled) return
 
-      // Phase 2: Wait for fonts (90-97%)
-      setProgress(90)
-      await waitForFonts()
+      // Fase 2: Fuentes (85% → 95%)
+      easeTo(88)
+      await waitForFonts(5000)
       if (cancelled) return
-      setProgress(97)
+      easeTo(96)
 
-      // Phase 3: Give the browser time to paint everything (97-100%)
-      await new Promise<void>((r) => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              setTimeout(r, 400)
-            })
-          })
-        })
-      })
-
+      // Fase 3: Dar tiempo al browser para pintar (96% → 100%)
+      await nextPaint()
+      await new Promise<void>((r) => setTimeout(r, 300))
       if (cancelled) return
-      setProgress(100)
+
+      easeTo(100)
     }
 
     run()
-    return () => { cancelled = true }
+
+    return () => {
+      cancelled = true
+      if (animRef.current) cancelAnimationFrame(animRef.current)
+    }
   }, [])
 
   useEffect(() => {
     if (progress >= 100 && !doneRef.current) {
       doneRef.current = true
-      const t1 = setTimeout(() => setFading(true), 400)
-      const t2 = setTimeout(onDone, 1200)
+      const t1 = setTimeout(() => setFading(true), 500)
+      const t2 = setTimeout(onDone, 1300)
       return () => { clearTimeout(t1); clearTimeout(t2) }
     }
   }, [progress, onDone])
@@ -152,7 +181,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             style={{
               width: `${progress}%`,
               background: 'linear-gradient(90deg, #b38728, #d4af37, #fcf6ba)',
-              transition: 'width 0.15s linear',
+              transition: 'width 0.3s ease-out',
             }}
           />
         </div>
