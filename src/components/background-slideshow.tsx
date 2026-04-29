@@ -10,63 +10,66 @@ const PHOTOS = [
 
 export default function BackgroundSlideshow({ visible = true }: { visible?: boolean }) {
   const [idx, setIdx] = useState(0)
-  const [show, setShow] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [bgUrl, setBgUrl] = useState(PHOTOS[0])
+  const [fading, setFading] = useState(false)
 
-  // Detect viewport once on mount (no resize listener — avoids re-renders)
+  // Preload all images on mount
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768)
+    PHOTOS.forEach(url => {
+      const img = new Image()
+      img.src = url
+    })
   }, [])
 
   // Initial reveal
   useEffect(() => {
     if (visible) {
-      const t = setTimeout(() => setShow(true), 300)
-      return () => clearTimeout(t)
+      setFading(true)
     }
   }, [visible])
 
-  // Auto-cycle — desktop only. On mobile the image stays static.
+  // Auto-cycle on all devices
   useEffect(() => {
-    if (!show || !visible || isMobile) return
+    if (!visible || !fading) return
 
     const interval = setInterval(() => {
-      setShow(false)
-      const swapTimer = setTimeout(() => {
+      // Fade out
+      setFading(false)
+      setTimeout(() => {
         setIdx(i => (i + 1) % PHOTOS.length)
-        const revealTimer = setTimeout(() => setShow(true), 100)
-        return () => clearTimeout(revealTimer)
-      }, 600)
-      return () => clearTimeout(swapTimer)
-    }, 9000)
+        setBgUrl(PHOTOS[(idx + 1) % PHOTOS.length])
+        // Fade in
+        setTimeout(() => setFading(true), 50)
+      }, 700)
+    }, 7000)
 
     return () => clearInterval(interval)
-  }, [show, visible, isMobile])
+  }, [visible, fading, idx])
 
   return (
-    <div className="fixed inset-0 z-[-10] bg-black overflow-hidden">
-      <img
-        key={idx}
-        src={PHOTOS[idx]}
-        alt=""
-        draggable={false}
-        className="absolute inset-0 w-full h-full object-cover object-top"
-        style={{
-          opacity: (show && visible) ? 1 : 0,
-          transition: isMobile
-            ? 'opacity 300ms linear'
-            : 'opacity 800ms ease',
-          filter: 'brightness(0.7) saturate(0.8)',
-          willChange: isMobile ? 'auto' : 'opacity',
-        }}
-      />
-      {/* Single combined gradient overlay */}
+    <div
+      className="fixed inset-0 z-[-10]"
+      style={{
+        backgroundColor: '#000',
+        transform: 'translateZ(0)', // Force GPU compositing — prevents iOS scroll shift
+        // Use background-image instead of <img> — more stable on mobile scroll
+        backgroundImage: `url(${bgUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 20%', // Center horizontally, offset up to focus on face
+        backgroundRepeat: 'no-repeat',
+        opacity: fading && visible ? 1 : 0,
+        transition: 'opacity 800ms ease',
+        filter: 'brightness(0.65) saturate(0.75)',
+      }}
+    >
+      {/* Gradient overlay */}
       <div
-        className="fixed inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
+          transform: 'translateZ(0)',
           background: `
-            linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 75%, rgba(0,0,0,0.7) 100%),
-            radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)
+            linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.8) 100%),
+            radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%)
           `,
         }}
       />
