@@ -53,21 +53,6 @@
 }
 
 /* Scroll-triggered section animations (GPU-composited) */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeSlideLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes fadeSlideRight {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
 @keyframes flipIn {
   from { transform: rotateX(-90deg); opacity: 0; }
   to { transform: rotateX(0); opacity: 1; }
@@ -177,50 +162,32 @@
 ::-webkit-scrollbar-thumb { background: rgba(184, 134, 11, 0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(184, 134, 11, 0.5); }
 
-/* ===== CSS Scroll Animations (replaces framer-motion whileInView) ===== */
-.css-fade-up {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.css-fade-up.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.css-fade-left {
-  opacity: 0;
-  transform: translateX(-30px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.css-fade-left.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
+/* ===== CSS Scroll Animations (fade-only, no transform = no scroll jank) ===== */
+.css-fade-up,
+.css-fade-left,
 .css-fade-right {
   opacity: 0;
-  transform: translateX(30px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.6s ease;
 }
+.css-fade-up.visible,
+.css-fade-left.visible,
 .css-fade-right.visible {
   opacity: 1;
-  transform: translateX(0);
 }
 
 .css-fade {
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 0.6s ease;
 }
 .css-fade.visible {
   opacity: 1;
 }
 
-/* Staggered children delays */
+/* Staggered children delays (minimal to avoid scroll jank) */
 .stagger > *:nth-child(1) { transition-delay: 0s; }
-.stagger > *:nth-child(2) { transition-delay: 0.1s; }
-.stagger > *:nth-child(3) { transition-delay: 0.2s; }
-.stagger > *:nth-child(4) { transition-delay: 0.3s; }
+.stagger > *:nth-child(2) { transition-delay: 0.05s; }
+.stagger > *:nth-child(3) { transition-delay: 0.1s; }
+.stagger > *:nth-child(4) { transition-delay: 0.15s; }
 
 /* ===== Hero animations (triggered by .hero-active class) ===== */
 .hero-line { opacity: 0; }
