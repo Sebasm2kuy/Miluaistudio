@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Envelope from '@/components/envelope'
 import LoadingScreen from '@/components/loading-screen'
-import ScrollProgress from '@/components/scroll-progress'
 import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
 import Particles from '@/components/particles'
@@ -30,8 +29,8 @@ function Divider() {
 export default function Home() {
   const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>('envelope')
 
-  const handleOpen = useCallback(() => setPhase('loading'), [])
-  const handleDone = useCallback(() => setPhase('done'), [])
+  const handleOpen = () => setPhase('loading')
+  const handleDone = () => setPhase('done')
 
   return (
     <div className="min-h-screen selection:bg-goldLight/30">
@@ -45,7 +44,7 @@ export default function Home() {
           pointerEvents: phase === 'done' ? 'auto' : 'none',
         }}
       >
-        <ScrollProgress />
+        {/* ScrollProgress REMOVED — was causing constant RAF loop */}
         <Navigation />
         <Hero active={phase === 'done'} />
 

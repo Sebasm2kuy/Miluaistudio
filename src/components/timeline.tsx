@@ -1,5 +1,5 @@
 'use client'
-import { motion } from 'framer-motion'
+import { useInView } from '@/hooks/useInView'
 
 const TIMELINE = [
   { time: '21:00', title: 'Recepción', desc: 'Ingreso de invitados', icon: '🥂' },
@@ -8,33 +8,17 @@ const TIMELINE = [
 ]
 
 export default function Timeline() {
+  const { ref, isInView } = useInView()
+
   return (
-    <section id="horarios" className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-        className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden"
-      >
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3"
-        >
+    <section id="horarios" ref={ref} className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
+      <div className={`css-fade-up ${isInView ? 'visible' : ''} glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden`}>
+        <p className={`css-fade-up ${isInView ? 'visible' : ''} font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`} style={{ transitionDelay: '0.2s' }}>
           La Noche
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-xs sm:text-sm md:text-base"
-        >
+        </p>
+        <p className={`css-fade ${isInView ? 'visible' : ''} text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-xs sm:text-sm md:text-base`} style={{ transitionDelay: '0.3s' }}>
           Cada momento cuenta
-        </motion.p>
+        </p>
 
         <div className="relative">
           <div
@@ -43,13 +27,10 @@ export default function Timeline() {
           />
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
             {TIMELINE.map((item, idx) => (
-              <motion.div
+              <div
                 key={item.time}
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 + idx * 0.15 }}
-                className={`relative flex items-start gap-4 sm:gap-5 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                className={`${idx % 2 === 0 ? 'css-fade-left' : 'css-fade-right'} ${isInView ? 'visible' : ''} relative flex items-start gap-4 sm:gap-5`}
+                style={{ transitionDelay: `${0.2 + idx * 0.15}s` }}
               >
                 <div className="absolute left-5 sm:left-6 md:left-1/2 -translate-x-1/2 top-1 z-10">
                   <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-2 border-goldLight bg-white" style={{ boxShadow: '0 0 10px rgba(212,175,55,0.3)' }} />
@@ -65,11 +46,11 @@ export default function Timeline() {
                     <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 uppercase tracking-widest">{item.desc}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   )
 }

@@ -2,20 +2,28 @@
 import { useState, useEffect } from 'react'
 
 /**
- * Ambient Glow — replaces 28 individual particle elements with a single
- * lightweight CSS radial gradient that slowly shifts. Zero DOM overhead.
+ * Ambient Glow — lightweight CSS radial gradients that slowly shift.
+ * On mobile or when the user prefers reduced motion, the component
+ * renders nothing to save GPU work.
  */
 export default function Particles() {
-  const [ready, setReady] = useState(false)
+  const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
     const isMobile = window.innerWidth < 768
-    const delay = isMobile ? 3000 : 0
-    const t = setTimeout(() => setReady(true), delay)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (isMobile || prefersReducedMotion) {
+      // Skip rendering entirely — no timers, no DOM
+      return
+    }
+
+    // Desktop: show after a short delay to let critical content paint first
+    const t = setTimeout(() => setEnabled(true), 0)
     return () => clearTimeout(t)
   }, [])
 
-  if (!ready) return null
+  if (!enabled) return null
 
   return (
     <div

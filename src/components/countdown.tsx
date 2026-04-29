@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useInView } from '@/hooks/useInView'
 import { CalendarPlus } from 'lucide-react'
 
 // Fecha del evento: 22 de Agosto 2026, 21:00 hs (hora de Uruguay, GMT-3)
-const EVENT_MS = Date.UTC(2026, 7, 23, 0, 0, 0) // 22 Ago 21:00 UY = 23 Ago 00:00 UTC
+const EVENT_MS = Date.UTC(2026, 7, 23, 0, 0, 0)
 const labels: Record<string, string> = { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' }
 
 function calcTimeLeft() {
@@ -20,6 +20,16 @@ function calcTimeLeft() {
 
 function FlipUnit({ value, label }: { value: number; label: string }) {
   const display = String(value).padStart(2, '0')
+  const [key, setKey] = useState(0)
+  const prevDisplay = useRef(display)
+
+  useEffect(() => {
+    if (prevDisplay.current !== display) {
+      prevDisplay.current = display
+      setKey(k => k + 1)
+    }
+  }, [display])
+
   return (
     <div className="flex flex-col items-center">
       <div
@@ -31,20 +41,16 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         }}
       >
         <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
-        <div style={{ perspective: '400px' }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={display}
-              initial={{ rotateX: -90, opacity: 0 }}
-              animate={{ rotateX: 0, opacity: 1 }}
-              exit={{ rotateX: 90, opacity: 0 }}
-              transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
-              style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
-              className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none"
-            >
+        <div className="flip-digit" style={{ perspective: '400px' }}>
+          <div
+            key={key}
+            className="flip-digit-value"
+            style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
+          >
+            <span className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none">
               {display}
-            </motion.div>
-          </AnimatePresence>
+            </span>
+          </div>
         </div>
       </div>
       <div className="text-[7px] sm:text-[9px] md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4">
@@ -54,14 +60,16 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
   )
 }
 
+// Need useRef for FlipUnit
+import { useRef } from 'react'
+
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
+  const { ref, isInView } = useInView()
 
   useEffect(() => {
-    setTimeLeft(calcTimeLeft()) // Sync immediately on mount
-    const timer = setInterval(() => {
-      setTimeLeft(calcTimeLeft())
-    }, 1000)
+    setTimeLeft(calcTimeLeft())
+    const timer = setInterval(() => setTimeLeft(calcTimeLeft()), 1000)
     return () => clearInterval(timer)
   }, [])
 
@@ -76,50 +84,29 @@ export default function Countdown() {
   }, [])
 
   return (
-    <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-        className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden"
-      >
+    <section id="detalles" ref={ref} className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
+      <div className={`css-fade-up ${isInView ? 'visible' : ''} glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
           El tiempo vuela...
         </h2>
-        <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6">
+        <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
           {Object.entries(timeLeft).map(([label, val]) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: Object.keys(timeLeft).indexOf(label) * 0.1 }}
-            >
+            <div key={label} className="css-fade-up">
               <FlipUnit value={val} label={labels[label]} />
-            </motion.div>
+            </div>
           ))}
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-8 sm:mt-12 md:mt-16"
-        >
-          <motion.button
+        <div className={`css-fade-up ${isInView ? 'visible' : ''} mt-8 sm:mt-12 md:mt-16`} style={{ transitionDelay: '0.6s' }}>
+          <button
             onClick={addToCalendar}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300"
+            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-all duration-200"
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
             <CalendarPlus size={14} strokeWidth={1.5} />
             Agregar al calendario
-          </motion.button>
-        </motion.div>
-      </motion.div>
+          </button>
+        </div>
+      </div>
     </section>
   )
 }
