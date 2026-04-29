@@ -30,9 +30,9 @@ export default function Navigation() {
     <nav
       className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-3 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 flex items-center shadow-2xl border border-goldLight/12"
       style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
+        background: 'rgba(255, 255, 255, 0.97)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))',
         boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.5) inset',
         willChange: 'transform',
