@@ -44,24 +44,20 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   }, [show, visible, isMobile])
 
   return (
-    <div className="fixed inset-0 z-[-10] bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-[-10] bg-black overflow-hidden">
       <img
         key={idx}
         src={PHOTOS[idx]}
         alt=""
         draggable={false}
-        className="w-[90vw] sm:w-[85vw] max-h-[78vh] sm:max-h-[84vh] object-contain rounded-2xl"
+        className="absolute inset-0 w-full h-full object-cover object-top"
         style={{
           opacity: (show && visible) ? 1 : 0,
           transition: isMobile
             ? 'opacity 300ms linear'
             : 'opacity 800ms ease',
-          filter: 'brightness(0.75) saturate(0.85)',
-          border: '1px solid rgba(212,175,55,0.06)',
+          filter: 'brightness(0.7) saturate(0.8)',
           willChange: isMobile ? 'auto' : 'opacity',
-          boxShadow: isMobile
-            ? '0 0 30px rgba(0,0,0,0.5)'
-            : '0 0 80px rgba(0,0,0,0.9)',
         }}
       />
       {/* Single combined gradient overlay */}

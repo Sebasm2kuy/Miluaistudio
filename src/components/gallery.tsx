@@ -151,7 +151,7 @@ export default function Gallery() {
                 {isOriginal ? (
                   <picture>
                     <source srcSet={photo.src} type="image/webp" />
-                    <img src={ORIGINAL_PHOTOS[origIdx].fallback} alt={`Momento especial ${origIdx + 1}`} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.03]" draggable={false} />
+                    <img src={ORIGINAL_PHOTOS[origIdx].fallback} alt={`Momento especial ${origIdx + 1}`} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]" draggable={false} />
                   </picture>
                 ) : (
                   <img src={photo.src} alt="Foto compartida" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" draggable={false} />
