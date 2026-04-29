@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Envelope from '@/components/envelope'
 import LoadingScreen from '@/components/loading-screen'
 import Navigation from '@/components/navigation'
@@ -26,15 +26,12 @@ function Divider() {
   )
 }
 
-export default function Home() {
-  const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>('envelope')
-  const [navHidden, setNavHidden] = useState(false)
+// Separate component for Navigation so it can be memoized independently
+function AppNavigation({ scrollRef }: { scrollRef: React.RefObject<HTMLDivElement | null> }) {
+  const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
-  const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Auto-hide nav on scroll down, show on scroll up
   useEffect(() => {
-    if (phase !== 'done') return
     const el = scrollRef.current
     if (!el) return
 
@@ -47,9 +44,9 @@ export default function Home() {
         const diff = currentY - lastScrollY.current
 
         if (diff > 5 && currentY > 100) {
-          setNavHidden(true)   // Scrolling down → hide
+          setHidden(true)
         } else if (diff < -5) {
-          setNavHidden(false)  // Scrolling up → show
+          setHidden(false)
         }
         lastScrollY.current = currentY
         ticking = false
@@ -58,21 +55,21 @@ export default function Home() {
 
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
-  }, [phase])
+  }, [scrollRef])
+
+  return <Navigation hidden={hidden} scrollContainer={scrollRef} />
+}
+
+export default function Home() {
+  const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>('envelope')
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const handleOpen = () => setPhase('loading')
   const handleDone = () => setPhase('done')
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Expose scroll ref for navigation component
-  useEffect(() => {
-    if (scrollRef.current && phase === 'done') {
-      ;(window as any).__scrollContainer = scrollRef.current
-    }
-  }, [phase])
+  }, [])
 
   return (
     <div className="selection:bg-goldLight/30">
@@ -90,7 +87,7 @@ export default function Home() {
             pointerEvents: phase === 'done' ? 'auto' : 'none',
           }}
         >
-          <Navigation hidden={navHidden} scrollContainer={scrollRef} />
+          {phase === 'done' && <AppNavigation scrollRef={scrollRef} />}
           <Hero active={phase === 'done'} scrollToTop={scrollToTop} />
 
           <div className="mt-12 sm:mt-16 md:mt-24">

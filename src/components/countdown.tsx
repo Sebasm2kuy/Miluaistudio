@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { CalendarPlus } from 'lucide-react'
 
 // Fecha del evento: 22 de Agosto 2026, 21:00 hs (hora de Uruguay, GMT-3)
@@ -17,15 +17,15 @@ function calcTimeLeft() {
   }
 }
 
+// Simple digit display — no flip animation, no perspective, no layout recalc
 function FlipUnit({ value, label }: { value: number; label: string }) {
   const display = String(value).padStart(2, '0')
-  const [key, setKey] = useState(0)
-  const prevDisplay = useRef(display)
+  const ref = useRef<HTMLSpanElement>(null)
 
+  // Direct DOM update — skip React re-render entirely
   useEffect(() => {
-    if (prevDisplay.current !== display) {
-      prevDisplay.current = display
-      setKey(k => k + 1)
+    if (ref.current) {
+      ref.current.textContent = display
     }
   }, [display])
 
@@ -36,21 +36,17 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         style={{
           background: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(245,244,243,0.95) 50.5%, rgba(240,239,238,0.95) 100%)',
           borderColor: 'rgba(184, 134, 11, 0.08)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
         }}
       >
         <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
-        <div className="flip-digit" style={{ perspective: '400px' }}>
-          <div
-            key={key}
-            className="flip-digit-value"
-            style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
-          >
-            <span className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none">
-              {display}
-            </span>
-          </div>
-        </div>
+        <span
+          ref={ref}
+          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none"
+          style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
+        >
+          {display}
+        </span>
       </div>
       <div className="text-[7px] sm:text-[9px] md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4">
         {label}
@@ -58,9 +54,6 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
     </div>
   )
 }
-
-// Need useRef for FlipUnit
-import { useRef } from 'react'
 
 export default function Countdown() {
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)

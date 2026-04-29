@@ -57,8 +57,8 @@ export default function EventInfo() {
             </div>
           </div>
 
-          {/* Map */}
-          <div className={`css-fade-up h-[280px] sm:h-[350px] md:h-[500px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] overflow-hidden border shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000 relative group cursor-pointer`} style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}>
+          {/* Map — NO grayscale filter on iframe (extremely expensive) */}
+          <div className={`css-fade-up h-[280px] sm:h-[350px] md:h-[500px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] overflow-hidden border shadow-2xl relative group cursor-pointer`} style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}>
             <iframe
               src="https://maps.google.com/maps?q=Salon+My+Father+Granaderos+3875+Montevideo+Uruguay&t=&z=16&ie=UTF8&iwloc=&output=embed"
               width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"

@@ -20,7 +20,7 @@ export default function Dedicatoria() {
 
         <div className={`css-fade-up flex items-center justify-center gap-3`}>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
-          <p className="font-cursive text-2xl sm:text-3xl md:text-4xl text-shimmer text-shimmer-infinite">
+          <p className="font-cursive text-2xl sm:text-3xl md:text-4xl text-shimmer text-shimmer-once">
             Milagros
           </p>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, #d4af37, transparent)' }} />

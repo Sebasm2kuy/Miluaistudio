@@ -46,7 +46,7 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
       style={{
         background: 'rgba(255, 255, 255, 0.98)',
         paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.5) inset',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         transform: hidden ? 'translateX(-50%) translateY(120px)' : 'translateX(-50%) translateY(0)',
         transition: 'transform 0.3s ease',
       }}

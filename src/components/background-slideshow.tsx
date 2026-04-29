@@ -52,26 +52,28 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
       className="fixed inset-0 z-[-10]"
       style={{
         backgroundColor: '#000',
-        // GPU compositing for stable positioning
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden',
-        // Use background-image for most reliable fixed positioning
+        // NO background-attachment: fixed — element is already position:fixed
+        // NO filter — replaced with dark overlay div (much cheaper)
         backgroundImage: `url(${PHOTOS[idx]})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center 25%',
         backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
         opacity: fading && visible ? 1 : 0,
         transition: 'opacity 800ms ease',
-        filter: 'brightness(0.65) saturate(0.75)',
       }}
     >
-      {/* Gradient overlay — also GPU composited */}
+      {/* Dark overlay — replaces expensive filter: brightness/saturate */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden',
+          background: 'rgba(0, 0, 0, 0.4)',
+        }}
+      />
+
+      {/* Gradient overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
           background: `
             linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.8) 100%),
             radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%)
