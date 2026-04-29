@@ -27,8 +27,9 @@ function preloadImages(urls: string[]): Promise<void> {
 
 function waitForFonts(timeoutMs = 5000): Promise<void> {
   if (typeof document === 'undefined') return Promise.resolve()
+  const fontsReady: Promise<void> = document.fonts?.ready ?? Promise.resolve()
   return Promise.race([
-    document.fonts?.ready?.() ?? Promise.resolve(),
+    fontsReady,
     new Promise<void>((r) => setTimeout(r, timeoutMs)),
   ])
 }
@@ -40,47 +41,60 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
   useEffect(() => {
     let cancelled = false
-    let current = 0
-    let imagesReady = false
-    let fontsReady = false
-    let finished = false
-    let lastTime = performance.now()
 
-    // Lanzar cargas en paralelo
-    preloadImages(ASSETS).then(() => { imagesReady = true })
-    waitForFonts(5000).then(() => { fontsReady = true })
+    let target = 0       // where the bar WANTS to be
+    let displayed = 0    // where the bar actually is
+    let lastTick = performance.now()
+    let imagesLoaded = false
+    let fontsLoaded = false
 
-    const TICK = 40 // ms entre updates (25 fps suficiente para una barra)
+    // Real asset loading — these confirm real progress
+    preloadImages(ASSETS).then(() => {
+      if (!cancelled) imagesLoaded = true
+    })
+    waitForFonts(5000).then(() => {
+      if (!cancelled) fontsLoaded = true
+    })
+
+    const TICK = 50
 
     const interval = setInterval(() => {
-      if (cancelled || finished) return
+      if (cancelled) return
 
       const now = performance.now()
-      const dt = Math.min((now - lastTime) / 1000, 0.2) // clamp para evitar saltos
-      lastTime = now
+      const dt = Math.min((now - lastTick) / 1000, 0.15)
+      lastTick = now
 
-      // Cálculo de velocidad basado en tiempo, NO en eventos
-      // Normal: 16%/s → ~6s total | Lento: 2%/s | Rápido: 25%/s
-      let speed = 16
+      // --- Update target based on real load state ---
 
-      if (!imagesReady) {
-        // Frenado suave: empieza a frenar en 50%, casi se detiene en 80%
-        const zone = Math.min(1, Math.max(0, (current - 50) / 35))
-        speed = 16 - 13.5 * zone // 16 → 2.5%/s
-      } else if (!fontsReady) {
-        // Frenado suave para fonts: empieza en 82%, casi se detiene en 93%
-        const zone = Math.min(1, Math.max(0, (current - 82) / 13))
-        speed = 16 - 13.5 * zone
+      if (!imagesLoaded) {
+        // Images still loading: ramp slowly (10%/s)
+        target = Math.min(target + 10 * dt, 82)
+      } else if (!fontsLoaded) {
+        // Images done, fonts pending: ramp moderately (8%/s)
+        target = Math.max(target, 85)
+        target = Math.min(target + 8 * dt, 92)
       } else {
-        // Todo cargado → acelerar para terminar
-        speed = 25
+        // Everything loaded: sprint to 100 (20%/s)
+        target = Math.max(target, 93)
+        target = Math.min(target + 20 * dt, 100)
       }
 
-      current = Math.min(current + speed * dt, 100)
-      setProgress(Math.round(current))
+      // --- Smooth display: catch up to target without jumping ---
+      // Per-tick: min 0.08%, proportional to gap (4%), max 2%
+      // CSS transition (0.2s) smooths these into fluid visual movement
 
-      if (current >= 100 && imagesReady && fontsReady) {
-        finished = true
+      const gap = target - displayed
+      if (gap > 0) {
+        const catchUp = Math.max(0.08, Math.min(gap * 0.04, 2))
+        displayed = Math.min(displayed + catchUp, target)
+      }
+
+      setProgress(Math.min(Math.round(displayed), 100))
+
+      // Done?
+      if (displayed >= 99.5 && imagesLoaded && fontsLoaded) {
+        setProgress(100)
         clearInterval(interval)
       }
     }, TICK)
@@ -94,8 +108,8 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   useEffect(() => {
     if (progress >= 100 && !doneRef.current) {
       doneRef.current = true
-      const t1 = setTimeout(() => setFading(true), 500)
-      const t2 = setTimeout(onDone, 1300)
+      const t1 = setTimeout(() => setFading(true), 600)
+      const t2 = setTimeout(onDone, 1500)
       return () => {
         clearTimeout(t1)
         clearTimeout(t2)
@@ -134,7 +148,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
               width: `${progress}%`,
               background:
                 'linear-gradient(90deg, #b38728, #d4af37, #fcf6ba)',
-              transition: 'width 0.25s linear',
+              transition: 'width 0.2s linear',
             }}
           />
         </div>
