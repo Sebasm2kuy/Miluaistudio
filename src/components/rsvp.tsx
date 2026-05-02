@@ -262,7 +262,7 @@ export default function Rsvp() {
               Cuenta Abitab
             </p>
 
-            <p className="text-4xl sm:text-5xl md:text-7xl font-light text-bordeaux tracking-tighter mb-5 sm:mb-8 md:mb-12 tabular-nums">
+            <p className="text-3xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
               145920
             </p>
 
@@ -291,7 +291,7 @@ export default function Rsvp() {
               Cuenta Mi Dinero
             </p>
 
-            <p className="text-4xl sm:text-5xl md:text-7xl font-light text-bordeaux tracking-tighter mb-5 sm:mb-8 md:mb-12 tabular-nums">
+            <p className="text-3xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
               2401461
             </p>
 
