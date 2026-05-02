@@ -42,13 +42,13 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
 
   return (
     <nav
-      className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-2 sm:px-5 md:px-7 py-2 sm:py-3 md:py-3.5 flex items-center shadow-2xl border border-goldLight/12"
+      className="fixed bottom-4 sm:bottom-6 left-1/2 z-[100] rounded-full px-1.5 sm:px-5 md:px-7 py-1.5 sm:py-3 md:py-3.5 flex items-center justify-around shadow-2xl border border-goldLight/12 max-w-[calc(100vw-1.5rem)]"
       style={{
         background: 'rgba(255, 255, 255, 0.98)',
         paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
         boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         transform: hidden ? 'translateX(-50%) translateY(120px)' : 'translateX(-50%) translateY(0)',
-        transition: 'transform 0.3s ease',
+        transition: 'transform 0.3s ease, translate 0.3s ease',
       }}
     >
       {navItems.map(({ icon: Icon, href, label }) => (
