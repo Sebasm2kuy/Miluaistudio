@@ -10,11 +10,11 @@ export default function Dedicatoria() {
         <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-l-2 rounded-bl-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
         <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-r-2 rounded-br-lg" style={{ borderColor: 'rgba(212,175,55,0.2)' }} />
 
-        <p className={`css-fade font-serif italic text-xl sm:text-2xl md:text-4xl text-bordeaux mb-6 sm:mb-8 leading-relaxed`}>
+        <p className={`css-fade font-serif italic text-[1.25rem] sm:text-2xl md:text-4xl text-bordeaux mb-6 sm:mb-8 leading-relaxed`}>
           &ldquo;Hay momentos que no se repiten, personas que no se olvidan y recuerdos que se guardan para siempre en el corazón.&rdquo;
         </p>
 
-        <p className={`css-fade text-gray-500 text-xs sm:text-sm md:text-base leading-relaxed mb-6 sm:mb-8 px-2 sm:px-4`}>
+        <p className={`css-fade text-gray-500 text-[13px] sm:text-sm md:text-base leading-relaxed mb-6 sm:mb-8 px-2 sm:px-4`}>
           Cada persona que está leyendo esto es parte importante de mi historia. Los esperamos con toda la emoción del mundo para compartir juntos esta noche tan especial.
         </p>
 

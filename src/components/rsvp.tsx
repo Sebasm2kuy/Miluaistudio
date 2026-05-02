@@ -134,7 +134,7 @@ export default function Rsvp() {
                   animation: 'rsvpFadeUp 0.6s ease 0.6s both',
                 }}
               >
-                <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
+                <p className="text-[10px] sm:text-[10px] uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
                 <p className="text-xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
               </div>
 
@@ -145,7 +145,7 @@ export default function Rsvp() {
               >
                 <button
                   onClick={enviarConfirmacion}
-                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
+                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[11px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                 >
                   <Send size={14} strokeWidth={1.5} />
                   Enviar confirmación
@@ -153,7 +153,7 @@ export default function Rsvp() {
 
                 <button
                   onClick={guardarComprobante}
-                  className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
+                  className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[11px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #25D366, #128C7E)',
                     boxShadow: '0 6px 20px rgba(37,211,102,0.3)',
@@ -165,7 +165,7 @@ export default function Rsvp() {
               </div>
 
               <p
-                className="text-[8px] sm:text-[9px] text-gray-400 mt-4 italic"
+                className="text-[10px] sm:text-[11px] text-gray-400 mt-4 italic"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 1.2s both' }}
               >
                 Guardá tu código como comprobante
@@ -180,7 +180,7 @@ export default function Rsvp() {
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
                 <div>
-                  <label className="block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                  <label className="block text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
                     Tu nombre *
                   </label>
                   <input
@@ -195,7 +195,7 @@ export default function Rsvp() {
                 </div>
 
                 <div>
-                  <label className="block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                  <label className="block text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
                     Tu teléfono *
                   </label>
                   <input
@@ -229,7 +229,7 @@ export default function Rsvp() {
                 )}
               </form>
 
-              <p className="text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
+              <p className="text-[10px] sm:text-[10px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
                 Favor confirmar antes del 10/08
               </p>
             </>
@@ -244,7 +244,7 @@ export default function Rsvp() {
           }}
         >
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
-            Regalo
+            Regalos
           </h2>
           <p className="text-gray-400 mb-6 sm:mb-10 italic text-[11px] sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
             &ldquo;Si deseas tener un detalle conmigo, te dejo las opciones donde podés hacerlo.&rdquo;
@@ -258,7 +258,7 @@ export default function Rsvp() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
             }}
           >
-            <p className="text-gold font-bold uppercase text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
+            <p className="text-gold font-bold uppercase text-[10px] sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
               Cuenta Abitab
             </p>
 
@@ -268,7 +268,7 @@ export default function Rsvp() {
 
             <button
               onClick={copyNumber}
-              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-[10px] sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copied ? (
@@ -287,7 +287,7 @@ export default function Rsvp() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
             }}
           >
-            <p className="text-gold font-bold uppercase text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
+            <p className="text-gold font-bold uppercase text-[10px] sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
               Cuenta Mi Dinero
             </p>
 
@@ -297,7 +297,7 @@ export default function Rsvp() {
 
             <button
               onClick={copyMiDinero}
-              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-[10px] sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copiedMiDinero ? (

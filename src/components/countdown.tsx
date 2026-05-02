@@ -32,8 +32,9 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border min-w-0 relative overflow-hidden"
+        className="p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
         style={{
+          minWidth: '2.6ch',
           background: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(245,244,243,0.95) 50.5%, rgba(240,239,238,0.95) 100%)',
           borderColor: 'rgba(184, 134, 11, 0.08)',
           boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
@@ -43,12 +44,12 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         <span
           ref={ref}
           className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none"
-          style={{ fontSize: 'clamp(1.1rem, 4.5vw, 4.5rem)' }}
+          style={{ fontSize: 'clamp(1.1rem, 3.5vw, 4rem)' }}
         >
           {display}
         </span>
       </div>
-      <div className="text-[7px] sm:text-[9px] md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4">
+      <div className="text-[9px] sm:text-[10px] md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4">
         {label}
       </div>
     </div>
@@ -90,7 +91,7 @@ export default function Countdown() {
         <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
           <button
             onClick={addToCalendar}
-            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
+            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[10px] sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
             <CalendarPlus size={14} strokeWidth={1.5} />

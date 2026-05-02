@@ -14,7 +14,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">La Gran Noche</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
                   Sábado 22 de Agosto &bull; 21:00 hs
                 </p>
               </div>
@@ -27,7 +27,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Salón My Father</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
                   Granaderos 3875, Montevideo
                 </p>
               </div>
@@ -40,7 +40,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Gala / Elegante</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
                   Código de Vestimenta
                 </p>
               </div>

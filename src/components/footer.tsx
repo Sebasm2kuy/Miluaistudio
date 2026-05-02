@@ -31,8 +31,8 @@ export default function Footer() {
           Con amor, para un día inolvidable
         </p>
 
-        <div className={`css-fade mt-8 sm:mt-10 md:mt-14`}>
-          <p className="font-light tracking-[0.15em] sm:tracking-[0.25em] text-xs sm:text-sm md:text-base text-shimmer text-shimmer-once">
+        <div className="mt-8 sm:mt-10 md:mt-14">
+          <p className="font-cursive text-lg sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once">
             #MilagrosXV2026
           </p>
         </div>

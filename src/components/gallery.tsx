@@ -169,14 +169,14 @@ export default function Gallery() {
 
           {/* Upload card */}
           <div
-            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/40 transition-[border-color] duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
-            style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)' }}
+            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/50 transition-[border-color] duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
+            style={{ borderColor: 'rgba(184, 134, 11, 0.3)', background: 'rgba(184, 134, 11, 0.04)' }}
             onClick={() => setUploadModal(true)}
           >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/60 group-hover:text-gold transition-colors duration-300" style={{ background: 'rgba(184, 134, 11, 0.06)' }}>
-              <Camera size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/70 group-hover:text-gold transition-colors duration-300" style={{ background: 'rgba(184, 134, 11, 0.1)' }}>
+              <Camera size={22} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
             </div>
-            <p className="text-gold/50 group-hover:text-gold font-bold text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
+            <p className="text-gold/60 group-hover:text-gold font-bold text-[10px] sm:text-[10px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
               Subir tu foto
             </p>
           </div>
