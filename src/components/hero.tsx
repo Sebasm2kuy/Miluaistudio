@@ -55,7 +55,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
       </div>
 
       {/* Scroll indicator */}
-      <div className="hero-scroll absolute bottom-32 sm:bottom-36 flex flex-col items-center gap-2.5">
+      <div className="hero-scroll absolute bottom-32 sm:bottom-36 flex flex-col items-center gap-2.5 z-20">
         <p
           className="text-xs sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.45em] font-light animate-slide-hint"
           style={{ color: '#e8d48b' }}
