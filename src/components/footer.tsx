@@ -31,11 +31,30 @@ export default function Footer() {
           Con amor, para un día inolvidable
         </p>
 
-        <div className="mt-8 sm:mt-10 md:mt-14">
-          <p className="font-cursive text-lg sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once">
+        <a
+          href="https://www.instagram.com/explore/tags/MilagrosXV2026/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 sm:mt-10 md:mt-14 flex items-center gap-2 sm:gap-3 group"
+        >
+          {/* Elegant Instagram icon */}
+          <svg
+            viewBox="0 0 24 24"
+            className="w-5 h-5 sm:w-6 sm:h-6 text-goldLight/80 group-hover:text-goldLight transition-colors duration-300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+          </svg>
+          <p className="font-cursive text-lg sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
             #MilagrosXV2026
           </p>
-        </div>
+        </a>
       </div>
     </footer>
   )
