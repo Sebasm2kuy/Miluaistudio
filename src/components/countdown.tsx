@@ -90,7 +90,7 @@ export default function Countdown() {
         <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
           <button
             onClick={addToCalendar}
-            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-all duration-200"
+            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
             <CalendarPlus size={14} strokeWidth={1.5} />

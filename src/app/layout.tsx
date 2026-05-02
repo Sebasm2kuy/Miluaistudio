@@ -22,13 +22,31 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sebasm2kuy.github.io/Miluaistudio/"),
   title: "Mis XV - Milagros Cabrera",
   description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",
   keywords: ["XV años", "Milagros", "quinceañera", "Milu", "invitación", "Montevideo", "Uruguay"],
   openGraph: {
     title: "Mis XV - Milagros Cabrera",
-    description: "Invitación digital para los XV años de Milagros Cabrera",
+    description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",
     type: "website",
+    locale: "es_UY",
+    url: "https://sebasm2kuy.github.io/Miluaistudio/",
+    siteName: "XV Años de Milagros",
+    images: [
+      {
+        url: "/Miluaistudio/invitacion-vertical.webp",
+        width: 1080,
+        height: 1350,
+        alt: "Invitación XV Años de Milagros Cabrera",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mis XV - Milagros Cabrera",
+    description: "Invitación digital para los XV años de Milagros Cabrera",
+    images: ["/Miluaistudio/invitacion-vertical.webp"],
   },
 };
 

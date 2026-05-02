@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
 
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOPx5jE1vcgW4nUfXWDkbKqQU8Ejex9RLI4rv64yZweZLFEiKrCoDj_8b7fryti3Sn/exec'
@@ -90,90 +89,63 @@ export default function Rsvp() {
     setTimeout(() => setCopiedMiDinero(false), 2000)
   }
 
-  const glassCard: React.CSSProperties = {
-    background: 'rgba(255, 255, 255, 0.96)',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
-    border: '1px solid rgba(184, 134, 11, 0.12)',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset',
-  }
-
   return (
     <section id="confirmar" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-10">
 
         {/* Confirmar Asistencia */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
-          style={{ ...glassCard, borderBottomWidth: '3px', borderBottomColor: '#b8860b' }}
+        <div
+          className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
+          style={{ borderBottomWidth: '3px', borderBottomColor: '#b8860b' }}
         >
           {status === 'ok' ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
-              className="py-4 sm:py-8"
-            >
+            <div className="py-4 sm:py-8">
               {/* Check animado */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+              <div
                 className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-5 rounded-full flex items-center justify-center"
                 style={{
                   background: 'linear-gradient(135deg, #d4af37, #b8860b)',
                   boxShadow: '0 8px 32px rgba(184,134,11,0.3)',
+                  animation: 'springIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both',
                 }}
               >
                 <Check size={36} className="sm:w-10 sm:h-10 text-white" strokeWidth={2} />
-              </motion.div>
+              </div>
 
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+              <p
                 className="font-serif text-2xl sm:text-3xl text-bordeaux italic mb-1"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 0.4s both' }}
               >
                 ¡Confirmado!
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+              </p>
+              <p
                 className="text-gold font-bold text-sm sm:text-base mb-4 sm:mb-5"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 0.5s both' }}
               >
                 {nombre.trim()}
-              </motion.p>
+              </p>
 
               {/* Codigo de confirmacion */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+              <div
                 className="inline-block px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl mb-5 sm:mb-6"
                 style={{
                   background: 'linear-gradient(135deg, rgba(184,134,11,0.08), rgba(212,175,55,0.08))',
                   border: '1px solid rgba(184,134,11,0.2)',
+                  animation: 'rsvpFadeUp 0.6s ease 0.6s both',
                 }}
               >
                 <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
                 <p className="text-xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
-              </motion.div>
+              </div>
 
               {/* Botones post-confirmacion */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
+              <div
                 className="space-y-2.5 sm:space-y-3"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 0.8s both' }}
               >
                 <button
                   onClick={enviarConfirmacion}
-                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-all duration-300 hover:scale-[1.02]"
+                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                 >
                   <Send size={14} strokeWidth={1.5} />
                   Enviar confirmación
@@ -181,7 +153,7 @@ export default function Rsvp() {
 
                 <button
                   onClick={guardarComprobante}
-                  className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-all duration-300 hover:scale-[1.02]"
+                  className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-[10px] sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #25D366, #128C7E)',
                     boxShadow: '0 6px 20px rgba(37,211,102,0.3)',
@@ -190,17 +162,15 @@ export default function Rsvp() {
                   <MessageCircle size={14} strokeWidth={1.5} />
                   Guardar mi comprobante
                 </button>
-              </motion.div>
+              </div>
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
+              <p
                 className="text-[8px] sm:text-[9px] text-gray-400 mt-4 italic"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 1.2s both' }}
               >
                 Guardá tu código como comprobante
-              </motion.p>
-            </motion.div>
+              </p>
+            </div>
           ) : (
             <>
               <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">Confirmar</h2>
@@ -264,17 +234,12 @@ export default function Rsvp() {
               </p>
             </>
           )}
-        </motion.div>
+        </div>
 
         {/* Colaboración */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-          className="rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
+        <div
+          className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
           style={{
-            ...glassCard,
             background: 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(253,252,251,0.98))',
           }}
         >
@@ -303,7 +268,7 @@ export default function Rsvp() {
 
             <button
               onClick={copyNumber}
-              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-all duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copied ? (
@@ -332,7 +297,7 @@ export default function Rsvp() {
 
             <button
               onClick={copyMiDinero}
-              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-all duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copiedMiDinero ? (
@@ -342,7 +307,7 @@ export default function Rsvp() {
               )}
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

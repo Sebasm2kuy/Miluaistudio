@@ -36,19 +36,22 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           }}
         />
 
-        <img
-          src="/Miluaistudio/invitacion-vertical.png"
-          alt="Invitación XV Años - Milagros"
-          draggable={false}
-          className="object-contain rounded-lg relative z-10"
-          style={{
-            display: 'block',
-            maxWidth: 'calc(100vw - 24px)',
-            maxHeight: 'calc(100vh - 24px)',
-            boxShadow: '0 0 40px rgba(212,175,55,0.15), 0 8px 32px rgba(0,0,0,0.4)',
-            border: '1px solid rgba(212,175,55,0.1)',
-          }}
-        />
+        <picture>
+          <source srcSet="/Miluaistudio/invitacion-vertical.webp" type="image/webp" />
+          <img
+            src="/Miluaistudio/invitacion-vertical.png"
+            alt="Invitación XV Años - Milagros"
+            draggable={false}
+            className="object-contain rounded-lg relative z-10"
+            style={{
+              display: 'block',
+              maxWidth: 'calc(100vw - 24px)',
+              maxHeight: 'calc(100vh - 24px)',
+              boxShadow: '0 0 40px rgba(212,175,55,0.15), 0 8px 32px rgba(0,0,0,0.4)',
+              border: '1px solid rgba(212,175,55,0.1)',
+            }}
+          />
+        </picture>
       </div>
 
       <p

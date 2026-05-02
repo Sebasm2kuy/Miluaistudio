@@ -169,7 +169,7 @@ export default function Gallery() {
 
           {/* Upload card */}
           <div
-            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/40 transition-all duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
+            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/40 transition-[border-color] duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
             style={{ borderColor: 'rgba(184, 134, 11, 0.2)', background: 'rgba(184, 134, 11, 0.02)' }}
             onClick={() => setUploadModal(true)}
           >
@@ -200,7 +200,7 @@ export default function Gallery() {
         >
           <button
             onClick={closeUpload}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-[color,background-color]"
             disabled={uploadState === 'compressing' || uploadState === 'uploading'}
           >
             <X size={16} />
@@ -211,7 +211,7 @@ export default function Gallery() {
 
           {!preview ? (
             <div
-              className="border-2 border-dashed rounded-2xl p-8 sm:p-12 flex flex-col items-center gap-3 cursor-pointer transition-all duration-300 hover:border-gold/40 hover:bg-gold/[0.02]"
+              className="border-2 border-dashed rounded-2xl p-8 sm:p-12 flex flex-col items-center gap-3 cursor-pointer transition-[border-color,background-color] duration-300 hover:border-gold/40 hover:bg-gold/[0.02]"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
               onClick={() => fileRef.current?.click()}
             >
@@ -230,7 +230,7 @@ export default function Gallery() {
                 <button
                   onClick={() => fileRef.current?.click()}
                   disabled={uploadState === 'compressing' || uploadState === 'uploading'}
-                  className="flex-1 py-3 rounded-xl border text-gray-500 text-xs font-medium hover:bg-gray-50 transition-all disabled:opacity-40"
+                  className="flex-1 py-3 rounded-xl border text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors disabled:opacity-40"
                   style={{ borderColor: 'rgba(0,0,0,0.1)' }}
                 >Cambiar</button>
                 <button
@@ -259,13 +259,13 @@ export default function Gallery() {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <button onClick={closeLightbox} className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-8 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10">
+        <button onClick={closeLightbox} className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-8 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-[color,background-color] z-10">
           <X size={18} className="sm:w-5 sm:h-5" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); prev() }} className="absolute left-1 sm:left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10">
+        <button onClick={(e) => { e.stopPropagation(); prev() }} className="absolute left-1 sm:left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-[color,background-color] z-10">
           <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); next() }} className="absolute right-1 sm:right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-10">
+        <button onClick={(e) => { e.stopPropagation(); next() }} className="absolute right-1 sm:right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-[color,background-color] z-10">
           <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
         {lightboxIdx !== null && (
@@ -279,7 +279,7 @@ export default function Gallery() {
         <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <div className="flex gap-1.5">
             {photos.map((_, i) => (
-              <div key={i} className={`rounded-full transition-all duration-300 ${lightboxIdx === i ? 'w-6 h-1 bg-goldLight' : 'w-1 h-1 bg-white/30'}`} />
+              <div key={i} className={`rounded-full transition-[width,height,background-color] duration-300 ${lightboxIdx === i ? 'w-6 h-1 bg-goldLight' : 'w-1 h-1 bg-white/30'}`} />
             ))}
           </div>
           <span className="text-white/30 text-[9px] sm:text-[10px] tracking-[0.3em] uppercase">
