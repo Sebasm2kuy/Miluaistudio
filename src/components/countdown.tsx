@@ -32,9 +32,8 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="p-2.5 sm:p-3 md:p-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
+        className="px-3 py-2.5 sm:px-4 sm:py-3 md:px-8 md:py-5 lg:px-10 lg:py-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
         style={{
-          minWidth: '2.6ch',
           background: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(245,244,243,0.95) 50.5%, rgba(240,239,238,0.95) 100%)',
           borderColor: 'rgba(184, 134, 11, 0.08)',
           boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
@@ -43,8 +42,7 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
         <span
           ref={ref}
-          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none"
-          style={{ fontSize: 'clamp(1.1rem, 3.5vw, 4rem)' }}
+          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
         >
           {display}
         </span>
