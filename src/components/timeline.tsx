@@ -39,7 +39,7 @@ export default function Timeline() {
                       <span className="font-bold text-bordeaux tabular-nums" style={{ fontSize: 'clamp(0.85rem, 3vw, 1.4rem)' }}>{item.time} hs</span>
                     </div>
                     <p className="font-serif italic text-bordeaux text-sm sm:text-base md:text-lg">{item.title}</p>
-                    <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 uppercase tracking-widest">{item.desc}</p>
+                    <p className="text-gray-400 text-xs sm:text-xs md:text-sm mt-0.5 uppercase tracking-widest">{item.desc}</p>
                   </div>
                 </div>
               </div>

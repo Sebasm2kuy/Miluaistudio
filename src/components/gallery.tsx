@@ -176,7 +176,7 @@ export default function Gallery() {
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/70 group-hover:text-gold transition-colors duration-300" style={{ background: 'rgba(184, 134, 11, 0.1)' }}>
               <Camera size={22} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
             </div>
-            <p className="text-gold/60 group-hover:text-gold font-bold text-[10px] sm:text-[10px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
+            <p className="text-gold/60 group-hover:text-gold font-bold text-[11px] sm:text-[11px] md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
               Subir tu foto
             </p>
           </div>
@@ -282,7 +282,7 @@ export default function Gallery() {
               <div key={i} className={`rounded-full transition-[width,height,background-color] duration-300 ${lightboxIdx === i ? 'w-6 h-1 bg-goldLight' : 'w-1 h-1 bg-white/30'}`} />
             ))}
           </div>
-          <span className="text-white/30 text-[9px] sm:text-[10px] tracking-[0.3em] uppercase">
+          <span className="text-white/30 text-[10px] sm:text-[10px] tracking-[0.3em] uppercase">
             {lightboxIdx !== null ? `${lightboxIdx + 1} / ${photos.length}` : ''}
           </span>
         </div>

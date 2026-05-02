@@ -18,7 +18,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
 
         {/* LINEA 1: Mis XV Años */}
         <p
-          className="hero-line hero-line-1 uppercase tracking-[0.5em] sm:tracking-[0.7em] md:tracking-[1.4em] text-xs sm:text-base md:text-xl mb-5 sm:mb-8 md:mb-10 font-bold"
+          className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-sm sm:text-base md:text-xl mb-5 sm:mb-8 md:mb-10 font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
           Mis XV Años
@@ -47,7 +47,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
 
         {/* LINEA 5: Salón My Father */}
         <p
-          className="hero-line hero-line-5 mt-3 sm:mt-5 md:mt-6 text-[11px] sm:text-sm md:text-base uppercase tracking-[0.35em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
+          className="hero-line hero-line-5 mt-3 sm:mt-5 md:mt-6 text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
           Salón My Father &bull; Montevideo
@@ -57,7 +57,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
       {/* Scroll indicator */}
       <div className="hero-scroll absolute bottom-32 sm:bottom-36 flex flex-col items-center gap-2.5">
         <p
-          className="text-[10px] sm:text-xs uppercase tracking-[0.35em] sm:tracking-[0.45em] font-light animate-slide-hint"
+          className="text-xs sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.45em] font-light animate-slide-hint"
           style={{ color: '#e8d48b' }}
         >
           Desliza

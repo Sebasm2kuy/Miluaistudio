@@ -18,10 +18,10 @@ import Footer from '@/components/footer'
 
 function Divider() {
   return (
-    <div className="flex items-center justify-center py-2 opacity-25">
-      <div className="h-px w-12 sm:w-20 md:w-32" style={{ background: 'linear-gradient(90deg, transparent, #b8860b)' }} />
-      <div className="w-1 h-1 rotate-45 bg-goldLight/60 mx-2.5 sm:mx-3" />
-      <div className="h-px w-12 sm:w-20 md:w-32" style={{ background: 'linear-gradient(90deg, #b8860b, transparent)' }} />
+    <div className="flex items-center justify-center py-3 sm:py-4 opacity-40">
+      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
+      <div className="w-1 h-1 rotate-45 bg-goldLight/70 mx-3 sm:mx-4" />
+      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, #d4af37, transparent)' }} />
     </div>
   )
 }
@@ -91,11 +91,11 @@ export default function Home() {
           <Hero active={phase === 'done'} scrollToTop={scrollToTop} />
 
           <div className="mt-12 sm:mt-16 md:mt-24">
-            <Dedicatoria />
+            <Countdown />
           </div>
           <Divider />
           <div className="mt-10 sm:mt-14 md:mt-20">
-            <Countdown />
+            <Dedicatoria />
           </div>
           <Divider />
           <div className="mt-10 sm:mt-14 md:mt-20">

@@ -42,10 +42,10 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
 
   return (
     <nav
-      className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-3 sm:px-5 md:px-7 py-2.5 sm:py-3 md:py-3.5 flex items-center shadow-2xl border border-goldLight/12"
+      className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100] rounded-full px-2 sm:px-5 md:px-7 py-2 sm:py-3 md:py-3.5 flex items-center shadow-2xl border border-goldLight/12"
       style={{
         background: 'rgba(255, 255, 255, 0.98)',
-        paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom))',
+        paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
         boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
         transform: hidden ? 'translateX(-50%) translateY(120px)' : 'translateX(-50%) translateY(0)',
         transition: 'transform 0.3s ease',
@@ -56,27 +56,30 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
           key={href}
           href={href}
           onClick={(e) => handleClick(e, href)}
-          className="group relative flex items-center gap-1.5 text-gold/70 hover:text-bordeaux transition-colors duration-200 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90"
+          className="group flex flex-col items-center gap-0 text-gold/70 hover:text-bordeaux transition-colors duration-200 p-1.5 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90"
           aria-label={label}
         >
           <Icon size={17} strokeWidth={1.5} className="sm:w-[18px] sm:h-[18px]" />
-          <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[8px] sm:text-[9px] uppercase tracking-[0.15em] font-semibold text-white/80 bg-black/70 px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap md:hidden">
+          {/* Mobile: always-visible small label */}
+          <span className="text-[8px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">
             {label}
           </span>
-          <span className="hidden md:block text-[9px] uppercase tracking-[0.15em] font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+          {/* Desktop: hover label */}
+          <span className="hidden sm:hidden md:block text-[9px] uppercase tracking-[0.15em] font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap mt-0.5">
             {label}
           </span>
         </a>
       ))}
 
-      <div className="w-px h-4 bg-goldLight/15 mx-0.5" />
+      <div className="w-px h-5 sm:h-4 bg-goldLight/15 mx-0.5" />
 
       <button
         onClick={scrollToTop}
-        className="text-gold/50 hover:text-bordeaux transition-colors duration-200 p-2 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90"
+        className="text-gold/50 hover:text-bordeaux transition-colors duration-200 p-1.5 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90 flex flex-col items-center"
         aria-label="Volver arriba"
       >
         <ArrowUp size={15} strokeWidth={1.5} />
+        <span className="text-[7px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">Top</span>
       </button>
     </nav>
   )

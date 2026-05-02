@@ -14,7 +14,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">La Gran Noche</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-xs sm:text-[11px] md:text-xs mt-1.5">
                   Sábado 22 de Agosto &bull; 21:00 hs
                 </p>
               </div>
@@ -27,7 +27,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Salón My Father</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-xs sm:text-[11px] md:text-xs mt-1.5">
                   Granaderos 3875, Montevideo
                 </p>
               </div>
@@ -40,7 +40,7 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl md:text-3xl text-bordeaux italic">Gala / Elegante</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] sm:text-[11px] md:text-xs mt-1.5">
+                <p className="text-gray-500 font-bold uppercase tracking-widest text-xs sm:text-[11px] md:text-xs mt-1.5">
                   Código de Vestimenta
                 </p>
               </div>
@@ -50,7 +50,7 @@ export default function EventInfo() {
             <div className={`css-fade-up`}>
               <button
                 onClick={() => window.open('https://maps.app.goo.gl/uXq5HCuF54u8DqJj8', '_blank')}
-                className="gold-button w-full py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-[11px] sm:text-xs md:text-sm"
+                className="gold-button w-full py-3 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-xs sm:text-xs md:text-sm"
               >
                 Cómo llegar
               </button>
