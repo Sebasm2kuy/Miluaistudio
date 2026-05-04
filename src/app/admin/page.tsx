@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES } from '@/data/admin-options'
+import { deployToGitHub } from '@/lib/github-deploy'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -372,6 +373,8 @@ export default function AdminPage() {
   const [saved, setSaved] = useState(false)
   const [deploying, setDeploying] = useState(false)
   const [deployResult, setDeployResult] = useState<string | null>(null)
+  const [githubToken, setGithubToken] = useState('')
+  const [showToken, setShowToken] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Force scroll fix on mount
@@ -389,14 +392,15 @@ export default function AdminPage() {
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('milu_config')
-      if (saved) {
-        const parsed = JSON.parse(saved) as SiteConfig
+      const savedCfg = localStorage.getItem('milu_config')
+      if (savedCfg) {
+        const parsed = JSON.parse(savedCfg) as SiteConfig
         if (parsed?.evento?.nombre) {
-          // Merge with defaults to handle new fields
           setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
         }
       }
+      const savedToken = localStorage.getItem('milu_github_token')
+      if (savedToken) setGithubToken(savedToken)
     } catch { /* ignore */ }
   }, [])
 
@@ -479,30 +483,27 @@ export default function AdminPage() {
   }, [cfg])
 
   const handleDeploy = useCallback(async () => {
+    if (!githubToken) {
+      setDeployResult('Falta el GitHub Token. Configuralo abajo.')
+      setTimeout(() => setDeployResult(null), 5000)
+      return
+    }
+    localStorage.setItem('milu_github_token', githubToken)
     saveConfig(cfg)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
     setDeploying(true)
     setDeployResult(null)
     try {
-      const res = await fetch('/api/deploy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ config: cfg }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setDeployResult('Deploy exitoso!')
-      } else {
-        setDeployResult(`Error: ${data.error}`)
-      }
+      const result = await deployToGitHub(cfg as unknown as Record<string, unknown>, githubToken)
+      setDeployResult(result.message)
     } catch (err) {
       setDeployResult(`Error: ${err instanceof Error ? err.message : 'unknown'}`)
     } finally {
       setDeploying(false)
-      setTimeout(() => setDeployResult(null), 5000)
+      setTimeout(() => setDeployResult(null), 8000)
     }
-  }, [cfg])
+  }, [cfg, githubToken])
 
   // --- Expand / Collapse all ---
   const expandAll = useCallback(() => {
@@ -613,6 +614,57 @@ export default function AdminPage() {
 
       {/* --- Form Body --- */}
       <main className="max-w-4xl mx-auto px-4 py-6 space-y-4 pb-16">
+
+        {/* DEPLOY - GitHub Token */}
+        <div className="rounded-2xl border overflow-hidden" style={{ borderColor: '#2563eb55', background: '#111111' }}>
+          <button
+            type="button"
+            onClick={() => setShowToken(!showToken)}
+            className="w-full flex items-center justify-between px-5 py-4 text-left select-none hover:bg-white/5 transition-colors"
+          >
+            <span className="flex items-center gap-3">
+              <span className="text-xl">🚀</span>
+              <span className="font-cursive text-xl" style={{ color: '#2563eb' }}>Deploy (Git Push)</span>
+            </span>
+            <svg className={`w-5 h-5 transition-transform duration-200 ${showToken ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showToken && (
+            <div className="px-5 pb-5 pt-1 border-t" style={{ borderColor: '#2563eb33' }}>
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400">
+                  Para deployar, necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">repo</code>.
+                </p>
+                <div className="relative">
+                  <input
+                    type="password"
+                    value={githubToken}
+                    onChange={(e) => { setGithubToken(e.target.value); localStorage.setItem('milu_github_token', e.target.value) }}
+                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                    className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#2563eb] pr-20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => { const inp = document.querySelector<HTMLInputElement>('.token-input'); if(inp) inp.type = inp.type === 'password' ? 'text' : 'password' }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] rounded bg-gray-800 text-gray-400 hover:text-gray-200"
+                  >
+                    Mostrar
+                  </button>
+                </div>
+                <p className="text-[10px] text-gray-600">
+                  Creá tu token en: GitHub &gt; Settings &gt; Developer settings &gt; Personal access tokens &gt; Fine-grained tokens. Dale permiso de &quot;Contents&quot; read/write al repo Miluaistudio.
+                </p>
+                {githubToken && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="text-green-400">Token configurado</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
         {/* EVENTO */}
         <Section title={SECTION_META.evento.title} icon={SECTION_META.evento.icon} open={openSections.has('evento')} onToggle={() => toggle('evento')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
