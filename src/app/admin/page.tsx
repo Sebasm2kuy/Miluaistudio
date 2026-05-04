@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES } from '@/data/admin-options'
-import { deployToGitHub } from '@/lib/github-deploy'
+import { deployToGitHub, uploadToGitHub } from '@/lib/github-deploy'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -242,30 +242,41 @@ function ImageCard({
   url,
   onUpload,
   onRemove,
+  token,
 }: {
   label: string
   url: string
   onUpload: (url: string) => void
   onRemove: () => void
+  token: string
 }) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
+  const [uploadMsg, setUploadMsg] = useState('')
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    if (!token) {
+      setUploadMsg('Falta el GitHub Token')
+      setTimeout(() => setUploadMsg(''), 3000)
+      return
+    }
     setUploading(true)
+    setUploadMsg('')
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('section', 'general')
-      const res = await fetch('/api/upload', { method: 'POST', body: formData })
-      const data = await res.json()
-      if (data.success) {
-        onUpload(data.url)
+      const result = await uploadToGitHub(file, token)
+      if (result.success) {
+        onUpload(result.url)
+        setUploadMsg('Subida!')
+        setTimeout(() => setUploadMsg(''), 3000)
+      } else {
+        setUploadMsg(result.message)
+        setTimeout(() => setUploadMsg(''), 5000)
       }
     } catch (err) {
-      console.error('Upload failed:', err)
+      setUploadMsg('Error al subir')
+      setTimeout(() => setUploadMsg(''), 5000)
     } finally {
       setUploading(false)
     }
@@ -311,13 +322,20 @@ function ImageCard({
         </div>
       )}
       <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 transition-colors"
-        >
-          {url ? 'Cambiar' : 'Subir'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 transition-colors"
+          >
+            {uploading ? 'Subiendo...' : url ? 'Cambiar' : 'Subir'}
+          </button>
+          {uploadMsg && (
+            <span className={`text-[10px] ${uploadMsg === 'Subida!' ? 'text-green-400' : 'text-red-400'}`}>
+              {uploadMsg}
+            </span>
+          )}
+        </div>
         <Field
           label=""
           value={url}
@@ -786,6 +804,7 @@ export default function AdminPage() {
                     key={i}
                     label={`Foto ${i + 1}`}
                     url={foto.webp}
+                    token={githubToken}
                     onUpload={(url) => {
                       const fotos = [...cfg.galeria.fotos]
                       fotos[i] = { webp: url, fallback: url }
@@ -864,12 +883,14 @@ export default function AdminPage() {
             <ImageCard
               label="Imagen de Invitación"
               url={cfg.invitacion.imagen}
+              token={githubToken}
               onUpload={(url) => setNested('invitacion', 'imagen', url)}
               onRemove={() => setNested('invitacion', 'imagen', '')}
             />
             <ImageCard
               label="Imagen Fallback"
               url={cfg.invitacion.imagenFallback}
+              token={githubToken}
               onUpload={(url) => setNested('invitacion', 'imagenFallback', url)}
               onRemove={() => setNested('invitacion', 'imagenFallback', '')}
             />

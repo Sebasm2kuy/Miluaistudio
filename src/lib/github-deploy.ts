@@ -2,6 +2,7 @@
 
 const GITHUB_REPO = 'Sebasm2kuy/Miluaistudio'
 const CONFIG_PATH = 'src/data/config.ts'
+const BASE_PATH = '/Miluaistudio'
 
 // Type definitions are embedded here so we can build the full config.ts file
 const CONFIG_TYPES = `// ============================================================
@@ -179,5 +180,79 @@ export async function deployToGitHub(
     return { success: false, message: `Error al pushear: ${err.message || putRes.status}` }
   } catch (err) {
     return { success: false, message: `Error de red: ${err instanceof Error ? err.message : 'unknown'}` }
+  }
+}
+
+/**
+ * Upload a file (image) to the repo via GitHub Contents API.
+ * The file is stored under `public/uploads/` and served at `/Miluaistudio/uploads/filename`.
+ */
+export async function uploadToGitHub(
+  file: File,
+  token: string,
+  subfolder = 'uploads',
+): Promise<{ success: boolean; url: string; message: string }> {
+  if (!token) {
+    return { success: false, url: '', message: 'Falta el GitHub Token' }
+  }
+
+  // Sanitize filename: lowercase, remove spaces, add timestamp to avoid collisions
+  const ext = file.name.split('.').pop() || 'jpg'
+  const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase()
+  const timestamp = Date.now().toString(36)
+  const fileName = `${baseName}_${timestamp}.${ext}`
+  const repoPath = `public/${subfolder}/${fileName}`
+
+  const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${repoPath}`
+
+  try {
+    // Convert file to base64
+    const arrayBuffer = await file.arrayBuffer()
+    const uint8Array = new Uint8Array(arrayBuffer)
+    let binary = ''
+    for (let i = 0; i < uint8Array.length; i++) {
+      binary += String.fromCharCode(uint8Array[i])
+    }
+    const base64Content = btoa(binary)
+
+    // Check if file already exists (get SHA)
+    const getRes = await fetch(apiBase, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
+
+    let sha: string | undefined
+    if (getRes.ok) {
+      const data = await getRes.json()
+      sha = data.sha
+    }
+
+    // Push file
+    const putRes = await fetch(apiBase, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Upload ${fileName} from admin`,
+        content: base64Content,
+        sha,
+        branch: 'main',
+      }),
+    })
+
+    if (putRes.ok) {
+      const publicUrl = `${BASE_PATH}/${subfolder}/${fileName}`
+      return { success: true, url: publicUrl, message: `Foto subida: ${fileName}` }
+    }
+
+    const err = await putRes.json().catch(() => ({}))
+    return { success: false, url: '', message: `Error al subir: ${err.message || putRes.status}` }
+  } catch (err) {
+    return { success: false, url: '', message: `Error de red: ${err instanceof Error ? err.message : 'unknown'}` }
   }
 }
