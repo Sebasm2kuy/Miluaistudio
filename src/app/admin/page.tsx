@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
-import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES } from '@/data/admin-options'
+import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES, COLOR_PRESETS, BACKGROUND_PRESETS } from '@/data/admin-options'
 import { deployToGitHub, uploadToGitHub } from '@/lib/github-deploy'
 
 // ---------------------------------------------------------------------------
@@ -166,6 +166,13 @@ function ColorField({
       </div>
     </label>
   )
+}
+
+function applyColorPreset(setCfg: React.Dispatch<React.SetStateAction<SiteConfig>>, colors: typeof COLOR_PRESETS[number]['colors']) {
+  setCfg(prev => ({
+    ...prev,
+    colores: { ...prev.colores, ...colors },
+  }))
 }
 
 // ---------------------------------------------------------------------------
@@ -977,32 +984,50 @@ export default function AdminPage() {
 
         {/* FONDO */}
         <Section title={SECTION_META.fondo.title} icon={SECTION_META.fondo.icon} open={openSections.has('fondo')} onToggle={() => toggle('fondo')}>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos de fondo ({cfg.fondo.fotos.length})</span>
-              <button
-                type="button"
-                onClick={() => setCfg((prev) => ({ ...prev, fondo: { ...prev.fondo, fotos: [...prev.fondo.fotos, ''] } }))}
-                className="px-3 py-1 rounded-md text-xs font-medium"
-                style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
-              >
-                + Agregar
-              </button>
+          <div className="space-y-4">
+            <p className="text-xs text-gray-400 mb-2">Elegí un fondo para tu invitación. Podés usar un degradado o las fotos de la galería.</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {BACKGROUND_PRESETS.map((bg) => {
+                const isActive = cfg.fondo.fotos.length === 0 && bg.css === '' || false
+                return (
+                  <button
+                    key={bg.id}
+                    type="button"
+                    onClick={() => {
+                      if (bg.id === 'fotos') {
+                        // Restore gallery photos
+                        setCfg(prev => ({
+                          ...prev,
+                          fondo: { fotos: prev.galeria.fotos.map(f => f.webp).filter(Boolean) },
+                        }))
+                      } else {
+                        // Use gradient (store empty fotos, we handle gradient in config)
+                        setCfg(prev => ({ ...prev, fondo: { fotos: [`gradient:${bg.id}`] } }))
+                      }
+                    }}
+                    className="rounded-xl border overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                    style={{
+                      borderColor: (bg.id === 'fotos' && cfg.fondo.fotos.length > 0 && !cfg.fondo.fotos[0]?.startsWith('gradient:')) ? '#d4af37' : 'rgba(75,85,99,0.4)',
+                      background: bg.css || 'rgba(255,255,255,0.05)',
+                    }}
+                  >
+                    <div className="h-16 sm:h-20 flex items-center justify-center relative" style={bg.css ? {} : { background: 'rgba(255,255,255,0.05)' }}>
+                      {bg.id === 'fotos' ? (
+                        <span className="text-2xl">📸</span>
+                      ) : (
+                        <span className="text-3xl">{bg.emoji}</span>
+                      )}
+                    </div>
+                    <div className="px-2 py-1.5 bg-gray-900/80">
+                      <div className="text-[10px] font-semibold text-gray-300 truncate">{bg.name}</div>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
-              {cfg.fondo.fotos.map((url, i) => (
-                <ImageCard
-                  key={i}
-                  label={`Fondo ${i + 1}`}
-                  url={url}
-                  onUpload={(newUrl) => {
-                    const fotos = [...cfg.fondo.fotos]
-                    fotos[i] = newUrl
-                    setCfg((p) => ({ ...p, fondo: { ...p.fondo, fotos } }))
-                  }}
-                  onRemove={() => setCfg((p) => ({ ...p, fondo: { ...p.fondo, fotos: p.fondo.fotos.filter((_, idx) => idx !== i) } }))}
-                />
-              ))}
+            <div className="flex items-center gap-2 pt-2">
+              <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: cfg.fondo.fotos[0]?.startsWith('gradient:') ? cfg.fondo.fotos[0].replace('gradient:', '') : 'rgba(255,255,255,0.05)' }} />
+              <span className="text-[10px] text-gray-500">Preview</span>
             </div>
           </div>
         </Section>
@@ -1010,24 +1035,55 @@ export default function AdminPage() {
         {/* COLORES */}
         <Section title={SECTION_META.colores.title} icon={SECTION_META.colores.icon} open={openSections.has('colores')} onToggle={() => toggle('colores')}>
           <div className="space-y-4">
-            <ColorField label="Principal" value={cfg.colores.principal} onChange={(v) => setNested('colores', 'principal', v)} />
-            <ColorField label="Dorado" value={cfg.colores.dorado} onChange={(v) => setNested('colores', 'dorado', v)} />
-            <ColorField label="Dorado Claro" value={cfg.colores.doradoClaro} onChange={(v) => setNested('colores', 'doradoClaro', v)} />
-            <ColorField label="Marfil" value={cfg.colores.marfil} onChange={(v) => setNested('colores', 'marfil', v)} />
-            <ColorField label="Fondo" value={cfg.colores.fondo} onChange={(v) => setNested('colores', 'fondo', v)} />
-            <div className="pt-2">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Vista previa</span>
-              <div className="flex gap-1 h-10 rounded-lg overflow-hidden border border-gray-700">
-                {[cfg.colores.principal, cfg.colores.dorado, cfg.colores.doradoClaro, cfg.colores.marfil, cfg.colores.fondo].map((c, i) => (
-                  <div key={i} className="flex-1 transition-colors duration-200" style={{ backgroundColor: c }} />
-                ))}
-              </div>
-              <div className="flex gap-1 mt-1">
-                {['Principal', 'Dorado', 'Dorado C.', 'Marfil', 'Fondo'].map((name) => (
-                  <span key={name} className="flex-1 text-center text-[10px] text-gray-600 truncate">{name}</span>
-                ))}
-              </div>
+            <p className="text-xs text-gray-400 mb-2">Elegí un tema de colores predefinido o personalizá cada uno.</p>
+            {/* Color Presets */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {COLOR_PRESETS.map((preset) => {
+                const isActive = cfg.colores.principal === preset.colors.principal
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => applyColorPreset(setCfg, preset.colors)}
+                    className="rounded-xl border overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                    style={{
+                      borderColor: isActive ? '#d4af37' : 'rgba(75,85,99,0.4)',
+                      background: preset.colors.principal,
+                    }}
+                  >
+                    <div className="h-12 sm:h-14 flex flex-col items-center justify-center gap-1">
+                      <span className="text-lg">{preset.emoji}</span>
+                      <span className="text-[9px] font-bold" style={{ color: preset.colors.doradoClaro }}>{preset.name}</span>
+                    </div>
+                    <div className="flex h-4">
+                      <div className="flex-1" style={{ background: preset.colors.dorado }} />
+                      <div className="flex-1" style={{ background: preset.colors.doradoClaro }} />
+                      <div className="flex-1" style={{ background: preset.colors.marfil }} />
+                      <div className="flex-1" style={{ background: preset.colors.fondo }} />
+                    </div>
+                    {isActive && (
+                      <div className="py-1 text-center bg-[#d4af37]/20">
+                        <span className="text-[9px] font-bold text-[#d4af37]">ACTIVO</span>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
             </div>
+            {/* Individual Color Pickers */}
+            <details className="group">
+              <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-300 transition-colors flex items-center gap-1">
+                <svg className="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                Personalizar colores individualmente
+              </summary>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-gray-800">
+                <ColorField label="Principal" value={cfg.colores.principal} onChange={(v) => setNested('colores', 'principal', v)} />
+                <ColorField label="Dorado" value={cfg.colores.dorado} onChange={(v) => setNested('colores', 'dorado', v)} />
+                <ColorField label="Dorado Claro" value={cfg.colores.doradoClaro} onChange={(v) => setNested('colores', 'doradoClaro', v)} />
+                <ColorField label="Marfil" value={cfg.colores.marfil} onChange={(v) => setNested('colores', 'marfil', v)} />
+                <ColorField label="Fondo" value={cfg.colores.fondo} onChange={(v) => setNested('colores', 'fondo', v)} />
+              </div>
+            </details>
           </div>
         </Section>
 
@@ -1086,38 +1142,110 @@ export default function AdminPage() {
             />
 
             {/* Clock Style */}
-            <OptionPicker
-              label="Modelo de Reloj / Countdown"
-              options={CLOCK_STYLES}
-              value={cfg.estilos.modeloReloj}
-              onChange={(v) => setNested('estilos', 'modeloReloj', v)}
-              renderOption={(opt, isSelected) => (
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
-                    {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
-                  </div>
-                  <div className="text-2xl font-bold text-center py-1" style={{ color: '#e8d48b' }}>{opt.preview}</div>
-                  <p className="text-[10px] text-gray-500 text-center">{opt.description}</p>
-                </div>
-              )}
-            />
+              <OptionPicker
+                label="Modelo de Reloj"
+                options={CLOCK_STYLES}
+                value={cfg.estilos.modeloReloj}
+                onChange={(v) => setNested('estilos', 'modeloReloj', v)}
+                renderOption={(opt, isSelected) => {
+                  const s = opt as unknown as typeof CLOCK_STYLES[number]
+                  return (
+                    <div>
+                      <div
+                        className="rounded-lg px-2 py-2 mb-2 text-center"
+                        style={{
+                          background: s.sectionBg || 'rgba(255,255,255,0.12)',
+                          border: s.sectionBorder || 'none',
+                          borderRadius: '0.5rem',
+                          minHeight: '48px',
+                        }}
+                      >
+                        <div className="text-[8px] mb-1" style={{ color: s.titleColor }}>{cfg.countdown.titulo || 'El tiempo...'}</div>
+                        <div className="flex items-center justify-center gap-1">
+                          {['08', '12', '45', '30'].map((n, i) => (
+                            <div key={i} className="text-center">
+                              <div
+                                className="rounded px-1 py-0.5 text-[11px] font-bold"
+                                style={{
+                                  background: s.containerBg,
+                                  border: `1px solid ${s.containerBorder}`,
+                                  color: s.numberColor,
+                                  textShadow: (s as Record<string, unknown>).numberGlow as string || 'none',
+                                }}
+                              >
+                                {n}
+                              </div>
+                              <div className="text-[5px] uppercase mt-0.5" style={{ color: s.labelColor }}>
+                                {['D', 'H', 'M', 'S'][i]}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
+                      <p className="text-[8px] text-gray-500">{s.description}</p>
+                    </div>
+                  )
+                }}
+              />
 
             {/* Card Style */}
-            <OptionPicker
-              label="Estilo de Tarjetas"
-              options={CARD_STYLES}
-              value={cfg.estilos.estiloTarjetas}
-              onChange={(v) => setNested('estilos', 'estiloTarjetas', v)}
-            />
+              <OptionPicker
+                label="Estilo de Tarjetas"
+                options={CARD_STYLES}
+                value={cfg.estilos.estiloTarjetas}
+                onChange={(v) => setNested('estilos', 'estiloTarjetas', v)}
+                renderOption={(opt, isSelected) => {
+                  const s = opt as unknown as typeof CARD_STYLES[number]
+                  return (
+                    <div>
+                      <div
+                        className="rounded-lg px-2 py-3 mb-2 flex items-center justify-between"
+                        style={{
+                          background: s.previewBg,
+                          border: s.previewBorder,
+                          borderRadius: '0.5rem',
+                        }}
+                      >
+                        <span className="text-[10px] font-medium" style={{ color: s.previewText }}>Texto de ejemplo</span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ color: s.previewText, border: `1px solid ${s.previewText}33`, background: 'transparent' }}>Boton</span>
+                      </div>
+                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
+                      <p className="text-[8px] text-gray-500">{s.description}</p>
+                    </div>
+                  )
+                }}
+              />
 
             {/* Button Style */}
-            <OptionPicker
-              label="Estilo de Botones"
-              options={BUTTON_STYLES}
-              value={cfg.estilos.estiloBotones}
-              onChange={(v) => setNested('estilos', 'estiloBotones', v)}
-            />
+              <OptionPicker
+                label="Estilo de Botones"
+                options={BUTTON_STYLES}
+                value={cfg.estilos.estiloBotones}
+                onChange={(v) => setNested('estilos', 'estiloBotones', v)}
+                renderOption={(opt, isSelected) => {
+                  const s = opt as unknown as typeof BUTTON_STYLES[number]
+                  return (
+                    <div>
+                      <div className="flex items-center justify-center mb-2 py-3">
+                        <button
+                          type="button"
+                          className="px-3 py-1.5 rounded-full text-[10px] font-bold"
+                          style={{
+                            background: s.previewBg,
+                            border: s.previewBorder,
+                            color: s.previewText,
+                          }}
+                        >
+                          Agregar al Calendario
+                        </button>
+                      </div>
+                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
+                      <p className="text-[8px] text-gray-500">{s.description}</p>
+                    </div>
+                  )
+                }}
+              />
           </div>
         </Section>
       </main>

@@ -1,4 +1,8 @@
-// Font options available for the admin panel
+// ============================================================================
+// ADMIN OPTIONS — Visual presets for the wedding admin panel
+// ============================================================================
+
+// --- Fonts ---
 export const FONT_OPTIONS = [
   { id: 'alex-brush', name: 'Alex Brush', category: 'Script', style: "'Alex Brush', cursive", preview: 'Elegancia' },
   { id: 'playfair', name: 'Playfair Display', category: 'Serif', style: "'Playfair Display', serif", preview: 'Sophistication' },
@@ -17,55 +21,311 @@ export const FONT_OPTIONS = [
   { id: 'bodoni-moda', name: 'Bodoni Moda', category: 'Serif', style: "'Bodoni Moda', serif", preview: 'CLASIC' },
 ] as const
 
-// Clock/countdown style options
+// --- Clock Styles with full visual preview data ---
 export const CLOCK_STYLES = [
   {
     id: 'classic',
     name: 'Clásico',
-    description: 'Tarjetas blancas con números grandes',
-    preview: '█08█',
+    description: 'Tarjetas blancas elegantes con números grandes',
+    containerBg: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(240,239,238,0.95) 100%)',
+    containerBorder: 'rgba(184, 134, 11, 0.08)',
+    numberColor: '#3d0202',
+    labelColor: '#b8860b',
+    sectionBg: 'rgba(255,255,255,0.12)',
+    sectionBorder: 'none',
+    titleColor: '#3d0202',
   },
   {
     id: 'minimal',
     name: 'Minimal',
-    description: 'Solo números, sin bordes',
-    preview: '08',
+    description: 'Solo números grandes, sin bordes ni fondo',
+    containerBg: 'transparent',
+    containerBorder: 'transparent',
+    numberColor: '#fdfcfb',
+    labelColor: 'rgba(212,175,55,0.6)',
+    sectionBg: 'linear-gradient(180deg, rgba(61,2,2,0.92) 0%, rgba(30,1,1,0.95) 100%)',
+    sectionBorder: 'none',
+    titleColor: '#d4af37',
   },
   {
     id: 'gold-glass',
     name: 'Dorado Vidrio',
-    description: 'Fondo dorado translúcido',
-    preview: '◈08◈',
+    description: 'Fondo dorado translúcido con efecto glass',
+    containerBg: 'linear-gradient(135deg, rgba(184,134,11,0.15) 0%, rgba(212,175,55,0.1) 100%)',
+    containerBorder: 'rgba(212,175,55,0.3)',
+    numberColor: '#d4af37',
+    labelColor: 'rgba(212,175,55,0.7)',
+    sectionBg: 'rgba(255,255,255,0.12)',
+    sectionBorder: 'none',
+    titleColor: '#3d0202',
   },
   {
     id: 'dark-luxury',
     name: 'Lujo Oscuro',
-    description: 'Fondo oscuro con acentos dorados',
-    preview: '◆08◆',
+    description: 'Fondo oscuro premium con glow dorado',
+    containerBg: 'linear-gradient(180deg, rgba(30,30,30,0.95) 0%, rgba(15,15,15,0.98) 100%)',
+    containerBorder: 'rgba(212,175,55,0.25)',
+    numberColor: '#d4af37',
+    labelColor: 'rgba(212,175,55,0.5)',
+    sectionBg: 'linear-gradient(180deg, rgba(61,2,2,0.92) 0%, rgba(30,1,1,0.95) 100%)',
+    sectionBorder: '1px solid rgba(212,175,55,0.2)',
+    titleColor: '#d4af37',
+    numberGlow: '0 0 20px rgba(212,175,55,0.3)',
   },
   {
     id: 'neon',
     name: 'Neón',
-    description: 'Efecto neón brillante',
-    preview: '✦08✦',
+    description: 'Efecto neón brillante con triple glow',
+    containerBg: 'rgba(0,0,0,0.6)',
+    containerBorder: 'rgba(212,175,55,0.15)',
+    numberColor: '#d4af37',
+    labelColor: 'rgba(212,175,55,0.6)',
+    sectionBg: 'linear-gradient(180deg, rgba(61,2,2,0.92) 0%, rgba(30,1,1,0.95) 100%)',
+    sectionBorder: '1px solid rgba(212,175,55,0.2)',
+    titleColor: '#d4af37',
+    numberGlow: '0 0 10px rgba(212,175,55,0.8), 0 0 30px rgba(212,175,55,0.4), 0 0 60px rgba(212,175,55,0.2)',
   },
 ] as const
 
-// Card/section style options
+// --- Card/Section Style Options with visual data ---
 export const CARD_STYLES = [
-  { id: 'glass', name: 'Cristal', description: 'Fondo blanco translúcido' },
-  { id: 'dark', name: 'Oscuro', description: 'Fondo oscuro elegante' },
-  { id: 'gold-border', name: 'Borde Dorado', description: 'Borde dorado con fondo claro' },
-  { id: 'minimal-dark', name: 'Minimal Oscuro', description: 'Sin bordes, fondo semi-oscuro' },
+  {
+    id: 'glass',
+    name: 'Cristal',
+    description: 'Fondo blanco translúcido y brillante',
+    previewBg: 'rgba(255,255,255,0.12)',
+    previewBorder: '1px solid rgba(255,255,255,0.2)',
+    previewText: '#fdfcfb',
+  },
+  {
+    id: 'dark',
+    name: 'Oscuro',
+    description: 'Fondo oscuro elegante y sofisticado',
+    previewBg: 'linear-gradient(135deg, rgba(61,2,2,0.85) 0%, rgba(20,0,0,0.92) 100%)',
+    previewBorder: '1px solid rgba(212,175,55,0.15)',
+    previewText: '#d4af37',
+  },
+  {
+    id: 'gold-border',
+    name: 'Borde Dorado',
+    description: 'Borde dorado elegante con fondo claro',
+    previewBg: 'rgba(255,255,255,0.08)',
+    previewBorder: '2px solid rgba(212,175,55,0.4)',
+    previewText: '#d4af37',
+  },
+  {
+    id: 'minimal-dark',
+    name: 'Minimal Oscuro',
+    description: 'Sin bordes visibles, fondo semi-oscuro',
+    previewBg: 'rgba(0,0,0,0.5)',
+    previewBorder: '1px solid rgba(255,255,255,0.06)',
+    previewText: '#e0e0e0',
+  },
 ] as const
 
-// Button style options
+// --- Button Style Options with visual data ---
 export const BUTTON_STYLES = [
-  { id: 'gold-gradient', name: 'Gradiente Dorado', description: 'Degradado clásico dorado' },
-  { id: 'outline-gold', name: 'Contorno Dorado', description: 'Solo borde dorado' },
-  { id: 'filled-dark', name: 'Sólido Oscuro', description: 'Botón oscuro con texto dorado' },
-  { id: 'minimal', name: 'Minimal', description: 'Texto limpio sin fondo' },
+  {
+    id: 'gold-gradient',
+    name: 'Gradiente Dorado',
+    description: 'Degradado dorado elegante',
+    previewBg: 'linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #b8860b 100%)',
+    previewBorder: 'none',
+    previewText: '#fff',
+  },
+  {
+    id: 'outline-gold',
+    name: 'Contorno Dorado',
+    description: 'Solo borde dorado, fondo transparente',
+    previewBg: 'transparent',
+    previewBorder: '2px solid #d4af37',
+    previewText: '#d4af37',
+  },
+  {
+    id: 'filled-dark',
+    name: 'Sólido Oscuro',
+    description: 'Botón oscuro con texto dorado',
+    previewBg: 'rgba(30,30,30,0.9)',
+    previewBorder: '1px solid rgba(212,175,55,0.3)',
+    previewText: '#d4af37',
+  },
+  {
+    id: 'minimal',
+    name: 'Minimal',
+    description: 'Texto limpio sin fondo ni bordes',
+    previewBg: 'transparent',
+    previewBorder: '1px dashed rgba(255,255,255,0.2)',
+    previewText: '#d4af37',
+  },
 ] as const
 
-// Google Fonts to load (subset: latin)
+// --- Color Presets (pre-made themes) ---
+export const COLOR_PRESETS = [
+  {
+    id: 'bordeo-oro',
+    name: 'Bordó & Oro',
+    emoji: '🍷',
+    description: 'Elegante clásico, bordó oscuro con dorado',
+    colors: {
+      principal: '#3d0202',
+      dorado: '#b8860b',
+      doradoClaro: '#d4af37',
+      marfil: '#fdfcfb',
+      fondo: '#050505',
+    },
+  },
+  {
+    id: 'rosa-dorado',
+    name: 'Rosa & Dorado',
+    emoji: '🌸',
+    description: 'Romántico y suave, rosa pálido con dorado',
+    colors: {
+      principal: '#5c1a3a',
+      dorado: '#c9956b',
+      doradoClaro: '#e0b88a',
+      marfil: '#fdf8f5',
+      fondo: '#0a0508',
+    },
+  },
+  {
+    id: 'blanco-azul',
+    name: 'Blanco & Azul',
+    emoji: '🤍',
+    description: 'Puro y moderno, blanco con acentos azules',
+    colors: {
+      principal: '#1a365d',
+      dorado: '#4299e1',
+      doradoClaro: '#90cdf4',
+      marfil: '#f7fafc',
+      fondo: '#0a1628',
+    },
+  },
+  {
+    id: 'verde-natural',
+    name: 'Verde & Dorado',
+    emoji: '🌿',
+    description: 'Natural y elegante, verde oscuro con dorado',
+    colors: {
+      principal: '#1a3c2a',
+      dorado: '#b8860b',
+      doradoClaro: '#d4af37',
+      marfil: '#f8f9f5',
+      fondo: '#050a07',
+    },
+  },
+  {
+    id: 'vino-blanco',
+    name: 'Vino & Blanco',
+    emoji: '❤️',
+    description: 'Apasionado, vino intenso con detalles blancos',
+    colors: {
+      principal: '#5c0a0a',
+      dorado: '#c8b89a',
+      doradoClaro: '#e0d5c0',
+      marfil: '#fdfcfa',
+      fondo: '#0a0202',
+    },
+  },
+  {
+    id: 'lila-lavanda',
+    name: 'Lila & Lavanda',
+    emoji: '💜',
+    description: 'Delicado y moderno, lila con acentos plateados',
+    colors: {
+      principal: '#3b1f5e',
+      dorado: '#a78bba',
+      doradoClaro: '#c9b8d8',
+      marfil: '#faf8fc',
+      fondo: '#080510',
+    },
+  },
+  {
+    id: 'negro-champagne',
+    name: 'Negro & Champagne',
+    emoji: '🖤',
+    description: 'Ultra elegante, negro con champagne',
+    colors: {
+      principal: '#111111',
+      dorado: '#c9a96e',
+      doradoClaro: '#dcc49e',
+      marfil: '#fdf9f0',
+      fondo: '#030303',
+    },
+  },
+  {
+    id: 'terracota',
+    name: 'Terracota',
+    emoji: '🧡',
+    description: 'Cálido y acogedor, terracota con arena',
+    colors: {
+      principal: '#6b3a2a',
+      dorado: '#c47d4e',
+      doradoClaro: '#d9a07a',
+      marfil: '#fdf6f0',
+      fondo: '#0a0504',
+    },
+  },
+] as const
+
+// --- Background Presets (gradient backgrounds as alternatives to photos) ---
+export const BACKGROUND_PRESETS = [
+  {
+    id: 'fotos',
+    name: 'Mis Fotos',
+    emoji: '📸',
+    description: 'Usar las fotos de la galería como fondo',
+    css: '',
+  },
+  {
+    id: 'bordo-solid',
+    name: 'Bordó Profundo',
+    emoji: '🍷',
+    description: 'Degradado bordó oscuro elegante',
+    css: 'linear-gradient(135deg, #1a0000 0%, #3d0202 30%, #2a0101 60%, #0a0000 100%)',
+  },
+  {
+    id: 'negro-lujo',
+    name: 'Negro Lujo',
+    emoji: '🖤',
+    description: 'Negro profundo con sutil brillo dorado',
+    css: 'radial-gradient(ellipse at 30% 20%, rgba(61,2,2,0.4) 0%, rgba(0,0,0,1) 70%)',
+  },
+  {
+    id: 'rosa-romantico',
+    name: 'Rosa Romántico',
+    emoji: '🌸',
+    description: 'Rosa pálido suave y romántico',
+    css: 'linear-gradient(135deg, #1a0a10 0%, #3d1525 30%, #2a0d1a 60%, #0a0508 100%)',
+  },
+  {
+    id: 'verde-bosque',
+    name: 'Bosque Nocturno',
+    emoji: '🌿',
+    description: 'Verde oscuro profundo tipo bosque',
+    css: 'linear-gradient(135deg, #020a05 0%, #0a2010 30%, #051508 60%, #010502 100%)',
+  },
+  {
+    id: 'azul-medianoche',
+    name: 'Medianoche Azul',
+    emoji: '🌙',
+    description: 'Azul oscuro tipo cielo nocturno',
+    css: 'linear-gradient(135deg, #020810 0%, #0a1a35 30%, #05102a 60%, #010308 100%)',
+  },
+  {
+    id: 'dorado-cielo',
+    name: 'Atardecer Dorado',
+    emoji: '🌅',
+    description: 'Cálido degradado dorado y terracota',
+    css: 'linear-gradient(135deg, #1a0a00 0%, #3d2010 25%, #2a1508 50%, #1a0a02 75%, #0a0500 100%)',
+  },
+  {
+    id: 'lila-mistico',
+    name: 'Lila Místico',
+    emoji: '💜',
+    description: 'Degradado lila profundo y misterioso',
+    css: 'linear-gradient(135deg, #080310 0%, #1a0a30 30%, #100520 60%, #050208 100%)',
+  },
+] as const
+
+// Google Fonts to load
 export const GOOGLE_FONTS = FONT_OPTIONS.map(f => f.name).join('&family=').replace(/ /g, '+')
