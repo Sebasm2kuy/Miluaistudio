@@ -12,13 +12,22 @@ export default function AdminLayout({
 }) {
   return (
     <>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              document.documentElement.classList.add('admin-page');
+              document.documentElement.style.overflow = 'auto';
+              document.documentElement.style.height = 'auto';
+              document.documentElement.style.position = 'static';
+              document.body.style.overflow = 'auto';
+              document.body.style.height = 'auto';
+              document.body.style.position = 'static';
+            })();
+          `,
+        }}
+      />
       {children}
-      <style dangerouslySetInnerHTML={{ __html: `
-        .admin-layout { overflow-y: auto !important; height: 100vh !important; height: 100dvh !important; position: static !important; }
-        .admin-layout body { overflow-y: auto !important; height: auto !important; position: static !important; }
-        .admin-layout html { overflow: hidden !important; height: 100% !important; }
-        .admin-layout { background: #030712; }
-      `}} />
     </>
   );
 }

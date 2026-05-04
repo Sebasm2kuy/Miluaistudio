@@ -204,6 +204,8 @@ export default function AdminPage() {
   const [cfg, setCfg] = useState<SiteConfig>(deepClone(config))
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set(['evento']))
   const [saved, setSaved] = useState(false)
+  const [deploying, setDeploying] = useState(false)
+  const [deployResult, setDeployResult] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Load from localStorage on mount
@@ -294,6 +296,34 @@ export default function AdminPage() {
     setTimeout(() => setSaved(false), 2000)
   }, [cfg])
 
+  const handleDeploy = useCallback(async () => {
+    // First save to localStorage
+    saveConfig(cfg)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+
+    setDeploying(true)
+    setDeployResult(null)
+    try {
+      const res = await fetch('/api/deploy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config: cfg }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setDeployResult('Deploy exitoso! Git commit + push + rebuild completado.')
+      } else {
+        setDeployResult(`Error: ${data.error}`)
+      }
+    } catch (err) {
+      setDeployResult(`Error de conexión: ${err instanceof Error ? err.message : 'unknown'}`)
+    } finally {
+      setDeploying(false)
+      setTimeout(() => setDeployResult(null), 5000)
+    }
+  }, [cfg])
+
   // --- Expand / Collapse all ---
   const expandAll = useCallback(() => {
     setOpenSections(new Set(SECTION_KEYS))
@@ -307,8 +337,23 @@ export default function AdminPage() {
   // Render
   // =====================================================================
 
+  // Force scroll fix on mount
+  useEffect(() => {
+    const html = document.documentElement
+    const body = document.body
+    html.style.overflow = 'auto'
+    html.style.height = 'auto'
+    html.style.position = 'static'
+    body.style.overflow = 'auto'
+    body.style.height = 'auto'
+    body.style.position = 'static'
+  }, [])
+
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div
+      className="min-h-screen bg-gray-950 text-gray-100"
+      style={{ overflow: 'auto', height: '100vh', position: 'relative' }}
+    >
       {/* --- Fixed Header --- */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md border-b"
@@ -334,6 +379,40 @@ export default function AdminPage() {
             >
               {saved ? 'Guardado ✓' : 'Guardar Cambios'}
             </button>
+            <button
+              type="button"
+              onClick={handleDeploy}
+              disabled={deploying}
+              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5"
+              style={{
+                background: deploying ? '#6b7280' : '#2563eb',
+                color: '#fff',
+                border: 'none',
+                opacity: deploying ? 0.7 : 1,
+              }}
+            >
+              {deploying ? (
+                <>
+                  <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Deploying...
+                </>
+              ) : (
+                <>
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  Guardar + Deploy
+                </>
+              )}
+            </button>
+            {deployResult && (
+              <span className={`text-xs px-2 py-1 rounded-md ${deployResult.startsWith('Error') ? 'bg-red-950/80 text-red-300' : 'bg-green-950/80 text-green-300'}`}>
+                {deployResult}
+              </span>
+            )}
             <button
               type="button"
               onClick={handleExport}
