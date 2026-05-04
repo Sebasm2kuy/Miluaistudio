@@ -1,4 +1,5 @@
 'use client'
+import config from '@/data/config'
 
 export default function Footer() {
   return (
@@ -13,7 +14,7 @@ export default function Footer() {
           className="font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 30px rgba(0,0,0,0.95)' }}
         >
-          Milu
+          {config.footer.apodo}
         </p>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
@@ -26,18 +27,18 @@ export default function Footer() {
           className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
         >
-          Montevideo &bull; Uruguay &bull; 2026
+          {config.footer.ubicacion}
         </p>
 
         <p
           className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
         >
-          Con amor, para un día inolvidable
+          {config.footer.frase}
         </p>
 
         <a
-          href="https://www.instagram.com/explore/tags/MilagrosXV2026/"
+          href={config.evento.hashtagUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-8 sm:mt-10 md:mt-14 flex items-center gap-2 sm:gap-3 group"
@@ -57,7 +58,7 @@ export default function Footer() {
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
           </svg>
           <p className="font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
-            #MilagrosXV2026
+            {config.evento.hashtag}
           </p>
         </a>
       </div>

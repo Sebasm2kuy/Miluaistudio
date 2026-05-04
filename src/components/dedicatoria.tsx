@@ -1,4 +1,5 @@
 'use client'
+import config from '@/data/config'
 
 export default function Dedicatoria() {
   return (
@@ -26,17 +27,17 @@ export default function Dedicatoria() {
         />
 
         <p className={`css-fade font-serif italic text-[1.75rem] sm:text-2xl md:text-4xl mb-8 sm:mb-8 leading-relaxed relative z-10`} style={{ color: '#fcf6ba' }}>
-          &ldquo;Hay momentos que no se repiten, personas que no se olvidan y recuerdos que se guardan para siempre en el coraz&oacute;n.&rdquo;
+          &ldquo;{config.dedicatoria.cita}&rdquo;
         </p>
 
         <p className={`css-fade text-base sm:text-base md:text-base leading-relaxed mb-8 sm:mb-8 px-2 sm:px-4 relative z-10`} style={{ color: 'rgba(232,212,139,0.65)' }}>
-          Cada persona que est&aacute; leyendo esto es parte importante de mi historia. Los esperamos con toda la emoci&oacute;n del mundo para compartir juntos esta noche tan especial.
+          {config.dedicatoria.cuerpo}
         </p>
 
         <div className={`css-fade-up flex items-center justify-center gap-3 relative z-10`}>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
           <p className="font-cursive text-3xl sm:text-3xl md:text-4xl text-shimmer text-shimmer-once">
-            Milagros
+            {config.dedicatoria.firma}
           </p>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, #d4af37, transparent)' }} />
         </div>

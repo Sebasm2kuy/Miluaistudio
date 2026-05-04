@@ -1,10 +1,11 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { CalendarPlus } from 'lucide-react'
+import config from '@/data/config'
 
-// Fecha del evento: 22 de Agosto 2026, 21:00 hs (hora de Uruguay, GMT-3)
-const EVENT_MS = Date.UTC(2026, 7, 23, 0, 0, 0)
-const labels: Record<string, string> = { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' }
+// Fecha del evento: configurada desde config (hora de Uruguay, GMT-3)
+const EVENT_MS = new Date(config.evento.fechaEvento + ' GMT-0300').getTime()
+const labels: Record<string, string> = config.countdown.labels
 
 function calcTimeLeft() {
   const diff = EVENT_MS - Date.now()
@@ -66,10 +67,10 @@ export default function Countdown() {
   const addToCalendar = useCallback(() => {
     const url = new URL('https://www.google.com/calendar/render')
     url.searchParams.set('action', 'TEMPLATE')
-    url.searchParams.set('text', 'XV Años de Milagros')
-    url.searchParams.set('dates', '20260822T210000/20260823T060000')
-    url.searchParams.set('location', 'Salón My Father, Granaderos 3875, Montevideo, Uruguay')
-    url.searchParams.set('details', 'XV Años de Milagros Cabrera\nSalón My Father - Granaderos 3875, Montevideo\n21:00 hs\n\n¡Nos vemos!')
+    url.searchParams.set('text', config.countdown.calendarioTitulo)
+    url.searchParams.set('dates', `${config.evento.fechaEvento.replace(/-/g, '').replace(' ', 'T')}00/20260823T060000`)
+    url.searchParams.set('location', config.countdown.calendarioLocation)
+    url.searchParams.set('details', config.countdown.calendarioDetalles)
     window.open(url.toString(), '_blank')
   }, [])
 
@@ -77,7 +78,7 @@ export default function Countdown() {
     <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
-          El tiempo vuela...
+          {config.countdown.titulo}
         </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
           {Object.entries(timeLeft).map(([label, val]) => (
@@ -93,7 +94,7 @@ export default function Countdown() {
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
             <CalendarPlus size={16} strokeWidth={1.5} />
-            Agregar al calendario
+            {config.countdown.botonCalendario}
           </button>
         </div>
       </div>

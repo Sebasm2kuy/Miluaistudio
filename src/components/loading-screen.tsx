@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
+import config from '@/data/config'
 
 interface LoadingScreenProps { onDone: () => void }
 
@@ -135,7 +136,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
         className="font-cursive text-7xl sm:text-6xl mb-12 sm:mb-12"
         style={{ color: '#d4af37' }}
       >
-        Milagros
+        {config.evento.nombre}
       </p>
       <div className="w-48 sm:w-64 md:w-72">
         <div

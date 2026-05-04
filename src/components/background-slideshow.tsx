@@ -1,12 +1,8 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
+import config from '@/data/config'
 
-const PHOTOS = [
-  '/Miluaistudio/gallery/gallery1.webp',
-  '/Miluaistudio/gallery/gallery2.webp',
-  '/Miluaistudio/gallery/gallery3.webp',
-  '/Miluaistudio/gallery/gallery4.webp',
-]
+const PHOTOS = config.fondo.fotos
 
 export default function BackgroundSlideshow({ visible = true }: { visible?: boolean }) {
   const [idx, setIdx] = useState(0)

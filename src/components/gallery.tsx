@@ -1,15 +1,11 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import config from '@/data/config'
 
 const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbxUezuoHmM_xfpTendM2tHePMOkgaJ2VHpNW-733d0izMfOgY9dpkysMmWW9pV7f0jxiw/exec'
 
-const ORIGINAL_PHOTOS = [
-  { src: '/Miluaistudio/gallery/gallery1.webp', fallback: '/Miluaistudio/gallery/gallery1.jpg' },
-  { src: '/Miluaistudio/gallery/gallery2.webp', fallback: '/Miluaistudio/gallery/gallery2.jpg' },
-  { src: '/Miluaistudio/gallery/gallery3.webp', fallback: '/Miluaistudio/gallery/gallery3.jpg' },
-  { src: '/Miluaistudio/gallery/gallery4.webp', fallback: '/Miluaistudio/gallery/gallery4.jpg' },
-]
+const ORIGINAL_PHOTOS = config.galeria.fotos.map(p => ({ src: p.webp, fallback: p.fallback }))
 
 interface Photo {
   id: string
@@ -169,9 +165,9 @@ export default function Gallery() {
   return (
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
-        <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">Galería</h2>
+        <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{config.galeria.titulo}</h2>
         <p className="text-gray-400 italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2">
-          Momentos que hacen esta celebración inolvidable
+          {config.galeria.subtitulo}
         </p>
 
         {/* ===== Horizontal Carousel ===== */}
@@ -267,7 +263,7 @@ export default function Gallery() {
         >
           <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
           <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
-            Dejale un recuerdo
+            {config.galeria.botonSubir}
           </span>
         </button>
       </div>
