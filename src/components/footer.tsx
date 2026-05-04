@@ -10,7 +10,7 @@ export default function Footer() {
       />
       <div className={`css-fade-up flex flex-col items-center relative z-10`}>
         <p
-          className="font-cursive text-4xl sm:text-6xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
+          className="font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 30px rgba(0,0,0,0.95)' }}
         >
           Milu
@@ -23,14 +23,14 @@ export default function Footer() {
         </div>
 
         <p
-          className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-xs sm:text-sm md:text-base font-bold text-shimmer text-shimmer-once"
+          className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
         >
           Montevideo &bull; Uruguay &bull; 2026
         </p>
 
         <p
-          className="mt-5 sm:mt-6 md:mt-8 text-sm sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once"
+          className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
         >
           Con amor, para un día inolvidable
@@ -56,7 +56,7 @@ export default function Footer() {
             <circle cx="12" cy="12" r="5" />
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
           </svg>
-          <p className="font-cursive text-lg sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
+          <p className="font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
             #MilagrosXV2026
           </p>
         </a>

@@ -10,10 +10,10 @@ export default function Timeline() {
   return (
     <section id="horarios" className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden`}>
-        <p className={`css-fade-up font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`}>
+        <p className={`css-fade-up font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`}>
           La Noche
         </p>
-        <p className={`css-fade text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-xs sm:text-sm md:text-base`}>
+        <p className={`css-fade text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-sm sm:text-sm md:text-base`}>
           Cada momento cuenta
         </p>
 
@@ -35,11 +35,11 @@ export default function Timeline() {
                   <div className={`inline-block px-4 sm:px-5 py-3 sm:py-4 md:py-5 rounded-2xl sm:rounded-2xl md:rounded-3xl border text-left ${idx % 2 === 0 ? 'md:text-right' : ''}`}
                     style={{ background: 'rgba(253,252,251,0.85)', borderColor: 'rgba(184, 134, 11, 0.1)', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
                     <div className="flex items-center gap-2 sm:gap-3 mb-1">
-                      <span className="text-lg sm:text-xl md:text-2xl">{item.icon}</span>
-                      <span className="font-bold text-bordeaux tabular-nums" style={{ fontSize: 'clamp(0.85rem, 3vw, 1.4rem)' }}>{item.time} hs</span>
+                      <span className="text-lg sm:text-xl md:text-2xl hidden sm:inline">{item.icon}</span>
+                      <span className="font-bold text-bordeaux tabular-nums" style={{ fontSize: 'clamp(1rem, 4vw, 1.5rem)' }}>{item.time} hs</span>
                     </div>
-                    <p className="font-serif italic text-bordeaux text-sm sm:text-base md:text-lg">{item.title}</p>
-                    <p className="text-gray-400 text-xs sm:text-xs md:text-sm mt-0.5 uppercase tracking-widest">{item.desc}</p>
+                    <p className="font-serif italic text-bordeaux text-base sm:text-base md:text-lg">{item.title}</p>
+                    <p className="text-gray-400 text-xs sm:text-xs md:text-sm mt-1 uppercase tracking-widest">{item.desc}</p>
                   </div>
                 </div>
               </div>

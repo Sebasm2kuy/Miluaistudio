@@ -42,12 +42,12 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
         <span
           ref={ref}
-          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
+          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
         >
           {display}
         </span>
       </div>
-      <div className="text-[11px] sm:text-xs md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-1.5 sm:mt-2 md:mt-4">
+      <div className="text-xs sm:text-sm md:text-xs uppercase text-gold tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.4em] font-bold mt-2 sm:mt-2 md:mt-4">
         {label}
       </div>
     </div>
@@ -76,7 +76,7 @@ export default function Countdown() {
   return (
     <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
-        <h2 className="font-serif italic text-2xl sm:text-3xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
+        <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
           El tiempo vuela...
         </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
@@ -89,10 +89,10 @@ export default function Countdown() {
         <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
           <button
             onClick={addToCalendar}
-            className="inline-flex items-center gap-2 sm:gap-3 text-gold font-bold text-xs sm:text-xs md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
+            className="inline-flex items-center gap-2.5 sm:gap-3 text-gold font-bold text-sm sm:text-sm md:text-xs uppercase tracking-widest border-2 px-6 sm:px-7 md:px-10 py-3 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
-            <CalendarPlus size={14} strokeWidth={1.5} />
+            <CalendarPlus size={16} strokeWidth={1.5} />
             Agregar al calendario
           </button>
         </div>

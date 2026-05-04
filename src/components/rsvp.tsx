@@ -135,7 +135,7 @@ export default function Rsvp() {
                 }}
               >
                 <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
-                <p className="text-xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
+                <p className="text-2xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
               </div>
 
               {/* Botones post-confirmacion */}
@@ -173,14 +173,14 @@ export default function Rsvp() {
             </div>
           ) : (
             <>
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">Confirmar</h2>
-              <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-xs sm:text-sm md:text-base">
+              <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">Confirmar</h2>
+              <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base">
                 Espero poder contar contigo para hacer de esta noche algo inolvidable.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
                 <div>
-                  <label className="block text-xs sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                  <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
                     Tu nombre *
                   </label>
                   <input
@@ -188,14 +188,14 @@ export default function Rsvp() {
                     required
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
+                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
                     style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
                     placeholder="Ej: María González"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                  <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
                     Tu teléfono *
                   </label>
                   <input
@@ -203,7 +203,7 @@ export default function Rsvp() {
                     required
                     value={telefono}
                     onChange={(e) => setTelefono(e.target.value)}
-                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-sm text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
+                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
                     style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
                     placeholder="Ej: 099 123 456"
                   />
@@ -212,7 +212,7 @@ export default function Rsvp() {
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-xs sm:text-xs md:text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-sm sm:text-xs md:text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ boxShadow: '0 10px 30px rgba(138, 107, 13, 0.35)' }}
                 >
                   {status === 'sending' ? (
@@ -229,7 +229,7 @@ export default function Rsvp() {
                 )}
               </form>
 
-              <p className="text-[10px] sm:text-[10px] md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
+              <p className="text-xs sm:text-xs md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
                 Favor confirmar antes del 10/08
               </p>
             </>
@@ -243,10 +243,10 @@ export default function Rsvp() {
             background: 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(253,252,251,0.98))',
           }}
         >
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
+          <h2 className="font-serif text-3xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
             Regalos
           </h2>
-          <p className="text-gray-400 mb-6 sm:mb-10 italic text-xs sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
+          <p className="text-gray-400 mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
             &ldquo;Si deseas tener un detalle conmigo, te dejo las opciones donde podés hacerlo.&rdquo;
           </p>
 
@@ -258,23 +258,23 @@ export default function Rsvp() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
             }}
           >
-            <p className="text-gold font-bold uppercase text-xs sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
+            <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
               Cuenta Abitab
             </p>
 
-            <p className="text-3xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
+            <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
               145920
             </p>
 
             <button
               onClick={copyNumber}
-              className="inline-flex items-center gap-2 text-gold font-bold text-xs sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copied ? (
-                <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
+                <><Check size={14} strokeWidth={2} /> ¡Copiado!</>
               ) : (
-                <><Copy size={12} strokeWidth={2} /> Copiar número</>
+                <><Copy size={14} strokeWidth={2} /> Copiar número</>
               )}
             </button>
           </div>
@@ -287,23 +287,23 @@ export default function Rsvp() {
               boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
             }}
           >
-            <p className="text-gold font-bold uppercase text-xs sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
+            <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
               Cuenta Mi Dinero
             </p>
 
-            <p className="text-3xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
+            <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
               2401461
             </p>
 
             <button
               onClick={copyMiDinero}
-              className="inline-flex items-center gap-2 text-gold font-bold text-xs sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+              className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
               style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
             >
               {copiedMiDinero ? (
-                <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
+                <><Check size={14} strokeWidth={2} /> ¡Copiado!</>
               ) : (
-                <><Copy size={12} strokeWidth={2} /> Copiar número</>
+                <><Copy size={14} strokeWidth={2} /> Copiar número</>
               )}
             </button>
           </div>

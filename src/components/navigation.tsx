@@ -59,9 +59,9 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
           className="group flex flex-col items-center gap-0 text-gold/70 hover:text-bordeaux transition-colors duration-200 p-1.5 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90"
           aria-label={label}
         >
-          <Icon size={17} strokeWidth={1.5} className="sm:w-[18px] sm:h-[18px]" />
+          <Icon size={19} strokeWidth={1.5} className="sm:w-[20px] sm:h-[20px]" />
           {/* Mobile: always-visible small label */}
-          <span className="text-[8px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">
+          <span className="text-[9px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">
             {label}
           </span>
           {/* Desktop: hover label */}
@@ -79,7 +79,7 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
         aria-label="Volver arriba"
       >
         <ArrowUp size={15} strokeWidth={1.5} />
-        <span className="text-[7px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">Top</span>
+        <span className="text-[8px] sm:hidden uppercase tracking-[0.05em] font-semibold leading-none mt-0.5">Top</span>
       </button>
     </nav>
   )

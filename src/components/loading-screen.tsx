@@ -132,7 +132,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
       }}
     >
       <p
-        className="font-cursive text-3xl sm:text-5xl mb-8 sm:mb-10"
+        className="font-cursive text-5xl sm:text-6xl mb-10 sm:mb-12"
         style={{ color: '#d4af37' }}
       >
         Milagros
@@ -152,7 +152,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             }}
           />
         </div>
-        <p className="text-center mt-3 sm:mt-4 text-[10px] sm:text-xs text-gold/50 tracking-[0.3em] font-light tabular-nums">
+        <p className="text-center mt-4 sm:mt-4 text-xs sm:text-sm text-gold/50 tracking-[0.3em] font-light tabular-nums">
           {progress}%
         </p>
       </div>

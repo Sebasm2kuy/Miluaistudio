@@ -18,20 +18,20 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
 
         {/* LINEA 1: Mis XV Años */}
         <p
-          className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-sm sm:text-base md:text-xl mb-5 sm:mb-8 md:mb-10 font-bold"
+          className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
           Mis XV Años
         </p>
 
         {/* LINEA 2: Milagros — UN solo text-shadow sutil, sin shimmer */}
-        <h1 className="hero-line hero-line-2 font-cursive text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] leading-none mb-5 sm:mb-8 md:mb-10">
+        <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
           <span style={{ color: '#fcf6ba', textShadow: '0 4px 20px rgba(0,0,0,0.7)' }}>Milagros</span>
         </h1>
 
         {/* LINEA 3: Línea decorativa */}
         <div
-          className="hero-line hero-line-3 w-28 sm:w-44 md:w-72 h-px mx-auto mb-5 sm:mb-8 md:mb-10"
+          className="hero-line hero-line-3 w-36 sm:w-44 md:w-72 h-px mx-auto mb-6 sm:mb-8 md:mb-10"
           style={{
             background: 'linear-gradient(90deg, transparent, #fcf6ba, #d4af37, #fcf6ba, transparent)',
           }}
@@ -39,7 +39,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
 
         {/* LINEA 4: Fecha */}
         <p
-          className="hero-line hero-line-4 font-serif italic text-base sm:text-xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
+          className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
           Sábado 22 de Agosto<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'rgba(252,246,186,0.4)' }}>&bull;</span>2026
@@ -47,7 +47,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
 
         {/* LINEA 5: Salón My Father */}
         <p
-          className="hero-line hero-line-5 mt-3 sm:mt-5 md:mt-6 text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
+          className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
           Salón My Father &bull; Montevideo
@@ -57,7 +57,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
       {/* Scroll indicator */}
       <div className="hero-scroll absolute bottom-10 sm:bottom-14 flex flex-col items-center gap-2.5 z-20">
         <p
-          className="text-xs sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.45em] font-light animate-slide-hint"
+          className="text-sm sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.45em] font-light animate-slide-hint"
           style={{ color: '#e8d48b' }}
         >
           Desliza
