@@ -3,7 +3,12 @@
 export default function Footer() {
   return (
     <footer className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
-      <div className={`css-fade-up flex flex-col items-center`}>
+      {/* Semi-transparent dark background overlay for readability */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.9) 100%)' }}
+      />
+      <div className={`css-fade-up flex flex-col items-center relative z-10`}>
         <p
           className="font-cursive text-4xl sm:text-6xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 30px rgba(0,0,0,0.95)' }}
