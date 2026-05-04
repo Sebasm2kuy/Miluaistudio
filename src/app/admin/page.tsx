@@ -986,9 +986,11 @@ export default function AdminPage() {
         <Section title={SECTION_META.fondo.title} icon={SECTION_META.fondo.icon} open={openSections.has('fondo')} onToggle={() => toggle('fondo')}>
           <div className="space-y-4">
             <p className="text-xs text-gray-400 mb-2">Elegí un fondo para tu invitación. Podés usar un degradado o las fotos de la galería.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {BACKGROUND_PRESETS.map((bg) => {
-                const isActive = cfg.fondo.fotos.length === 0 && bg.css === '' || false
+                const isGradientActive = cfg.fondo.fotos[0]?.startsWith('gradient:') === true && cfg.fondo.fotos[0] === `gradient:${bg.id}`
+                const isPhotosActive = bg.id === 'fotos' && cfg.fondo.fotos.length > 0 && !cfg.fondo.fotos[0]?.startsWith('gradient:')
+                const isActive = isGradientActive || isPhotosActive
                 return (
                   <button
                     key={bg.id}
@@ -1005,29 +1007,38 @@ export default function AdminPage() {
                         setCfg(prev => ({ ...prev, fondo: { fotos: [`gradient:${bg.id}`] } }))
                       }
                     }}
-                    className="rounded-xl border overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                    className={`rounded-2xl border overflow-hidden transition-all duration-200 hover:scale-[1.02] ${isActive ? 'ring-2 ring-[#d4af37] ring-offset-2 ring-offset-gray-950' : ''}`}
                     style={{
-                      borderColor: (bg.id === 'fotos' && cfg.fondo.fotos.length > 0 && !cfg.fondo.fotos[0]?.startsWith('gradient:')) ? '#d4af37' : 'rgba(75,85,99,0.4)',
-                      background: bg.css || 'rgba(255,255,255,0.05)',
+                      borderColor: isActive ? '#d4af37' : 'rgba(75,85,99,0.4)',
                     }}
                   >
-                    <div className="h-16 sm:h-20 flex items-center justify-center relative" style={bg.css ? {} : { background: 'rgba(255,255,255,0.05)' }}>
+                    <div
+                      className="h-24 flex items-center justify-center relative"
+                      style={{
+                        background: bg.css || 'rgba(255,255,255,0.05)',
+                      }}
+                    >
                       {bg.id === 'fotos' ? (
-                        <span className="text-2xl">📸</span>
+                        <span className="text-3xl">📸</span>
                       ) : (
-                        <span className="text-3xl">{bg.emoji}</span>
+                        <span className="text-4xl">{bg.emoji}</span>
+                      )}
+                      {/* Active checkmark */}
+                      {isActive && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#d4af37] flex items-center justify-center">
+                          <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
                       )}
                     </div>
-                    <div className="px-2 py-1.5 bg-gray-900/80">
-                      <div className="text-[10px] font-semibold text-gray-300 truncate">{bg.name}</div>
+                    <div className="px-3 py-2 bg-gray-900/90">
+                      <div className="text-xs font-semibold text-gray-200 truncate">{bg.name}</div>
+                      <div className="text-[10px] text-gray-500 truncate mt-0.5">{bg.description}</div>
                     </div>
                   </button>
                 )
               })}
-            </div>
-            <div className="flex items-center gap-2 pt-2">
-              <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: cfg.fondo.fotos[0]?.startsWith('gradient:') ? cfg.fondo.fotos[0].replace('gradient:', '') : 'rgba(255,255,255,0.05)' }} />
-              <span className="text-[10px] text-gray-500">Preview</span>
             </div>
           </div>
         </Section>
@@ -1037,7 +1048,7 @@ export default function AdminPage() {
           <div className="space-y-4">
             <p className="text-xs text-gray-400 mb-2">Elegí un tema de colores predefinido o personalizá cada uno.</p>
             {/* Color Presets */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {COLOR_PRESETS.map((preset) => {
                 const isActive = cfg.colores.principal === preset.colors.principal
                 return (
@@ -1045,27 +1056,36 @@ export default function AdminPage() {
                     key={preset.id}
                     type="button"
                     onClick={() => applyColorPreset(setCfg, preset.colors)}
-                    className="rounded-xl border overflow-hidden transition-all duration-200 hover:scale-[1.02]"
+                    className={`rounded-2xl border overflow-hidden transition-all duration-200 hover:scale-[1.02] ${isActive ? 'ring-2 ring-[#d4af37] ring-offset-2 ring-offset-gray-950' : ''}`}
                     style={{
                       borderColor: isActive ? '#d4af37' : 'rgba(75,85,99,0.4)',
-                      background: preset.colors.principal,
                     }}
                   >
-                    <div className="h-12 sm:h-14 flex flex-col items-center justify-center gap-1">
-                      <span className="text-lg">{preset.emoji}</span>
-                      <span className="text-[9px] font-bold" style={{ color: preset.colors.doradoClaro }}>{preset.name}</span>
+                    <div
+                      className="h-24 flex flex-col items-center justify-center gap-2 relative"
+                      style={{ background: preset.colors.principal }}
+                    >
+                      <span className="text-2xl">{preset.emoji}</span>
+                      <span className="text-xs font-bold" style={{ color: preset.colors.doradoClaro }}>{preset.name}</span>
+                      {/* Active checkmark */}
+                      {isActive && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#d4af37] flex items-center justify-center">
+                          <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex h-4">
+                    {/* Color bar showing all 4 colors */}
+                    <div className="flex h-5">
                       <div className="flex-1" style={{ background: preset.colors.dorado }} />
                       <div className="flex-1" style={{ background: preset.colors.doradoClaro }} />
                       <div className="flex-1" style={{ background: preset.colors.marfil }} />
                       <div className="flex-1" style={{ background: preset.colors.fondo }} />
                     </div>
-                    {isActive && (
-                      <div className="py-1 text-center bg-[#d4af37]/20">
-                        <span className="text-[9px] font-bold text-[#d4af37]">ACTIVO</span>
-                      </div>
-                    )}
+                    <div className="px-3 py-2 bg-gray-900/90">
+                      <div className="text-[10px] text-gray-500 truncate">{preset.description}</div>
+                    </div>
                   </button>
                 )
               })}
@@ -1142,95 +1162,207 @@ export default function AdminPage() {
             />
 
             {/* Clock Style */}
-              <OptionPicker
-                label="Modelo de Reloj"
-                options={CLOCK_STYLES}
-                value={cfg.estilos.modeloReloj}
-                onChange={(v) => setNested('estilos', 'modeloReloj', v)}
-                renderOption={(opt, isSelected) => {
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Modelo de Reloj</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {CLOCK_STYLES.map((opt) => {
                   const s = opt as unknown as typeof CLOCK_STYLES[number]
+                  const isSelected = cfg.estilos.modeloReloj === opt.id
+                  const labels = [
+                    cfg.countdown.labels?.D || 'Días',
+                    cfg.countdown.labels?.H || 'Horas',
+                    cfg.countdown.labels?.M || 'Min',
+                    cfg.countdown.labels?.S || 'Seg',
+                  ]
                   return (
-                    <div>
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setNested('estilos', 'modeloReloj', s.id)}
+                      className={`rounded-2xl border overflow-hidden transition-all duration-200 hover:scale-[1.01] text-left ${isSelected ? 'ring-2 ring-[#d4af37] ring-offset-2 ring-offset-gray-950' : ''}`}
+                      style={{ borderColor: isSelected ? '#d4af37' : 'rgba(75,85,99,0.4)' }}
+                    >
+                      {/* Preview area */}
                       <div
-                        className="rounded-lg px-2 py-2 mb-2 text-center"
-                        style={{
-                          background: s.sectionBg || 'rgba(255,255,255,0.12)',
-                          border: s.sectionBorder || 'none',
-                          borderRadius: '0.5rem',
-                          minHeight: '48px',
-                        }}
+                        className="px-4 py-5 flex flex-col items-center justify-center relative"
+                        style={{ background: s.previewBg, minHeight: '120px' }}
                       >
-                        <div className="text-[8px] mb-1" style={{ color: s.titleColor }}>{cfg.countdown.titulo || 'El tiempo...'}</div>
-                        <div className="flex items-center justify-center gap-1">
+                        {/* Title */}
+                        <div
+                          className="text-sm mb-3"
+                          style={{
+                            color: s.previewTitleColor,
+                            fontFamily: s.previewTitleFont,
+                          }}
+                        >
+                          {cfg.countdown.titulo || 'El tiempo...'}
+                        </div>
+                        {/* Time units */}
+                        <div className="flex items-start gap-2">
                           {['08', '12', '45', '30'].map((n, i) => (
-                            <div key={i} className="text-center">
-                              <div
-                                className="rounded px-1 py-0.5 text-[11px] font-bold"
-                                style={{
-                                  background: s.containerBg,
-                                  border: `1px solid ${s.containerBorder}`,
-                                  color: s.numberColor,
-                                  textShadow: (s as Record<string, unknown>).numberGlow as string || 'none',
-                                }}
-                              >
-                                {n}
-                              </div>
-                              <div className="text-[5px] uppercase mt-0.5" style={{ color: s.labelColor }}>
-                                {['D', 'H', 'M', 'S'][i]}
-                              </div>
+                            <div key={i} className="flex flex-col items-center">
+                              {s.previewShape === 'rectangle' ? (
+                                <div
+                                  className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center bg-white rounded-lg"
+                                  style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}
+                                >
+                                  <span className="text-xl sm:text-2xl font-bold" style={{ color: s.previewNumberColor }}>{n}</span>
+                                </div>
+                              ) : s.previewShape === 'none' ? (
+                                <div className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center">
+                                  <span className="text-2xl sm:text-3xl font-bold" style={{ color: s.previewNumberColor }}>{n}</span>
+                                </div>
+                              ) : s.previewShape === 'rounded-dark' ? (
+                                <div
+                                  className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center rounded-xl"
+                                  style={{
+                                    background: s.previewBg === '#0a0508' || s.previewBg === '#000000' || s.previewBg === '#0a0000'
+                                      ? 'rgba(255,255,255,0.08)'
+                                      : 'rgba(255,255,255,0.15)',
+                                    border: `1px solid ${s.previewAccentColor}44`,
+                                    boxShadow: (s as Record<string, unknown>).numberGlow as string
+                                      ? (s as Record<string, unknown>).numberGlow as string
+                                      : undefined,
+                                  }}
+                                >
+                                  <span
+                                    className="text-xl sm:text-2xl font-bold"
+                                    style={{
+                                      color: s.previewNumberColor,
+                                      textShadow: (s as Record<string, unknown>).numberGlow as string
+                                        ? (s as Record<string, unknown>).numberGlow as string
+                                        : 'none',
+                                    }}
+                                  >
+                                    {n}
+                                  </span>
+                                </div>
+                              ) : (
+                                <div
+                                  className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center rounded-lg px-2"
+                                  style={{
+                                    background: s.containerBg,
+                                    border: `1px solid ${s.containerBorder}`,
+                                  }}
+                                >
+                                  <span
+                                    className="text-xl sm:text-2xl font-bold"
+                                    style={{
+                                      color: s.previewNumberColor,
+                                      textShadow: (s as Record<string, unknown>).numberGlow as string
+                                        ? (s as Record<string, unknown>).numberGlow as string
+                                        : 'none',
+                                    }}
+                                  >
+                                    {n}
+                                  </span>
+                                </div>
+                              )}
+                              <span className="text-[10px] uppercase mt-1" style={{ color: s.previewLabelColor }}>
+                                {labels[i]}
+                              </span>
                             </div>
                           ))}
                         </div>
+                        {/* Active checkmark */}
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#d4af37] flex items-center justify-center">
+                            <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
-                      <p className="text-[8px] text-gray-500">{s.description}</p>
-                    </div>
+                      {/* Info bar */}
+                      <div className="px-3 py-2 bg-gray-900/90">
+                        <div className="text-xs font-semibold text-gray-200">{s.name}</div>
+                        <div className="text-[10px] text-gray-500">{s.description}</div>
+                      </div>
+                    </button>
                   )
-                }}
-              />
+                })}
+              </div>
+            </div>
 
             {/* Card Style */}
-              <OptionPicker
-                label="Estilo de Tarjetas"
-                options={CARD_STYLES}
-                value={cfg.estilos.estiloTarjetas}
-                onChange={(v) => setNested('estilos', 'estiloTarjetas', v)}
-                renderOption={(opt, isSelected) => {
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Estilo de Tarjetas</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {CARD_STYLES.map((opt) => {
                   const s = opt as unknown as typeof CARD_STYLES[number]
+                  const isSelected = cfg.estilos.estiloTarjetas === opt.id
                   return (
-                    <div>
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setNested('estilos', 'estiloTarjetas', s.id)}
+                      className={`rounded-2xl border overflow-hidden transition-all duration-200 hover:scale-[1.02] text-left ${isSelected ? 'ring-2 ring-[#d4af37] ring-offset-2 ring-offset-gray-950' : ''}`}
+                      style={{ borderColor: isSelected ? '#d4af37' : 'rgba(75,85,99,0.4)' }}
+                    >
+                      {/* Mini card preview */}
                       <div
-                        className="rounded-lg px-2 py-3 mb-2 flex items-center justify-between"
+                        className="p-3 flex flex-col gap-2 relative"
                         style={{
                           background: s.previewBg,
                           border: s.previewBorder,
-                          borderRadius: '0.5rem',
+                          borderRadius: '0.75rem',
+                          minHeight: '80px',
                         }}
                       >
-                        <span className="text-[10px] font-medium" style={{ color: s.previewText }}>Texto de ejemplo</span>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ color: s.previewText, border: `1px solid ${s.previewText}33`, background: 'transparent' }}>Boton</span>
+                        <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: s.previewText }}>
+                          Timeline
+                        </div>
+                        <div className="text-[8px]" style={{ color: s.previewText, opacity: 0.7 }}>
+                          Descripción breve del evento aquí...
+                        </div>
+                        <div className="flex items-center gap-2 mt-auto">
+                          <div className="text-[7px] px-1.5 py-0.5 rounded" style={{ color: s.previewText, border: `1px solid ${s.previewText}33`, background: 'transparent' }}>
+                            Ver más
+                          </div>
+                        </div>
+                        {/* Active checkmark */}
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#d4af37] flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
-                      <p className="text-[8px] text-gray-500">{s.description}</p>
-                    </div>
+                      {/* Info bar */}
+                      <div className="px-3 py-2 bg-gray-900/90">
+                        <div className="text-[10px] font-semibold text-gray-200">{s.name}</div>
+                        <div className="text-[9px] text-gray-500">{s.description}</div>
+                      </div>
+                    </button>
                   )
-                }}
-              />
+                })}
+              </div>
+            </div>
 
             {/* Button Style */}
-              <OptionPicker
-                label="Estilo de Botones"
-                options={BUTTON_STYLES}
-                value={cfg.estilos.estiloBotones}
-                onChange={(v) => setNested('estilos', 'estiloBotones', v)}
-                renderOption={(opt, isSelected) => {
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Estilo de Botones</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {BUTTON_STYLES.map((opt) => {
                   const s = opt as unknown as typeof BUTTON_STYLES[number]
+                  const isSelected = cfg.estilos.estiloBotones === opt.id
                   return (
-                    <div>
-                      <div className="flex items-center justify-center mb-2 py-3">
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setNested('estilos', 'estiloBotones', s.id)}
+                      className={`rounded-2xl border overflow-hidden transition-all duration-200 hover:scale-[1.02] text-left ${isSelected ? 'ring-2 ring-[#d4af37] ring-offset-2 ring-offset-gray-950' : ''}`}
+                      style={{ borderColor: isSelected ? '#d4af37' : 'rgba(75,85,99,0.4)' }}
+                    >
+                      {/* Button preview area */}
+                      <div
+                        className="p-4 flex items-center justify-center relative"
+                        style={{ minHeight: '72px', background: 'rgba(17,17,17,0.6)' }}
+                      >
                         <button
                           type="button"
-                          className="px-3 py-1.5 rounded-full text-[10px] font-bold"
+                          className="px-4 py-2 rounded-full text-xs font-bold"
                           style={{
                             background: s.previewBg,
                             border: s.previewBorder,
@@ -1239,13 +1371,25 @@ export default function AdminPage() {
                         >
                           Agregar al Calendario
                         </button>
+                        {/* Active checkmark */}
+                        {isSelected && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#d4af37] flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-[10px] font-medium text-gray-300">{s.name}</div>
-                      <p className="text-[8px] text-gray-500">{s.description}</p>
-                    </div>
+                      {/* Info bar */}
+                      <div className="px-3 py-2 bg-gray-900/90">
+                        <div className="text-[10px] font-semibold text-gray-200">{s.name}</div>
+                        <div className="text-[9px] text-gray-500">{s.description}</div>
+                      </div>
+                    </button>
                   )
-                }}
-              />
+                })}
+              </div>
+            </div>
           </div>
         </Section>
       </main>
