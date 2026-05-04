@@ -256,17 +256,17 @@ export default function Gallery() {
         {/* Upload button — outside the carousel */}
         <button
           onClick={() => setUploadModal(true)}
-          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-2.5 sm:gap-3 py-3 sm:py-3.5 px-8 sm:px-12 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98]"
           style={{
-            borderColor: 'rgba(184, 134, 11, 0.3)',
-            color: 'rgba(184, 134, 11, 0.7)',
-            background: 'rgba(184, 134, 11, 0.04)',
+            borderColor: 'rgba(184, 134, 11, 0.35)',
+            color: '#b8860b',
+            background: 'rgba(184, 134, 11, 0.06)',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.08)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.3)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.04)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.35)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.06)' }}
         >
-          <Camera size={16} strokeWidth={1.5} />
-          <span className="font-cursive text-base sm:text-lg italic" style={{ color: 'inherit' }}>
+          <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
+          <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
             Dejale un recuerdo
           </span>
         </button>
