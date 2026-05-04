@@ -132,7 +132,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
       }}
     >
       <p
-        className="font-cursive text-5xl sm:text-6xl mb-10 sm:mb-12"
+        className="font-cursive text-7xl sm:text-6xl mb-12 sm:mb-12"
         style={{ color: '#d4af37' }}
       >
         Milagros
