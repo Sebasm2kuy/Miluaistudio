@@ -19,7 +19,7 @@ interface Photo {
 
 type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
 
-const CHUNK_SIZE = 4000 // caracteres por chunk (safe para cualquier limite de URL)
+const CHUNK_SIZE = 4000
 
 function compressImage(file: File, maxSize = 640, quality = 0.4): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -54,6 +54,7 @@ export default function Gallery() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const parseGasResponse = async (res: Response): Promise<any> => {
     const text = await res.text()
@@ -100,6 +101,17 @@ export default function Gallery() {
     if (file) { setSelectedFile(file); setPreview(URL.createObjectURL(file)); setUploadState('idle') }
   }
 
+  const scrollCarousel = useCallback((direction: 'left' | 'right') => {
+    if (!scrollRef.current) return
+    const card = scrollRef.current.querySelector('[data-carousel-card]') as HTMLElement
+    if (!card) return
+    const scrollAmount = card.offsetWidth + 16
+    scrollRef.current.scrollBy({
+      left: direction === 'right' ? scrollAmount : -scrollAmount,
+      behavior: 'smooth'
+    })
+  }, [])
+
   const handleUpload = useCallback(async () => {
     if (!selectedFile) return
     try {
@@ -107,7 +119,7 @@ export default function Gallery() {
       const compressed = await compressImage(selectedFile)
       setUploadState('uploading')
 
-      // 1. Convertir a base64url (URL-safe: reemplaza +/ con -_, saca =)
+      // 1. Convertir a base64url (URL-safe)
       const rawBase64 = compressed.replace(/^data:image\/[a-zA-Z]+;base64,/, '')
       const base64url = rawBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 
@@ -115,7 +127,7 @@ export default function Gallery() {
       const uploadId = Date.now().toString(36) + Math.random().toString(36).substr(2)
       const totalChunks = Math.ceil(base64url.length / CHUNK_SIZE)
 
-      // 3. Enviar cada chunk como GET (URLs cortas, sin problema de limite)
+      // 3. Enviar cada chunk como GET
       for (let i = 0; i < totalChunks; i++) {
         const chunk = base64url.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
         await fetch(
@@ -124,14 +136,25 @@ export default function Gallery() {
         )
       }
 
-      // 4. Ensamblar en el servidor y guardar en Drive
+      // 4. Ensamblar en el servidor
       const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
       const data = await parseGasResponse(res)
 
       if (data && data.success && data.url) {
         setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' }])
         setUploadState('ok')
-        setTimeout(() => { setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle') }, 1500)
+        setTimeout(() => {
+          setUploadModal(false)
+          setSelectedFile(null)
+          setPreview(null)
+          setUploadState('idle')
+          // Scroll al final del carousel para ver la foto nueva
+          if (scrollRef.current) {
+            setTimeout(() => {
+              scrollRef.current?.scrollTo({ left: scrollRef.current.scrollWidth, behavior: 'smooth' })
+            }, 100)
+          }
+        }, 1500)
       } else {
         setUploadState('error')
       }
@@ -143,12 +166,11 @@ export default function Gallery() {
     setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle')
   }
 
-  const statusConfig = {
-    compressing: { icon: Loader2, text: 'Comprimiendo...', color: 'text-gold', spin: true },
-    uploading: { icon: Loader2, text: 'Subiendo...', color: 'text-gold', spin: true },
-    ok: { icon: CheckCircle, text: '¡Foto subida!', color: 'text-green-600', spin: false },
-    error: { icon: AlertCircle, text: 'Error, intentá de nuevo', color: 'text-red-500', spin: false },
-  }
+  // Status config con componente de icono extraído (evita React error #418)
+  const statusText = uploadState === 'compressing' ? 'Comprimiendo...' : uploadState === 'uploading' ? 'Subiendo...' : uploadState === 'ok' ? '¡Foto subida!' : uploadState === 'error' ? 'Error, intentá de nuevo' : ''
+  const statusColor = uploadState === 'error' ? 'text-red-500' : uploadState === 'ok' ? 'text-green-600' : 'text-gold'
+  const statusSpinning = uploadState === 'compressing' || uploadState === 'uploading'
+  const showStatus = uploadState !== 'idle'
 
   return (
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
@@ -158,53 +180,104 @@ export default function Gallery() {
           Momentos que hacen esta celebración inolvidable
         </p>
 
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-5">
-          {photos.map((photo, idx) => {
-            const isOriginal = photo.type === 'original'
-            const origIdx = isOriginal ? parseInt(photo.id.split('-')[1]) : -1
-            return (
-              <div
-                key={photo.id}
-                className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4]`}
-                style={{ background: '#f5f0eb' }}
-                onClick={() => openLightbox(idx)}
-              >
-                {isOriginal ? (
-                  <picture>
-                    <source srcSet={photo.src} type="image/webp" />
-                    <img src={ORIGINAL_PHOTOS[origIdx].fallback} alt={`Momento especial ${origIdx + 1}`} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]" draggable={false} />
-                  </picture>
-                ) : (
-                  <img src={photo.src} alt="Foto compartida" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" draggable={false} />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-bordeaux/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-transparent group-hover:border-goldLight/25 transition-colors duration-500" />
-                <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-2 group-hover:translate-y-0">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 flex items-center justify-center border border-white/30">
-                    <Maximize2 size={14} className="sm:w-4 sm:h-4 text-white" strokeWidth={1.5} />
+        {/* ===== Horizontal Carousel ===== */}
+        <div className="relative">
+          {/* Desktop arrows — delicate gold circles */}
+          <button
+            onClick={() => scrollCarousel('left')}
+            className="hidden md:flex absolute -left-2 xl:-left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
+            style={{
+              background: 'rgba(253, 252, 251, 0.92)',
+              borderColor: 'rgba(184, 134, 11, 0.25)',
+              color: 'rgba(184, 134, 11, 0.7)',
+            }}
+            aria-label="Foto anterior"
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.25)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+          >
+            <ChevronLeft size={18} strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={() => scrollCarousel('right')}
+            className="hidden md:flex absolute -right-2 xl:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
+            style={{
+              background: 'rgba(253, 252, 251, 0.92)',
+              borderColor: 'rgba(184, 134, 11, 0.25)',
+              color: 'rgba(184, 134, 11, 0.7)',
+            }}
+            aria-label="Foto siguiente"
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.25)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+          >
+            <ChevronRight size={18} strokeWidth={1.5} />
+          </button>
+
+          {/* Scrollable track */}
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-3 sm:gap-4 md:gap-5 pb-1"
+          >
+            {photos.map((photo, idx) => {
+              const isOriginal = photo.type === 'original'
+              const origIdx = isOriginal ? parseInt(photo.id.split('-')[1]) : -1
+              return (
+                <div
+                  key={photo.id}
+                  data-carousel-card
+                  className="flex-shrink-0 w-[42vw] sm:w-[36vw] md:w-[30%] aspect-[3/4] snap-center rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group relative"
+                  style={{ background: '#f5f0eb' }}
+                  onClick={() => openLightbox(idx)}
+                >
+                  {isOriginal ? (
+                    <picture>
+                      <source srcSet={photo.src} type="image/webp" />
+                      <img
+                        src={ORIGINAL_PHOTOS[origIdx].fallback}
+                        alt={`Momento especial ${origIdx + 1}`}
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                        draggable={false}
+                      />
+                    </picture>
+                  ) : (
+                    <img
+                      src={photo.src}
+                      alt="Foto compartida"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      draggable={false}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-bordeaux/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-2 group-hover:translate-y-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 flex items-center justify-center border border-white/30">
+                      <Maximize2 size={14} className="sm:w-4 sm:h-4 text-white" strokeWidth={1.5} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
 
-          {/* Upload card */}
-          <div
-            className={`css-fade-up relative group cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl aspect-[3/4] border-2 border-dashed hover:border-gold/50 transition-[border-color] duration-500 flex flex-col items-center justify-center gap-2 sm:gap-3`}
-            style={{ borderColor: 'rgba(184, 134, 11, 0.3)', background: 'rgba(184, 134, 11, 0.04)' }}
-            onClick={() => setUploadModal(true)}
-          >
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-gold/70 group-hover:text-gold transition-colors duration-300" style={{ background: 'rgba(184, 134, 11, 0.1)' }}>
-              <Camera size={22} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
+            {/* Upload card */}
+            <div
+              data-carousel-card
+              className="flex-shrink-0 w-[42vw] sm:w-[36vw] md:w-[30%] aspect-[3/4] snap-center rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 sm:gap-3 cursor-pointer"
+              style={{ borderColor: 'rgba(184, 134, 11, 0.3)', background: 'rgba(184, 134, 11, 0.04)' }}
+              onClick={() => setUploadModal(true)}
+            >
+              <div
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors duration-300"
+                style={{ background: 'rgba(184, 134, 11, 0.1)', color: 'rgba(184, 134, 11, 0.7)' }}
+              >
+                <Camera size={22} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
+              </div>
+              <p className="font-bold text-[11px] sm:text-xs md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em]" style={{ color: 'rgba(184, 134, 11, 0.6)' }}>
+                Subir tu foto
+              </p>
             </div>
-            <p className="text-gold/60 group-hover:text-gold font-bold text-[11px] sm:text-[11px] md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] transition-colors duration-300">
-              Subir tu foto
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Upload Modal — CSS-only transitions, no framer-motion */}
+      {/* ===== Upload Modal ===== */}
       <div
         className={`fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 modal-overlay ${uploadModal ? 'open' : ''}`}
         style={{ background: 'rgba(0, 0, 0, 0.9)' }}
@@ -260,10 +333,16 @@ export default function Gallery() {
                   className="gold-button flex-1 py-3 rounded-xl text-white text-xs font-semibold disabled:opacity-60"
                 >{uploadState === 'ok' ? '¡Subida!' : 'Subir foto'}</button>
               </div>
-              {(uploadState === 'compressing' || uploadState === 'uploading' || uploadState === 'ok' || uploadState === 'error') && (
-                <div className={`flex items-center justify-center gap-2 text-xs ${statusConfig[uploadState].color}`}>
-                  {(() => { const cfg = statusConfig[uploadState]; const Icon = cfg.icon; return <Icon size={14} className={cfg.spin ? 'animate-spin' : ''} /> })()}
-                  <span>{statusConfig[uploadState].text}</span>
+              {showStatus && (
+                <div className={`flex items-center justify-center gap-2 text-xs ${statusColor}`}>
+                  {uploadState === 'ok' ? (
+                    <CheckCircle size={14} />
+                  ) : uploadState === 'error' ? (
+                    <AlertCircle size={14} />
+                  ) : (
+                    <Loader2 size={14} className={statusSpinning ? 'animate-spin' : ''} />
+                  )}
+                  <span>{statusText}</span>
                 </div>
               )}
             </div>
@@ -272,7 +351,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Lightbox — CSS-only transitions */}
+      {/* ===== Lightbox ===== */}
       <div
         className={`fixed inset-0 z-[300] flex items-center justify-center p-2 sm:p-4 md:p-10 modal-overlay ${lightboxIdx !== null ? 'open' : ''}`}
         style={{ background: 'rgba(0, 0, 0, 0.96)' }}

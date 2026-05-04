@@ -215,6 +215,10 @@
   transform: scale(1) translateY(0);
 }
 
+/* ===== Scrollbar hide (for horizontal carousels) ===== */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ===== Shimmer text utility ===== */
 .text-shimmer {
   background: linear-gradient(90deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #bf953f);
