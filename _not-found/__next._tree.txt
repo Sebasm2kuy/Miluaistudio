@@ -1,0 +1,2 @@
+:HL["/Miluaistudio/_next/static/chunks/06ull7~fkewt..css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"n529vqCZ-UWe2gTEriTif"}
