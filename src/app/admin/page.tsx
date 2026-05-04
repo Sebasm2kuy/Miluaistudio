@@ -837,22 +837,13 @@ export default function AdminPage() {
         </Section>
       </main>
 
-      {/* --- Custom scrollbar styles --- */}
-      <style jsx global>{`
-        .custom-scroll::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-          background: #374151;
-          border-radius: 3px;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb:hover {
-          background: #4b5563;
-        }
-      `}</style>
+      {/* Custom scrollbar styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+      `}} />
     </div>
   )
 }

@@ -1,7 +1,22 @@
 'use client'
+import { useState, useCallback, useRef } from 'react'
 import config from '@/data/config'
 
 export default function Footer() {
+  const clickCount = useRef(0)
+  const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleFraseClick = useCallback(() => {
+    clickCount.current++
+    if (clickTimer.current) clearTimeout(clickTimer.current)
+    clickTimer.current = setTimeout(() => { clickCount.current = 0 }, 2000)
+
+    if (clickCount.current >= 5) {
+      clickCount.current = 0
+      window.location.href = '/Miluaistudio/admin'
+    }
+  }, [])
+
   return (
     <footer className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
       {/* Semi-transparent dark background overlay for readability */}
@@ -31,8 +46,9 @@ export default function Footer() {
         </p>
 
         <p
-          className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once"
+          className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once cursor-default select-none"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
+          onClick={handleFraseClick}
         >
           {config.footer.frase}
         </p>
