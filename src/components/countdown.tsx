@@ -180,12 +180,27 @@ export default function Countdown() {
   }, [])
 
   // Choose background based on clock style
-  const cardBg = clockStyle === 'dark-luxury' || clockStyle === 'neon' || clockStyle === 'minimal'
-    ? 'linear-gradient(180deg, rgba(61,2,2,0.92) 0%, rgba(30,1,1,0.95) 100%)'
-    : undefined
+  const cardBg =
+    clockStyle === 'neon'
+      ? 'linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%)'
+      : clockStyle === 'dark-luxury' || clockStyle === 'minimal'
+        ? 'linear-gradient(180deg, rgba(61,2,2,0.92) 0%, rgba(30,1,1,0.95) 100%)'
+        : undefined
 
   const cardBorder = clockStyle === 'dark-luxury' || clockStyle === 'neon'
     ? '1px solid rgba(212,175,55,0.2)'
+    : undefined
+
+  // Title color per clock style
+  const titleColor =
+    clockStyle === 'neon' || clockStyle === 'dark-luxury'
+      ? '#d4af37'
+      : clockStyle === 'minimal'
+        ? '#f5f0e8'
+        : undefined
+
+  const titleStyle = titleColor
+    ? { color: titleColor, ...(clockStyle === 'neon' ? { textShadow: '0 0 10px rgba(212,175,55,0.6), 0 0 30px rgba(212,175,55,0.3)' } : {}) }
     : undefined
 
   return (
@@ -194,7 +209,7 @@ export default function Countdown() {
         className={`css-fade-up rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden ${clockStyle === 'classic' || clockStyle === 'gold-glass' ? 'glass-card' : ''}`}
         style={{ background: cardBg, border: cardBorder }}
       >
-        <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
+        <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16" style={titleStyle}>
           {cfg.countdown.titulo}
         </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
