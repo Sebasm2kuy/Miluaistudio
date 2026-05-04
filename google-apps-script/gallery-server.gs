@@ -27,24 +27,28 @@
  * ============================================
  */
 
-const FOLDER_NAME = 'MilagrosXV_Galeria';
-const SPREADSHEET_NAME = 'MilagrosXV_Galeria_DB';
-const SHEET_NAME = 'Fotos';
-const MAX_FILE_SIZE_KB = 500; // Máximo 500KB por foto
+var FOLDER_NAME = 'MilagrosXV_Galeria';
+var SPREADSHEET_NAME = 'MilagrosXV_Galeria_DB';
+var SHEET_NAME = 'Fotos';
+var MAX_FILE_SIZE_KB = 500;
 
 /**
- * GET handler — procesa getPhotos y upload (via parámetros URL)
+ * GET handler — procesa getPhotos, chunk y assemble
  */
 function doGet(e) {
   try {
-    const action = e.parameter.action;
+    var action = e.parameter.action;
 
     if (action === 'getPhotos') {
       return handleGetPhotos();
     }
 
-    if (action === 'upload') {
-      return handleUpload(e);
+    if (action === 'chunk') {
+      return handleChunk(e);
+    }
+
+    if (action === 'assemble') {
+      return handleAssemble(e);
     }
 
     return jsonResponse({ error: 'Accion no valida' });
@@ -54,93 +58,111 @@ function doGet(e) {
 }
 
 /**
- * POST handler — fallback, redirige a doGet
+ * POST handler — fallback
  */
 function doPost(e) {
   return doGet(e);
 }
 
 /**
- * Obtener todas las fotos guardadas en la hoja de cálculo
+ * Recibir un chunk de imagen (base64url)
+ * Se guarda en CacheService con expiración de 5 minutos
  */
-function handleGetPhotos() {
+function handleChunk(e) {
   try {
-    const sheet = getSheet();
-    if (!sheet) {
-      return jsonResponse({ photos: [] });
+    var uid = e.parameter.uid;
+    var chunkIndex = e.parameter.i;
+    var totalChunks = e.parameter.t;
+    var data = e.parameter.d;
+
+    if (!uid || data === undefined) {
+      return jsonResponse({ error: 'Parametros faltantes' });
     }
 
-    const data = sheet.getDataRange().getValues();
+    var cache = CacheService.getScriptCache();
 
-    // La primera fila son los headers (Fecha, URL, ID Archivo, Nombre)
-    if (data.length <= 1) {
-      return jsonResponse({ photos: [] });
-    }
+    // Guardar el chunk
+    cache.put('chunk_' + uid + '_' + chunkIndex, data, 300);
 
-    const photos = [];
-    // Leer de abajo hacia arriba para mostrar las más recientes primero
-    for (let i = data.length - 1; i >= 1; i--) {
-      const row = data[i];
-      const url = row[1]; // Columna B = URL
-      if (url && typeof url === 'string' && url.trim() !== '') {
-        photos.push(url.trim());
-      }
-    }
+    // Guardar metadata (total de chunks)
+    cache.put('meta_' + uid, String(totalChunks), 300);
 
-    return jsonResponse({ photos: photos });
+    return jsonResponse({ ok: true, chunk: chunkIndex });
   } catch (error) {
-    console.error('Error en getPhotos: ' + error.message);
-    return jsonResponse({ photos: [] });
+    return jsonResponse({ error: error.message });
   }
 }
 
 /**
- * Subir una foto: decodificar base64 → guardar en Drive → registrar en Sheet
+ * Ensamblar todos los chunks, decodificar y guardar en Drive
  */
-function handleUpload(e) {
+function handleAssemble(e) {
   try {
-    const imageData = e.parameter.imageData;
-    const mimeType = e.parameter.mimeType || 'image/jpeg';
-
-    if (!imageData) {
-      return jsonResponse({ error: 'No se recibio imagen', success: false });
+    var uid = e.parameter.uid;
+    if (!uid) {
+      return jsonResponse({ error: 'UID faltante', success: false });
     }
 
-    // Remover prefix data:image/...;base64, si existe
-    const base64Data = imageData.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
+    var cache = CacheService.getScriptCache();
+
+    // Leer metadata
+    var totalChunksStr = cache.get('meta_' + uid);
+    if (!totalChunksStr) {
+      return jsonResponse({ error: 'Upload expirado. Intenta de nuevo.', success: false });
+    }
+
+    var totalChunks = parseInt(totalChunksStr);
+
+    // Ensamblar todos los chunks en orden
+    var base64url = '';
+    for (var i = 0; i < totalChunks; i++) {
+      var chunk = cache.get('chunk_' + uid + '_' + i);
+      if (!chunk) {
+        return jsonResponse({ error: 'Chunk ' + i + ' faltante. Intenta de nuevo.', success: false });
+      }
+      base64url += chunk;
+    }
+
+    // Convertir base64url → base64 estándar
+    var base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    // Restaurar padding
+    while (base64.length % 4 !== 0) {
+      base64 += '=';
+    }
 
     // Validar tamaño
-    const byteSize = Math.ceil(base64Data.length * 3 / 4 / 1024);
+    var byteSize = Math.ceil(base64.length * 3 / 4 / 1024);
     if (byteSize > MAX_FILE_SIZE_KB) {
-      return jsonResponse({
-        error: 'Imagen muy grande. Maximo ' + MAX_FILE_SIZE_KB + 'KB.',
-        success: false
-      });
+      cleanupChunks(cache, uid, totalChunks);
+      return jsonResponse({ error: 'Imagen muy grande. Maximo ' + MAX_FILE_SIZE_KB + 'KB.', success: false });
     }
 
     // Decodificar base64 y crear blob
-    const decodedBytes = Utilities.base64Decode(base64Data);
-    const blob = Utilities.newBlob(decodedBytes, mimeType, 'foto_' + Date.now() + '.jpg');
+    var decodedBytes = Utilities.base64Decode(base64);
+    var blob = Utilities.newBlob(decodedBytes, 'image/jpeg', 'foto_' + Date.now() + '.jpg');
 
     // Guardar en Google Drive
-    const folder = getOrCreateFolder();
-    const file = folder.createFile(blob);
+    var folder = getOrCreateFolder();
+    var file = folder.createFile(blob);
 
-    // Hacer público para que se pueda ver desde la web
+    // Hacer público
     file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
 
-    // Obtener URL pública de la imagen
-    const fileId = file.getId();
-    const imageUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
+    // Obtener URL pública
+    var fileId = file.getId();
+    var imageUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
 
     // Registrar en la hoja de cálculo
-    const sheet = getOrCreateSheet();
+    var sheet = getOrCreateSheet();
     sheet.appendRow([
-      new Date().toISOString(),  // Columna A: Fecha
-      imageUrl,                   // Columna B: URL pública
-      fileId,                     // Columna C: ID del archivo en Drive
-      'Foto de invitado'          // Columna D: Descripción
+      new Date().toISOString(),
+      imageUrl,
+      fileId,
+      'Foto de invitado'
     ]);
+
+    // Limpiar chunks del cache
+    cleanupChunks(cache, uid, totalChunks);
 
     return jsonResponse({
       success: true,
@@ -149,11 +171,47 @@ function handleUpload(e) {
     });
 
   } catch (error) {
-    console.error('Error en upload: ' + error.message);
-    return jsonResponse({
-      error: 'Error al subir: ' + error.message,
-      success: false
-    });
+    return jsonResponse({ error: 'Error al ensamblar: ' + error.message, success: false });
+  }
+}
+
+/**
+ * Limpiar chunks del cache
+ */
+function cleanupChunks(cache, uid, totalChunks) {
+  for (var i = 0; i < totalChunks; i++) {
+    cache.remove('chunk_' + uid + '_' + i);
+  }
+  cache.remove('meta_' + uid);
+}
+
+/**
+ * Obtener todas las fotos guardadas
+ */
+function handleGetPhotos() {
+  try {
+    var sheet = getSheet();
+    if (!sheet) {
+      return jsonResponse({ photos: [] });
+    }
+
+    var data = sheet.getDataRange().getValues();
+
+    if (data.length <= 1) {
+      return jsonResponse({ photos: [] });
+    }
+
+    var photos = [];
+    for (var i = data.length - 1; i >= 1; i--) {
+      var url = data[i][1];
+      if (url && typeof url === 'string' && url.trim() !== '') {
+        photos.push(url.trim());
+      }
+    }
+
+    return jsonResponse({ photos: photos });
+  } catch (error) {
+    return jsonResponse({ photos: [] });
   }
 }
 
@@ -161,28 +219,23 @@ function handleUpload(e) {
  * Obtener o crear la hoja de cálculo
  */
 function getOrCreateSheet() {
-  const props = PropertiesService.getScriptProperties();
-  let ssId = props.getProperty('SPREADSHEET_ID');
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty('SPREADSHEET_ID');
 
   if (!ssId) {
-    // Crear nueva hoja de cálculo
-    const ss = SpreadsheetApp.create(SPREADSHEET_NAME);
+    var ss = SpreadsheetApp.create(SPREADSHEET_NAME);
     ssId = ss.getId();
     props.setProperty('SPREADSHEET_ID', ssId);
 
-    // Crear la hoja "Fotos" con headers
-    const sheet = ss.insertSheet(SHEET_NAME);
+    var sheet = ss.insertSheet(SHEET_NAME);
     sheet.appendRow(['Fecha', 'URL', 'ID Archivo', 'Descripcion']);
 
-    // Eliminar la hoja por defecto "Hoja 1"
     try {
-      const defaultSheet = ss.getSheetByName('Sheet1') || ss.getSheetByName('Hoja 1');
+      var defaultSheet = ss.getSheetByName('Sheet1') || ss.getSheetByName('Hoja 1');
       if (defaultSheet && defaultSheet.getSheetId() !== sheet.getSheetId()) {
         ss.deleteSheet(defaultSheet);
       }
-    } catch (e) {
-      // Ignorar si no se puede eliminar
-    }
+    } catch (e) {}
   }
 
   return SpreadsheetApp.openById(ssId).getSheetByName(SHEET_NAME);
@@ -192,8 +245,8 @@ function getOrCreateSheet() {
  * Obtener la hoja existente (sin crear)
  */
 function getSheet() {
-  const props = PropertiesService.getScriptProperties();
-  const ssId = props.getProperty('SPREADSHEET_ID');
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty('SPREADSHEET_ID');
   if (!ssId) return null;
 
   try {
@@ -207,7 +260,7 @@ function getSheet() {
  * Obtener o crear la carpeta en Google Drive
  */
 function getOrCreateFolder() {
-  const folders = DriveApp.getFoldersByName(FOLDER_NAME);
+  var folders = DriveApp.getFoldersByName(FOLDER_NAME);
   if (folders.hasNext()) {
     return folders.next();
   }
@@ -215,7 +268,7 @@ function getOrCreateFolder() {
 }
 
 /**
- * Devolver respuesta JSON con CORS headers
+ * Devolver respuesta JSON
  */
 function jsonResponse(data) {
   return ContentService

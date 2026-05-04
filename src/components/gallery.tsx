@@ -19,7 +19,8 @@ interface Photo {
 
 type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
 
-// Tamaño reducido para caber en URL como GET param (max ~200KB base64)
+const CHUNK_SIZE = 4000 // caracteres por chunk (safe para cualquier limite de URL)
+
 function compressImage(file: File, maxSize = 640, quality = 0.4): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -106,13 +107,28 @@ export default function Gallery() {
       const compressed = await compressImage(selectedFile)
       setUploadState('uploading')
 
-      // Enviar como GET con base64 en URL (el POST a GAS pierde el body por redirect 302)
-      const url = `${PHOTO_UPLOAD_URL}?action=upload&imageData=${encodeURIComponent(compressed)}&mimeType=image/jpeg`
-      const res = await fetch(url, { redirect: 'follow' })
+      // 1. Convertir a base64url (URL-safe: reemplaza +/ con -_, saca =)
+      const rawBase64 = compressed.replace(/^data:image\/[a-zA-Z]+;base64,/, '')
+      const base64url = rawBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+      // 2. Generar ID unico y dividir en chunks
+      const uploadId = Date.now().toString(36) + Math.random().toString(36).substr(2)
+      const totalChunks = Math.ceil(base64url.length / CHUNK_SIZE)
+
+      // 3. Enviar cada chunk como GET (URLs cortas, sin problema de limite)
+      for (let i = 0; i < totalChunks; i++) {
+        const chunk = base64url.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
+        await fetch(
+          `${PHOTO_UPLOAD_URL}?action=chunk&uid=${uploadId}&i=${i}&t=${totalChunks}&d=${chunk}`,
+          { redirect: 'follow' }
+        )
+      }
+
+      // 4. Ensamblar en el servidor y guardar en Drive
+      const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
       const data = await parseGasResponse(res)
 
       if (data && data.success && data.url) {
-        // Usar la URL del servidor (persistente en Google Drive), no el base64 local
         setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' }])
         setUploadState('ok')
         setTimeout(() => { setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle') }, 1500)
