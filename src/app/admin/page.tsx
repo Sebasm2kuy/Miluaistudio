@@ -392,8 +392,10 @@ export default function AdminPage() {
   const [deploying, setDeploying] = useState(false)
   const [deployResult, setDeployResult] = useState<string | null>(null)
   const [githubToken, setGithubToken] = useState('')
-  const [showToken, setShowToken] = useState(false)
+  const [showToken, setShowToken] = useState(true)
+  const [tokenStatus, setTokenStatus] = useState<'idle' | 'checking' | 'ok' | 'error'>('idle')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const tokenInputRef = useRef<HTMLInputElement>(null)
 
   // Force scroll fix on mount
   useEffect(() => {
@@ -418,7 +420,7 @@ export default function AdminPage() {
         }
       }
       const savedToken = localStorage.getItem('milu_github_token')
-      if (savedToken) setGithubToken(savedToken)
+      if (savedToken?.trim()) setGithubToken(savedToken.trim())
     } catch { /* ignore */ }
   }, [])
 
@@ -500,20 +502,45 @@ export default function AdminPage() {
     setTimeout(() => setSaved(false), 2000)
   }, [cfg])
 
-  const handleDeploy = useCallback(async () => {
-    if (!githubToken) {
-      setDeployResult('Falta el GitHub Token. Configuralo abajo.')
-      setTimeout(() => setDeployResult(null), 5000)
+  const handleVerifyToken = useCallback(async () => {
+    const token = githubToken.trim()
+    if (!token) {
+      setTokenStatus('error')
       return
     }
-    localStorage.setItem('milu_github_token', githubToken)
+    setTokenStatus('checking')
+    try {
+      const res = await fetch('https://api.github.com/repos/Sebasm2kuy/Miluaistudio/contents/src/data/config.ts', {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' },
+      })
+      if (res.ok) {
+        setTokenStatus('ok')
+        setGithubToken(token)
+        localStorage.setItem('milu_github_token', token)
+      } else {
+        setTokenStatus('error')
+      }
+    } catch {
+      setTokenStatus('error')
+    }
+  }, [githubToken])
+
+  const handleDeploy = useCallback(async () => {
+    const token = githubToken.trim()
+    if (!token) {
+      setDeployResult('Falta el GitHub Token. Pegalo arriba.')
+      setTimeout(() => setDeployResult(null), 5000)
+      setShowToken(true)
+      return
+    }
+    localStorage.setItem('milu_github_token', token)
     saveConfig(cfg)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
     setDeploying(true)
     setDeployResult(null)
     try {
-      const result = await deployToGitHub(cfg as unknown as Record<string, unknown>, githubToken)
+      const result = await deployToGitHub(cfg as unknown as Record<string, unknown>, token)
       setDeployResult(result.message)
     } catch (err) {
       setDeployResult(`Error: ${err instanceof Error ? err.message : 'unknown'}`)
@@ -652,33 +679,62 @@ export default function AdminPage() {
             <div className="px-5 pb-5 pt-1 border-t" style={{ borderColor: '#2563eb33' }}>
               <div className="space-y-3">
                 <p className="text-xs text-gray-400">
-                  Para deployar, necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">repo</code>.
+                  Para deployar y subir fotos, necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">Contents read/write</code>.
                 </p>
                 <div className="relative">
                   <input
+                    ref={tokenInputRef}
                     type="password"
                     value={githubToken}
-                    onChange={(e) => { setGithubToken(e.target.value); localStorage.setItem('milu_github_token', e.target.value) }}
-                    placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-                    className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#2563eb] pr-20"
+                    onChange={(e) => {
+                      const v = e.target.value
+                      setGithubToken(v)
+                      localStorage.setItem('milu_github_token', v)
+                      setTokenStatus('idle')
+                    }}
+                    placeholder="Pegá tu token acá..."
+                    className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#2563eb] pr-28"
                   />
-                  <button
-                    type="button"
-                    onClick={() => { const inp = document.querySelector<HTMLInputElement>('.token-input'); if(inp) inp.type = inp.type === 'password' ? 'text' : 'password' }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-[10px] rounded bg-gray-800 text-gray-400 hover:text-gray-200"
-                  >
-                    Mostrar
-                  </button>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const inp = tokenInputRef.current
+                        if (inp) inp.type = inp.type === 'password' ? 'text' : 'password'
+                      }}
+                      className="px-2 py-1 text-[10px] rounded bg-gray-800 text-gray-400 hover:text-gray-200"
+                    >
+                      Mostrar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleVerifyToken}
+                      disabled={tokenStatus === 'checking'}
+                      className="px-2 py-1 text-[10px] rounded font-bold transition-colors"
+                      style={{
+                        background: tokenStatus === 'ok' ? '#16a34a' : tokenStatus === 'error' ? '#dc2626' : '#2563eb',
+                        color: '#fff',
+                      }}
+                    >
+                      {tokenStatus === 'checking' ? '...' : tokenStatus === 'ok' ? 'OK' : tokenStatus === 'error' ? 'Error' : 'Verificar'}
+                    </button>
+                  </div>
                 </div>
-                <p className="text-[10px] text-gray-600">
-                  Creá tu token en: GitHub &gt; Settings &gt; Developer settings &gt; Personal access tokens &gt; Fine-grained tokens. Dale permiso de &quot;Contents&quot; read/write al repo Miluaistudio.
-                </p>
-                {githubToken && (
+                {tokenStatus === 'ok' && (
                   <div className="flex items-center gap-2 text-xs">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-green-400">Token configurado</span>
+                    <span className="text-green-400">Token valido - deploy listo</span>
                   </div>
                 )}
+                {tokenStatus === 'error' && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    <span className="text-red-400">Token invalido o sin permisos. Verificá que tenga Contents read/write.</span>
+                  </div>
+                )}
+                <p className="text-[10px] text-gray-600">
+                  Si no tenés token: GitHub &gt; Settings &gt; Developer settings &gt; Personal access tokens &gt; Fine-grained tokens. Dale permiso de &quot;Contents&quot; read/write al repo Miluaistudio.
+                </p>
               </div>
             </div>
           )}
