@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
+import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES } from '@/data/admin-options'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -93,7 +94,7 @@ function Field({
   label: string
   value: string
   onChange: (v: string) => void
-  type?: 'text' | 'url' | 'datetime-local' | 'tel'
+  type?: 'text' | 'url' | 'datetime-local' | 'tel' | 'date'
   placeholder?: string
   rows?: number
 }) {
@@ -167,6 +168,169 @@ function ColorField({
 }
 
 // ---------------------------------------------------------------------------
+// Option Picker (for fonts, clock styles, etc.)
+// ---------------------------------------------------------------------------
+
+function OptionPicker({
+  label,
+  options,
+  value,
+  onChange,
+  renderOption,
+}: {
+  label: string
+  options: readonly { id: string; name: string; description?: string; preview?: string; style?: string; category?: string }[]
+  value: string
+  onChange: (v: string) => void
+  renderOption?: (opt: typeof options[number], isSelected: boolean) => React.ReactNode
+}) {
+  return (
+    <div className="space-y-2">
+      <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {options.map((opt) => {
+          const isSelected = value === opt.id
+          if (renderOption) {
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => onChange(opt.id)}
+                className={`rounded-xl border p-3 text-left transition-all duration-200 ${
+                  isSelected
+                    ? 'border-[#d4af37] bg-[#d4af37]/10 ring-1 ring-[#d4af37]/30'
+                    : 'border-gray-700 bg-gray-900 hover:border-gray-600'
+                }`}
+              >
+                {renderOption(opt, isSelected)}
+              </button>
+            )
+          }
+          return (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => onChange(opt.id)}
+              className={`rounded-xl border p-3 text-left transition-all duration-200 ${
+                isSelected
+                  ? 'border-[#d4af37] bg-[#d4af37]/10 ring-1 ring-[#d4af37]/30'
+                  : 'border-gray-700 bg-gray-900 hover:border-gray-600'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                {isSelected && <span className="text-[#d4af37] text-xs font-bold">ACTIVO</span>}
+              </div>
+              {opt.description && (
+                <p className="text-[10px] text-gray-500">{opt.description}</p>
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Image Upload Card
+// ---------------------------------------------------------------------------
+
+function ImageCard({
+  label,
+  url,
+  onUpload,
+  onRemove,
+}: {
+  label: string
+  url: string
+  onUpload: (url: string) => void
+  onRemove: () => void
+}) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('section', 'general')
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (data.success) {
+        onUpload(data.url)
+      }
+    } catch (err) {
+      console.error('Upload failed:', err)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-gray-500">{label}</span>
+        {url && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="text-red-400 hover:text-red-300 text-lg leading-none"
+            title="Eliminar"
+          >
+            &times;
+          </button>
+        )}
+      </div>
+      {url ? (
+        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-800">
+          <img src={url} alt={label} className="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div
+          className="aspect-[3/4] rounded-lg border-2 border-dashed border-gray-700 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-gray-500 transition-colors"
+          onClick={() => fileRef.current?.click()}
+        >
+          {uploading ? (
+            <svg className="animate-spin h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          ) : (
+            <>
+              <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span className="text-[10px] text-gray-600">Subir foto</span>
+            </>
+          )}
+        </div>
+      )}
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 transition-colors"
+        >
+          {url ? 'Cambiar' : 'Subir'}
+        </button>
+        <Field
+          label=""
+          value={url}
+          onChange={onUpload}
+          type="url"
+          placeholder="O pegá URL..."
+        />
+      </div>
+      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main Page
 // ---------------------------------------------------------------------------
 
@@ -182,6 +346,7 @@ const SECTION_KEYS = [
   'countdown',
   'fondo',
   'colores',
+  'estilos',
 ] as const
 
 type SectionKey = (typeof SECTION_KEYS)[number]
@@ -198,6 +363,7 @@ const SECTION_META: Record<SectionKey, { title: string; icon: string }> = {
   countdown: { title: 'Countdown', icon: '⏳' },
   fondo: { title: 'Fondo', icon: '🖼️' },
   colores: { title: 'Colores', icon: '🎨' },
+  estilos: { title: 'Estilos', icon: '✨' },
 }
 
 export default function AdminPage() {
@@ -208,13 +374,28 @@ export default function AdminPage() {
   const [deployResult, setDeployResult] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Force scroll fix on mount
+  useEffect(() => {
+    const html = document.documentElement
+    const body = document.body
+    html.style.overflow = 'auto'
+    html.style.height = 'auto'
+    html.style.position = 'static'
+    body.style.overflow = 'auto'
+    body.style.height = 'auto'
+    body.style.position = 'static'
+  }, [])
+
   // Load from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem('milu_config')
       if (saved) {
         const parsed = JSON.parse(saved) as SiteConfig
-        if (parsed?.evento?.nombre) setCfg(parsed)
+        if (parsed?.evento?.nombre) {
+          // Merge with defaults to handle new fields
+          setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
+        }
       }
     } catch { /* ignore */ }
   }, [])
@@ -271,7 +452,8 @@ export default function AdminPage() {
       reader.onload = (ev) => {
         try {
           const parsed = JSON.parse(ev.target?.result as string) as SiteConfig
-          setCfg(parsed)
+          // Merge with defaults
+          setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
         } catch {
           alert('Archivo JSON inválido')
         }
@@ -297,11 +479,9 @@ export default function AdminPage() {
   }, [cfg])
 
   const handleDeploy = useCallback(async () => {
-    // First save to localStorage
     saveConfig(cfg)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
-
     setDeploying(true)
     setDeployResult(null)
     try {
@@ -312,12 +492,12 @@ export default function AdminPage() {
       })
       const data = await res.json()
       if (data.success) {
-        setDeployResult('Deploy exitoso! Git commit + push + rebuild completado.')
+        setDeployResult('Deploy exitoso!')
       } else {
         setDeployResult(`Error: ${data.error}`)
       }
     } catch (err) {
-      setDeployResult(`Error de conexión: ${err instanceof Error ? err.message : 'unknown'}`)
+      setDeployResult(`Error: ${err instanceof Error ? err.message : 'unknown'}`)
     } finally {
       setDeploying(false)
       setTimeout(() => setDeployResult(null), 5000)
@@ -336,18 +516,6 @@ export default function AdminPage() {
   // =====================================================================
   // Render
   // =====================================================================
-
-  // Force scroll fix on mount
-  useEffect(() => {
-    const html = document.documentElement
-    const body = document.body
-    html.style.overflow = 'auto'
-    html.style.height = 'auto'
-    html.style.position = 'static'
-    body.style.overflow = 'auto'
-    body.style.height = 'auto'
-    body.style.position = 'static'
-  }, [])
 
   return (
     <div
@@ -377,7 +545,7 @@ export default function AdminPage() {
                 border: 'none',
               }}
             >
-              {saved ? 'Guardado ✓' : 'Guardar Cambios'}
+              {saved ? 'Guardado ✓' : 'Guardar'}
             </button>
             <button
               type="button"
@@ -404,7 +572,7 @@ export default function AdminPage() {
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                   </svg>
-                  Guardar + Deploy
+                  Deploy
                 </>
               )}
             </button>
@@ -418,62 +586,35 @@ export default function AdminPage() {
               onClick={handleExport}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
               style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.background = GOLD + '44')}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.background = GOLD + '22')}
             >
-              Descargar JSON
+              JSON
             </button>
             <button
               type="button"
               onClick={handleImport}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
               style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
-              onMouseEnter={(e) => ((e.target as HTMLElement).style.background = GOLD + '44')}
-              onMouseLeave={(e) => ((e.target as HTMLElement).style.background = GOLD + '22')}
             >
-              Importar JSON
+              Importar
             </button>
             <button
               type="button"
               onClick={handleReset}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors bg-red-950/60 text-red-300 border border-red-800/50 hover:bg-red-900/60"
             >
-              Restaurar Valores
+              Reset
             </button>
-            <button
-              type="button"
-              onClick={expandAll}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700"
-            >
-              Expandir
-            </button>
-            <button
-              type="button"
-              onClick={collapseAll}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors bg-gray-800 text-gray-300 border border-gray-700 hover:bg-gray-700"
-            >
-              Colapsar
-            </button>
+            <button type="button" onClick={expandAll} className="px-2 py-1.5 rounded-lg text-xs bg-gray-800 text-gray-300 border border-gray-700">+</button>
+            <button type="button" onClick={collapseAll} className="px-2 py-1.5 rounded-lg text-xs bg-gray-800 text-gray-300 border border-gray-700">-</button>
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
         </div>
       </header>
 
       {/* --- Form Body --- */}
       <main className="max-w-4xl mx-auto px-4 py-6 space-y-4 pb-16">
         {/* EVENTO */}
-        <Section
-          title={SECTION_META.evento.title}
-          icon={SECTION_META.evento.icon}
-          open={openSections.has('evento')}
-          onToggle={() => toggle('evento')}
-        >
+        <Section title={SECTION_META.evento.title} icon={SECTION_META.evento.icon} open={openSections.has('evento')} onToggle={() => toggle('evento')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Tipo" value={cfg.evento.tipo} onChange={(v) => setNested('evento', 'tipo', v)} />
             <Field label="Nombre" value={cfg.evento.nombre} onChange={(v) => setNested('evento', 'nombre', v)} />
@@ -482,7 +623,7 @@ export default function AdminPage() {
             <Field label="Fecha (texto)" value={cfg.evento.fecha} onChange={(v) => setNested('evento', 'fecha', v)} />
             <Field label="Año" value={cfg.evento.anio} onChange={(v) => setNested('evento', 'anio', v)} />
             <Field
-              label="Fecha Evento"
+              label="Fecha y Hora del Evento"
               type="datetime-local"
               value={cfg.evento.fechaEvento}
               onChange={(v) => setNested('evento', 'fechaEvento', v)}
@@ -497,12 +638,7 @@ export default function AdminPage() {
         </Section>
 
         {/* DEDICATORIA */}
-        <Section
-          title={SECTION_META.dedicatoria.title}
-          icon={SECTION_META.dedicatoria.icon}
-          open={openSections.has('dedicatoria')}
-          onToggle={() => toggle('dedicatoria')}
-        >
+        <Section title={SECTION_META.dedicatoria.title} icon={SECTION_META.dedicatoria.icon} open={openSections.has('dedicatoria')} onToggle={() => toggle('dedicatoria')}>
           <div className="space-y-4">
             <Field label="Cita" value={cfg.dedicatoria.cita} onChange={(v) => setNested('dedicatoria', 'cita', v)} rows={3} />
             <Field label="Cuerpo" value={cfg.dedicatoria.cuerpo} onChange={(v) => setNested('dedicatoria', 'cuerpo', v)} rows={4} />
@@ -511,18 +647,12 @@ export default function AdminPage() {
         </Section>
 
         {/* TIMELINE */}
-        <Section
-          title={SECTION_META.timeline.title}
-          icon={SECTION_META.timeline.icon}
-          open={openSections.has('timeline')}
-          onToggle={() => toggle('timeline')}
-        >
+        <Section title={SECTION_META.timeline.title} icon={SECTION_META.timeline.icon} open={openSections.has('timeline')} onToggle={() => toggle('timeline')}>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Título" value={cfg.timeline.titulo} onChange={(v) => setNested('timeline', 'titulo', v)} />
               <Field label="Subtítulo" value={cfg.timeline.subtitulo} onChange={(v) => setNested('timeline', 'subtitulo', v)} />
             </div>
-
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Eventos</span>
@@ -531,25 +661,18 @@ export default function AdminPage() {
                   onClick={() =>
                     setCfg((prev) => ({
                       ...prev,
-                      timeline: {
-                        ...prev.timeline,
-                        eventos: [...prev.timeline.eventos, { hora: '', titulo: '', desc: '', icono: '' }],
-                      },
+                      timeline: { ...prev.timeline, eventos: [...prev.timeline.eventos, { hora: '', titulo: '', desc: '', icono: '' }] },
                     }))
                   }
-                  className="px-3 py-1 rounded-md text-xs font-medium transition-colors"
+                  className="px-3 py-1 rounded-md text-xs font-medium"
                   style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
                 >
-                  + Agregar evento
+                  + Agregar
                 </button>
               </div>
-
               <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
                 {cfg.timeline.eventos.map((ev, i) => (
-                  <div
-                    key={i}
-                    className="relative rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-3"
-                  >
+                  <div key={i} className="relative rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-gray-500">#{i + 1}</span>
                       <button
@@ -557,63 +680,19 @@ export default function AdminPage() {
                         onClick={() =>
                           setCfg((prev) => ({
                             ...prev,
-                            timeline: {
-                              ...prev.timeline,
-                              eventos: prev.timeline.eventos.filter((_, idx) => idx !== i),
-                            },
+                            timeline: { ...prev.timeline, eventos: prev.timeline.eventos.filter((_, idx) => idx !== i) },
                           }))
                         }
-                        className="text-red-400 hover:text-red-300 text-lg leading-none transition-colors"
-                        title="Eliminar evento"
+                        className="text-red-400 hover:text-red-300 text-lg leading-none"
                       >
                         &times;
                       </button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <Field
-                        label="Hora"
-                        value={ev.hora}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const evs = [...prev.timeline.eventos]
-                            evs[i] = { ...evs[i], hora: v }
-                            return { ...prev, timeline: { ...prev.timeline, eventos: evs } }
-                          })
-                        }
-                      />
-                      <Field
-                        label="Título"
-                        value={ev.titulo}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const evs = [...prev.timeline.eventos]
-                            evs[i] = { ...evs[i], titulo: v }
-                            return { ...prev, timeline: { ...prev.timeline, eventos: evs } }
-                          })
-                        }
-                      />
-                      <Field
-                        label="Descripción"
-                        value={ev.desc}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const evs = [...prev.timeline.eventos]
-                            evs[i] = { ...evs[i], desc: v }
-                            return { ...prev, timeline: { ...prev.timeline, eventos: evs } }
-                          })
-                        }
-                      />
-                      <Field
-                        label="Icono (emoji)"
-                        value={ev.icono}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const evs = [...prev.timeline.eventos]
-                            evs[i] = { ...evs[i], icono: v }
-                            return { ...prev, timeline: { ...prev.timeline, eventos: evs } }
-                          })
-                        }
-                      />
+                      <Field label="Hora" value={ev.hora} onChange={(v) => { const evs = [...cfg.timeline.eventos]; evs[i] = { ...evs[i], hora: v }; setCfg((p) => ({ ...p, timeline: { ...p.timeline, eventos: evs } })) }} />
+                      <Field label="Título" value={ev.titulo} onChange={(v) => { const evs = [...cfg.timeline.eventos]; evs[i] = { ...evs[i], titulo: v }; setCfg((p) => ({ ...p, timeline: { ...p.timeline, eventos: evs } })) }} />
+                      <Field label="Descripción" value={ev.desc} onChange={(v) => { const evs = [...cfg.timeline.eventos]; evs[i] = { ...evs[i], desc: v }; setCfg((p) => ({ ...p, timeline: { ...p.timeline, eventos: evs } })) }} />
+                      <Field label="Icono (emoji)" value={ev.icono} onChange={(v) => { const evs = [...cfg.timeline.eventos]; evs[i] = { ...evs[i], icono: v }; setCfg((p) => ({ ...p, timeline: { ...p.timeline, eventos: evs } })) }} />
                     </div>
                   </div>
                 ))}
@@ -623,12 +702,7 @@ export default function AdminPage() {
         </Section>
 
         {/* GALERÍA */}
-        <Section
-          title={SECTION_META.galeria.title}
-          icon={SECTION_META.galeria.icon}
-          open={openSections.has('galeria')}
-          onToggle={() => toggle('galeria')}
-        >
+        <Section title={SECTION_META.galeria.title} icon={SECTION_META.galeria.icon} open={openSections.has('galeria')} onToggle={() => toggle('galeria')}>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Título" value={cfg.galeria.titulo} onChange={(v) => setNested('galeria', 'titulo', v)} />
@@ -638,77 +712,40 @@ export default function AdminPage() {
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos</span>
+                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos ({cfg.galeria.fotos.length})</span>
                 <button
                   type="button"
                   onClick={() =>
                     setCfg((prev) => ({
                       ...prev,
-                      galeria: {
-                        ...prev.galeria,
-                        fotos: [...prev.galeria.fotos, { webp: '', fallback: '' }],
-                      },
+                      galeria: { ...prev.galeria, fotos: [...prev.galeria.fotos, { webp: '', fallback: '' }] },
                     }))
                   }
-                  className="px-3 py-1 rounded-md text-xs font-medium transition-colors"
+                  className="px-3 py-1 rounded-md text-xs font-medium"
                   style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
                 >
                   + Agregar foto
                 </button>
               </div>
 
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[600px] overflow-y-auto pr-1 custom-scroll">
                 {cfg.galeria.fotos.map((foto, i) => (
-                  <div
+                  <ImageCard
                     key={i}
-                    className="relative rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-500">Foto #{i + 1}</span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCfg((prev) => ({
-                            ...prev,
-                            galeria: {
-                              ...prev.galeria,
-                              fotos: prev.galeria.fotos.filter((_, idx) => idx !== i),
-                            },
-                          }))
-                        }
-                        className="text-red-400 hover:text-red-300 text-lg leading-none transition-colors"
-                        title="Eliminar foto"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <Field
-                        label="WebP URL"
-                        type="url"
-                        value={foto.webp}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const fotos = [...prev.galeria.fotos]
-                            fotos[i] = { ...fotos[i], webp: v }
-                            return { ...prev, galeria: { ...prev.galeria, fotos } }
-                          })
-                        }
-                      />
-                      <Field
-                        label="Fallback URL"
-                        type="url"
-                        value={foto.fallback}
-                        onChange={(v) =>
-                          setCfg((prev) => {
-                            const fotos = [...prev.galeria.fotos]
-                            fotos[i] = { ...fotos[i], fallback: v }
-                            return { ...prev, galeria: { ...prev.galeria, fotos } }
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
+                    label={`Foto ${i + 1}`}
+                    url={foto.webp}
+                    onUpload={(url) => {
+                      const fotos = [...cfg.galeria.fotos]
+                      fotos[i] = { webp: url, fallback: url }
+                      setCfg((p) => ({ ...p, galeria: { ...p.galeria, fotos } }))
+                    }}
+                    onRemove={() => {
+                      setCfg((p) => ({
+                        ...p,
+                        galeria: { ...p.galeria, fotos: p.galeria.fotos.filter((_, idx) => idx !== i) },
+                      }))
+                    }}
+                  />
                 ))}
               </div>
             </div>
@@ -716,12 +753,7 @@ export default function AdminPage() {
         </Section>
 
         {/* MÚSICA */}
-        <Section
-          title={SECTION_META.musica.title}
-          icon={SECTION_META.musica.icon}
-          open={openSections.has('musica')}
-          onToggle={() => toggle('musica')}
-        >
+        <Section title={SECTION_META.musica.title} icon={SECTION_META.musica.icon} open={openSections.has('musica')} onToggle={() => toggle('musica')}>
           <div className="grid grid-cols-1 gap-4">
             <Field label="Título" value={cfg.musica.titulo} onChange={(v) => setNested('musica', 'titulo', v)} />
             <Field label="Subtítulo" value={cfg.musica.subtitulo} onChange={(v) => setNested('musica', 'subtitulo', v)} />
@@ -735,12 +767,7 @@ export default function AdminPage() {
         </Section>
 
         {/* RSVP */}
-        <Section
-          title={SECTION_META.rsvp.title}
-          icon={SECTION_META.rsvp.icon}
-          open={openSections.has('rsvp')}
-          onToggle={() => toggle('rsvp')}
-        >
+        <Section title={SECTION_META.rsvp.title} icon={SECTION_META.rsvp.icon} open={openSections.has('rsvp')} onToggle={() => toggle('rsvp')}>
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Título" value={cfg.rsvp.titulo} onChange={(v) => setNested('rsvp', 'titulo', v)} />
@@ -750,22 +777,18 @@ export default function AdminPage() {
             </div>
             <Field label="Subtítulo" value={cfg.rsvp.subtitulo} onChange={(v) => setNested('rsvp', 'subtitulo', v)} rows={3} />
             <Field label="Google Sheet URL" type="url" value={cfg.rsvp.googleSheetUrl} onChange={(v) => setNested('rsvp', 'googleSheetUrl', v)} />
-
-            {/* Regalos sub-section */}
             <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-4 space-y-4">
-              <h4 className="font-cursive text-lg" style={{ color: GOLD }}>
-                🎁 Regalos
-              </h4>
+              <h4 className="font-cursive text-lg" style={{ color: GOLD }}>🎁 Regalos</h4>
               <Field label="Título" value={cfg.rsvp.regalos.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'titulo'], v)} />
               <Field label="Subtítulo" value={cfg.rsvp.regalos.subtitulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'subtitulo'], v)} rows={2} />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Abitab</span>
+                  <span className="text-xs font-semibold text-gray-500 uppercase">Abitab</span>
                   <Field label="Título" value={cfg.rsvp.regalos.abitab.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'abitab', 'titulo'], v)} />
                   <Field label="Número" value={cfg.rsvp.regalos.abitab.numero} onChange={(v) => setDeep(['rsvp', 'regalos', 'abitab', 'numero'], v)} />
                 </div>
                 <div className="space-y-2">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Mi Dinero</span>
+                  <span className="text-xs font-semibold text-gray-500 uppercase">Mi Dinero</span>
                   <Field label="Título" value={cfg.rsvp.regalos.miDinero.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'miDinero', 'titulo'], v)} />
                   <Field label="Número" value={cfg.rsvp.regalos.miDinero.numero} onChange={(v) => setDeep(['rsvp', 'regalos', 'miDinero', 'numero'], v)} />
                 </div>
@@ -775,12 +798,7 @@ export default function AdminPage() {
         </Section>
 
         {/* FOOTER */}
-        <Section
-          title={SECTION_META.footer.title}
-          icon={SECTION_META.footer.icon}
-          open={openSections.has('footer')}
-          onToggle={() => toggle('footer')}
-        >
+        <Section title={SECTION_META.footer.title} icon={SECTION_META.footer.icon} open={openSections.has('footer')} onToggle={() => toggle('footer')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Apodo" value={cfg.footer.apodo} onChange={(v) => setNested('footer', 'apodo', v)} />
             <Field label="Ubicación" value={cfg.footer.ubicacion} onChange={(v) => setNested('footer', 'ubicacion', v)} />
@@ -789,53 +807,36 @@ export default function AdminPage() {
         </Section>
 
         {/* INVITACIÓN */}
-        <Section
-          title={SECTION_META.invitacion.title}
-          icon={SECTION_META.invitacion.icon}
-          open={openSections.has('invitacion')}
-          onToggle={() => toggle('invitacion')}
-        >
-          <div className="grid grid-cols-1 gap-4">
-            <Field label="Imagen URL" type="url" value={cfg.invitacion.imagen} onChange={(v) => setNested('invitacion', 'imagen', v)} />
-            <Field label="Imagen Fallback URL" type="url" value={cfg.invitacion.imagenFallback} onChange={(v) => setNested('invitacion', 'imagenFallback', v)} />
+        <Section title={SECTION_META.invitacion.title} icon={SECTION_META.invitacion.icon} open={openSections.has('invitacion')} onToggle={() => toggle('invitacion')}>
+          <div className="space-y-4">
+            <ImageCard
+              label="Imagen de Invitación"
+              url={cfg.invitacion.imagen}
+              onUpload={(url) => setNested('invitacion', 'imagen', url)}
+              onRemove={() => setNested('invitacion', 'imagen', '')}
+            />
+            <ImageCard
+              label="Imagen Fallback"
+              url={cfg.invitacion.imagenFallback}
+              onUpload={(url) => setNested('invitacion', 'imagenFallback', url)}
+              onRemove={() => setNested('invitacion', 'imagenFallback', '')}
+            />
             <Field label="Texto Abrir" value={cfg.invitacion.textoAbrir} onChange={(v) => setNested('invitacion', 'textoAbrir', v)} />
           </div>
         </Section>
 
         {/* COUNTDOWN */}
-        <Section
-          title={SECTION_META.countdown.title}
-          icon={SECTION_META.countdown.icon}
-          open={openSections.has('countdown')}
-          onToggle={() => toggle('countdown')}
-        >
+        <Section title={SECTION_META.countdown.title} icon={SECTION_META.countdown.icon} open={openSections.has('countdown')} onToggle={() => toggle('countdown')}>
           <div className="space-y-4">
             <Field label="Título" value={cfg.countdown.titulo} onChange={(v) => setNested('countdown', 'titulo', v)} />
-
             <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-4">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 block">
-                Labels (D / H / M / S)
-              </span>
+              <span className="text-xs font-semibold text-gray-500 uppercase mb-3 block">Labels (D / H / M / S)</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {(['D', 'H', 'M', 'S'] as const).map((key) => (
-                  <Field
-                    key={key}
-                    label={key}
-                    value={cfg.countdown.labels[key]}
-                    onChange={(v) =>
-                      setCfg((prev) => ({
-                        ...prev,
-                        countdown: {
-                          ...prev.countdown,
-                          labels: { ...prev.countdown.labels, [key]: v },
-                        },
-                      }))
-                    }
-                  />
+                  <Field key={key} label={key} value={cfg.countdown.labels[key]} onChange={(v) => setCfg((prev) => ({ ...prev, countdown: { ...prev.countdown, labels: { ...prev.countdown.labels, [key]: v } } }))} />
                 ))}
               </div>
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Botón Calendario" value={cfg.countdown.botonCalendario} onChange={(v) => setNested('countdown', 'botonCalendario', v)} />
               <Field label="Calendario Título" value={cfg.countdown.calendarioTitulo} onChange={(v) => setNested('countdown', 'calendarioTitulo', v)} />
@@ -846,105 +847,148 @@ export default function AdminPage() {
         </Section>
 
         {/* FONDO */}
-        <Section
-          title={SECTION_META.fondo.title}
-          icon={SECTION_META.fondo.icon}
-          open={openSections.has('fondo')}
-          onToggle={() => toggle('fondo')}
-        >
+        <Section title={SECTION_META.fondo.title} icon={SECTION_META.fondo.icon} open={openSections.has('fondo')} onToggle={() => toggle('fondo')}>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
-                Fotos de fondo ({cfg.fondo.fotos.length})
-              </span>
+              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos de fondo ({cfg.fondo.fotos.length})</span>
               <button
                 type="button"
-                onClick={() =>
-                  setCfg((prev) => ({
-                    ...prev,
-                    fondo: { ...prev.fondo, fotos: [...prev.fondo.fotos, ''] },
-                  }))
-                }
-                className="px-3 py-1 rounded-md text-xs font-medium transition-colors"
+                onClick={() => setCfg((prev) => ({ ...prev, fondo: { ...prev.fondo, fotos: [...prev.fondo.fotos, ''] } }))}
+                className="px-3 py-1 rounded-md text-xs font-medium"
                 style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
               >
-                + Agregar foto
+                + Agregar
               </button>
             </div>
-
-            <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
               {cfg.fondo.fotos.map((url, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600 w-6 text-right shrink-0">{i + 1}</span>
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) =>
-                      setCfg((prev) => {
-                        const fotos = [...prev.fondo.fotos]
-                        fotos[i] = e.target.value
-                        return { ...prev, fondo: { ...prev.fondo, fotos } }
-                      })
-                    }
-                    className="flex-1 rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#d4af37]"
-                    placeholder="URL de imagen"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setCfg((prev) => ({
-                        ...prev,
-                        fondo: {
-                          ...prev.fondo,
-                          fotos: prev.fondo.fotos.filter((_, idx) => idx !== i),
-                        },
-                      }))
-                    }
-                    className="text-red-400 hover:text-red-300 text-lg leading-none transition-colors shrink-0 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-950/50"
-                    title="Eliminar"
-                  >
-                    &times;
-                  </button>
-                </div>
+                <ImageCard
+                  key={i}
+                  label={`Fondo ${i + 1}`}
+                  url={url}
+                  onUpload={(newUrl) => {
+                    const fotos = [...cfg.fondo.fotos]
+                    fotos[i] = newUrl
+                    setCfg((p) => ({ ...p, fondo: { ...p.fondo, fotos } }))
+                  }}
+                  onRemove={() => setCfg((p) => ({ ...p, fondo: { ...p.fondo, fotos: p.fondo.fotos.filter((_, idx) => idx !== i) } }))}
+                />
               ))}
             </div>
           </div>
         </Section>
 
         {/* COLORES */}
-        <Section
-          title={SECTION_META.colores.title}
-          icon={SECTION_META.colores.icon}
-          open={openSections.has('colores')}
-          onToggle={() => toggle('colores')}
-        >
+        <Section title={SECTION_META.colores.title} icon={SECTION_META.colores.icon} open={openSections.has('colores')} onToggle={() => toggle('colores')}>
           <div className="space-y-4">
             <ColorField label="Principal" value={cfg.colores.principal} onChange={(v) => setNested('colores', 'principal', v)} />
             <ColorField label="Dorado" value={cfg.colores.dorado} onChange={(v) => setNested('colores', 'dorado', v)} />
             <ColorField label="Dorado Claro" value={cfg.colores.doradoClaro} onChange={(v) => setNested('colores', 'doradoClaro', v)} />
             <ColorField label="Marfil" value={cfg.colores.marfil} onChange={(v) => setNested('colores', 'marfil', v)} />
             <ColorField label="Fondo" value={cfg.colores.fondo} onChange={(v) => setNested('colores', 'fondo', v)} />
-
-            {/* Live preview strip */}
             <div className="pt-2">
-              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">
-                Vista previa
-              </span>
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Vista previa</span>
               <div className="flex gap-1 h-10 rounded-lg overflow-hidden border border-gray-700">
-                {([cfg.colores.principal, cfg.colores.dorado, cfg.colores.doradoClaro, cfg.colores.marfil, cfg.colores.fondo] as string[]).map(
-                  (c, i) => (
-                    <div key={i} className="flex-1 transition-colors duration-200" style={{ backgroundColor: c }} />
-                  ),
-                )}
+                {[cfg.colores.principal, cfg.colores.dorado, cfg.colores.doradoClaro, cfg.colores.marfil, cfg.colores.fondo].map((c, i) => (
+                  <div key={i} className="flex-1 transition-colors duration-200" style={{ backgroundColor: c }} />
+                ))}
               </div>
               <div className="flex gap-1 mt-1">
-                {['Principal', 'Dorado', 'Dorado C.', 'Marfil', 'Fondo'].map((name, i) => (
-                  <span key={name} className="flex-1 text-center text-[10px] text-gray-600 truncate">
-                    {name}
-                  </span>
+                {['Principal', 'Dorado', 'Dorado C.', 'Marfil', 'Fondo'].map((name) => (
+                  <span key={name} className="flex-1 text-center text-[10px] text-gray-600 truncate">{name}</span>
                 ))}
               </div>
             </div>
+          </div>
+        </Section>
+
+        {/* ESTILOS */}
+        <Section title={SECTION_META.estilos.title} icon={SECTION_META.estilos.icon} open={openSections.has('estilos')} onToggle={() => toggle('estilos')}>
+          <div className="space-y-6">
+            {/* Font Pickers */}
+            <OptionPicker
+              label="Fuente Títulos"
+              options={FONT_OPTIONS}
+              value={cfg.estilos.fuenteTitulo}
+              onChange={(v) => setNested('estilos', 'fuenteTitulo', v)}
+              renderOption={(opt, isSelected) => (
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">{opt.category}</span>}
+                    {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
+                  </div>
+                  <p className="text-lg truncate" style={{ fontFamily: opt.style, color: '#e8d48b' }}>{opt.preview}</p>
+                </div>
+              )}
+            />
+
+            <OptionPicker
+              label="Fuente Cuerpo"
+              options={FONT_OPTIONS}
+              value={cfg.estilos.fuenteCuerpo}
+              onChange={(v) => setNested('estilos', 'fuenteCuerpo', v)}
+              renderOption={(opt, isSelected) => (
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">{opt.category}</span>}
+                    {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
+                  </div>
+                  <p className="text-sm truncate" style={{ fontFamily: opt.style, color: '#ccc' }}>Texto de ejemplo para ver la fuente</p>
+                </div>
+              )}
+            />
+
+            <OptionPicker
+              label="Fuente Cursiva"
+              options={FONT_OPTIONS.filter(f => f.category === 'Script')}
+              value={cfg.estilos.fuenteCursiva}
+              onChange={(v) => setNested('estilos', 'fuenteCursiva', v)}
+              renderOption={(opt, isSelected) => (
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                    {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
+                  </div>
+                  <p className="text-xl truncate" style={{ fontFamily: opt.style, color: '#e8d48b' }}>{opt.preview}</p>
+                </div>
+              )}
+            />
+
+            {/* Clock Style */}
+            <OptionPicker
+              label="Modelo de Reloj / Countdown"
+              options={CLOCK_STYLES}
+              value={cfg.estilos.modeloReloj}
+              onChange={(v) => setNested('estilos', 'modeloReloj', v)}
+              renderOption={(opt, isSelected) => (
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                    {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
+                  </div>
+                  <div className="text-2xl font-bold text-center py-1" style={{ color: '#e8d48b' }}>{opt.preview}</div>
+                  <p className="text-[10px] text-gray-500 text-center">{opt.description}</p>
+                </div>
+              )}
+            />
+
+            {/* Card Style */}
+            <OptionPicker
+              label="Estilo de Tarjetas"
+              options={CARD_STYLES}
+              value={cfg.estilos.estiloTarjetas}
+              onChange={(v) => setNested('estilos', 'estiloTarjetas', v)}
+            />
+
+            {/* Button Style */}
+            <OptionPicker
+              label="Estilo de Botones"
+              options={BUTTON_STYLES}
+              value={cfg.estilos.estiloBotones}
+              onChange={(v) => setNested('estilos', 'estiloBotones', v)}
+            />
           </div>
         </Section>
       </main>

@@ -96,6 +96,14 @@ export interface SiteConfig {
     marfil: string
     fondo: string
   }
+  estilos: {
+    fuenteTitulo: string
+    fuenteCuerpo: string
+    fuenteCursiva: string
+    modeloReloj: string
+    estiloTarjetas: string
+    estiloBotones: string
+  }
 }
 
 // ============================================================
@@ -196,6 +204,14 @@ const config: SiteConfig = {
     doradoClaro: '#d4af37',
     marfil: '#fdfcfb',
     fondo: '#050505',
+  },
+  estilos: {
+    fuenteTitulo: 'playfair',
+    fuenteCuerpo: 'montserrat',
+    fuenteCursiva: 'alex-brush',
+    modeloReloj: 'classic',
+    estiloTarjetas: 'glass',
+    estiloBotones: 'gold-gradient',
   },
 }
 
