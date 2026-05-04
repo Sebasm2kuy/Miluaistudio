@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
-const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycby32GDc4BAh5A68l7DPVIsbTu71Ss422MlEYMhovSC7mVQRPvVLeXCi2S1RdWGUxk_SrA/exec'
+const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbxUezuoHmM_xfpTendM2tHePMOkgaJ2VHpNW-733d0izMfOgY9dpkysMmWW9pV7f0jxiw/exec'
 
 const ORIGINAL_PHOTOS = [
   { src: '/Miluaistudio/gallery/gallery1.webp', fallback: '/Miluaistudio/gallery/gallery1.jpg' },
