@@ -18,7 +18,7 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="px-3 py-2.5 sm:px-4 sm:py-3 md:px-8 md:py-5 lg:px-10 lg:py-6 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
+        className="px-2 py-2 sm:px-3 sm:py-2.5 md:px-6 md:py-4 lg:px-8 lg:py-5 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
         style={{
           background: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(245,244,243,0.95) 50.5%, rgba(240,239,238,0.95) 100%)',
           borderColor: 'rgba(184, 134, 11, 0.08)',
@@ -28,7 +28,7 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
         <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
         <span
           ref={ref}
-          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
+          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl"
         >
           {display}
         </span>
@@ -45,10 +45,10 @@ function MinimalUnit({ value, label }: { value: number; label: string }) {
   const display = String(value).padStart(2, '0')
   return (
     <div className="flex flex-col items-center">
-      <span className="font-light text-ivory tracking-tight tabular-nums leading-none select-none text-5xl sm:text-6xl md:text-7xl lg:text-8xl">
+      <span className="font-light text-ivory tracking-tight tabular-nums leading-none select-none text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
         {display}
       </span>
-      <div className="text-xs sm:text-sm uppercase text-goldLight/60 tracking-[0.3em] font-bold mt-2">
+      <div className="text-[9px] sm:text-xs uppercase text-goldLight/60 tracking-[0.2em] sm:tracking-[0.3em] font-bold mt-1 sm:mt-2">
         {label}
       </div>
     </div>
@@ -61,7 +61,7 @@ function GoldGlassUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="px-4 py-3 sm:px-5 sm:py-4 md:px-8 md:py-5 rounded-2xl border relative overflow-hidden"
+        className="px-2 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 rounded-xl sm:rounded-2xl border relative overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, rgba(184,134,11,0.15) 0%, rgba(212,175,55,0.1) 100%)',
           borderColor: 'rgba(212,175,55,0.3)',
@@ -69,11 +69,11 @@ function GoldGlassUnit({ value, label }: { value: number; label: string }) {
           backdropFilter: 'blur(10px)',
         }}
       >
-        <span className="font-light text-goldLight tracking-tight tabular-nums leading-none select-none text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem]">
+        <span className="font-light text-goldLight tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl">
           {display}
         </span>
       </div>
-      <div className="text-xs sm:text-sm md:text-xs uppercase text-goldLight/70 tracking-[0.15em] font-bold mt-2">
+      <div className="text-[9px] sm:text-xs md:text-xs uppercase text-goldLight/70 tracking-[0.1em] sm:tracking-[0.15em] font-bold mt-1 sm:mt-2">
         {label}
       </div>
     </div>
@@ -86,20 +86,20 @@ function DarkLuxuryUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="px-4 py-3 sm:px-5 sm:py-4 md:px-8 md:py-5 rounded-2xl border relative overflow-hidden"
+        className="px-2 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 rounded-xl sm:rounded-2xl border relative overflow-hidden"
         style={{
           background: 'linear-gradient(180deg, rgba(30,30,30,0.95) 0%, rgba(15,15,15,0.98) 100%)',
           borderColor: 'rgba(212,175,55,0.25)',
           boxShadow: '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(212,175,55,0.1)',
         }}
       >
-        <span className="font-light text-gold tracking-tight tabular-nums leading-none select-none text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
+        <span className="font-light text-gold tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl"
           style={{ textShadow: '0 0 20px rgba(212,175,55,0.3)' }}
         >
           {display}
         </span>
       </div>
-      <div className="text-xs sm:text-sm md:text-xs uppercase text-gold/50 tracking-[0.15em] font-bold mt-2">
+      <div className="text-[9px] sm:text-xs md:text-xs uppercase text-gold/50 tracking-[0.1em] sm:tracking-[0.15em] font-bold mt-1 sm:mt-2">
         {label}
       </div>
     </div>
@@ -112,22 +112,22 @@ function NeonUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="px-4 py-3 sm:px-5 sm:py-4 md:px-8 md:py-5 rounded-2xl border relative overflow-hidden"
+        className="px-2 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 rounded-xl sm:rounded-2xl border relative overflow-hidden"
         style={{
           background: 'rgba(0,0,0,0.6)',
           borderColor: 'rgba(212,175,55,0.15)',
-          boxShadow: '0 0 30px rgba(212,175,55,0.1), 0 0 60px rgba(212,175,55,0.05)',
+          boxShadow: '0 0 20px rgba(212,175,55,0.08), 0 0 40px rgba(212,175,55,0.04)',
         }}
       >
         <span
-          className="font-light text-goldLight tracking-tight tabular-nums leading-none select-none text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem]"
-          style={{ textShadow: '0 0 10px rgba(212,175,55,0.8), 0 0 30px rgba(212,175,55,0.4), 0 0 60px rgba(212,175,55,0.2)' }}
+          className="font-light text-goldLight tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl"
+          style={{ textShadow: '0 0 8px rgba(212,175,55,0.8), 0 0 20px rgba(212,175,55,0.4), 0 0 40px rgba(212,175,55,0.2)' }}
         >
           {display}
         </span>
       </div>
-      <div className="text-xs sm:text-sm md:text-xs uppercase text-goldLight/60 tracking-[0.15em] font-bold mt-2"
-        style={{ textShadow: '0 0 8px rgba(212,175,55,0.4)' }}
+      <div className="text-[9px] sm:text-xs md:text-xs uppercase text-goldLight/60 tracking-[0.1em] sm:tracking-[0.15em] font-bold mt-1 sm:mt-2"
+        style={{ textShadow: '0 0 6px rgba(212,175,55,0.3)' }}
       >
         {label}
       </div>
@@ -206,13 +206,13 @@ export default function Countdown() {
   return (
     <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
       <div
-        className={`css-fade-up rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden ${clockStyle === 'classic' || clockStyle === 'gold-glass' ? 'glass-card' : ''}`}
+        className={`css-fade-up rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-4 sm:p-6 md:p-20 text-center relative overflow-hidden ${clockStyle === 'classic' || clockStyle === 'gold-glass' ? 'glass-card' : ''}`}
         style={{ background: cardBg, border: cardBorder }}
       >
         <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16" style={titleStyle}>
           {cfg.countdown.titulo}
         </h2>
-        <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
+        <div className="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4 stagger">
           {Object.entries(timeLeft).map(([label, val]) => (
             <div key={label} className="css-fade-up">
               <ClockUnit value={val} label={labels[label]} />
