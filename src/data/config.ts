@@ -248,8 +248,8 @@ const config: SiteConfig = {
     "fuenteTitulo": "playfair",
     "fuenteCuerpo": "montserrat",
     "fuenteCursiva": "alex-brush",
-    "modeloReloj": "minimal",
-    "estiloTarjetas": "glass",
+    "modeloReloj": "neon",
+    "estiloTarjetas": "gold-border",
     "estiloBotones": "gold-gradient"
   }
 } as SiteConfig
