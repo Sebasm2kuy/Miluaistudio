@@ -1,22 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { CalendarPlus } from 'lucide-react'
-import config from '@/data/config'
-
-// Fecha del evento: configurada desde config (hora de Uruguay, GMT-3)
-const EVENT_MS = new Date(config.evento.fechaEvento + ' GMT-0300').getTime()
-const labels: Record<string, string> = config.countdown.labels
-
-function calcTimeLeft() {
-  const diff = EVENT_MS - Date.now()
-  if (diff <= 0) return { D: 0, H: 0, M: 0, S: 0 }
-  return {
-    D: Math.floor(diff / 86400000),
-    H: Math.floor((diff / 3600000) % 24),
-    M: Math.floor((diff / 60000) % 60),
-    S: Math.floor((diff / 1000) % 60),
-  }
-}
+import { useConfig } from '@/hooks/useConfig'
 
 // Simple digit display — no flip animation, no perspective, no layout recalc
 function FlipUnit({ value, label }: { value: number; label: string }) {
@@ -56,6 +41,21 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
 }
 
 export default function Countdown() {
+  const cfg = useConfig()
+  const eventMs = new Date(cfg.evento.fechaEvento + ' GMT-0300').getTime()
+  const labels: Record<string, string> = cfg.countdown.labels
+
+  function calcTimeLeft() {
+    const diff = eventMs - Date.now()
+    if (diff <= 0) return { D: 0, H: 0, M: 0, S: 0 }
+    return {
+      D: Math.floor(diff / 86400000),
+      H: Math.floor((diff / 3600000) % 24),
+      M: Math.floor((diff / 60000) % 60),
+      S: Math.floor((diff / 1000) % 60),
+    }
+  }
+
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
 
   useEffect(() => {
@@ -67,10 +67,10 @@ export default function Countdown() {
   const addToCalendar = useCallback(() => {
     const url = new URL('https://www.google.com/calendar/render')
     url.searchParams.set('action', 'TEMPLATE')
-    url.searchParams.set('text', config.countdown.calendarioTitulo)
-    url.searchParams.set('dates', `${config.evento.fechaEvento.replace(/-/g, '').replace(' ', 'T')}00/20260823T060000`)
-    url.searchParams.set('location', config.countdown.calendarioLocation)
-    url.searchParams.set('details', config.countdown.calendarioDetalles)
+    url.searchParams.set('text', cfg.countdown.calendarioTitulo)
+    url.searchParams.set('dates', `${cfg.evento.fechaEvento.replace(/-/g, '').replace(' ', 'T')}00/20260823T060000`)
+    url.searchParams.set('location', cfg.countdown.calendarioLocation)
+    url.searchParams.set('details', cfg.countdown.calendarioDetalles)
     window.open(url.toString(), '_blank')
   }, [])
 
@@ -78,7 +78,7 @@ export default function Countdown() {
     <section id="detalles" className="max-w-4xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16">
-          {config.countdown.titulo}
+          {cfg.countdown.titulo}
         </h2>
         <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-6 stagger">
           {Object.entries(timeLeft).map(([label, val]) => (
@@ -94,7 +94,7 @@ export default function Countdown() {
             style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
           >
             <CalendarPlus size={16} strokeWidth={1.5} />
-            {config.countdown.botonCalendario}
+            {cfg.countdown.botonCalendario}
           </button>
         </div>
       </div>

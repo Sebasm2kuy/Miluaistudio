@@ -1,8 +1,9 @@
 'use client'
 import { Calendar, MapPin, Shirt } from 'lucide-react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 export default function EventInfo() {
+  const cfg = useConfig()
   return (
     <section id="ubicacion" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
@@ -16,7 +17,7 @@ export default function EventInfo() {
               <div>
                 <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">La Gran Noche</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-sm sm:text-[11px] md:text-xs mt-2">
-                  {config.evento.fecha} &bull; {config.evento.fechaEvento.split(' ')[1]} hs
+                  {cfg.evento.fecha} &bull; {cfg.evento.fechaEvento.split(' ')[1]} hs
                 </p>
               </div>
             </div>
@@ -27,9 +28,9 @@ export default function EventInfo() {
                 <MapPin size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">{config.evento.lugar}</h3>
+                <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">{cfg.evento.lugar}</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-sm sm:text-[11px] md:text-xs mt-2">
-                  {config.evento.direccion}
+                  {cfg.evento.direccion}
                 </p>
               </div>
             </div>
@@ -50,7 +51,7 @@ export default function EventInfo() {
             {/* CTA Button */}
             <div className={`css-fade-up`}>
               <button
-                onClick={() => window.open(config.evento.mapsUrl, '_blank')}
+                onClick={() => window.open(cfg.evento.mapsUrl, '_blank')}
                 className="gold-button w-full py-3.5 sm:py-4 md:py-5 rounded-xl sm:rounded-xl md:rounded-2xl mt-2 text-white font-semibold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-sm sm:text-sm md:text-sm"
               >
                 Cómo llegar
@@ -59,7 +60,7 @@ export default function EventInfo() {
           </div>
 
           {/* Map — static grayscale, NO transition (animated filter on iframe kills scroll perf) */}
-          <div className={`css-fade-up h-[280px] sm:h-[350px] md:h-[500px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] overflow-hidden border shadow-2xl relative group cursor-pointer grayscale`} style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} onClick={() => window.open(config.evento.mapsUrl, '_blank')}>
+          <div className={`css-fade-up h-[280px] sm:h-[350px] md:h-[500px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] overflow-hidden border shadow-2xl relative group cursor-pointer grayscale`} style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} onClick={() => window.open(cfg.evento.mapsUrl, '_blank')}>
             <iframe
               src="https://maps.google.com/maps?q=Salon+My+Father+Granaderos+3875+Montevideo+Uruguay&t=&z=16&ie=UTF8&iwloc=&output=embed"
               width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"

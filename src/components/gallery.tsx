@@ -1,11 +1,10 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbxUezuoHmM_xfpTendM2tHePMOkgaJ2VHpNW-733d0izMfOgY9dpkysMmWW9pV7f0jxiw/exec'
 
-const ORIGINAL_PHOTOS = config.galeria.fotos.map(p => ({ src: p.webp, fallback: p.fallback }))
 
 interface Photo {
   id: string
@@ -40,8 +39,10 @@ function compressImage(file: File, maxSize = 640, quality = 0.4): Promise<string
 }
 
 export default function Gallery() {
+  const cfg = useConfig()
+  const originalPhotos = cfg.galeria.fotos.map(p => ({ src: p.webp, fallback: p.fallback }))
   const [photos, setPhotos] = useState<Photo[]>(
-    ORIGINAL_PHOTOS.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
+    originalPhotos.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
   )
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -165,9 +166,9 @@ export default function Gallery() {
   return (
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
-        <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{config.galeria.titulo}</h2>
+        <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{cfg.galeria.titulo}</h2>
         <p className="text-gray-400 italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2">
-          {config.galeria.subtitulo}
+          {cfg.galeria.subtitulo}
         </p>
 
         {/* ===== Horizontal Carousel ===== */}
@@ -222,7 +223,7 @@ export default function Gallery() {
                     <picture>
                       <source srcSet={photo.src} type="image/webp" />
                       <img
-                        src={ORIGINAL_PHOTOS[origIdx].fallback}
+                        src={originalPhotos[origIdx].fallback}
                         alt={`Momento especial ${origIdx + 1}`}
                         className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
                         draggable={false}
@@ -263,7 +264,7 @@ export default function Gallery() {
         >
           <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
           <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
-            {config.galeria.botonSubir}
+            {cfg.galeria.botonSubir}
           </span>
         </button>
       </div>

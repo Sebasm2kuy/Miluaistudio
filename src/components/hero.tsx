@@ -1,10 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 interface HeroProps { active: boolean; scrollToTop?: () => void }
 
 export default function Hero({ active, scrollToTop }: HeroProps) {
+  const cfg = useConfig()
   return (
     <header className={`min-h-[100dvh] flex flex-col items-center justify-center text-center px-4 sm:px-6 relative z-10 ${active ? 'hero-active' : ''}`}>
       {/* Dark radial vignette */}
@@ -22,12 +23,12 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
           className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
-          {config.evento.tipo}
+          {cfg.evento.tipo}
         </p>
 
         {/* LINEA 2: Milagros — UN solo text-shadow sutil, sin shimmer */}
         <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
-          <span style={{ color: '#fcf6ba', textShadow: '0 4px 20px rgba(0,0,0,0.7)' }}>{config.evento.nombre}</span>
+          <span style={{ color: '#fcf6ba', textShadow: '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
         </h1>
 
         {/* LINEA 3: Línea decorativa */}
@@ -43,7 +44,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
           className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
-          {config.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'rgba(252,246,186,0.4)' }}>&bull;</span>{config.evento.anio}
+          {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'rgba(252,246,186,0.4)' }}>&bull;</span>{cfg.evento.anio}
         </p>
 
         {/* LINEA 5: Salón My Father */}
@@ -51,7 +52,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
           className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
           style={{ color: '#e8d48b', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
-          {config.evento.lugar} &bull; {config.evento.ubicacion}
+          {cfg.evento.lugar} &bull; {cfg.evento.ubicacion}
         </p>
       </div>
 

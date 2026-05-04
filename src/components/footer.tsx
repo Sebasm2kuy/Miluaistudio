@@ -1,8 +1,9 @@
 'use client'
 import { useState, useCallback, useRef } from 'react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 export default function Footer() {
+  const cfg = useConfig()
   const clickCount = useRef(0)
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -29,7 +30,7 @@ export default function Footer() {
           className="font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 30px rgba(0,0,0,0.95)' }}
         >
-          {config.footer.apodo}
+          {cfg.footer.apodo}
         </p>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
@@ -42,7 +43,7 @@ export default function Footer() {
           className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold text-shimmer text-shimmer-once"
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
         >
-          {config.footer.ubicacion}
+          {cfg.footer.ubicacion}
         </p>
 
         <p
@@ -50,11 +51,11 @@ export default function Footer() {
           style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
           onClick={handleFraseClick}
         >
-          {config.footer.frase}
+          {cfg.footer.frase}
         </p>
 
         <a
-          href={config.evento.hashtagUrl}
+          href={cfg.evento.hashtagUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-8 sm:mt-10 md:mt-14 flex items-center gap-2 sm:gap-3 group"
@@ -74,7 +75,7 @@ export default function Footer() {
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
           </svg>
           <p className="font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
-            {config.evento.hashtag}
+            {cfg.evento.hashtag}
           </p>
         </a>
       </div>

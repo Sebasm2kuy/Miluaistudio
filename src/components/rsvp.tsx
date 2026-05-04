@@ -1,10 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
-const GOOGLE_SHEET_URL = config.rsvp.googleSheetUrl
-const HOST_PHONE = config.rsvp.hostPhone
 
 function generarCodigo() {
   const num = Math.floor(1000 + Math.random() * 9000)
@@ -20,6 +18,9 @@ function limpiarTelefono(tel: string) {
 }
 
 export default function Rsvp() {
+  const cfg = useConfig()
+  const googleSheetUrl = cfg.rsvp.googleSheetUrl
+  const hostPhone = cfg.rsvp.hostPhone
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle')
@@ -36,7 +37,7 @@ export default function Rsvp() {
     setCodigo(nuevoCodigo)
 
     try {
-      const res = await fetch(GOOGLE_SHEET_URL, {
+      const res = await fetch(googleSheetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
@@ -58,34 +59,34 @@ export default function Rsvp() {
   const enviarConfirmacion = () => {
     const msg = encodeURIComponent(
       `✅ Confirmación de asistencia\n\n` +
-      `🎀 ${config.countdown.calendarioTitulo}\n` +
+      `🎀 ${cfg.countdown.calendarioTitulo}\n` +
       `👤 ${nombre.trim()}\n` +
       `📱 ${telefono.trim()}\n` +
       `🎫 ${codigo}`
     )
-    window.open(`https://wa.me/${HOST_PHONE}?text=${msg}`, '_blank')
+    window.open(`https://wa.me/${hostPhone}?text=${msg}`, '_blank')
   }
 
   const guardarComprobante = () => {
     const telefonoLimpio = limpiarTelefono(telefono)
     const msg = encodeURIComponent(
-      `✅ Mi asistencia a los ${config.evento.tipo} de ${config.evento.nombre} quedó registrada.\n\n` +
+      `✅ Mi asistencia a los ${cfg.evento.tipo} de ${cfg.evento.nombre} quedó registrada.\n\n` +
       `🎫 Código: ${codigo}\n` +
-      `📅 ${config.evento.fechaEvento}\n` +
-      `📍 ${config.evento.lugar}, ${config.evento.ubicacion}\n\n` +
+      `📅 ${cfg.evento.fechaEvento}\n` +
+      `📍 ${cfg.evento.lugar}, ${cfg.evento.ubicacion}\n\n` +
       `¡Nos vemos! 💛`
     )
     window.open(`https://wa.me/${telefonoLimpio}?text=${msg}`, '_blank')
   }
 
   const copyNumber = () => {
-    navigator.clipboard.writeText(config.rsvp.regalos.abitab.numero)
+    navigator.clipboard.writeText(cfg.rsvp.regalos.abitab.numero)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   const copyMiDinero = () => {
-    navigator.clipboard.writeText(config.rsvp.regalos.miDinero.numero)
+    navigator.clipboard.writeText(cfg.rsvp.regalos.miDinero.numero)
     setCopiedMiDinero(true)
     setTimeout(() => setCopiedMiDinero(false), 2000)
   }
@@ -174,9 +175,9 @@ export default function Rsvp() {
             </div>
           ) : (
             <>
-              <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">{config.rsvp.titulo}</h2>
+              <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">{cfg.rsvp.titulo}</h2>
               <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base">
-                {config.rsvp.subtitulo}
+                {cfg.rsvp.subtitulo}
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
@@ -231,7 +232,7 @@ export default function Rsvp() {
               </form>
 
               <p className="text-xs sm:text-xs md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
-                {config.rsvp.fechaLimite}
+                {cfg.rsvp.fechaLimite}
               </p>
             </>
           )}
@@ -245,10 +246,10 @@ export default function Rsvp() {
           }}
         >
           <h2 className="font-serif text-3xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
-            {config.rsvp.regalos.titulo}
+            {cfg.rsvp.regalos.titulo}
           </h2>
           <p className="text-gray-400 mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
-            &ldquo;{config.rsvp.regalos.subtitulo}&rdquo;
+            &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
           </p>
 
           {/* Abitab */}
@@ -260,11 +261,11 @@ export default function Rsvp() {
             }}
           >
             <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
-              {config.rsvp.regalos.abitab.titulo}
+              {cfg.rsvp.regalos.abitab.titulo}
             </p>
 
             <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
-              {config.rsvp.regalos.abitab.numero}
+              {cfg.rsvp.regalos.abitab.numero}
             </p>
 
             <button
@@ -289,11 +290,11 @@ export default function Rsvp() {
             }}
           >
             <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
-              {config.rsvp.regalos.miDinero.titulo}
+              {cfg.rsvp.regalos.miDinero.titulo}
             </p>
 
             <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
-              {config.rsvp.regalos.miDinero.numero}
+              {cfg.rsvp.regalos.miDinero.numero}
             </p>
 
             <button

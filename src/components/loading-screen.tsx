@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 interface LoadingScreenProps { onDone: () => void }
 
@@ -36,6 +36,7 @@ function waitForFonts(timeoutMs = 5000): Promise<void> {
 }
 
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
+  const cfg = useConfig()
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
   const doneRef = useRef(false)
@@ -136,7 +137,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
         className="font-cursive text-7xl sm:text-6xl mb-12 sm:mb-12"
         style={{ color: '#d4af37' }}
       >
-        {config.evento.nombre}
+        {cfg.evento.nombre}
       </p>
       <div className="w-48 sm:w-64 md:w-72">
         <div

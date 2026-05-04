@@ -1,10 +1,11 @@
 'use client'
 import { useState, useCallback } from 'react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
 interface EnvelopeProps { onOpen: () => void }
 
 export default function Envelope({ onOpen }: EnvelopeProps) {
+  const cfg = useConfig()
   const [exiting, setExiting] = useState(false)
 
   const handleOpen = useCallback(() => {
@@ -38,9 +39,9 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
         />
 
         <picture>
-          <source srcSet={config.invitacion.imagen} type="image/webp" />
+          <source srcSet={cfg.invitacion.imagen} type="image/webp" />
           <img
-            src={config.invitacion.imagenFallback}
+            src={cfg.invitacion.imagenFallback}
             alt="Invitación XV Años - Milagros"
             draggable={false}
             className="object-contain rounded-lg relative z-10"
@@ -59,7 +60,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
         className="fixed bottom-6 sm:bottom-12 left-0 right-0 text-center text-goldLight/60 text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-light"
         style={{ opacity: 0, animation: 'fadeIn 1s ease 2s both, slideHint 2.5s ease-in-out 3s infinite' }}
       >
-        {config.invitacion.textoAbrir}
+        {cfg.invitacion.textoAbrir}
       </p>
     </div>
   )

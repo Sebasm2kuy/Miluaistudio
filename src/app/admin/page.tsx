@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
+import { saveConfig, clearConfig } from '@/hooks/useConfig'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -202,7 +203,19 @@ const SECTION_META: Record<SectionKey, { title: string; icon: string }> = {
 export default function AdminPage() {
   const [cfg, setCfg] = useState<SiteConfig>(deepClone(config))
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set(['evento']))
+  const [saved, setSaved] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('milu_config')
+      if (saved) {
+        const parsed = JSON.parse(saved) as SiteConfig
+        if (parsed?.evento?.nombre) setCfg(parsed)
+      }
+    } catch { /* ignore */ }
+  }, [])
 
   // --- Mutators ---
   const setNested = useCallback(
@@ -268,10 +281,18 @@ export default function AdminPage() {
   )
 
   const handleReset = useCallback(() => {
-    if (confirm('¿Restaurar todos los valores por defecto? Los cambios no guardados se perderán.')) {
+    if (confirm('¿Restaurar todos los valores por defecto? Se eliminarán los cambios guardados.')) {
       setCfg(deepClone(config))
+      clearConfig()
+      setSaved(false)
     }
   }, [])
+
+  const handleSave = useCallback(() => {
+    saveConfig(cfg)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }, [cfg])
 
   // --- Expand / Collapse all ---
   const expandAll = useCallback(() => {
@@ -301,6 +322,18 @@ export default function AdminPage() {
             Panel de Configuración
           </h1>
           <div className="flex items-center gap-2 flex-wrap justify-center">
+            <button
+              type="button"
+              onClick={handleSave}
+              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-colors"
+              style={{
+                background: saved ? '#16a34a' : '#d4af37',
+                color: '#fff',
+                border: 'none',
+              }}
+            >
+              {saved ? 'Guardado ✓' : 'Guardar Cambios'}
+            </button>
             <button
               type="button"
               onClick={handleExport}

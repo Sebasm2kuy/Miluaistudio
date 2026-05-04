@@ -1,17 +1,18 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
-const PHOTOS = config.fondo.fotos
 
 export default function BackgroundSlideshow({ visible = true }: { visible?: boolean }) {
+  const cfg = useConfig()
+  const photos = cfg.fondo.fotos
   const [idx, setIdx] = useState(0)
   const [fading, setFading] = useState(false)
   const nextRef = useRef(0)
 
   // Preload all images on mount
   useEffect(() => {
-    PHOTOS.forEach(url => {
+    photos.forEach(url => {
       const img = new Image()
       img.src = url
     })
@@ -33,7 +34,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
       // Fade out
       setFading(false)
       setTimeout(() => {
-        nextRef.current = (nextRef.current + 1) % PHOTOS.length
+        nextRef.current = (nextRef.current + 1) % photos.length
         setIdx(nextRef.current)
         // Fade in
         setTimeout(() => setFading(true), 50)
@@ -50,7 +51,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
         backgroundColor: '#000',
         // NO background-attachment: fixed — element is already position:fixed
         // NO filter — replaced with dark overlay div (much cheaper)
-        backgroundImage: `url(${PHOTOS[idx]})`,
+        backgroundImage: `url(${photos[idx]})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center 25%',
         backgroundRepeat: 'no-repeat',

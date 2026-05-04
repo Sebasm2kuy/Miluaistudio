@@ -1,17 +1,18 @@
 'use client'
-import config from '@/data/config'
+import { useConfig } from '@/hooks/useConfig'
 
-const TIMELINE = config.timeline.eventos
 
 export default function Timeline() {
+  const cfg = useConfig()
+  const timeline = cfg.timeline.eventos
   return (
     <section id="horarios" className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-20 text-center relative overflow-hidden`}>
         <p className={`css-fade-up font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3`}>
-          {config.timeline.titulo}
+          {cfg.timeline.titulo}
         </p>
         <p className={`css-fade text-gray-400 italic mb-8 sm:mb-12 md:mb-16 text-sm sm:text-sm md:text-base`}>
-          {config.timeline.subtitulo}
+          {cfg.timeline.subtitulo}
         </p>
 
         <div className="relative">
@@ -20,7 +21,7 @@ export default function Timeline() {
             style={{ background: 'linear-gradient(to bottom, transparent, #d4af37 15%, #d4af37 85%, transparent)' }}
           />
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
-            {TIMELINE.map((item, idx) => (
+            {timeline.map((item, idx) => (
               <div
                 key={item.hora}
                 className={`${idx % 2 === 0 ? 'css-fade-left' : 'css-fade-right'} relative flex items-start gap-4 sm:gap-5`}
