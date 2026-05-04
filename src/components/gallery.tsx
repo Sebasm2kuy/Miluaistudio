@@ -148,12 +148,6 @@ export default function Gallery() {
           setSelectedFile(null)
           setPreview(null)
           setUploadState('idle')
-          // Scroll al final del carousel para ver la foto nueva
-          if (scrollRef.current) {
-            setTimeout(() => {
-              scrollRef.current?.scrollTo({ left: scrollRef.current.scrollWidth, behavior: 'smooth' })
-            }, 100)
-          }
         }, 1500)
       } else {
         setUploadState('error')
@@ -256,25 +250,26 @@ export default function Gallery() {
               )
             })}
 
-            {/* Upload card */}
-            <div
-              data-carousel-card
-              className="flex-shrink-0 w-[42vw] sm:w-[36vw] md:w-[30%] aspect-[3/4] snap-center rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 sm:gap-3 cursor-pointer"
-              style={{ borderColor: 'rgba(184, 134, 11, 0.3)', background: 'rgba(184, 134, 11, 0.04)' }}
-              onClick={() => setUploadModal(true)}
-            >
-              <div
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors duration-300"
-                style={{ background: 'rgba(184, 134, 11, 0.1)', color: 'rgba(184, 134, 11, 0.7)' }}
-              >
-                <Camera size={22} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
-              </div>
-              <p className="font-bold text-[11px] sm:text-xs md:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em]" style={{ color: 'rgba(184, 134, 11, 0.6)' }}>
-                Subir tu foto
-              </p>
-            </div>
           </div>
         </div>
+
+        {/* Upload button — outside the carousel */}
+        <button
+          onClick={() => setUploadModal(true)}
+          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-2.5 sm:gap-3 py-3 sm:py-3.5 px-8 sm:px-12 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          style={{
+            borderColor: 'rgba(184, 134, 11, 0.3)',
+            color: 'rgba(184, 134, 11, 0.7)',
+            background: 'rgba(184, 134, 11, 0.04)',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.08)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.3)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.04)' }}
+        >
+          <Camera size={16} strokeWidth={1.5} />
+          <span className="font-cursive text-base sm:text-lg italic" style={{ color: 'inherit' }}>
+            Dejale un recuerdo
+          </span>
+        </button>
       </div>
 
       {/* ===== Upload Modal ===== */}
