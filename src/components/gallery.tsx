@@ -2,8 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
-// ⚠️ REEMPLAZAR con la URL de tu NUEVO deployment del GAS (ver google-apps-script/gallery-server.gs)
-const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbx6fEZPcwLsAVF8Dj2FkFYdrcnhBz0Y9e_I4qJLf5UOZY6PvWTHo7RTvelBIdqtYIkK/exec'
+const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycby32GDc4BAh5A68l7DPVIsbTu71Ss422MlEYMhovSC7mVQRPvVLeXCi2S1RdWGUxk_SrA/exec'
 
 const ORIGINAL_PHOTOS = [
   { src: '/Miluaistudio/gallery/gallery1.webp', fallback: '/Miluaistudio/gallery/gallery1.jpg' },
