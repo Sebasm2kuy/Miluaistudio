@@ -39,9 +39,24 @@ export default function SpotifyPlayer() {
           />
         </div>
 
-        <p className={`css-fade mt-5 sm:mt-6 text-xs sm:text-sm md:text-base uppercase tracking-[0.15em] sm:tracking-[0.2em] text-goldLight/70 font-light`}>
-          Abre en Spotify y suma tus temas favoritos
-        </p>
+        <a
+          href="https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 sm:mt-6 md:mt-8 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] no-underline"
+          style={{
+            borderColor: 'rgba(184, 134, 11, 0.35)',
+            color: '#b8860b',
+            background: 'rgba(184, 134, 11, 0.06)',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.35)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.06)' }}
+        >
+          <Music size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
+          <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
+            Abre en Spotify y suma tus temas favoritos
+          </span>
+        </a>
       </div>
     </section>
   )
