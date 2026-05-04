@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
+// ⚠️ REEMPLAZAR con la URL de tu NUEVO deployment del GAS (ver google-apps-script/gallery-server.gs)
 const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbx6fEZPcwLsAVF8Dj2FkFYdrcnhBz0Y9e_I4qJLf5UOZY6PvWTHo7RTvelBIdqtYIkK/exec'
 
 const ORIGINAL_PHOTOS = [
@@ -19,7 +20,8 @@ interface Photo {
 
 type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
 
-function compressImage(file: File, maxSize = 800, quality = 0.5): Promise<string> {
+// Tamaño reducido para caber en URL como GET param (max ~200KB base64)
+function compressImage(file: File, maxSize = 640, quality = 0.4): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
@@ -104,16 +106,20 @@ export default function Gallery() {
       setUploadState('compressing')
       const compressed = await compressImage(selectedFile)
       setUploadState('uploading')
-      const blob = await (await fetch(compressed)).blob()
-      const form = new FormData()
-      form.append('file', blob, 'photo.jpg')
-      form.append('action', 'upload')
-      const res = await fetch(PHOTO_UPLOAD_URL, { method: 'POST', body: form })
-      if (res.ok) {
-        setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: compressed, type: 'uploaded' }])
+
+      // Enviar como GET con base64 en URL (el POST a GAS pierde el body por redirect 302)
+      const url = `${PHOTO_UPLOAD_URL}?action=upload&imageData=${encodeURIComponent(compressed)}&mimeType=image/jpeg`
+      const res = await fetch(url, { redirect: 'follow' })
+      const data = await parseGasResponse(res)
+
+      if (data && data.success && data.url) {
+        // Usar la URL del servidor (persistente en Google Drive), no el base64 local
+        setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' }])
         setUploadState('ok')
         setTimeout(() => { setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle') }, 1500)
-      } else { setUploadState('error') }
+      } else {
+        setUploadState('error')
+      }
     } catch { setUploadState('error') }
   }, [selectedFile])
 
