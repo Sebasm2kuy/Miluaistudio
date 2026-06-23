@@ -540,14 +540,32 @@ export default function AdminPage() {
       setShowToken(true)
       return
     }
+
+    // ------------------------------------------------------------------
+    // Auto-sync fondo.fotos with galeria.fotos when fondo is in photo mode.
+    // This prevents the background from showing stale/removed gallery photos.
+    // Mode is "photos" when fondo.fotos is non-empty AND first entry is not a gradient.
+    // ------------------------------------------------------------------
+    const isGradientMode = cfg.fondo.fotos[0]?.startsWith('gradient:') === true
+    const cfgToDeploy: SiteConfig = isGradientMode
+      ? cfg
+      : {
+          ...cfg,
+          fondo: {
+            fotos: cfg.galeria.fotos.map(f => f.webp).filter(Boolean),
+          },
+        }
+
     localStorage.setItem('milu_github_token', token)
-    saveConfig(cfg)
+    saveConfig(cfgToDeploy)
+    // Also reflect the sync in the local editor state so the user sees it
+    setCfg(cfgToDeploy)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
     setDeploying(true)
     setDeployResult(null)
     try {
-      const result = await deployToGitHub(cfg as unknown as Record<string, unknown>, token)
+      const result = await deployToGitHub(cfgToDeploy as unknown as Record<string, unknown>, token)
       setDeployResult(result.message)
     } catch (err) {
       setDeployResult(`Error: ${err instanceof Error ? err.message : 'unknown'}`)

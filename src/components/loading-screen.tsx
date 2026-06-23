@@ -4,11 +4,10 @@ import { useConfig } from '@/hooks/useConfig'
 
 interface LoadingScreenProps { onDone: () => void }
 
-const ASSETS = [
-  '/Miluaistudio/gallery/gallery1.webp',
-  '/Miluaistudio/gallery/gallery2.webp',
-  '/Miluaistudio/gallery/gallery3.webp',
-  '/Miluaistudio/gallery/gallery4.webp',
+// Static must-have asset (the invitation cover).
+// Background photos are pulled dynamically from cfg.fondo.fotos below,
+// so the loader only waits for assets that will actually be displayed.
+const STATIC_ASSETS = [
   '/Miluaistudio/invitacion-vertical.webp',
 ]
 
@@ -40,6 +39,14 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
   const doneRef = useRef(false)
+
+  // Build the asset list from the live config so we only preload
+  // photos that will actually be displayed (no removed gallery photos).
+  // Skip gradient presets — they're CSS, not images.
+  const dynamicAssets = (cfg.fondo.fotos || []).filter(
+    (url) => url && !url.startsWith('gradient:')
+  )
+  const ASSETS = [...STATIC_ASSETS, ...dynamicAssets]
 
   useEffect(() => {
     let cancelled = false
@@ -105,7 +112,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
       cancelled = true
       clearInterval(interval)
     }
-  }, [])
+  }, [ASSETS.join(',')])
 
   useEffect(() => {
     if (progress >= 100 && !doneRef.current) {

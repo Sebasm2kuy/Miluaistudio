@@ -232,9 +232,9 @@ const config: SiteConfig = {
   "fondo": {
     "fotos": [
       "/Miluaistudio/gallery/gallery1.webp",
-      "/Miluaistudio/gallery/gallery2.webp",
-      "/Miluaistudio/gallery/gallery3.webp",
-      "/Miluaistudio/gallery/gallery4.webp"
+      "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
+      "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
+      "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg"
     ]
   },
   "colores": {
