@@ -165,16 +165,16 @@ const config: SiteConfig = {
         "fallback": "/Miluaistudio/gallery/gallery1.jpg"
       },
       {
-        "webp": "/Miluaistudio/gallery/gallery2.webp",
-        "fallback": "/Miluaistudio/gallery/gallery2.jpg"
+        "webp": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
+        "fallback": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg"
       },
       {
-        "webp": "/Miluaistudio/gallery/gallery3.webp",
-        "fallback": "/Miluaistudio/gallery/gallery3.jpg"
+        "webp": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
+        "fallback": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg"
       },
       {
-        "webp": "/Miluaistudio/gallery/gallery4.webp",
-        "fallback": "/Miluaistudio/gallery/gallery4.jpg"
+        "webp": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg",
+        "fallback": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg"
       }
     ]
   },
