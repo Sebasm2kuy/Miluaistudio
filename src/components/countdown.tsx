@@ -161,13 +161,16 @@ export default function Countdown() {
     }
   }
 
-  const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
+  const [timeLeft, setTimeLeft] = useState<{ D: number; H: number; M: number; S: number }>({ D: 0, H: 0, M: 0, S: 0 })
 
+  // Update after mount to avoid SSR/hydration mismatch (React error #418).
+  // Server and client must render the same initial text; Date.now() differs.
   useEffect(() => {
     setTimeLeft(calcTimeLeft())
     const timer = setInterval(() => setTimeLeft(calcTimeLeft()), 1000)
     return () => clearInterval(timer)
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventMs])
 
   const addToCalendar = useCallback(() => {
     const url = new URL('https://www.google.com/calendar/render')
