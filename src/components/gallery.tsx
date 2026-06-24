@@ -225,7 +225,8 @@ export default function Gallery() {
                       <img
                         src={originalPhotos[origIdx].fallback}
                         alt={`Momento especial ${origIdx + 1}`}
-                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        style={{ objectPosition: 'center 30%' }}
                         draggable={false}
                       />
                     </picture>
@@ -234,6 +235,7 @@ export default function Gallery() {
                       src={photo.src}
                       alt="Foto compartida"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      style={{ objectPosition: 'center 30%' }}
                       draggable={false}
                     />
                   )}

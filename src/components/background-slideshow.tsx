@@ -86,7 +86,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
         backgroundColor: '#000',
         backgroundImage: `url(${photos[idx]})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center 25%',
+        backgroundPosition: 'center 20%',
         backgroundRepeat: 'no-repeat',
         opacity: fading && visible ? 1 : 0,
         transition: 'opacity 800ms ease',
