@@ -81,12 +81,11 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   // Photo slideshow mode
   return (
     <div
-      className="fixed inset-0 z-[-10]"
+      className="fixed inset-0 z-[-10] bg-slideshow-photo"
       style={{
         backgroundColor: '#000',
         backgroundImage: `url(${photos[idx]})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center 20%',
         backgroundRepeat: 'no-repeat',
         opacity: fading && visible ? 1 : 0,
         transition: 'opacity 800ms ease',

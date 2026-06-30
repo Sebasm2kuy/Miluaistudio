@@ -233,3 +233,41 @@
 .text-shimmer-infinite {
   animation: shimmer 5s ease-in-out infinite;
 }
+
+/* ===== Responsive photo cropping (fix: rostro cortado en mobile) =====
+ * En móviles las tarjetas/pantalla son verticales y estrechas, y un
+ * object-position fijo (center 30% / center 20%) corta la cabeza en
+ * muchas fotos. En mobile priorizamos la parte superior (donde suele
+ * estar el rostro) y en desktop mantenemos un centrado más natural.
+ */
+
+/* Fondo del slideshow (background-slideshow.tsx) */
+.bg-slideshow-photo {
+  background-position: center 15%;
+}
+@media (max-width: 768px) {
+  .bg-slideshow-photo {
+    /* En portrait phone, cover recorta los laterales. Subimos el foco
+       para que la cabeza no quede fuera del viewport. */
+    background-position: center top;
+  }
+}
+
+/* Fotos de la galería (gallery.tsx) */
+.gallery-photo {
+  object-position: center 30%;
+}
+@media (max-width: 768px) {
+  .gallery-photo {
+    /* Tarjetas verticales estrechas en mobile: enfocamos arriba para
+       mostrar el rostro completo. */
+    object-position: center 20%;
+  }
+}
+@media (max-width: 480px) {
+  .gallery-photo {
+    /* En pantallas muy angostas forzamos top aún más para garantizar
+       que la cara se vea siempre. */
+    object-position: center top;
+  }
+}

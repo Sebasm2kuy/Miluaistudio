@@ -129,8 +129,7 @@ export default function Gallery() {
                       <img
                         src={originalPhotos[origIdx].fallback}
                         alt={`Momento especial ${origIdx + 1}`}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        style={{ objectPosition: 'center 30%' }}
+                        className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         draggable={false}
                       />
                     </picture>
@@ -138,8 +137,7 @@ export default function Gallery() {
                     <img
                       src={photo.src}
                       alt="Foto compartida"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      style={{ objectPosition: 'center 30%' }}
+                      className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                       draggable={false}
                     />
                   )}
