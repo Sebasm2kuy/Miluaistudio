@@ -79,6 +79,12 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   }
 
   // Photo slideshow mode
+  // Elegir la posición por foto desde config (fondo.posiciones[idx]).
+  // En mobile usamos el valor mobile, en desktop el desktop.
+  const posicion = cfg.fondo.posiciones?.[idx] || {}
+  const posicionDesktop = posicion.desktop || 'center 15%'
+  const posicionMobile = posicion.mobile || 'center top'
+
   return (
     <div
       className="fixed inset-0 z-[-10] bg-slideshow-photo"
@@ -86,6 +92,9 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
         backgroundColor: '#000',
         backgroundImage: `url(${photos[idx]})`,
         backgroundSize: 'cover',
+        // CSS variables que consume la clase .bg-slideshow-photo en globals.css
+        ['--bg-pos-desktop' as string]: posicionDesktop,
+        ['--bg-pos-mobile' as string]: posicionMobile,
         backgroundRepeat: 'no-repeat',
         opacity: fading && visible ? 1 : 0,
         transition: 'opacity 800ms ease',

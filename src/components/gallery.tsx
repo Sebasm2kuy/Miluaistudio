@@ -18,7 +18,13 @@ interface Photo {
 
 export default function Gallery() {
   const cfg = useConfig()
-  const originalPhotos = cfg.galeria.fotos.map(p => ({ src: p.webp, fallback: p.fallback }))
+  // Cada foto puede traer su objectPosition calculada desde la detección
+  // de rostro; si no, se usa un fallback razonable.
+  const originalPhotos = cfg.galeria.fotos.map(p => ({
+    src: p.webp,
+    fallback: p.fallback,
+    objectPosition: p.objectPosition || { desktop: 'center 30%', mobile: 'center top' },
+  }))
   const [photos] = useState<Photo[]>(
     originalPhotos.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
   )
@@ -130,6 +136,10 @@ export default function Gallery() {
                         src={originalPhotos[origIdx].fallback}
                         alt={`Momento especial ${origIdx + 1}`}
                         className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                        style={{
+                          ['--pos-desktop' as string]: originalPhotos[origIdx].objectPosition.desktop,
+                          ['--pos-mobile' as string]: originalPhotos[origIdx].objectPosition.mobile,
+                        }}
                         draggable={false}
                       />
                     </picture>
@@ -138,6 +148,10 @@ export default function Gallery() {
                       src={photo.src}
                       alt="Foto compartida"
                       className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      style={{
+                        ['--pos-desktop' as string]: 'center 30%',
+                        ['--pos-mobile' as string]: 'center top',
+                      }}
                       draggable={false}
                     />
                   )}
