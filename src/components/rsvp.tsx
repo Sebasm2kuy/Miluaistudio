@@ -19,7 +19,6 @@ function limpiarTelefono(tel: string) {
 
 export default function Rsvp() {
   const cfg = useConfig()
-  const googleSheetUrl = cfg.rsvp.googleSheetUrl
   const hostPhone = cfg.rsvp.hostPhone
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
@@ -28,6 +27,12 @@ export default function Rsvp() {
   const [copied, setCopied] = useState(false)
   const [copiedMiDinero, setCopiedMiDinero] = useState(false)
 
+  // Nota (2026-06-30):
+  // El backend original (Google Apps Script → Google Sheet) dejó de responder
+  // (404). En lugar de mostrar error al usuario, generamos el código localmente
+  // y pasamos directo a la pantalla de confirmación, donde el invitado puede
+  // enviar su confirmación por WhatsApp a la organizadora. Es el mismo flujo
+  // que ya existía como paso final, pero sin depender del backend caído.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim() || !telefono.trim()) return
@@ -36,24 +41,9 @@ export default function Rsvp() {
     const nuevoCodigo = generarCodigo()
     setCodigo(nuevoCodigo)
 
-    try {
-      const res = await fetch(googleSheetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          nombre: nombre.trim(),
-          telefono: telefono.trim(),
-          codigo: nuevoCodigo,
-        }),
-      })
-      if (res.ok) {
-        setStatus('ok')
-      } else {
-        setStatus('error')
-      }
-    } catch {
-      setStatus('error')
-    }
+    // Pequeña demora para que el spinner sea visible y se sienta natural.
+    await new Promise((r) => setTimeout(r, 400))
+    setStatus('ok')
   }
 
   const enviarConfirmacion = () => {

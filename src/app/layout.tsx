@@ -26,6 +26,14 @@ export const metadata: Metadata = {
   title: "Mis XV - Milagros Cabrera",
   description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",
   keywords: ["XV años", "Milagros", "quinceañera", "Milu", "invitación", "Montevideo", "Uruguay"],
+  icons: {
+    icon: [
+      { url: "/Miluaistudio/logo.svg", type: "image/svg+xml" },
+      { url: "/Miluaistudio/sello-sm.png", type: "image/png", sizes: "256x256" },
+    ],
+    shortcut: ["/Miluaistudio/sello-sm.png"],
+    apple: [{ url: "/Miluaistudio/sello-sm.png", sizes: "256x256" }],
+  },
   openGraph: {
     title: "Mis XV - Milagros Cabrera",
     description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",

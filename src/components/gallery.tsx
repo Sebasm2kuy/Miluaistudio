@@ -1,10 +1,14 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { useState, useRef, useCallback } from 'react'
+import { X, ChevronLeft, ChevronRight, Maximize2, Camera, MessageCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 
-const PHOTO_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbxUezuoHmM_xfpTendM2tHePMOkgaJ2VHpNW-733d0izMfOgY9dpkysMmWW9pV7f0jxiw/exec'
-
+// Nota (2026-06-30):
+// El backend original basado en Google Apps Script dejó de responder (404 en
+// script.googleusercontent.com/macros/echo), por lo que la subida de fotos y
+// la carga de fotos subidas por otros invitados se reemplazaron por un flujo
+// basado en WhatsApp. Las fotos originales de la galería siguen viniendo
+// desde config.ts (estáticas) y se muestran igual que antes.
 
 interface Photo {
   id: string
@@ -12,73 +16,16 @@ interface Photo {
   type: 'original' | 'uploaded'
 }
 
-type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
-
-const CHUNK_SIZE = 4000
-
-function compressImage(file: File, maxSize = 640, quality = 0.4): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      let { width, height } = img
-      if (width > maxSize || height > maxSize) {
-        if (width > height) { height = Math.round((height * maxSize) / width); width = maxSize }
-        else { width = Math.round((width * maxSize) / height); height = maxSize }
-      }
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return reject(new Error('No canvas context'))
-      ctx.drawImage(img, 0, 0, width, height)
-      resolve(canvas.toDataURL('image/jpeg', quality))
-    }
-    img.onerror = reject
-    img.src = URL.createObjectURL(file)
-  })
-}
-
 export default function Gallery() {
   const cfg = useConfig()
   const originalPhotos = cfg.galeria.fotos.map(p => ({ src: p.webp, fallback: p.fallback }))
-  const [photos, setPhotos] = useState<Photo[]>(
+  const [photos] = useState<Photo[]>(
     originalPhotos.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
   )
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
   const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [uploadModal, setUploadModal] = useState(false)
-  const [uploadState, setUploadState] = useState<UploadState>('idle')
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
-
-  const parseGasResponse = async (res: Response): Promise<any> => {
-    const text = await res.text()
-    try { return JSON.parse(text) } catch {
-      const match = text.match(/\{[\s\S]*\}/)
-      if (match) { try { return JSON.parse(match[0]) } catch { /* ignore */ } }
-      return null
-    }
-  }
-
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const res = await fetch(`${PHOTO_UPLOAD_URL}?action=getPhotos`)
-        if (res.ok) {
-          const data = await parseGasResponse(res)
-          if (data && Array.isArray(data.photos)) {
-            const uploaded: Photo[] = data.photos.map((url: string, i: number) => ({
-              id: `srv-${i}`, src: url, type: 'uploaded' as const,
-            }))
-            setPhotos(prev => [...prev, ...uploaded])
-          }
-        }
-      } catch { /* silently ignore */ }
-    }
-    fetchPhotos()
-  }, [])
 
   const openLightbox = (idx: number) => setLightboxIdx(idx)
   const closeLightbox = () => setLightboxIdx(null)
@@ -93,11 +40,6 @@ export default function Gallery() {
     setTouchStart(null)
   }
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) { setSelectedFile(file); setPreview(URL.createObjectURL(file)); setUploadState('idle') }
-  }
-
   const scrollCarousel = useCallback((direction: 'left' | 'right') => {
     if (!scrollRef.current) return
     const card = scrollRef.current.querySelector('[data-carousel-card]') as HTMLElement
@@ -109,59 +51,21 @@ export default function Gallery() {
     })
   }, [])
 
-  const handleUpload = useCallback(async () => {
-    if (!selectedFile) return
-    try {
-      setUploadState('compressing')
-      const compressed = await compressImage(selectedFile)
-      setUploadState('uploading')
-
-      // 1. Convertir a base64url (URL-safe)
-      const rawBase64 = compressed.replace(/^data:image\/[a-zA-Z]+;base64,/, '')
-      const base64url = rawBase64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-
-      // 2. Generar ID unico y dividir en chunks
-      const uploadId = Date.now().toString(36) + Math.random().toString(36).substr(2)
-      const totalChunks = Math.ceil(base64url.length / CHUNK_SIZE)
-
-      // 3. Enviar cada chunk como GET
-      for (let i = 0; i < totalChunks; i++) {
-        const chunk = base64url.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
-        await fetch(
-          `${PHOTO_UPLOAD_URL}?action=chunk&uid=${uploadId}&i=${i}&t=${totalChunks}&d=${chunk}`,
-          { redirect: 'follow' }
-        )
-      }
-
-      // 4. Ensamblar en el servidor
-      const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
-      const data = await parseGasResponse(res)
-
-      if (data && data.success && data.url) {
-        setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' }])
-        setUploadState('ok')
-        setTimeout(() => {
-          setUploadModal(false)
-          setSelectedFile(null)
-          setPreview(null)
-          setUploadState('idle')
-        }, 1500)
-      } else {
-        setUploadState('error')
-      }
-    } catch { setUploadState('error') }
-  }, [selectedFile])
-
-  const closeUpload = () => {
-    if (uploadState === 'compressing' || uploadState === 'uploading') return
-    setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle')
-  }
-
-  // Status config con componente de icono extraído (evita React error #418)
-  const statusText = uploadState === 'compressing' ? 'Comprimiendo...' : uploadState === 'uploading' ? 'Subiendo...' : uploadState === 'ok' ? '¡Foto subida!' : uploadState === 'error' ? 'Error, intentá de nuevo' : ''
-  const statusColor = uploadState === 'error' ? 'text-red-500' : uploadState === 'ok' ? 'text-green-600' : 'text-gold'
-  const statusSpinning = uploadState === 'compressing' || uploadState === 'uploading'
-  const showStatus = uploadState !== 'idle'
+  // Reemplazo del upload por WhatsApp: abre WhatsApp con un mensaje
+  // pidiendo al invitado que envíe su foto a la quinceañera / organizador.
+  const shareViaWhatsApp = useCallback(() => {
+    const hostPhone = cfg.rsvp.hostPhone
+    const msg = encodeURIComponent(
+      `¡Hola Milu! 🎀\n` +
+      `Quiero compartir una foto para la galería de tus XV.\n` +
+      `Te la envío por aquí. ¡Gracias!`
+    )
+    if (hostPhone) {
+      window.open(`https://wa.me/${hostPhone}?text=${msg}`, '_blank')
+    } else {
+      window.open(`https://wa.me/?text=${msg}`, '_blank')
+    }
+  }, [cfg.rsvp.hostPhone])
 
   return (
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
@@ -252,97 +156,26 @@ export default function Gallery() {
           </div>
         </div>
 
-        {/* Upload button — outside the carousel */}
+        {/* Upload button — ahora abre WhatsApp en lugar del Apps Script roto */}
         <button
-          onClick={() => setUploadModal(true)}
+          onClick={shareViaWhatsApp}
           className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98]"
           style={{
-            borderColor: 'rgba(184, 134, 11, 0.35)',
-            color: '#b8860b',
-            background: 'rgba(184, 134, 11, 0.06)',
+            borderColor: 'rgba(37, 211, 102, 0.45)',
+            color: '#128C7E',
+            background: 'rgba(37, 211, 102, 0.08)',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.35)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.06)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(37, 211, 102, 0.7)'; e.currentTarget.style.color = '#0f6b5e'; e.currentTarget.style.background = 'rgba(37, 211, 102, 0.14)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(37, 211, 102, 0.45)'; e.currentTarget.style.color = '#128C7E'; e.currentTarget.style.background = 'rgba(37, 211, 102, 0.08)' }}
         >
-          <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
+          <MessageCircle size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
           <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
             {cfg.galeria.botonSubir}
           </span>
         </button>
-      </div>
-
-      {/* ===== Upload Modal ===== */}
-      <div
-        className={`fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 modal-overlay ${uploadModal ? 'open' : ''}`}
-        style={{ background: 'rgba(0, 0, 0, 0.9)' }}
-        onClick={closeUpload}
-      >
-        <div
-          className="modal-content w-full max-w-md rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
-          style={{
-            background: 'rgba(255, 255, 255, 0.98)',
-            border: '1px solid rgba(184, 134, 11, 0.15)',
-            boxShadow: '0 24px 80px rgba(0,0,0,0.3)',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            onClick={closeUpload}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-[color,background-color]"
-            disabled={uploadState === 'compressing' || uploadState === 'uploading'}
-          >
-            <X size={16} />
-          </button>
-
-          <h3 className="font-serif italic text-xl sm:text-2xl text-bordeaux mb-1">Compartí tu foto</h3>
-          <p className="text-gray-400 text-xs sm:text-sm mb-6">Las mejores fotos de la noche</p>
-
-          {!preview ? (
-            <div
-              className="border-2 border-dashed rounded-2xl p-8 sm:p-12 flex flex-col items-center gap-3 cursor-pointer transition-[border-color,background-color] duration-300 hover:border-gold/40 hover:bg-gold/[0.02]"
-              style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
-              onClick={() => fileRef.current?.click()}
-            >
-              <div className="w-14 h-14 rounded-full flex items-center justify-center text-gold" style={{ background: 'rgba(184, 134, 11, 0.08)' }}>
-                <Upload size={22} strokeWidth={1.5} />
-              </div>
-              <p className="text-gray-500 text-xs sm:text-sm font-medium">Tocá para elegir una foto</p>
-              <p className="text-gray-300 text-[10px] sm:text-xs">JPG o PNG</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
-                <img src={preview} alt="Preview" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => fileRef.current?.click()}
-                  disabled={uploadState === 'compressing' || uploadState === 'uploading'}
-                  className="flex-1 py-3 rounded-xl border text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors disabled:opacity-40"
-                  style={{ borderColor: 'rgba(0,0,0,0.1)' }}
-                >Cambiar</button>
-                <button
-                  onClick={handleUpload}
-                  disabled={uploadState === 'compressing' || uploadState === 'uploading' || uploadState === 'ok'}
-                  className="gold-button flex-1 py-3 rounded-xl text-white text-xs font-semibold disabled:opacity-60"
-                >{uploadState === 'ok' ? '¡Subida!' : 'Subir foto'}</button>
-              </div>
-              {showStatus && (
-                <div className={`flex items-center justify-center gap-2 text-xs ${statusColor}`}>
-                  {uploadState === 'ok' ? (
-                    <CheckCircle size={14} />
-                  ) : uploadState === 'error' ? (
-                    <AlertCircle size={14} />
-                  ) : (
-                    <Loader2 size={14} className={statusSpinning ? 'animate-spin' : ''} />
-                  )}
-                  <span>{statusText}</span>
-                </div>
-              )}
-            </div>
-          )}
-          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileSelect} />
-        </div>
+        <p className="text-gray-400 text-[10px] sm:text-xs italic mt-3 sm:mt-4 px-4">
+          Te abre WhatsApp para enviarnos tu foto directamente
+        </p>
       </div>
 
       {/* ===== Lightbox ===== */}
