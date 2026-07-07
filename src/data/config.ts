@@ -200,7 +200,7 @@ const config: SiteConfig = {
     "playlistUrl": "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0",
     "embedUrl": "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0&si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0",
     "botonAgregar": "Agregar canciones",
-    "botonSpotify": "Hagamos una playlist en equipo. Únete y edítala: Milu XV https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=_KpUTq3UQ_SoEML4raJ_-Q&pt=49c1f1ada05b26c6b262295469aee275&pi=oPZinDCrSqWSc"
+    "botonSpotify": "Hagamos una playlist en equipo. Únete y edítala: Milu XV "
   },
   "rsvp": {
     "titulo": "Confirmar",
