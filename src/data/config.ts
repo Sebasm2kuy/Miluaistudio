@@ -12,19 +12,6 @@ export interface TimelineEvent {
 export interface GalleryPhoto {
   webp: string
   fallback: string
-  /**
-   * Posición de recorte (object-position CSS) calculada a partir del rostro
-   * detectado en la foto, para que la cara siempre se vea completa.
-   * Si no se especifica, se usa 'center 30%' como fallback.
-   * {
-   *   desktop: 'X% Y%',   // tarjetas en desktop (aspect 3:4, ~300x400)
-   *   mobile:  'X% Y%'    // tarjetas en mobile  (aspect 3:4, ~164x219)
-   * }
-   */
-  objectPosition?: {
-    desktop?: string
-    mobile?: string
-  }
 }
 
 export interface SiteConfig {
@@ -101,17 +88,6 @@ export interface SiteConfig {
   }
   fondo: {
     fotos: string[]
-    /**
-     * Posición de recorte (background-position CSS) por cada foto del fondo.
-     * El índice del array corresponde al de `fotos`.
-     * Si no se especifica o falta un elemento, se usa 'center 15%' (desktop)
-     * o 'center top' (mobile) como fallback.
-     * Cada item: { desktop: 'X% Y%', mobile: 'X% Y%' }
-     */
-    posiciones?: Array<{
-      desktop?: string
-      mobile?: string
-    }>
   }
   colores: {
     principal: string
@@ -187,22 +163,34 @@ const config: SiteConfig = {
       {
         "webp": "/Miluaistudio/gallery/gallery1.webp",
         "fallback": "/Miluaistudio/gallery/gallery1.jpg",
-        "objectPosition": { "desktop": "12% 50%", "mobile": "12% 50%" }
+        "objectPosition": {
+          "desktop": "12% 50%",
+          "mobile": "12% 50%"
+        }
       },
       {
         "webp": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
         "fallback": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
-        "objectPosition": { "desktop": "23% 50%", "mobile": "23% 50%" }
+        "objectPosition": {
+          "desktop": "23% 50%",
+          "mobile": "23% 50%"
+        }
       },
       {
         "webp": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
         "fallback": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
-        "objectPosition": { "desktop": "90% 50%", "mobile": "90% 50%" }
+        "objectPosition": {
+          "desktop": "90% 50%",
+          "mobile": "90% 50%"
+        }
       },
       {
         "webp": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg",
         "fallback": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg",
-        "objectPosition": { "desktop": "50% 0%", "mobile": "50% 0%" }
+        "objectPosition": {
+          "desktop": "50% 0%",
+          "mobile": "50% 0%"
+        }
       }
     ]
   },
@@ -212,7 +200,7 @@ const config: SiteConfig = {
     "playlistUrl": "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0",
     "embedUrl": "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0&si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0",
     "botonAgregar": "Agregar canciones",
-    "botonSpotify": "Abre en Spotify y suma tus temas favoritos"
+    "botonSpotify": "Hagamos una playlist en equipo. Únete y edítala: Milu XV https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=_KpUTq3UQ_SoEML4raJ_-Q&pt=49c1f1ada05b26c6b262295469aee275&pi=oPZinDCrSqWSc"
   },
   "rsvp": {
     "titulo": "Confirmar",
@@ -263,12 +251,6 @@ const config: SiteConfig = {
       "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
       "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
       "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg"
-    ],
-    "posiciones": [
-      { "desktop": "50% 0%",   "mobile": "22% 50%" },
-      { "desktop": "50% 0%",   "mobile": "31% 50%" },
-      { "desktop": "50% 2%",   "mobile": "79% 50%" },
-      { "desktop": "50% 22%",  "mobile": "57% 50%" }
     ]
   },
   "colores": {
