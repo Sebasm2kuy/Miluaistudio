@@ -8,7 +8,7 @@ import defaultConfig, { type SiteConfig } from '@/data/config'
 // localStorage del navegador del usuario. Esto evita el problema de "veo datos
 // viejos aunque ya deployé" sin tener que pedir al usuario que borre localStorage.
 const STORAGE_KEY = 'milu_config'
-const CONFIG_VERSION = '2026-07-14-santander'
+const CONFIG_VERSION = '2026-07-14-timeline-6'
 const VERSION_KEY = 'milu_config_version'
 
 export function useConfig(): SiteConfig {

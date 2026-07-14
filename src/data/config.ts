@@ -138,20 +138,38 @@ const config: SiteConfig = {
       {
         "hora": "21:00",
         "titulo": "Recepción",
-        "desc": "Ingreso de invitados",
+        "desc": "Cóctel de bienvenida y catering",
         "icono": "🥂"
       },
       {
         "hora": "22:00",
-        "titulo": "Mi Ingreso",
-        "desc": "La noche comienza",
+        "titulo": "Ingreso de Milu",
+        "desc": "Vals y comienzo de la fiesta",
         "icono": "👑"
+      },
+      {
+        "hora": "22:30",
+        "titulo": "Discoteca",
+        "desc": "A bailar toda la noche",
+        "icono": "💃"
       },
       {
         "hora": "02:00",
         "titulo": "Espejo Mágico",
-        "desc": "Las mejores fotos",
+        "desc": "Las mejores fotos (2 hs)",
         "icono": "📸"
+      },
+      {
+        "hora": "03:30",
+        "titulo": "Torta y Velas",
+        "desc": "Brindis y momento especial",
+        "icono": "🎂"
+      },
+      {
+        "hora": "04:00",
+        "titulo": "Café de cierre",
+        "desc": "Agradecemos su presencia",
+        "icono": "☕"
       }
     ]
   },
