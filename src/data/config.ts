@@ -207,7 +207,7 @@ const config: SiteConfig = {
     "subtitulo": "Espero poder contar contigo para hacer de esta noche algo inolvidable.",
     "fechaLimite": "10/08",
     "fechaLimiteFull": "10/08/2026",
-    "googleSheetUrl": "",
+    "googleSheetUrl": "https://script.google.com/macros/s/AKfycbyBHeEW8KcJANijMZ2cnlvMANhwmN6nScUxntMVOVUFtxh1LUg05Dd_4Km6ESSfjeEW/exec",
     "hostPhone": "59895239386",
     "regalos": {
       "titulo": "Regalos",
