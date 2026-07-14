@@ -72,7 +72,7 @@ export interface SiteConfig {
       titulo: string
       subtitulo: string
       abitab: { titulo: string; numero: string }
-      miDinero: { titulo: string; numero: string }
+      miDinero: { titulo: string; numero: string; numeroInterbancario?: string; sucursal?: string }
     }
   }
   footer: {

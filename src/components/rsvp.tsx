@@ -32,6 +32,7 @@ export default function Rsvp() {
   const [codigo, setCodigo] = useState('')
   const [copied, setCopied] = useState(false)
   const [copiedMiDinero, setCopiedMiDinero] = useState(false)
+  const [copiedInterbancario, setCopiedInterbancario] = useState(false)
 
   // --- Handlers ---
   const toggleConfirmo = () => {
@@ -147,6 +148,14 @@ export default function Rsvp() {
     navigator.clipboard.writeText(cfg.rsvp.regalos.miDinero.numero)
     setCopiedMiDinero(true)
     setTimeout(() => setCopiedMiDinero(false), 2000)
+  }
+
+  const copyInterbancario = () => {
+    if (cfg.rsvp.regalos.miDinero.numeroInterbancario) {
+      navigator.clipboard.writeText(cfg.rsvp.regalos.miDinero.numeroInterbancario)
+      setCopiedInterbancario(true)
+      setTimeout(() => setCopiedInterbancario(false), 2000)
+    }
   }
 
   return (
@@ -470,7 +479,7 @@ export default function Rsvp() {
             </button>
           </div>
 
-          {/* Mi Dinero */}
+          {/* Santander (antes Mi Dinero) — soporta 1 o 2 números según configuración */}
           <div
             className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden"
             style={{
@@ -482,21 +491,81 @@ export default function Rsvp() {
               {cfg.rsvp.regalos.miDinero.titulo}
             </p>
 
-            <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
-              {cfg.rsvp.regalos.miDinero.numero}
-            </p>
+            {cfg.rsvp.regalos.miDinero.numeroInterbancario ? (
+              // Layout de dos números (Santander: mismo banco + otros bancos)
+              <div className="space-y-5 sm:space-y-6 mb-5 sm:mb-8">
+                {/* Sucursal */}
+                {cfg.rsvp.regalos.miDinero.sucursal && (
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gray-400 italic">
+                    {cfg.rsvp.regalos.miDinero.sucursal}
+                  </p>
+                )}
 
-            <button
-              onClick={copyMiDinero}
-              className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
-              style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
-            >
-              {copiedMiDinero ? (
-                <><Check size={14} strokeWidth={2} /> ¡Copiado!</>
-              ) : (
-                <><Copy size={14} strokeWidth={2} /> Copiar número</>
-              )}
-            </button>
+                {/* Mismo banco */}
+                <div>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gold/60 font-bold mb-1.5">
+                    Mismo banco
+                  </p>
+                  <p className="text-2xl sm:text-3xl md:text-4xl font-light text-bordeaux tracking-tight tabular-nums leading-tight mb-2">
+                    {cfg.rsvp.regalos.miDinero.numero}
+                  </p>
+                  <button
+                    onClick={copyMiDinero}
+                    className="inline-flex items-center gap-1.5 text-gold font-bold text-[10px] sm:text-xs uppercase tracking-widest border-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+                    style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                  >
+                    {copiedMiDinero ? (
+                      <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
+                    ) : (
+                      <><Copy size={12} strokeWidth={2} /> Copiar</>
+                    )}
+                  </button>
+                </div>
+
+                {/* Separador */}
+                <div className="border-t pt-4" style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} />
+
+                {/* Otros bancos */}
+                <div>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gold/60 font-bold mb-1.5">
+                    Desde otros bancos
+                  </p>
+                  <p className="text-xl sm:text-2xl md:text-3xl font-light text-bordeaux tracking-tight tabular-nums leading-tight mb-2 break-all">
+                    {cfg.rsvp.regalos.miDinero.numeroInterbancario}
+                  </p>
+                  <button
+                    onClick={copyInterbancario}
+                    className="inline-flex items-center gap-1.5 text-gold font-bold text-[10px] sm:text-xs uppercase tracking-widest border-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+                    style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                  >
+                    {copiedInterbancario ? (
+                      <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
+                    ) : (
+                      <><Copy size={12} strokeWidth={2} /> Copiar</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // Layout de un solo número (compatibilidad hacia atrás)
+              <>
+                <p className="text-4xl sm:text-5xl md:text-6xl font-light text-bordeaux tracking-tight mb-5 sm:mb-8 md:mb-12 tabular-nums">
+                  {cfg.rsvp.regalos.miDinero.numero}
+                </p>
+
+                <button
+                  onClick={copyMiDinero}
+                  className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
+                  style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                >
+                  {copiedMiDinero ? (
+                    <><Check size={14} strokeWidth={2} /> ¡Copiado!</>
+                  ) : (
+                    <><Copy size={14} strokeWidth={2} /> Copiar número</>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -65,7 +65,7 @@ export interface SiteConfig {
       titulo: string
       subtitulo: string
       abitab: { titulo: string; numero: string }
-      miDinero: { titulo: string; numero: string }
+      miDinero: { titulo: string; numero: string; numeroInterbancario?: string; sucursal?: string }
     }
   }
   footer: {
@@ -213,12 +213,14 @@ const config: SiteConfig = {
       "titulo": "Regalos",
       "subtitulo": "Si deseas tener un detalle conmigo, te dejo las opciones donde podés hacerlo.",
       "abitab": {
-        "titulo": "Cuenta Abitab",
-        "numero": "145920"
+        "titulo": "Abitab — Milagros 15 Años",
+        "numero": "147168"
       },
       "miDinero": {
-        "titulo": "Cuenta Mi Dinero",
-        "numero": "2401461"
+        "titulo": "Cuenta Santander",
+        "numero": "1205758395",
+        "numeroInterbancario": "0067001205758395",
+        "sucursal": "Sucursal 67 - Parque Batlle · UYU"
       }
     }
   },
