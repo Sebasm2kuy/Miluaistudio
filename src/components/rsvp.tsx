@@ -81,18 +81,22 @@ export default function Rsvp() {
 
     // Intentar registrar en el backend (Google Sheet) si está disponible.
     // Si falla, no bloquear al usuario — el flujo sigue por WhatsApp.
+    // Usamos GET con query params porque Google Apps Script a veces rechaza
+    // POSTs con 405 (depende de la versión deployada). El limite de URL es
+    // ~16KB, suficiente para grupos de hasta 10 nombres.
     try {
-      await fetch(cfg.rsvp.googleSheetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          tipo: 'rsvp_grupo',
-          codigo: nuevoCodigo,
-          cantidad: cantidad,
-          invitados: invitados.map(n => n.trim()),
-          telefono: telefono.trim(),
-          fecha: new Date().toISOString(),
-        }),
+      const params = new URLSearchParams({
+        action: 'rsvp',
+        codigo: nuevoCodigo,
+        cantidad: String(cantidad),
+        invitados: JSON.stringify(invitados.map(n => n.trim())),
+        telefono: telefono.trim(),
+        fecha: new Date().toISOString(),
+      })
+      // no-cors + redirect manual: el navegador hace la request sin esperar respuesta
+      await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, {
+        method: 'GET',
+        mode: 'no-cors',
       })
     } catch {
       // Backend caído — no afecta el flujo del usuario
