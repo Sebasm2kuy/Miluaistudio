@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Copy, Check, Send, Loader2, MessageCircle } from 'lucide-react'
+import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 
 
@@ -17,40 +17,99 @@ function limpiarTelefono(tel: string) {
   return solo
 }
 
+const MAX_INVITADOS = 10
+
 export default function Rsvp() {
   const cfg = useConfig()
   const hostPhone = cfg.rsvp.hostPhone
-  const [nombre, setNombre] = useState('')
+
+  // --- Estado del formulario ---
+  const [confirmo, setConfirmo] = useState(false)
+  const [cantidad, setCantidad] = useState(1)
+  const [invitados, setInvitados] = useState<string[]>([''])
   const [telefono, setTelefono] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle')
   const [codigo, setCodigo] = useState('')
   const [copied, setCopied] = useState(false)
   const [copiedMiDinero, setCopiedMiDinero] = useState(false)
 
-  // Nota (2026-06-30):
-  // El backend original (Google Apps Script → Google Sheet) dejó de responder
-  // (404). En lugar de mostrar error al usuario, generamos el código localmente
-  // y pasamos directo a la pantalla de confirmación, donde el invitado puede
-  // enviar su confirmación por WhatsApp a la organizadora. Es el mismo flujo
-  // que ya existía como paso final, pero sin depender del backend caído.
+  // --- Handlers ---
+  const toggleConfirmo = () => {
+    const next = !confirmo
+    setConfirmo(next)
+    if (!next) {
+      // Al desactivar, resetear cantidad e invitados
+      setCantidad(1)
+      setInvitados([''])
+    }
+  }
+
+  const cambiarCantidad = (delta: number) => {
+    const next = Math.max(1, Math.min(MAX_INVITADOS, cantidad + delta))
+    setCantidad(next)
+    // Ajustar el array de invitados conservando los valores ya cargados
+    setInvitados(prev => {
+      const arr = [...prev]
+      while (arr.length < next) arr.push('')
+      while (arr.length > next) arr.pop()
+      return arr
+    })
+  }
+
+  const actualizarInvitado = (idx: number, value: string) => {
+    setInvitados(prev => {
+      const arr = [...prev]
+      arr[idx] = value
+      return arr
+    })
+  }
+
+  // Validación: confirmo activo + al menos el primer invitado con nombre + teléfono
+  const nombresValidos = invitados.filter(n => n.trim().length >= 2)
+  const formularioValido = confirmo && nombresValidos.length === cantidad && cantidad >= 1 && telefono.trim().length >= 6
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!nombre.trim() || !telefono.trim()) return
+    if (!formularioValido) return
 
     setStatus('sending')
     const nuevoCodigo = generarCodigo()
     setCodigo(nuevoCodigo)
 
     // Pequeña demora para que el spinner sea visible y se sienta natural.
-    await new Promise((r) => setTimeout(r, 400))
+    await new Promise((r) => setTimeout(r, 500))
+
+    // Intentar registrar en el backend (Google Sheet) si está disponible.
+    // Si falla, no bloquear al usuario — el flujo sigue por WhatsApp.
+    try {
+      await fetch(cfg.rsvp.googleSheetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          tipo: 'rsvp_grupo',
+          codigo: nuevoCodigo,
+          cantidad: cantidad,
+          invitados: invitados.map(n => n.trim()),
+          telefono: telefono.trim(),
+          fecha: new Date().toISOString(),
+        }),
+      })
+    } catch {
+      // Backend caído — no afecta el flujo del usuario
+    }
+
     setStatus('ok')
   }
 
   const enviarConfirmacion = () => {
+    const listaNombres = invitados
+      .map((n, i) => `   ${i + 1}. ${n.trim()}`)
+      .join('\n')
     const msg = encodeURIComponent(
       `✅ Confirmación de asistencia\n\n` +
       `🎀 ${cfg.countdown.calendarioTitulo}\n` +
-      `👤 ${nombre.trim()}\n` +
+      `👥 Cantidad: ${cantidad} persona(s)\n` +
+      `👤 Invitados:\n${listaNombres}\n` +
       `📱 ${telefono.trim()}\n` +
       `🎫 ${codigo}`
     )
@@ -59,9 +118,14 @@ export default function Rsvp() {
 
   const guardarComprobante = () => {
     const telefonoLimpio = limpiarTelefono(telefono)
+    const listaNombres = invitados
+      .map((n, i) => `   ${i + 1}. ${n.trim()}`)
+      .join('\n')
     const msg = encodeURIComponent(
       `✅ Mi asistencia a los ${cfg.evento.tipo} de ${cfg.evento.nombre} quedó registrada.\n\n` +
       `🎫 Código: ${codigo}\n` +
+      `👥 Cantidad: ${cantidad} persona(s)\n` +
+      `👤 Invitados:\n${listaNombres}\n` +
       `📅 ${cfg.evento.fechaEvento}\n` +
       `📍 ${cfg.evento.lugar}, ${cfg.evento.ubicacion}\n\n` +
       `¡Nos vemos! 💛`
@@ -111,11 +175,23 @@ export default function Rsvp() {
                 ¡Confirmado!
               </p>
               <p
-                className="text-gold font-bold text-sm sm:text-base mb-4 sm:mb-5"
+                className="text-gold font-bold text-sm sm:text-base mb-1"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.5s both' }}
               >
-                {nombre.trim()}
+                {cantidad} {cantidad === 1 ? 'persona' : 'personas'}
               </p>
+
+              {/* Lista de invitados confirmados */}
+              <div
+                className="mb-4 sm:mb-5 mt-3 sm:mt-4 space-y-1.5"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 0.55s both' }}
+              >
+                {invitados.filter(n => n.trim()).map((n, i) => (
+                  <p key={i} className="text-bordeaux text-sm sm:text-base italic">
+                    {n.trim()}
+                  </p>
+                ))}
+              </div>
 
               {/* Codigo de confirmacion */}
               <div
@@ -171,48 +247,167 @@ export default function Rsvp() {
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
-                <div>
-                  <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
-                    Tu nombre *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
-                    style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
-                    placeholder="Ej: María González"
-                  />
+
+                {/* === Paso 1: Checkbox confirmo asistencia === */}
+                <button
+                  type="button"
+                  onClick={toggleConfirmo}
+                  className={`w-full flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-4 sm:py-5 rounded-xl border-2 transition-all duration-300 ${confirmo ? 'scale-[1.01]' : 'hover:bg-gold/[0.03]'}`}
+                  style={{
+                    borderColor: confirmo ? '#d4af37' : 'rgba(184, 134, 11, 0.2)',
+                    background: confirmo ? 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(184,134,11,0.04))' : 'transparent',
+                    boxShadow: confirmo ? '0 4px 20px rgba(184,134,11,0.12)' : 'none',
+                  }}
+                >
+                  {/* Checkbox custom */}
+                  <div
+                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-md flex items-center justify-center shrink-0 transition-all duration-300"
+                    style={{
+                      background: confirmo ? 'linear-gradient(135deg, #d4af37, #b8860b)' : 'rgba(255,255,255,0.6)',
+                      border: confirmo ? 'none' : '2px solid rgba(184,134,11,0.3)',
+                    }}
+                  >
+                    {confirmo && <Check size={18} strokeWidth={3} className="text-white" />}
+                  </div>
+                  <div className="text-left flex-1">
+                    <p className={`font-bold text-sm sm:text-base transition-colors ${confirmo ? 'text-bordeaux' : 'text-gray-600'}`}>
+                      Confirmo asistencia
+                    </p>
+                    <p className="text-xs text-gray-400 italic mt-0.5">
+                      {confirmo ? '¡Gracias! Contanos cuántos van a ir' : 'Tocá acá para confirmar tu asistencia'}
+                    </p>
+                  </div>
+                </button>
+
+                {/* === Paso 2: Cantidad de personas (se desbloquea al confirmar) === */}
+                <div
+                  className="transition-all duration-500 overflow-hidden"
+                  style={{
+                    maxHeight: confirmo ? '500px' : '0',
+                    opacity: confirmo ? 1 : 0,
+                    marginTop: confirmo ? undefined : 0,
+                  }}
+                >
+                  <div className="pt-2">
+                    <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-2 sm:mb-3">
+                      <span className="inline-flex items-center gap-2">
+                        <Users size={14} strokeWidth={2} />
+                        ¿Cuántas personas?
+                      </span>
+                    </label>
+                    <div className="flex items-center justify-center gap-4 sm:gap-6">
+                      <button
+                        type="button"
+                        onClick={() => cambiarCantidad(-1)}
+                        disabled={cantidad <= 1}
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                        style={{ borderColor: 'rgba(184,134,11,0.3)', color: '#b8860b', background: 'rgba(184,134,11,0.04)' }}
+                        aria-label="Restar persona"
+                      >
+                        <Minus size={20} strokeWidth={2.5} />
+                      </button>
+                      <div className="text-center min-w-[80px]">
+                        <p className="text-5xl sm:text-6xl font-light text-bordeaux tabular-nums leading-none">
+                          {cantidad}
+                        </p>
+                        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gold/60 mt-1">
+                          {cantidad === 1 ? 'persona' : 'personas'}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => cambiarCantidad(1)}
+                        disabled={cantidad >= MAX_INVITADOS}
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                        style={{ borderColor: 'rgba(184,134,11,0.3)', color: '#b8860b', background: 'rgba(184,134,11,0.04)' }}
+                        aria-label="Sumar persona"
+                      >
+                        <Plus size={20} strokeWidth={2.5} />
+                      </button>
+                    </div>
+                    {cantidad >= MAX_INVITADOS && (
+                      <p className="text-center text-[10px] text-gold/50 italic mt-2">
+                        Máximo {MAX_INVITADOS} personas por confirmación
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
-                    Tu teléfono *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
-                    className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
-                    style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
-                    placeholder="Ej: 099 123 456"
-                  />
+                {/* === Paso 3: N cuadros de nombre y apellido (se desbloquea al confirmar) === */}
+                <div
+                  className="transition-all duration-500 overflow-hidden space-y-3"
+                  style={{
+                    maxHeight: confirmo ? '1200px' : '0',
+                    opacity: confirmo ? 1 : 0,
+                  }}
+                >
+                  <div className="pt-2 space-y-3">
+                    <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                      <span className="inline-flex items-center gap-2">
+                        <UserPlus size={14} strokeWidth={2} />
+                        Nombres y apellidos
+                      </span>
+                    </label>
+                    {invitados.map((nombre, i) => (
+                      <input
+                        key={i}
+                        type="text"
+                        value={nombre}
+                        onChange={(e) => actualizarInvitado(i, e.target.value)}
+                        className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300 transition-all duration-300"
+                        style={{ borderColor: nombre.trim() ? 'rgba(184, 134, 11, 0.35)' : 'rgba(184, 134, 11, 0.15)' }}
+                        placeholder={`Invitado ${i + 1} — Nombre y apellido`}
+                      />
+                    ))}
+                  </div>
                 </div>
 
+                {/* === Paso 4: Teléfono de contacto (se desbloquea al confirmar) === */}
+                <div
+                  className="transition-all duration-500 overflow-hidden"
+                  style={{
+                    maxHeight: confirmo ? '200px' : '0',
+                    opacity: confirmo ? 1 : 0,
+                  }}
+                >
+                  <div className="pt-2">
+                    <label className="block text-sm sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gold font-bold mb-1.5 sm:mb-2">
+                      Teléfono de contacto *
+                    </label>
+                    <input
+                      type="tel"
+                      required={confirmo}
+                      value={telefono}
+                      onChange={(e) => setTelefono(e.target.value)}
+                      className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
+                      style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
+                      placeholder="Ej: 099 123 456"
+                    />
+                  </div>
+                </div>
+
+                {/* === Botón confirmar (se desbloquea al validar) === */}
                 <button
                   type="submit"
-                  disabled={status === 'sending'}
-                  className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-sm sm:text-xs md:text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{ boxShadow: '0 10px 30px rgba(138, 107, 13, 0.35)' }}
+                  disabled={status === 'sending' || !formularioValido}
+                  className="gold-button w-full py-4 sm:py-5 md:py-7 rounded-full flex items-center justify-center gap-2 sm:gap-3 text-white font-semibold tracking-[0.1em] sm:tracking-[0.15em] text-sm sm:text-xs md:text-sm mt-2 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{
+                    boxShadow: formularioValido ? '0 10px 30px rgba(138, 107, 13, 0.35)' : 'none',
+                    transform: formularioValido ? 'scale(1)' : 'scale(0.98)',
+                  }}
                 >
                   {status === 'sending' ? (
                     <><Loader2 size={14} className="animate-spin" /> Enviando...</>
                   ) : (
-                    <><Send size={14} className="sm:w-4 sm:h-4" strokeWidth={1.5} /> Confirmar asistencia</>
+                    <><Send size={14} className="sm:w-4 sm:h-4" strokeWidth={1.5} /> Confirmar {cantidad} {cantidad === 1 ? 'asistencia' : 'asistencias'}</>
                   )}
                 </button>
+
+                {!formularioValido && confirmo && (
+                  <p className="text-xs text-gold/60 text-center italic">
+                    Completá todos los nombres y el teléfono para confirmar
+                  </p>
+                )}
 
                 {status === 'error' && (
                   <p className="text-red-500 text-xs sm:text-xs text-center italic">

@@ -30,6 +30,7 @@
 var FOLDER_NAME = 'MilagrosXV_Galeria';
 var SPREADSHEET_NAME = 'MilagrosXV_Galeria_DB';
 var SHEET_NAME = 'Fotos';
+var RSVP_SHEET_NAME = 'RSVP';
 var MAX_FILE_SIZE_KB = 500;
 
 /**
@@ -58,10 +59,25 @@ function doGet(e) {
 }
 
 /**
- * POST handler — fallback
+ * POST handler — procesa rsvp y otros
  */
 function doPost(e) {
-  return doGet(e);
+  try {
+    var action = e.parameter.action;
+
+    // RSVP no usa ?action=, llega como JSON en el body. Lo detectamos por el contenido.
+    var body = null;
+    try { body = JSON.parse(e.postData.contents); } catch (err) { body = null; }
+
+    if (body && body.tipo === 'rsvp_grupo') {
+      return handleRsvp(body);
+    }
+
+    // Fallback al doGet si no es RSVP
+    return doGet(e);
+  } catch (error) {
+    return jsonResponse({ error: error.message });
+  }
 }
 
 /**
@@ -274,4 +290,112 @@ function jsonResponse(data) {
   return ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * ============================================
+ * RSVP — Confirmaciones de asistencia agrupadas
+ * ============================================
+ *
+ * El frontend envía un JSON con esta estructura:
+ * {
+ *   "tipo": "rsvp_grupo",
+ *   "codigo": "MIL-1234",
+ *   "cantidad": 3,
+ *   "invitados": ["María González", "Pedro Pérez", "Lucía Fernández"],
+ *   "telefono": "099123456",
+ *   "fecha": "2026-07-14T15:30:00.000Z"
+ * }
+ *
+ * El script guarda una fila por invitado, con el mismo código de grupo
+ * para que puedan filtrarse/agruparse en la hoja de cálculo.
+ */
+
+var RSVP_HEADERS = ['Fecha Registro', 'Código Grupo', 'Índice', 'Cantidad Total', 'Nombre y Apellido', 'Teléfono'];
+
+function handleRsvp(data) {
+  try {
+    // Validar
+    if (!data || !data.invitados || !Array.isArray(data.invitados) || data.invitados.length === 0) {
+      return jsonResponse({ success: false, error: 'Faltan invitados en el grupo' });
+    }
+    if (!data.codigo) {
+      return jsonResponse({ success: false, error: 'Falta el código de grupo' });
+    }
+
+    var sheet = getOrCreateRsvpSheet();
+    var codigoGrupo = String(data.codigo);
+    var cantidad = data.cantidad || data.invitados.length;
+    var telefono = String(data.telefono || '');
+    var fechaRegistro = data.fecha || new Date().toISOString();
+
+    // Una fila por cada invitado, todas con el mismo código de grupo
+    var filas = data.invitados.map(function(nombre, i) {
+      return [
+        fechaRegistro,
+        codigoGrupo,
+        i + 1,
+        cantidad,
+        String(nombre || '').trim(),
+        telefono
+      ];
+    });
+
+    // Insertar todas las filas de una vez (atómico)
+    if (filas.length > 1) {
+      sheet.getRange(sheet.getLastRow() + 1, 1, filas.length, filas[0].length).setValues(filas);
+    } else {
+      sheet.appendRow(filas[0]);
+    }
+
+    return jsonResponse({
+      success: true,
+      codigo: codigoGrupo,
+      cantidad: cantidad,
+      registrados: filas.length
+    });
+  } catch (error) {
+    return jsonResponse({ success: false, error: 'Error al registrar RSVP: ' + error.message });
+  }
+}
+
+/**
+ * Obtener o crear la hoja de RSVP dentro del mismo spreadsheet
+ */
+function getOrCreateRsvpSheet() {
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty('SPREADSHEET_ID');
+
+  var ss;
+  if (!ssId) {
+    // Si el spreadsheet no existe, lo creamos (igual que getOrCreateSheet)
+    ss = SpreadsheetApp.create(SPREADSHEET_NAME);
+    ssId = ss.getId();
+    props.setProperty('SPREADSHEET_ID', ssId);
+  } else {
+    ss = SpreadsheetApp.openById(ssId);
+  }
+
+  var sheet = ss.getSheetByName(RSVP_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(RSVP_SHEET_NAME);
+    sheet.appendRow(RSVP_HEADERS);
+
+    // Formatear encabezados
+    var headerRange = sheet.getRange(1, 1, 1, RSVP_HEADERS.length);
+    headerRange.setFontWeight('bold').setBackground('#f4e4bc');
+
+    // Congelar la primera fila
+    sheet.setFrozenRows(1);
+
+    // Ajustar ancho de columnas
+    sheet.setColumnWidth(1, 180);  // Fecha
+    sheet.setColumnWidth(2, 140);  // Código Grupo
+    sheet.setColumnWidth(3, 80);   // Índice
+    sheet.setColumnWidth(4, 100);  // Cantidad Total
+    sheet.setColumnWidth(5, 280);  // Nombre y Apellido
+    sheet.setColumnWidth(6, 140);  // Teléfono
+  }
+
+  return sheet;
 }
