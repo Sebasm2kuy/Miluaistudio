@@ -35,26 +35,28 @@ export const metadata: Metadata = {
     apple: [{ url: "/Miluaistudio/sello-sm.png", sizes: "256x256" }],
   },
   openGraph: {
-    title: "Mis XV - Milagros Cabrera",
-    description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",
+    title: "Mis XV Años — Milagros Cabrera",
+    description: "Sábado 22 de Agosto de 2026 · Salón My Father, Montevideo. ¡Te espero para compartir esta noche inolvidable!",
     type: "website",
     locale: "es_UY",
     url: "https://sebasm2kuy.github.io/Miluaistudio/",
     siteName: "XV Años de Milagros",
     images: [
       {
-        url: "/Miluaistudio/invitacion-vertical.webp",
-        width: 1080,
-        height: 1350,
-        alt: "Invitación XV Años de Milagros Cabrera",
+        // JPG optimizado (90KB, 1200x630) — WhatsApp no soporta webp para previews
+        url: "/Miluaistudio/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Invitación XV Años de Milagros Cabrera — 22 de Agosto de 2026",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mis XV - Milagros Cabrera",
-    description: "Invitación digital para los XV años de Milagros Cabrera",
-    images: ["/Miluaistudio/invitacion-vertical.webp"],
+    title: "Mis XV Años — Milagros Cabrera",
+    description: "Sábado 22 de Agosto de 2026 · Salón My Father, Montevideo",
+    images: ["/Miluaistudio/og-image.jpg"],
   },
 };
 
