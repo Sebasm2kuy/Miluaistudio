@@ -43,8 +43,9 @@ export const metadata: Metadata = {
     siteName: "XV Años de Milagros",
     images: [
       {
-        // JPG optimizado (90KB, 1200x630) — WhatsApp no soporta webp para previews
-        url: "/Miluaistudio/og-image.jpg",
+        // URL absoluta para evitar el bug de basePath duplicado en Next.js
+        // (sin esto, Next concatena basePath + la URL y queda /Miluaistudio/Miluaistudio/og-image.jpg = 404)
+        url: "https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Invitación XV Años de Milagros Cabrera — 22 de Agosto de 2026",
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mis XV Años — Milagros Cabrera",
     description: "Sábado 22 de Agosto de 2026 · Salón My Father, Montevideo",
-    images: ["/Miluaistudio/og-image.jpg"],
+    images: ["https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg"],
   },
 };
 
