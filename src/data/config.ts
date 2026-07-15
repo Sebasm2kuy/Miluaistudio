@@ -154,13 +154,13 @@ const config: SiteConfig = {
         "icono": "💃"
       },
       {
-        "hora": "02:00",
+        "hora": "23:00",
         "titulo": "Espejo Mágico",
         "desc": "Las mejores fotos (2 hs)",
         "icono": "📸"
       },
       {
-        "hora": "03:30",
+        "hora": "03:00",
         "titulo": "Torta y Velas",
         "desc": "Brindis y momento especial",
         "icono": "🎂"
