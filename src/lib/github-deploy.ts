@@ -51,6 +51,7 @@ export interface SiteConfig {
     titulo: string
     subtitulo: string
     botonSubir: string
+    photoUploadUrl: string
     fotos: GalleryPhoto[]
   }
   musica: {

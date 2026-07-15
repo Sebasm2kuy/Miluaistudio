@@ -44,6 +44,7 @@ export interface SiteConfig {
     titulo: string
     subtitulo: string
     botonSubir: string
+    photoUploadUrl: string
     fotos: GalleryPhoto[]
   }
   musica: {
@@ -177,6 +178,7 @@ const config: SiteConfig = {
     "titulo": "Galería",
     "subtitulo": "Momentos que hacen esta celebración inolvidable",
     "botonSubir": "Dejale un recuerdo",
+    "photoUploadUrl": "",
     "fotos": [
       {
         "webp": "/Miluaistudio/gallery/gallery1.webp",
