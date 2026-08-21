@@ -122,6 +122,8 @@ export default function Gallery() {
   const handleUpload = useCallback(async () => {
     if (!selectedFile) return
     if (!PHOTO_UPLOAD_URL) {
+      // Backend no configurado — mostrar mensaje claro en lugar del error genérico
+      alert('La subida de fotos todavía no está activa. Avisale a Milu para que configure el backend.')
       setUploadState('error')
       return
     }
@@ -153,9 +155,6 @@ export default function Gallery() {
       const data = await parseGasResponse(res)
 
       if (data && data.success) {
-        // No agregamos la foto al carousel acá porque está pendiente de moderación.
-        // Va a aparecer automáticamente cuando el moderador la apruebe y el usuario
-        // recargue la página (el fetch de getPhotos solo trae aprobadas).
         setUploadState('ok')
         setTimeout(() => {
           setUploadModal(false)
