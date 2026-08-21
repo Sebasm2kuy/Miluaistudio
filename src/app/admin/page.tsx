@@ -861,6 +861,24 @@ export default function AdminPage() {
               <Field label="Botón subir" value={cfg.galeria.botonSubir} onChange={(v) => setNested('galeria', 'botonSubir', v)} />
             </div>
 
+            <Field
+              label="Photo Upload URL (backend Google Apps Script para subida de fotos)"
+              type="url"
+              value={cfg.galeria.photoUploadUrl}
+              onChange={(v) => setNested('galeria', 'photoUploadUrl', v)}
+              placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+            />
+            {cfg.galeria.photoUploadUrl && (
+              <p className="text-xs text-green-400 italic">
+                ✓ Backend de subida activo. Las fotos que suban los invitados van a quedar pendientes de aprobación en el spreadsheet.
+              </p>
+            )}
+            {!cfg.galeria.photoUploadUrl && (
+              <p className="text-xs text-amber-400 italic">
+                ⚠ Sin configurar: el botón "Dejale un recuerdo" muestra un error. Pegá acá la URL del script de Google Apps Script para fotos.
+              </p>
+            )}
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos ({cfg.galeria.fotos.length})</span>

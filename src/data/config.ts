@@ -178,7 +178,7 @@ const config: SiteConfig = {
     "titulo": "Galería",
     "subtitulo": "Momentos que hacen esta celebración inolvidable",
     "botonSubir": "Dejale un recuerdo",
-    "photoUploadUrl": "",
+    "photoUploadUrl": "https://script.google.com/macros/s/AKfycbzsrC1JqjXIVsHKJ6Thl4Ho6B4FDwdovPKYpg2SIbYfiBgXe5c12lzbhs2_D3mwhgsYFg/exec",
     "fotos": [
       {
         "webp": "/Miluaistudio/gallery/gallery1.webp",
