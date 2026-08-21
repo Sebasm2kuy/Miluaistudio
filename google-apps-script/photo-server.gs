@@ -101,7 +101,7 @@ function handleChunk(e) {
 }
 
 /**
- * Ensamblar todos los chunks, decodificar y guardar en Drive (carpeta Pendientes)
+ * Ensamblar todos los chunks, decodificar y guardar en Drive (carpeta Aprobadas — publicación automática)
  */
 function handleAssemble(e) {
   try {
@@ -140,36 +140,34 @@ function handleAssemble(e) {
     var decodedBytes = Utilities.base64Decode(base64);
     var blob = Utilities.newBlob(decodedBytes, 'image/jpeg', 'foto_' + Date.now() + '.jpg');
 
-    // Guardar en carpeta Pendientes (NO pública todavía)
-    var folder = getOrCreateFolder(FOLDER_PENDIENTES);
+    // ===== Publicación automática (sin moderación) =====
+    // La foto se guarda directo en la carpeta Aprobadas y se hace pública.
+    var folder = getOrCreateFolder(FOLDER_APROBADAS);
     var file = folder.createFile(blob);
-
-    // Pendiente: ANYONE_WITH_LINK puede ver (para que el moderador la previsualice)
-    // pero NO aparece en búsqueda pública. Solo cuando se aprueba se hace ANYONE.
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
 
     var fileId = file.getId();
-    // URL para previsualización del moderador (mientras esté pendiente)
-    var pendingUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
+    var publicUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
 
-    // Registrar en la hoja con estado "pendiente"
+    // Registrar en la hoja con estado "aprobada" y URL pública
     var sheet = getOrCreateSheet();
     sheet.appendRow([
       new Date().toISOString(),
-      '',              // URL pública — se llena al aprobar
-      pendingUrl,      // URL pendiente (para preview del moderador)
+      publicUrl,      // URL pública (visible en galería)
+      publicUrl,      // URL pendiente (mantenida por compatibilidad del schema)
       fileId,
-      'pendiente',
-      '=IMAGE("' + pendingUrl + '=s120")'  // Thumbnail en el sheet
+      'aprobada',
+      '=IMAGE("' + publicUrl + '=s120")'  // Thumbnail en el sheet
     ]);
 
     cleanupChunks(cache, uid, totalChunks);
 
     return jsonResponse({
       success: true,
-      pendingUrl: pendingUrl,
+      url: publicUrl,        // URL pública — el frontend la usa para agregar al carousel
+      publicUrl: publicUrl,
       fileId: fileId,
-      message: 'Foto recibida. Va a estar visible en la galería pronto.'
+      message: 'Foto publicada en la galería.'
     });
 
   } catch (error) {

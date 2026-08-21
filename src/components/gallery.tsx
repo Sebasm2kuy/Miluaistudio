@@ -154,14 +154,22 @@ export default function Gallery() {
       const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
       const data = await parseGasResponse(res)
 
-      if (data && data.success) {
+      if (data && data.success && data.url) {
+        // Auto-publicación: la foto ya está visible, la agregamos al carousel.
+        setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' as const }])
         setUploadState('ok')
         setTimeout(() => {
           setUploadModal(false)
           setSelectedFile(null)
           setPreview(null)
           setUploadState('idle')
-        }, 2000)
+          // Scroll al final del carousel para mostrar la foto nueva
+          if (scrollRef.current) {
+            setTimeout(() => {
+              scrollRef.current?.scrollTo({ left: scrollRef.current.scrollWidth, behavior: 'smooth' })
+            }, 200)
+          }
+        }, 1500)
       } else {
         setUploadState('error')
       }
@@ -361,7 +369,7 @@ export default function Gallery() {
               )}
               {uploadState === 'ok' && (
                 <p className="text-center text-gray-500 text-xs italic mt-2">
-                  ¡Gracias! Tu foto va a estar visible en la galería pronto.
+                  ¡Gracias! Tu foto ya está visible en la galería.
                 </p>
               )}
             </div>
