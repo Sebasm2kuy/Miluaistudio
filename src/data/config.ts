@@ -237,8 +237,8 @@ const config: SiteConfig = {
         "numero": "147168"
       },
       "miDinero": {
-        "titulo": "Cuenta Santander",
-        "numero": "1205758395",
+        "titulo": "",
+        "numero": "",
         "numeroInterbancario": "0067001205758395",
         "sucursal": "Sucursal 67 - Parque Batlle · UYU"
       }
