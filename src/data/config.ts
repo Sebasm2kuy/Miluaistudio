@@ -239,8 +239,8 @@ const config: SiteConfig = {
       "miDinero": {
         "titulo": "",
         "numero": "",
-        "numeroInterbancario": "0067001205758395",
-        "sucursal": "Sucursal 67 - Parque Batlle · UYU"
+        "numeroInterbancario": "",
+        "sucursal": ""
       }
     }
   },
