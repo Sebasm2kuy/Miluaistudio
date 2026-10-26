@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import InvitationExperience from '@/components/invitation-experience';
 import { INVITATION_DESIGNS } from '@/data/invitation-designs';
 import { createDemoConfig } from '@/data/demo-config';
@@ -58,7 +59,17 @@ export default async function InvitationDemoPage({
 
   return (
     <ConfigProvider config={safeConfig}>
-      <InvitationExperience />
+      <>
+        <InvitationExperience />
+        <a
+          href="/Miluaistudio/catalogo/"
+          className="fixed left-3 top-3 z-[9999] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/75 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-md transition hover:border-white/40 hover:bg-black/90 sm:left-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
+          aria-label="Volver al catálogo de diseños"
+        >
+          <ArrowLeft size={15} />
+          Volver al catálogo
+        </a>
+      </>
     </ConfigProvider>
   );
 }
