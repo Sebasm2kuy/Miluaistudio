@@ -3,7 +3,7 @@ name: Validate Miluaistudio
 on:
   push:
     branches:
-      - feature/catalogo-disenos
+      - work/miluaistudio-catalogo-20261026
   pull_request:
     branches:
       - main
