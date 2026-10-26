@@ -173,6 +173,7 @@ function DesignCard({ design, onPreview }: { design: InvitationDesign; onPreview
           </button>
         </div>
         <p className="mt-2 min-h-10 text-sm leading-relaxed text-white/60">{design.description}</p>
+        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-white/45"><span>Precio publicado</span><strong className="text-sm font-semibold text-white">$ 1.200 UYU</strong></div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {[design.background, design.accent, design.accentSoft, design.text].map((color) => (
             <span key={color} title={color} className="h-4 w-4 rounded-full border border-white/15" style={{ background: color }} />
