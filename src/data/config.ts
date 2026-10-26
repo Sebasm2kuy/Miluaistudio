@@ -15,6 +15,8 @@ export interface GalleryPhoto {
 }
 
 export interface SiteConfig {
+  /** Public preview mode: external RSVP/photo submissions are disabled. */
+  modoDemo?: boolean;
   evento: {
     tipo: string
     nombre: string
@@ -27,6 +29,7 @@ export interface SiteConfig {
     ubicacion: string
     direccion: string
     mapsUrl: string
+    mapsEmbedUrl?: string
     hashtag: string
     hashtagUrl: string
   }
@@ -98,6 +101,7 @@ export interface SiteConfig {
     fondo: string
   }
   estilos: {
+    modeloComposicion?: string
     fuenteTitulo: string
     fuenteCuerpo: string
     fuenteCursiva: string
