@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowDown, ArrowRight, Check, Clock3, ExternalLink, Heart, Menu, Sparkles, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, Check, Clock3, ExternalLink, Heart, Sparkles, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 
 const MERCADO_LIBRE_URL = 'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
@@ -15,7 +15,7 @@ function CountdownPreview({ design }: { design: InvitationDesign }) {
 
   return (
     <div className="mt-5 flex items-center justify-center gap-2.5">
-      {values.map((item, index) => {
+      {values.map((item) => {
         const commonText = { color: design.text, fontVariantNumeric: 'tabular-nums' as const };
         if (design.clock === 'minimal') {
           return (
