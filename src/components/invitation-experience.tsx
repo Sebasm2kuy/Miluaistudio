@@ -21,9 +21,9 @@ import Footer from '@/components/footer'
 function Divider() {
   return (
     <div className="flex items-center justify-center py-3 sm:py-4 opacity-40">
-      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, transparent, #d4af37)' }} />
+      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-accent-light, #d4af37))' }} />
       <div className="w-1 h-1 rotate-45 bg-goldLight/70 mx-3 sm:mx-4" />
-      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, #d4af37, transparent)' }} />
+      <div className="h-px w-14 sm:w-24 md:w-40" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), transparent)' }} />
     </div>
   )
 }
@@ -83,7 +83,7 @@ export default function InvitationExperience() {
   }, [])
 
   return (
-    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
+    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
