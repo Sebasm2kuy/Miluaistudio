@@ -362,6 +362,20 @@ export const BACKGROUND_PRESETS = [
     css: 'linear-gradient(135deg, #1a0a00 0%, #3d2010 25%, #2a1508 50%, #1a0a02 75%, #0a0500 100%)',
   },
   {
+    id: 'perla-clara',
+    name: 'Perla Clara',
+    emoji: '🤍',
+    description: 'Fondo claro y luminoso para diseños minimalistas',
+    css: 'linear-gradient(135deg, #f4f0e9 0%, #e7ded2 48%, #fbf8f3 100%)',
+  },
+  {
+    id: 'grafito-cobre',
+    name: 'Grafito y Cobre',
+    emoji: '🔶',
+    description: 'Grafito moderno con acentos cálidos de cobre',
+    css: 'linear-gradient(135deg, #17191c 0%, #25282d 48%, #111214 100%)',
+  },
+  {
     id: 'lila-mistico',
     name: 'Lila Mistico',
     emoji: '💜',
