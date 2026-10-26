@@ -23,9 +23,27 @@ const montserrat = Montserrat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sebasm2kuy.github.io/Miluaistudio/"),
-  title: "Mis XV - Milagros Cabrera",
-  description: "Invitación digital para los XV años de Milagros Cabrera. Sábado 22 de Agosto de 2026, Salón My Father, Montevideo.",
-  keywords: ["XV años", "Milagros", "quinceañera", "Milu", "invitación", "Montevideo", "Uruguay"],
+  title: {
+    default: "Miluaistudio | Invitaciones digitales personalizadas",
+    template: "%s | Miluaistudio",
+  },
+  description: "Invitaciones digitales interactivas y personalizadas para fiestas de 15, bodas y celebraciones. Explorá los diseños, probá las demostraciones y consultá la personalización.",
+  keywords: [
+    "invitaciones digitales Uruguay",
+    "invitación digital 15 años",
+    "invitaciones web",
+    "invitaciones interactivas",
+    "invitaciones de boda",
+    "quinceañera",
+    "Miluaistudio",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://sebasm2kuy.github.io/Miluaistudio/",
+  },
   icons: {
     icon: [
       { url: "/Miluaistudio/logo.svg", type: "image/svg+xml" },
@@ -35,29 +53,27 @@ export const metadata: Metadata = {
     apple: [{ url: "/Miluaistudio/sello-sm.png", sizes: "256x256" }],
   },
   openGraph: {
-    title: "Mis XV Años — Milagros Cabrera",
-    description: "Sábado 22 de Agosto de 2026 · Salón My Father, Montevideo. ¡Te espero para compartir esta noche inolvidable!",
+    title: "Miluaistudio | Invitaciones digitales personalizadas",
+    description: "Explorá diseños de invitación web para fiestas de 15, bodas y celebraciones. Cada invitación reúne el estilo y los detalles de tu evento en un solo enlace.",
     type: "website",
     locale: "es_UY",
     url: "https://sebasm2kuy.github.io/Miluaistudio/",
-    siteName: "XV Años de Milagros",
+    siteName: "Miluaistudio · Invitaciones digitales",
     images: [
       {
-        // URL absoluta para evitar el bug de basePath duplicado en Next.js
-        // (sin esto, Next concatena basePath + la URL y queda /Miluaistudio/Miluaistudio/og-image.jpg = 404)
-        url: "https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Invitación XV Años de Milagros Cabrera — 22 de Agosto de 2026",
-        type: "image/jpeg",
+        url: "https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg",
+        width: 900,
+        height: 1200,
+        alt: "Invitación digital de demostración de Miluaistudio",
+        type: "image/svg+xml",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mis XV Años — Milagros Cabrera",
-    description: "Sábado 22 de Agosto de 2026 · Salón My Father, Montevideo",
-    images: ["https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg"],
+    title: "Miluaistudio | Invitaciones digitales personalizadas",
+    description: "Diseños web personalizados para fiestas de 15, bodas y celebraciones.",
+    images: ["https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg"],
   },
 };
 
