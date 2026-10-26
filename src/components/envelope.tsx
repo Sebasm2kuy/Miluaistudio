@@ -39,7 +39,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
         />
 
         <picture>
-          <source srcSet={cfg.invitacion.imagen} type="image/webp" />
+          {cfg.invitacion.imagen.toLowerCase().endsWith(".webp") && <source srcSet={cfg.invitacion.imagen} type="image/webp" />}
           <img
             src={cfg.invitacion.imagenFallback}
             alt={`Invitación de ${cfg.evento.tipo} - ${cfg.evento.nombre}`}
