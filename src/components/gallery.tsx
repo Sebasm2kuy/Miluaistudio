@@ -282,8 +282,9 @@ export default function Gallery() {
 
         {/* Upload button — abre el modal de subida directa */}
         <button
+          disabled={cfg.modoDemo}
           onClick={() => setUploadModal(true)}
-          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
           style={{
             borderColor: 'rgba(184, 134, 11, 0.35)',
             color: '#b8860b',
