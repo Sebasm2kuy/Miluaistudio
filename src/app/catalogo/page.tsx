@@ -241,7 +241,7 @@ export default function CatalogoPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#dfbd85]">Colección inicial</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Diez caminos visuales</h2>
             </div>
-            <p className="max-w-xl text-sm leading-relaxed text-white/50">Estos modelos son propuestas visuales iniciales. El siguiente paso es integrar cada tema al motor interactivo para conservar las mismas funciones en todos.</p>
+            <p className="max-w-xl text-sm leading-relaxed text-white/50">Cada modelo tiene su propia invitación web de demostración para que explores colores, composición y reloj antes de consultar la personalización.</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {INVITATION_DESIGNS.map((design) => <DesignCard key={design.id} design={design} onPreview={() => setSelected(design)} />)}
@@ -280,11 +280,12 @@ export default function CatalogoPage() {
                 <div className="mt-5 flex items-center gap-2 text-sm text-white/55"><Clock3 size={16} /> Cuenta regresiva con diseño a juego</div>
                 <div className="mt-3 flex items-center gap-2 text-sm text-white/55"><Check size={16} /> Adaptable a pantallas móviles</div>
                 <div className="mt-3 flex items-center gap-2 text-sm text-white/55"><Check size={16} /> Personalizable según el evento</div>
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dfbd85] px-5 py-3 text-sm font-semibold text-[#17120b] hover:bg-[#eed5a7]">Probar invitación completa <ArrowRight size={15} /></a>
                   <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-white/85">Consultar / comprar <ExternalLink size={15} /></a>
                   <button type="button" onClick={() => setSelected(null)} className="rounded-full border border-white/15 px-5 py-3 text-sm text-white/80 hover:bg-white/5">Volver al catálogo</button>
                 </div>
-                <p className="mt-4 text-xs leading-relaxed text-white/35">Esta previsualización presenta la dirección visual del diseño. La integración completa de cada variante al motor interactivo se realizará en la siguiente etapa.</p>
+                <p className="mt-4 text-xs leading-relaxed text-white/35">La invitación completa funciona en modo demostración: no envía confirmaciones, no usa datos personales ni publica fotos. Los datos reales se configuran al personalizar.</p>
               </div>
             </div>
           </div>
