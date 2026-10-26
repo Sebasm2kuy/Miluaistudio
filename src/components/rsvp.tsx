@@ -191,7 +191,7 @@ export default function Rsvp() {
                 className="font-serif text-2xl sm:text-3xl text-bordeaux italic mb-1"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.4s both' }}
               >
-                ¡Confirmado!
+{cfg.modoDemo ? 'Prueba completada' : '¡Confirmado!'}
               </p>
               <p
                 className="text-gold font-bold text-sm sm:text-base mb-1"
@@ -221,7 +221,8 @@ export default function Rsvp() {
                   animation: 'rsvpFadeUp 0.6s ease 0.6s both',
                 }}
               >
-                <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
+                <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">{cfg.modoDemo ? 'Código de muestra' : 'Tu código'}</p>
+                {cfg.modoDemo && <p className="mx-auto mb-3 max-w-sm text-xs leading-relaxed text-gray-500">Esta interacción es solo una prueba visual. No se registró ninguna asistencia ni se enviaron datos.</p>}
                 <p className="text-2xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
               </div>
 
