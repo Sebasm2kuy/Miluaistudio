@@ -226,6 +226,7 @@ export default function Rsvp() {
               </div>
 
               {/* Botones post-confirmacion */}
+{!cfg.modoDemo && (
               <div
                 className="space-y-2.5 sm:space-y-3"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.8s both' }}
@@ -250,6 +251,9 @@ export default function Rsvp() {
                   Guardar mi comprobante
                 </button>
               </div>
+
+)}
+              {cfg.modoDemo && <p className="mt-4 rounded-xl border border-dashed p-3 text-xs italic text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)' }}>Esta es una demostración: los datos no se enviaron ni se guardaron.</p>}
 
               <p
                 className="text-[11px] sm:text-xs text-gray-400 mt-4 italic"
@@ -455,9 +459,10 @@ export default function Rsvp() {
           <p className="text-gray-400 mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
             &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
           </p>
+          {cfg.modoDemo && <p className="mb-6 rounded-xl border border-dashed p-3 text-xs text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)' }}>En la invitación personalizada se puede agregar información útil para los invitados.</p>}
 
           {/* Abitab */}
-          <div
+          {!cfg.modoDemo && <div
             className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden mb-3 sm:mb-4"
             style={{
               borderColor: 'rgba(184, 134, 11, 0.1)',
@@ -483,7 +488,7 @@ export default function Rsvp() {
                 <><Copy size={14} strokeWidth={2} /> Copiar número</>
               )}
             </button>
-          </div>
+          </div>}
 
           {/* Bloque secundario (Santander / Mi Dinero) — solo se renderiza si tiene número configurado */}
           {cfg.rsvp.regalos.miDinero.numero && (
