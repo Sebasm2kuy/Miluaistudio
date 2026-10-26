@@ -202,12 +202,12 @@ export default function Gallery() {
             className="hidden md:flex absolute -left-2 xl:-left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
             style={{
               background: 'rgba(253, 252, 251, 0.92)',
-              borderColor: 'rgba(184, 134, 11, 0.25)',
+              borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)',
               color: 'rgba(184, 134, 11, 0.7)',
             }}
             aria-label="Foto anterior"
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.25)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
           >
             <ChevronLeft size={18} strokeWidth={1.5} />
           </button>
@@ -216,12 +216,12 @@ export default function Gallery() {
             className="hidden md:flex absolute -right-2 xl:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
             style={{
               background: 'rgba(253, 252, 251, 0.92)',
-              borderColor: 'rgba(184, 134, 11, 0.25)',
+              borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)',
               color: 'rgba(184, 134, 11, 0.7)',
             }}
             aria-label="Foto siguiente"
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = '#b8860b' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.25)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
           >
             <ChevronRight size={18} strokeWidth={1.5} />
           </button>
@@ -286,12 +286,12 @@ export default function Gallery() {
           onClick={() => setUploadModal(true)}
           className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
           style={{
-            borderColor: 'rgba(184, 134, 11, 0.35)',
-            color: '#b8860b',
-            background: 'rgba(184, 134, 11, 0.06)',
+            borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)',
+            color: 'var(--theme-accent, #b8860b)',
+            background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.35)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.06)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)' }}
         >
           <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
           <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
@@ -310,7 +310,7 @@ export default function Gallery() {
           className="modal-content w-full max-w-md rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
           style={{
             background: 'rgba(255, 255, 255, 0.98)',
-            border: '1px solid rgba(184, 134, 11, 0.15)',
+            border: '1px solid color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)',
             boxShadow: '0 24px 80px rgba(0,0,0,0.3)',
           }}
           onClick={(e) => e.stopPropagation()}
@@ -329,10 +329,10 @@ export default function Gallery() {
           {!preview ? (
             <div
               className="border-2 border-dashed rounded-2xl p-8 sm:p-12 flex flex-col items-center gap-3 cursor-pointer transition-[border-color,background-color] duration-300 hover:border-gold/40 hover:bg-gold/[0.02]"
-              style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+              style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)' }}
               onClick={() => fileRef.current?.click()}
             >
-              <div className="w-14 h-14 rounded-full flex items-center justify-center text-gold" style={{ background: 'rgba(184, 134, 11, 0.08)' }}>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center text-gold" style={{ background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 8%, transparent)' }}>
                 <Upload size={22} strokeWidth={1.5} />
               </div>
               <p className="text-gray-500 text-xs sm:text-sm font-medium">Tocá para elegir una foto</p>
