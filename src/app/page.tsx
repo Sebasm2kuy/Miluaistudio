@@ -16,6 +16,57 @@ const MERCADO_LIBRE_URL =
   'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 const FEATURED_DESIGNS = INVITATION_DESIGNS.slice(0, 4);
+const PREVIEW_SPRITE_URL = '/Miluaistudio/catalogo/previews-sprite.webp';
+const PREVIEW_INDEX: Record<string, number> = {
+  'rosa-romantica': 0,
+  'noche-dorada': 1,
+  'azul-celestial': 2,
+  'jardin-botanico': 3,
+  lavanda: 4,
+  terracota: 5,
+  'blanco-perla': 6,
+  'rojo-glamour': 7,
+  'geometria-moderna': 8,
+  'azul-romantico': 9,
+};
+const DEMO_NAMES: Record<string, string> = {
+  'rosa-romantica': 'Valentina',
+  'noche-dorada': 'Camila',
+  'azul-celestial': 'Lucía',
+  'jardin-botanico': 'Sofía',
+  lavanda: 'Martina',
+  terracota: 'Renata',
+  'blanco-perla': 'Isabella',
+  'rojo-glamour': 'Julieta',
+  'geometria-moderna': 'Valentina & Diego',
+  'azul-romantico': 'Emilia',
+};
+
+function PhotoDesignPreview({ design, large = false }: { design: InvitationDesign; large?: boolean }) {
+  const index = PREVIEW_INDEX[design.id] ?? 0;
+  const col = index % 5;
+  const row = Math.floor(index / 5);
+  return (
+    <div
+      role="img"
+      aria-label={'Ejemplo de invitación ' + design.name + ', ' + DEMO_NAMES[design.id]}
+      className={'relative aspect-square w-full overflow-hidden ' + (large ? 'rounded-[1.5rem]' : 'rounded-xl')}
+      style={{
+        backgroundImage: 'url(' + PREVIEW_SPRITE_URL + ')',
+        backgroundSize: '500% 200%',
+        backgroundPosition: String(col * 25) + '% ' + String(row * 100) + '%',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent px-3 pb-3 pt-8">
+        <span className="inline-flex rounded-full border border-white/30 bg-black/25 px-2.5 py-1 text-[9px] font-medium text-white/95 backdrop-blur-sm">
+          Ejemplo ficticio: {DEMO_NAMES[design.id]}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 
 const shapeClasses: Record<InvitationDesign['layout'], string> = {
   classic: 'rounded-2xl',
@@ -185,11 +236,12 @@ export default function Home() {
               <span className="text-[10px] uppercase tracking-[0.2em] text-white/45">Vista de ejemplo</span>
               <span className="inline-flex items-center gap-1.5 text-[10px] text-[#dfbd85]"><span className="h-1.5 w-1.5 rounded-full bg-[#dfbd85]" /> Interactiva</span>
             </div>
-            <DesignPreview design={heroDesign} large />
+            <PhotoDesignPreview design={heroDesign} large />
             <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-4">
               <div>
                 <p className="text-sm font-semibold">{heroDesign.name}</p>
                 <p className="mt-0.5 text-xs text-white/45">{heroDesign.palette}</p>
+                <p className="mt-1 text-[10px] text-white/40">Ejemplo ficticio: {DEMO_NAMES[heroDesign.id]}</p>
               </div>
               <a href={'/Miluaistudio/catalogo/' + heroDesign.id + '/'} className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#dfbd85] hover:text-[#eed5a7]">
                 Probar diseño <ArrowRight size={14} />
@@ -232,7 +284,7 @@ export default function Home() {
           {FEATURED_DESIGNS.map((design) => (
             <article key={design.id} className="rounded-2xl border border-white/10 bg-white/[0.035] p-3 transition hover:-translate-y-1 hover:border-white/20 sm:p-4">
               <a href={'/Miluaistudio/catalogo/' + design.id + '/'} className="block" aria-label={'Probar ' + design.name}>
-                <DesignPreview design={design} />
+                <PhotoDesignPreview design={design} />
               </a>
               <div className="px-1 pb-1 pt-4">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accent }}>{design.category}</p>
