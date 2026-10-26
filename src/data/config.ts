@@ -12,6 +12,7 @@ export interface TimelineEvent {
 export interface GalleryPhoto {
   webp: string
   fallback: string
+  objectPosition?: { desktop: string; mobile: string }
 }
 
 export interface SiteConfig {
