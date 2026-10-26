@@ -375,3 +375,29 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+/* Typography variants use the three fonts already bundled with the project. */
+.invitation-experience[data-title-font="montserrat"] .font-serif {
+  font-family: var(--font-sans), Arial, sans-serif !important;
+}
+.invitation-experience[data-title-font="alex-brush"] .font-serif {
+  font-family: var(--font-cursive), cursive !important;
+}
+.invitation-experience[data-script-font="playfair"] .font-cursive {
+  font-family: var(--font-serif), Georgia, serif !important;
+  font-style: italic;
+}
+.invitation-experience[data-script-font="montserrat"] .font-cursive {
+  font-family: var(--font-sans), Arial, sans-serif !important;
+  font-style: normal;
+}
+.invitation-experience[data-script-font="alex-brush"] .font-cursive {
+  font-family: var(--font-cursive), cursive !important;
+}
+.invitation-experience[data-demo="true"] #confirmar input {
+  border-color: color-mix(in srgb, var(--theme-accent) 35%, transparent) !important;
+}
+.invitation-experience[data-demo="true"] #confirmar .gold-button {
+  letter-spacing: 0.08em;
+}
