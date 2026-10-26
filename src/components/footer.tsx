@@ -8,6 +8,7 @@ export default function Footer() {
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleFraseClick = useCallback(() => {
+    if (cfg.modoDemo) return
     clickCount.current++
     if (clickTimer.current) clearTimeout(clickTimer.current)
     clickTimer.current = setTimeout(() => { clickCount.current = 0 }, 2000)
@@ -16,7 +17,7 @@ export default function Footer() {
       clickCount.current = 0
       window.location.href = '/Miluaistudio/admin'
     }
-  }, [])
+  }, [cfg.modoDemo])
 
   return (
     <footer className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
@@ -34,9 +35,9 @@ export default function Footer() {
         </p>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
-          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, transparent, #fcf6ba, #d4af37)' }} />
+          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-highlight, #fcf6ba), var(--theme-accent-light, #d4af37))' }} />
           <div className="w-1.5 h-1.5 rotate-45 bg-goldLight/70" />
-          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, #d4af37, #fcf6ba, transparent)' }} />
+          <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), var(--theme-highlight, #fcf6ba), transparent)' }} />
         </div>
 
         <p
