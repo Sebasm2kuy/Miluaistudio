@@ -1,12 +1,57 @@
 import defaultConfig, { type SiteConfig } from '@/data/config';
 import type { InvitationDesign } from '@/data/invitation-designs';
 
-const DEMO_PHOTOS = [
-  '/Miluaistudio/catalogo/demo-01.svg',
-  '/Miluaistudio/catalogo/demo-02.svg',
-  '/Miluaistudio/catalogo/demo-03.svg',
-  '/Miluaistudio/catalogo/demo-04.svg',
-];
+const PREVIEW_SPRITE_URL = '/Miluaistudio/catalogo/previews-sprite.webp';
+
+type DemoProfile = {
+  tipo: string;
+  nombre: string;
+  apellido: string;
+  apodo: string;
+  fecha: string;
+  anio: string;
+  fechaEvento: string;
+  lugar: string;
+  hashtag: string;
+};
+
+const DEFAULT_DEMO_PROFILE: DemoProfile = {
+  tipo: 'Una celebración especial',
+  nombre: 'Valentina',
+  apellido: '',
+  apodo: 'Vale',
+  fecha: '15 de noviembre',
+  anio: '2027',
+  fechaEvento: '2027-11-15 21:00',
+  lugar: 'Jardín Magnolia',
+  hashtag: '#CelebracionDeMuestra',
+};
+
+const DEMO_PROFILES: Record<string, DemoProfile> = {
+  'rosa-romantica': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Valentina', apodo: 'Vale', lugar: 'Jardín Magnolia', hashtag: '#ValentinaXV2027' },
+  'noche-dorada': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Camila', apodo: 'Cami', fecha: '28 de noviembre', fechaEvento: '2027-11-28 21:00', lugar: 'Salón Imperial', hashtag: '#CamilaXV2027' },
+  'azul-celestial': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Lucía', apodo: 'Lu', fecha: '7 de diciembre', fechaEvento: '2027-12-07 21:00', lugar: 'Terraza Celeste', hashtag: '#LuciaXV2027' },
+  'jardin-botanico': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Sofía', apodo: 'Sofi', fecha: '21 de noviembre', fechaEvento: '2027-11-21 21:00', lugar: 'Quinta del Prado', hashtag: '#SofiaXV2027' },
+  lavanda: { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Martina', apodo: 'Marti', fecha: '23 de abril', fechaEvento: '2027-04-23 21:00', lugar: 'Casa Lavanda', hashtag: '#MartinaXV2027' },
+  terracota: { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Renata', apodo: 'Rena', fecha: '13 de julio', fechaEvento: '2027-07-13 21:00', lugar: 'Espacio Terracota', hashtag: '#RenataXV2027' },
+  'blanco-perla': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Isabella', apodo: 'Isa', fecha: '10 de octubre', fechaEvento: '2027-10-10 21:00', lugar: 'Salón Perla', hashtag: '#IsabellaXV2027' },
+  'rojo-glamour': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Julieta', apodo: 'Juli', fecha: '18 de noviembre', fechaEvento: '2027-11-18 21:00', lugar: 'Palacio Rubí', hashtag: '#JulietaXV2027' },
+  'geometria-moderna': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Valentina & Diego', apellido: '', apodo: 'Vale & Diego', fecha: '8 de agosto', fechaEvento: '2027-08-08 20:30', lugar: 'Casa del Lago', hashtag: '#ValentinaYDiego2027' },
+  'azul-romantico': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Emilia', apodo: 'Emi', fecha: '22 de septiembre', fechaEvento: '2027-09-22 21:00', lugar: 'Jardín del Sur', hashtag: '#EmiliaXV2027' },
+};
+
+const DEMO_GALLERIES: Record<string, number[]> = {
+  'rosa-romantica': [0, 3, 4, 5],
+  'noche-dorada': [1, 7, 6, 8],
+  'azul-celestial': [2, 9, 6, 1],
+  'jardin-botanico': [3, 9, 5, 6],
+  lavanda: [4, 0, 5, 3],
+  terracota: [5, 3, 4, 6],
+  'blanco-perla': [6, 3, 5, 9],
+  'rojo-glamour': [7, 1, 5, 8],
+  'geometria-moderna': [8, 1, 5, 2],
+  'azul-romantico': [9, 2, 6, 3],
+};
 
 function cloneConfig(): SiteConfig {
   return JSON.parse(JSON.stringify(defaultConfig)) as SiteConfig;
@@ -19,30 +64,32 @@ function cloneConfig(): SiteConfig {
  */
 export function createDemoConfig(design: InvitationDesign): SiteConfig {
   const config = cloneConfig();
+  const profile = DEMO_PROFILES[design.id] ?? DEFAULT_DEMO_PROFILE;
+  const galleryIndices = DEMO_GALLERIES[design.id] ?? [0, 1, 2, 3];
 
   config.modoDemo = true;
   config.evento = {
     ...config.evento,
-    tipo: 'Una celebración especial',
-    nombre: 'Tu Nombre',
-    apellido: '',
-    apodo: 'Tu evento',
-    fecha: '20 de noviembre',
-    anio: '2027',
-    fechaEvento: '2027-11-20 21:00',
-    lugar: 'Tu salón',
+    tipo: profile.tipo,
+    nombre: profile.nombre,
+    apellido: profile.apellido,
+    apodo: profile.apodo,
+    fecha: profile.fecha,
+    anio: profile.anio,
+    fechaEvento: profile.fechaEvento,
+    lugar: profile.lugar,
     ubicacion: 'Montevideo',
-    direccion: 'Dirección a confirmar',
+    direccion: 'Montevideo, Uruguay',
     mapsUrl: 'https://maps.google.com/?q=Montevideo%2C+Uruguay',
     mapsEmbedUrl: 'https://maps.google.com/maps?q=Montevideo%2C%20Uruguay&t=&z=13&ie=UTF8&iwloc=&output=embed',
-    hashtag: '#TuCelebracion',
+    hashtag: profile.hashtag,
     hashtagUrl: 'https://www.instagram.com/',
   };
 
   config.dedicatoria = {
     cita: 'Los mejores momentos se vuelven inolvidables cuando los compartimos.',
     cuerpo: 'Esta es una invitación de demostración. Los textos, colores y detalles se pueden adaptar a tu celebración.',
-    firma: 'Con cariño',
+    firma: profile.nombre,
   };
 
   config.timeline = {
@@ -61,7 +108,12 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
     subtitulo: 'Detalles de muestra para imaginar tu propia invitación',
     botonSubir: 'Galería de demostración',
     photoUploadUrl: '',
-    fotos: DEMO_PHOTOS.map((url) => ({ webp: url, fallback: url })),
+    fotos: galleryIndices.map((spriteIndex) => ({
+      webp: PREVIEW_SPRITE_URL,
+      fallback: PREVIEW_SPRITE_URL,
+      spriteIndex,
+      objectPosition: { desktop: 'center center', mobile: 'center center' },
+    })),
   };
 
   config.musica = {
@@ -89,7 +141,7 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
   };
 
   config.footer = {
-    apodo: 'Tu celebración',
+    apodo: profile.apodo,
     ubicacion: 'Montevideo · Uruguay',
     frase: 'Una invitación hecha a tu estilo',
   };
@@ -105,8 +157,8 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
     titulo: 'La cuenta regresiva',
     labels: { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' },
     botonCalendario: 'Agregar a tu calendario',
-    calendarioTitulo: 'Una celebración especial',
-    calendarioLocation: 'Montevideo, Uruguay',
+    calendarioTitulo: profile.tipo + ' · ' + profile.nombre,
+    calendarioLocation: profile.lugar + ', Montevideo, Uruguay',
     calendarioDetalles: 'Invitación web de demostración. Los datos reales se configuran al personalizar tu evento.',
   };
 
