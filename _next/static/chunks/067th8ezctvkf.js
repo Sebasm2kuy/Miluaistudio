@@ -1,4 +1,4 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,72906,e=>{"use strict";var t=e.i(43476),s=e.i(71645),a=e.i(23974),o=e.i(24437),r=e.i(28813);let l="Sebasm2kuy/Miluaistudio",n=`// ============================================================
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,72906,e=>{"use strict";var t=e.i(43476),s=e.i(71645),a=e.i(23974),o=e.i(29646),r=e.i(28813);let l="Sebasm2kuy/Miluaistudio",n=`// ============================================================
 // CONFIGURACI\xd3N CENTRAL — Edit\xe1 todo desde ac\xe1 o desde /admin
 // ============================================================
 
