@@ -33,7 +33,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           className="absolute rounded-2xl"
           style={{
             inset: '-20px',
-            background: 'radial-gradient(ellipse, rgba(212,175,55,0.15) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse, color-mix(in srgb, var(--theme-accent-light, #d4af37) 15%, transparent) 0%, transparent 60%)',
             animation: 'breathe 3s ease-in-out infinite',
           }}
         />
@@ -42,15 +42,15 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           <source srcSet={cfg.invitacion.imagen} type="image/webp" />
           <img
             src={cfg.invitacion.imagenFallback}
-            alt="Invitación XV Años - Milagros"
+            alt={`Invitación de ${cfg.evento.tipo} - ${cfg.evento.nombre}`}
             draggable={false}
             className="object-contain rounded-lg relative z-10"
             style={{
               display: 'block',
               maxWidth: 'calc(100vw - 24px)',
               maxHeight: 'calc(100vh - 24px)',
-              boxShadow: '0 0 40px rgba(212,175,55,0.15), 0 8px 32px rgba(0,0,0,0.4)',
-              border: '1px solid rgba(212,175,55,0.1)',
+              boxShadow: '0 0 40px color-mix(in srgb, var(--theme-accent-light, #d4af37) 15%, transparent), 0 8px 32px rgba(0,0,0,0.4)',
+              border: '1px solid color-mix(in srgb, var(--theme-accent-light, #d4af37) 10%, transparent)',
             }}
           />
         </picture>
