@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Invitaciones digitales personalizadas | Miluaistudio',
+  title: 'Invitaciones digitales personalizadas',
   description: 'Explorá invitaciones digitales interactivas para fiestas de 15, bodas y celebraciones. Elegí un diseño y consultá las opciones de personalización.',
   // The public storefront must be discoverable. Individual demo pages may
   // remain noindex until each template has finalized commercial content.
