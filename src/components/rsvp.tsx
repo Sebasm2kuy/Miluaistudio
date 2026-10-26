@@ -80,6 +80,12 @@ export default function Rsvp() {
     // Pequeña demora para que el spinner sea visible y se sienta natural.
     await new Promise((r) => setTimeout(r, 500))
 
+    // Las muestras públicas simulan el flujo, pero nunca envían datos de invitados.
+    if (cfg.modoDemo) {
+      setStatus('ok')
+      return
+    }
+
     // Intentar registrar en el backend (Google Sheet) si está disponible.
     // Si falla, no bloquear al usuario — el flujo sigue por WhatsApp.
     // Usamos GET con query params porque Google Apps Script a veces rechaza
