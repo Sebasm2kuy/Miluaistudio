@@ -140,7 +140,7 @@ function CircleUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div className="flex h-14 w-14 items-center justify-center rounded-full border sm:h-20 sm:w-20 md:h-24 md:w-24" style={{ borderColor: 'var(--theme-accent, var(--theme-accent, #b8860b))', background: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 10%, transparent)' }}>
-        <span className="font-light text-bordeaux tabular-nums leading-none text-lg sm:text-2xl md:text-3xl">{String(value).padStart(2, '0')}</span>
+        <span className="font-light tabular-nums leading-none text-lg sm:text-2xl md:text-3xl" style={{ color: "var(--theme-ivory, #fdfcfb)" }}>{String(value).padStart(2, '0')}</span>
       </div>
       <span className="mt-2 text-[9px] uppercase tracking-[0.18em] sm:text-xs" style={{ color: 'var(--theme-accent, var(--theme-accent, #b8860b))' }}>{label}</span>
     </div>
@@ -150,7 +150,7 @@ function CircleUnit({ value, label }: { value: number; label: string }) {
 function OutlineUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex min-w-0 flex-col items-center border-y py-3 sm:py-4" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 55%, transparent)' }}>
-      <span className="font-light text-bordeaux tabular-nums leading-none text-2xl sm:text-4xl md:text-5xl">{String(value).padStart(2, '0')}</span>
+      <span className="font-light tabular-nums leading-none text-2xl sm:text-4xl md:text-5xl" style={{ color: "var(--theme-ivory, #fdfcfb)" }}>{String(value).padStart(2, '0')}</span>
       <span className="mt-2 text-[9px] uppercase tracking-[0.18em] sm:text-xs" style={{ color: 'var(--theme-accent, var(--theme-accent, #b8860b))' }}>{label}</span>
     </div>
   )
