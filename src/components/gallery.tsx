@@ -244,7 +244,7 @@ export default function Gallery() {
                 >
                   {isOriginal ? (
                     <picture>
-                      <source srcSet={photo.src} type="image/webp" />
+                      {photo.src.toLowerCase().endsWith(".webp") && <source srcSet={photo.src} type="image/webp" />}
                       <img
                         src={originalPhotos[origIdx].fallback}
                         alt={`Momento especial ${origIdx + 1}`}
