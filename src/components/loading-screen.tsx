@@ -128,8 +128,9 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[300] bg-black flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[300] flex flex-col items-center justify-center"
       style={{
+        background: cfg.estilos.modoClaro ? cfg.colores.fondo : '#000',
         opacity: fading ? 0 : 1,
         transition: 'opacity 0.8s ease',
         left: '-5px',
@@ -142,7 +143,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
     >
       <p
         className="font-cursive text-7xl sm:text-6xl mb-12 sm:mb-12"
-        style={{ color: '#d4af37' }}
+        style={{ color: cfg.estilos.modoClaro ? cfg.colores.dorado : '#d4af37' }}
       >
         {cfg.evento.nombre}
       </p>
@@ -161,7 +162,7 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
             }}
           />
         </div>
-        <p className="text-center mt-4 sm:mt-4 text-xs sm:text-sm text-gold/50 tracking-[0.3em] font-light tabular-nums">
+        <p className="text-center mt-4 sm:mt-4 text-xs sm:text-sm tracking-[0.3em] font-light tabular-nums" style={{ color: 'color-mix(in srgb, var(--theme-accent) 55%, transparent)' }}>
           {progress}%
         </p>
       </div>

@@ -1,8 +1,6 @@
 import defaultConfig, { type SiteConfig } from '@/data/config';
 import type { InvitationDesign } from '@/data/invitation-designs';
 
-const PREVIEW_SPRITE_URL = '/Miluaistudio/catalogo/previews-sprite.webp';
-
 type DemoProfile = {
   tipo: string;
   nombre: string;
@@ -40,18 +38,19 @@ const DEMO_PROFILES: Record<string, DemoProfile> = {
   'azul-romantico': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Emilia', apodo: 'Emi', fecha: '22 de septiembre', fechaEvento: '2027-09-22 21:00', lugar: 'Jardín del Sur', hashtag: '#EmiliaXV2027' },
 };
 
-const DEMO_GALLERIES: Record<string, number[]> = {
-  'rosa-romantica': [0, 3, 4, 5],
-  'noche-dorada': [1, 7, 6, 8],
-  'azul-celestial': [2, 9, 6, 1],
-  'jardin-botanico': [3, 9, 5, 6],
-  lavanda: [4, 0, 5, 3],
-  terracota: [5, 3, 4, 6],
-  'blanco-perla': [6, 3, 5, 9],
-  'rojo-glamour': [7, 1, 5, 8],
-  'geometria-moderna': [8, 1, 5, 2],
-  'azul-romantico': [9, 2, 6, 3],
-};
+const DEMO_GALLERY_BASE = '/Miluaistudio/catalogo/galeria';
+
+/** Fotos de galería de demostración por diseño (recursos temáticos generados) */
+function demoGallery(designId: string) {
+  return [1, 2, 3, 4].map((n, i) => ({
+    webp: `${DEMO_GALLERY_BASE}/${designId}-${n}.jpg`,
+    fallback: `${DEMO_GALLERY_BASE}/${designId}-${n}.jpg`,
+    objectPosition: {
+      desktop: ['center 30%', 'center 45%', 'center 25%', 'center 40%'][i],
+      mobile: ['center 20%', 'center 35%', 'center 15%', 'center 30%'][i],
+    },
+  }));
+}
 
 function cloneConfig(): SiteConfig {
   return JSON.parse(JSON.stringify(defaultConfig)) as SiteConfig;
@@ -65,7 +64,6 @@ function cloneConfig(): SiteConfig {
 export function createDemoConfig(design: InvitationDesign): SiteConfig {
   const config = cloneConfig();
   const profile = DEMO_PROFILES[design.id] ?? DEFAULT_DEMO_PROFILE;
-  const galleryIndices = DEMO_GALLERIES[design.id] ?? [0, 1, 2, 3];
 
   config.modoDemo = true;
   config.evento = {
@@ -108,12 +106,7 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
     subtitulo: 'Detalles de muestra para imaginar tu propia invitación',
     botonSubir: 'Galería de demostración',
     photoUploadUrl: '',
-    fotos: galleryIndices.map((spriteIndex) => ({
-      webp: PREVIEW_SPRITE_URL,
-      fallback: PREVIEW_SPRITE_URL,
-      spriteIndex,
-      objectPosition: { desktop: 'center center', mobile: 'center center' },
-    })),
+    fotos: demoGallery(design.id),
   };
 
   config.musica = {
@@ -172,9 +165,10 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
   };
 
   const font = design.font === 'script' ? 'alex-brush' : design.font === 'sans' ? 'montserrat' : 'playfair';
+  const light = design.themeMode === 'light';
   const clock = design.clock === 'cards' ? 'classic' : design.clock === 'glass' ? 'gold-glass' : design.clock;
-  const cardStyle = design.layout === 'minimal' ? 'glass' : design.layout === 'cinematic' || design.layout === 'modern' ? 'dark' : 'gold-border';
-  const buttonStyle = design.layout === 'minimal' || design.layout === 'editorial' ? 'outline-gold' : design.layout === 'modern' ? 'filled-dark' : 'gold-gradient';
+  const cardStyle = light ? 'glass' : 'dark';
+  const buttonStyle = light ? 'outline-gold' : design.layout === 'modern' ? 'filled-dark' : 'gold-gradient';
 
   config.estilos = {
     ...config.estilos,
@@ -185,6 +179,8 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
     estiloTarjetas: cardStyle,
     estiloBotones: buttonStyle,
     modeloComposicion: design.layout,
+    modoClaro: light,
+    adorno: design.adorno,
   };
 
   return config;

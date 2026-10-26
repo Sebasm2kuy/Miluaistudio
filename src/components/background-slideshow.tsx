@@ -16,7 +16,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   const gradientId = isGradient ? photos[0].replace('gradient:', '') : null
   const gradientPreset = gradientId ? BACKGROUND_PRESETS.find(bg => bg.id === gradientId) : null
   const gradientCss = gradientPreset?.css || null
-  const isLightGradient = gradientId === 'perla-clara'
+  const isLightGradient = gradientPreset?.light === true
 
   // Preload all images on mount (only for photo mode)
   useEffect(() => {

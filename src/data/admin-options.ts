@@ -311,7 +311,16 @@ export const COLOR_PRESETS = [
 ] as const
 
 // --- Background Presets (gradient backgrounds as alternatives to photos) ---
-export const BACKGROUND_PRESETS = [
+export interface BackgroundPreset {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  css: string
+  /** true = fondo claro (los overlays y textos se adaptan) */
+  light?: boolean
+}
+export const BACKGROUND_PRESETS: BackgroundPreset[] = [
   {
     id: 'fotos',
     name: 'Mis Fotos',
@@ -366,6 +375,7 @@ export const BACKGROUND_PRESETS = [
     name: 'Perla Clara',
     emoji: '🤍',
     description: 'Fondo claro y luminoso para diseños minimalistas',
+    light: true,
     css: 'linear-gradient(135deg, #f4f0e9 0%, #e7ded2 48%, #fbf8f3 100%)',
   },
   {
@@ -382,7 +392,77 @@ export const BACKGROUND_PRESETS = [
     description: 'Degradado lila profundo y misterioso',
     css: 'linear-gradient(135deg, #080310 0%, #1a0a30 30%, #100520 60%, #050208 100%)',
   },
-] as const
+  // --- Presets de la colección de referencia (claros/oscuros por diseño) ---
+  {
+    id: 'rosa-suave',
+    name: 'Rosa Suave',
+    emoji: '🌹',
+    description: 'Rosa empolvado luminoso, estilo romántico',
+    light: true,
+    css: 'linear-gradient(160deg, #fdf4f4 0%, #f9e9e9 48%, #f6dfdf 100%)',
+  },
+  {
+    id: 'oro-real',
+    name: 'Oro Real',
+    emoji: '👑',
+    description: 'Negro profundo con brillo dorado real',
+    css: 'radial-gradient(ellipse at 50% 0%, #1d1608 0%, #0c0a06 55%, #050504 100%)',
+  },
+  {
+    id: 'jardin-pastel',
+    name: 'Jardín Pastel',
+    emoji: '🌼',
+    description: 'Crema y salvia suaves, frescura de jardín',
+    light: true,
+    css: 'linear-gradient(160deg, #f9f8f0 0%, #eff1e5 50%, #e8edde 100%)',
+  },
+  {
+    id: 'cielo-estrellado',
+    name: 'Cielo Estrellado',
+    emoji: '🌟',
+    description: 'Azul noche con luna y destellos',
+    css: 'radial-gradient(ellipse at 50% 10%, #17325c 0%, #0e203e 48%, #081326 100%)',
+  },
+  {
+    id: 'lavanda-suave',
+    name: 'Lavanda Suave',
+    emoji: '🦋',
+    description: 'Lila claro con mariposas y magia',
+    light: true,
+    css: 'linear-gradient(160deg, #faf6fd 0%, #f2e8f9 50%, #eadef5 100%)',
+  },
+  {
+    id: 'rojo-velvet',
+    name: 'Rojo Velvet',
+    emoji: '🌹',
+    description: 'Rojo rubí profundo con detalles dorados',
+    css: 'radial-gradient(ellipse at 50% 8%, #4d0f1c 0%, #2d0811 52%, #190309 100%)',
+  },
+  {
+    id: 'botanico-suave',
+    name: 'Botánico Suave',
+    emoji: '🌿',
+    description: 'Beige cálido con verdes naturales',
+    light: true,
+    css: 'linear-gradient(160deg, #f8f6ec 0%, #eeefdf 50%, #e5ead6 100%)',
+  },
+  {
+    id: 'geometria-calida',
+    name: 'Geometría Cálida',
+    emoji: '🟠',
+    description: 'Crema cálido con terracota y arena',
+    light: true,
+    css: 'linear-gradient(160deg, #faf3e8 0%, #f4e7d6 50%, #eddfc8 100%)',
+  },
+  {
+    id: 'floral-crema',
+    name: 'Floral Crema',
+    emoji: '🌸',
+    description: 'Marfil romántico con corales suaves',
+    light: true,
+    css: 'linear-gradient(160deg, #fbf6ee 0%, #f6eadf 50%, #f1e1d4 100%)',
+  },
+]
 
 // Google Fonts to load
 export const GOOGLE_FONTS = FONT_OPTIONS.map(f => f.name).join('&family=').replace(/ /g, '+')

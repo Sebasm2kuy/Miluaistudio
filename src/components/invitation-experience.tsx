@@ -83,7 +83,7 @@ export default function InvitationExperience() {
   }, [])
 
   return (
-    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
+    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
