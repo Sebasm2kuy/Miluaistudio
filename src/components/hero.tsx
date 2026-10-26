@@ -27,7 +27,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
         </p>
 
         {/* LINEA 2: Milagros — UN solo text-shadow sutil, sin shimmer */}
-        <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
+        <h1 className={`hero-line hero-line-2 font-cursive leading-none mb-6 sm:mb-8 md:mb-10 ${cfg.evento.nombre.length > 15 ? 'text-4xl sm:text-6xl md:text-7xl lg:text-8xl' : 'text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem]'}`}>
           <span style={{ color: 'var(--theme-highlight, #fcf6ba)', textShadow: '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
         </h1>
 
