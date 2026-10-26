@@ -12,6 +12,7 @@ export interface InvitationDesign {
   text: string;
   muted: string;
   layout: DesignLayout;
+  backgroundPreset: string;
   clock: "cards" | "minimal" | "glass" | "circles" | "outline";
   font: "serif" | "script" | "sans";
   ornament: "sparkles" | "botanical" | "stars" | "petals" | "geometry" | "none";
@@ -20,6 +21,7 @@ export interface InvitationDesign {
 export const INVITATION_DESIGNS: InvitationDesign[] = [
   {
     id: "rosa-romantica",
+    backgroundPreset: "rosa-romantico",
     name: "Rosa romántica",
     category: "XV · Bodas",
     description: "Rosa empolvado, detalles delicados y una composición romántica.",
@@ -36,6 +38,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "noche-dorada",
+    backgroundPreset: "negro-lujo",
     name: "Noche dorada",
     category: "XV · Bodas",
     description: "Negro profundo, dorado cálido y una estética de gala.",
@@ -52,6 +55,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "azul-celestial",
+    backgroundPreset: "azul-medianoche",
     name: "Azul celestial",
     category: "XV · Bodas",
     description: "Azules nocturnos y reflejos plateados, elegante y sereno.",
@@ -68,6 +72,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "jardin-botanico",
+    backgroundPreset: "verde-bosque",
     name: "Jardín botánico",
     category: "Bodas · XV",
     description: "Verdes profundos, tonos marfil y detalles inspirados en hojas.",
@@ -84,6 +89,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "lavanda",
+    backgroundPreset: "lila-mistico",
     name: "Lavanda",
     category: "XV · Cumpleaños",
     description: "Lila suave con matices fríos y una distribución liviana.",
@@ -100,6 +106,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "terracota",
+    backgroundPreset: "dorado-cielo",
     name: "Terracota",
     category: "Bodas · Cumpleaños",
     description: "Arena cálida y terracota para una celebración natural.",
@@ -116,6 +123,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "blanco-perla",
+    backgroundPreset: "perla-clara",
     name: "Blanco perla",
     category: "Bodas · Aniversarios",
     description: "Limpio, luminoso y centrado en la tipografía.",
@@ -132,6 +140,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "rojo-glamour",
+    backgroundPreset: "bordo-solid",
     name: "Rojo glamour",
     category: "XV · Cumpleaños",
     description: "Bordó, rojo rubí y alto contraste para una entrada impactante.",
@@ -148,6 +157,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "geometria-moderna",
+    backgroundPreset: "grafito-cobre",
     name: "Geometría moderna",
     category: "XV · Cumpleaños",
     description: "Formas geométricas, tipografía limpia y acentos vibrantes.",
@@ -164,6 +174,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
   },
   {
     id: "azul-romantico",
+    backgroundPreset: "azul-medianoche",
     name: "Azul romántico",
     category: "Bodas · Aniversarios",
     description: "Azul tinta, detalles pálidos y una composición clásica renovada.",
