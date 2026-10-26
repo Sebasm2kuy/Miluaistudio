@@ -8,7 +8,6 @@ import {
   MapPin,
   Music,
   ShieldCheck,
-  Smartphone,
   Sparkles,
 } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
