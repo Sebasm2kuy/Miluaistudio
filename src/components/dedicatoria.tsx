@@ -3,12 +3,15 @@ import { useConfig } from '@/hooks/useConfig'
 
 export default function Dedicatoria() {
   const cfg = useConfig()
+  const light = cfg.estilos.modoClaro === true
   return (
     <section className="max-w-3xl mx-auto px-3 sm:px-4 relative z-10">
       <div
         className={`css-fade-up rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-6 sm:p-8 md:p-16 text-center relative overflow-hidden`}
         style={{
-          background: 'linear-gradient(180deg, color-mix(in srgb, var(--theme-primary, #3d0202) 92%, black) 0%, color-mix(in srgb, var(--theme-background, #050505) 75%, var(--theme-primary, #3d0202)) 100%)',
+          background: light
+            ? 'linear-gradient(180deg, rgba(255,255,255,0.97) 0%, color-mix(in srgb, var(--theme-background, #f5f2ec) 72%, #ffffff) 100%)'
+            : 'linear-gradient(180deg, color-mix(in srgb, var(--theme-primary, #3d0202) 92%, black) 0%, color-mix(in srgb, var(--theme-background, #050505) 75%, var(--theme-primary, #3d0202)) 100%)',
           border: '1px solid color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
         }}
@@ -27,17 +30,17 @@ export default function Dedicatoria() {
           }}
         />
 
-        <p className={`css-fade font-serif italic text-[1.75rem] sm:text-2xl md:text-4xl mb-8 sm:mb-8 leading-relaxed relative z-10`} style={{ color: 'var(--theme-highlight, #fcf6ba)' }}>
+        <p className={`css-fade font-serif italic text-[1.75rem] sm:text-2xl md:text-4xl mb-8 sm:mb-8 leading-relaxed relative z-10`} style={{ color: light ? 'var(--theme-primary)' : 'var(--theme-highlight, #fcf6ba)' }}>
           &ldquo;{cfg.dedicatoria.cita}&rdquo;
         </p>
 
-        <p className={`css-fade text-base sm:text-base md:text-base leading-relaxed mb-8 sm:mb-8 px-2 sm:px-4 relative z-10`} style={{ color: 'color-mix(in srgb, var(--theme-highlight, #e8d48b) 65%, transparent)' }}>
+        <p className={`css-fade text-base sm:text-base md:text-base leading-relaxed mb-8 sm:mb-8 px-2 sm:px-4 relative z-10`} style={{ color: light ? 'color-mix(in srgb, var(--theme-primary) 80%, var(--theme-ivory))' : 'color-mix(in srgb, var(--theme-highlight, #e8d48b) 65%, transparent)' }}>
           {cfg.dedicatoria.cuerpo}
         </p>
 
         <div className={`css-fade-up flex items-center justify-center gap-3 relative z-10`}>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-accent-light, #d4af37))' }} />
-          <p className="font-cursive text-3xl sm:text-3xl md:text-4xl text-shimmer text-shimmer-once">
+          <p className={`font-cursive text-3xl sm:text-3xl md:text-4xl ${light ? '' : 'text-shimmer text-shimmer-once'}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
             {cfg.dedicatoria.firma}
           </p>
           <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), transparent)' }} />

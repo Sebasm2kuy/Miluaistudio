@@ -11,92 +11,21 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
+import MiniInvitation, { miniFromDesign } from '@/components/mini-invitation';
 
 const MERCADO_LIBRE_URL =
   'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 const FEATURED_DESIGNS = INVITATION_DESIGNS.slice(0, 4);
 
-const shapeClasses: Record<InvitationDesign['layout'], string> = {
-  classic: 'rounded-2xl',
-  editorial: 'rounded-md',
-  split: 'rounded-2xl',
-  framed: 'rounded-md',
-  botanical: 'rounded-[2rem]',
-  modern: 'rounded-xl',
-  rounded: 'rounded-[2rem]',
-  cinematic: 'rounded-xl',
-  arch: 'rounded-t-[45%] rounded-b-2xl',
-  minimal: 'rounded-xl',
-};
-
-function CountdownSample({ design }: { design: InvitationDesign }) {
-  const values = [
-    { value: '128', label: 'días' },
-    { value: '08', label: 'horas' },
-    { value: '42', label: 'min' },
-  ];
-
-  return (
-    <div className="mt-5 grid grid-cols-3 gap-2">
-      {values.map((item) => (
-        <div
-          key={item.label}
-          className={`px-1 py-2 text-center ${design.clock === 'circles' ? 'rounded-full border' : design.clock === 'minimal' ? '' : design.clock === 'glass' ? 'rounded-xl border backdrop-blur' : 'rounded-md'}`}
-          style={{
-            color: design.text,
-            background: design.clock === 'glass' ? `${design.accentSoft}70` : design.clock === 'cards' ? design.accentSoft : 'transparent',
-            borderColor: design.accent,
-          }}
-        >
-          <div className="text-lg font-light tabular-nums sm:text-xl">{item.value}</div>
-          <div className="mt-1 text-[7px] uppercase tracking-[0.15em]" style={{ color: design.muted }}>{item.label}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
+/** Miniatura coherente con el catálogo: misma representación del diseño real */
 function DesignPreview({ design, large = false }: { design: InvitationDesign; large?: boolean }) {
-  const titleFont =
-    design.font === 'script'
-      ? "var(--font-cursive), cursive"
-      : design.font === 'serif'
-        ? "var(--font-serif), Georgia, serif"
-        : "var(--font-sans), Arial, sans-serif";
-
   return (
     <div
-      className={`relative isolate flex flex-col items-center justify-center overflow-hidden border text-center ${shapeClasses[design.layout]} ${large ? 'min-h-[420px] p-8 sm:min-h-[500px] sm:p-10' : 'min-h-[320px] p-5 sm:min-h-[350px] sm:p-6'}`}
-      style={{
-        background: design.background,
-        color: design.text,
-        borderColor: `${design.accent}70`,
-        boxShadow: `0 20px 55px ${design.background}65`,
-      }}
+      className={`relative isolate w-full overflow-hidden rounded-2xl border shadow-[0_20px_55px_rgba(0,0,0,0.35)] ${large ? 'aspect-[10/15]' : 'aspect-[10/16]'}`}
+      style={{ borderColor: design.accent + '55' }}
     >
-      {design.layout === 'framed' && <div aria-hidden="true" className="pointer-events-none absolute inset-2 border" style={{ borderColor: `${design.accent}70` }} />}
-      {design.layout === 'arch' && <div aria-hidden="true" className="pointer-events-none absolute inset-x-5 top-5 h-2/3 rounded-t-full border" style={{ borderColor: `${design.accent}70` }} />}
-      {design.layout === 'modern' && <div aria-hidden="true" className="pointer-events-none absolute -right-8 top-8 h-28 w-28 rotate-45 border opacity-70" style={{ borderColor: design.accent }} />}
-      {design.ornament !== 'none' && (
-        <div aria-hidden="true" className="pointer-events-none absolute right-4 top-4 text-2xl opacity-70" style={{ color: design.accent }}>
-          {design.ornament === 'botanical' ? '❧' : design.ornament === 'petals' ? '❋' : design.ornament === 'geometry' ? '◇' : design.ornament === 'stars' ? '✦' : '✧'}
-        </div>
-      )}
-      <div className="relative z-10 w-full">
-        <p className="text-[8px] font-medium uppercase tracking-[0.28em] sm:text-[9px]" style={{ color: design.muted }}>Una celebración especial</p>
-        <h3 className={`mt-4 leading-none ${large ? 'text-5xl sm:text-6xl' : 'text-4xl sm:text-5xl'}`} style={{ color: design.accent, fontFamily: titleFont }}>
-          Tu nombre
-        </h3>
-        <p className="mt-3 text-[10px] uppercase tracking-[0.2em]" style={{ color: design.muted }}>Mis XV años</p>
-        <div className="mx-auto my-5 h-px w-14" style={{ background: design.accent }} />
-        <p className="text-xs sm:text-sm">Sábado · 21:00 hs</p>
-        <p className="mt-1 text-[9px] uppercase tracking-[0.16em]" style={{ color: design.muted }}>Montevideo · Uruguay</p>
-        <CountdownSample design={design} />
-        <div className="mx-auto mt-5 inline-flex rounded-full px-4 py-2 text-[8px] font-semibold uppercase tracking-[0.15em]" style={{ background: design.accent, color: design.background }}>
-          Confirmar asistencia
-        </div>
-      </div>
+      <MiniInvitation data={miniFromDesign(design)} variant="card" />
     </div>
   );
 }
@@ -125,7 +54,7 @@ export default function Home() {
   const heroDesign = INVITATION_DESIGNS[1];
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#09090b] text-white">
+    <main data-page="storefront" className="min-h-screen overflow-hidden bg-[#09090b] text-white">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 opacity-90" style={{ background: 'radial-gradient(ellipse at 12% 2%, rgba(153,96,125,0.18), transparent 34%), radial-gradient(ellipse at 88% 12%, rgba(215,180,106,0.12), transparent 32%)' }} />
 
       <header className="relative z-20 border-b border-white/10">

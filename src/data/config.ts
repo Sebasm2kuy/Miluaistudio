@@ -109,6 +109,10 @@ export interface SiteConfig {
     modeloReloj: string
     estiloTarjetas: string
     estiloBotones: string
+    /** true = tema de fondo claro (ajusta overlays, sombras y adornos) */
+    modoClaro?: boolean
+    /** Set de adornos SVG temáticos de la miniatura (rosas, luna-estrellas, etc.) */
+    adorno?: string
   }
 }
 

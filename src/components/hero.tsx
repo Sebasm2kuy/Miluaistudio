@@ -1,34 +1,54 @@
 'use client'
-import { useState, useEffect } from 'react'
 import { useConfig } from '@/hooks/useConfig'
+import { DesignAdornoGlyph, SparkleGlyph } from '@/components/design-ornaments'
+import type { DesignAdorno } from '@/data/invitation-designs'
 
 interface HeroProps { active: boolean; scrollToTop?: () => void }
 
 export default function Hero({ active, scrollToTop }: HeroProps) {
   const cfg = useConfig()
+  const light = cfg.estilos.modoClaro === true
+  const adorno = (cfg.estilos.adorno as DesignAdorno | undefined) || 'rosas'
+
+  // Sombras de texto: profundidad en temas oscuros, casi nulas en claros
+  const textShadow = light
+    ? '0 1px 10px rgba(255,255,255,0.45)'
+    : '0 2px 12px rgba(0,0,0,0.8)'
+
   return (
     <header className={`min-h-[100dvh] flex flex-col items-center justify-center text-center px-4 sm:px-6 relative z-10 ${active ? 'hero-active' : ''}`}>
-      {/* Dark radial vignette */}
+      {/* Viñeta: oscura en temas oscuros, luminosa en temas claros */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 80% 70% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.3) 60%, transparent 80%)',
+          background: light
+            ? 'radial-gradient(ellipse 85% 75% at center, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 45%, transparent 78%)'
+            : 'radial-gradient(ellipse 80% 70% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 35%, rgba(0,0,0,0.3) 60%, transparent 80%)',
         }}
       />
+
+      {/* Adornos temáticos en esquinas */}
+      <DesignAdornoGlyph adorno={adorno} className="pointer-events-none absolute z-0 w-24 sm:w-36 md:w-44" style={{ top: '4%', left: '2%', color: 'var(--theme-accent)', opacity: light ? 0.55 : 0.75 }} />
+      <DesignAdornoGlyph adorno={adorno} flip className="pointer-events-none absolute z-0 w-24 sm:w-36 md:w-44" style={{ top: '4%', right: '2%', color: 'var(--theme-accent)', opacity: light ? 0.55 : 0.75 }} />
+      <DesignAdornoGlyph adorno={adorno} flip className="pointer-events-none absolute z-0 w-20 sm:w-28 md:w-36" style={{ bottom: '6%', left: '3%', color: 'var(--theme-accent)', opacity: light ? 0.4 : 0.55 }} />
+      <DesignAdornoGlyph adorno={adorno} className="pointer-events-none absolute z-0 w-20 sm:w-28 md:w-36" style={{ bottom: '6%', right: '3%', color: 'var(--theme-accent)', opacity: light ? 0.4 : 0.55 }} />
+      {adorno === 'luna-estrellas' && (
+        <SparkleGlyph className="pointer-events-none absolute z-0 w-5 sm:w-7" style={{ top: '16%', left: '24%', color: 'var(--theme-accent)', opacity: 0.8 }} />
+      )}
 
       <div className="flex flex-col items-center relative z-10">
 
         {/* LINEA 1: Mis XV Años */}
         <p
           className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 font-bold"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
+          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
         >
           {cfg.evento.tipo}
         </p>
 
-        {/* LINEA 2: Milagros — UN solo text-shadow sutil, sin shimmer */}
+        {/* LINEA 2: Nombre — UN solo text-shadow sutil */}
         <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
-          <span style={{ color: 'var(--theme-highlight, #fcf6ba)', textShadow: '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
+          <span style={{ color: 'var(--theme-highlight, #fcf6ba)', textShadow: light ? '0 2px 18px rgba(255,255,255,0.5)' : '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
         </h1>
 
         {/* LINEA 3: Línea decorativa */}
@@ -42,15 +62,15 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
         {/* LINEA 4: Fecha */}
         <p
           className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
+          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
         >
           {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'color-mix(in srgb, var(--theme-highlight, #fcf6ba) 40%, transparent)' }}>&bull;</span>{cfg.evento.anio}
         </p>
 
-        {/* LINEA 5: Salón My Father */}
+        {/* LINEA 5: Salón */}
         <p
           className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
+          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
         >
           {cfg.evento.lugar} &bull; {cfg.evento.ubicacion}
         </p>
@@ -66,7 +86,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
         </p>
         <div style={{ animation: 'mouseWheelBounce 2.2s ease-in-out infinite' }}>
           <div className="w-5 h-8 sm:w-6 sm:h-9 border border-goldLight/40 rounded-full flex justify-center pt-1.5"
-            style={{ boxShadow: '0 0 12px rgba(0,0,0,0.6)' }}>
+            style={{ boxShadow: light ? '0 2px 10px rgba(0,0,0,0.08)' : '0 0 12px rgba(0,0,0,0.6)' }}>
             <div className="w-1 h-2 bg-goldLight/80 rounded-full animate-breathe" />
           </div>
         </div>

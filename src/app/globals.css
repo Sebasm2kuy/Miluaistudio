@@ -108,6 +108,15 @@
     overflow: hidden;
     height: 100%;
   }
+  /* Las páginas de tienda (portada y catálogo) necesitan scroll normal;
+     el overflow hidden es solo para la experiencia de invitación (iOS-safe). */
+  html:has([data-page="storefront"]),
+  html:has([data-page="storefront"]) body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
 }
 
 /* iOS-safe scroll container — prevents fixed elements from shifting during scroll */
@@ -400,4 +409,21 @@
 }
 .invitation-experience[data-demo="true"] #confirmar .gold-button {
   letter-spacing: 0.08em;
+}
+
+/* ===== Temas claros (colección de referencia) ===== */
+.invitation-experience[data-theme-mode="light"] .scroll-container {
+  background: var(--theme-background);
+}
+.invitation-experience[data-theme-mode="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 8px 30px color-mix(in srgb, var(--theme-accent) 12%, rgba(0, 0, 0, 0.06));
+}
+.invitation-experience[data-theme-mode="light"] ::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--theme-background) 92%, #ffffff);
+}
+/* Botones outline sobre fondo claro: texto del acento, borde acento */
+.invitation-experience[data-theme-mode="light"][data-button-style="outline-gold"] .gold-button {
+  color: var(--theme-accent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 65%, transparent) !important;
 }

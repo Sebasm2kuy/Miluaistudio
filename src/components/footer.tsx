@@ -19,17 +19,30 @@ export default function Footer() {
     }
   }, [cfg.modoDemo])
 
+  const light = cfg.estilos.modoClaro === true
+  const shimmer = light ? '' : ' text-shimmer text-shimmer-once'
+  const glow = light
+    ? { textShadow: '0 1px 8px rgba(255,255,255,0.6)', color: 'var(--theme-accent)' }
+    : { textShadow: '0 0 30px rgba(0,0,0,0.95)' }
+  const glowSoft = light
+    ? { textShadow: '0 1px 6px rgba(255,255,255,0.6)', color: 'var(--theme-accent-soft, var(--theme-accent))' }
+    : { textShadow: '0 0 20px rgba(0,0,0,0.95)' }
+
   return (
     <footer className="text-center py-16 sm:py-24 md:py-36 flex flex-col items-center relative z-10">
-      {/* Semi-transparent dark background overlay for readability */}
+      {/* Overlay semitransparente para legibilidad (oscuro u claro según tema) */}
       <div
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.9) 100%)' }}
+        style={{
+          background: light
+            ? 'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.7) 100%)'
+            : 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.9) 100%)',
+        }}
       />
       <div className={`css-fade-up flex flex-col items-center relative z-10`}>
         <p
-          className="font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6 text-shimmer text-shimmer-once"
-          style={{ textShadow: '0 0 30px rgba(0,0,0,0.95)' }}
+          className={`font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6${shimmer}`}
+          style={glow}
         >
           {cfg.footer.apodo}
         </p>
@@ -41,15 +54,15 @@ export default function Footer() {
         </div>
 
         <p
-          className="uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold text-shimmer text-shimmer-once"
-          style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
+          className={`uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold${shimmer}`}
+          style={glowSoft}
         >
           {cfg.footer.ubicacion}
         </p>
 
         <p
-          className="mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic text-shimmer text-shimmer-once cursor-default select-none"
-          style={{ textShadow: '0 0 20px rgba(0,0,0,0.95)' }}
+          className={`mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic cursor-default select-none${shimmer}`}
+          style={glowSoft}
           onClick={handleFraseClick}
         >
           {cfg.footer.frase}
@@ -75,7 +88,7 @@ export default function Footer() {
             <circle cx="12" cy="12" r="5" />
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
           </svg>
-          <p className="font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] text-shimmer text-shimmer-once group-hover:opacity-90 transition-opacity duration-300">
+          <p className={`font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] group-hover:opacity-90 transition-opacity duration-300${shimmer}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
             {cfg.evento.hashtag}
           </p>
         </a>
