@@ -4,6 +4,8 @@ import { useConfig } from '@/hooks/useConfig'
 
 export default function EventInfo() {
   const cfg = useConfig()
+  const mapQuery = encodeURIComponent(`${cfg.evento.direccion}, ${cfg.evento.ubicacion}`)
+  const mapEmbedUrl = cfg.evento.mapsEmbedUrl || `https://maps.google.com/maps?q=${mapQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`
   return (
     <section id="ubicacion" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
@@ -62,7 +64,7 @@ export default function EventInfo() {
           {/* Map — static grayscale, NO transition (animated filter on iframe kills scroll perf) */}
           <div className={`css-fade-up h-[280px] sm:h-[350px] md:h-[500px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] overflow-hidden border shadow-2xl relative group cursor-pointer grayscale`} style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} onClick={() => window.open(cfg.evento.mapsUrl, '_blank')}>
             <iframe
-              src="https://maps.google.com/maps?q=Salon+My+Father+Granaderos+3875+Montevideo+Uruguay&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              src={mapEmbedUrl}
               width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
