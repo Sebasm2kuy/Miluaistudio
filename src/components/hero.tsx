@@ -44,7 +44,7 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
           className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
           style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}
         >
-          {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'rgba(252,246,186,0.4)' }}>&bull;</span>{cfg.evento.anio}
+          {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'color-mix(in srgb, var(--theme-highlight, #fcf6ba) 40%, transparent)' }}>&bull;</span>{cfg.evento.anio}
         </p>
 
         {/* LINEA 5: Salón My Father */}
