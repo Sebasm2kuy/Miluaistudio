@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install ESLint Next config referenced by the existing config
+        run: npm install --no-save --package-lock=false eslint-config-next@16.1.1
+
       - name: Lint
         run: npm run lint
 
