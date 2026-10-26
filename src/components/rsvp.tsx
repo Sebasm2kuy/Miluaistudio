@@ -222,7 +222,7 @@ export default function Rsvp() {
                 }}
               >
                 <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">{cfg.modoDemo ? 'Código de muestra' : 'Tu código'}</p>
-                {cfg.modoDemo && <p className="mx-auto mb-3 max-w-sm text-xs leading-relaxed text-gray-500">Esta interacción es solo una prueba visual. No se registró ninguna asistencia ni se enviaron datos.</p>}
+                {cfg.modoDemo && <p className="mx-auto mb-3 max-w-sm text-xs leading-relaxed" style={{ color: 'var(--theme-card-muted)' }}>Esta interacción es solo una prueba visual. No se registró ninguna asistencia ni se enviaron datos.</p>}
                 <p className="text-2xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
               </div>
 
@@ -254,11 +254,11 @@ export default function Rsvp() {
               </div>
 
 )}
-              {cfg.modoDemo && <p className="mt-4 rounded-xl border border-dashed p-3 text-xs italic text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)' }}>Esta es una demostración: los datos no se enviaron ni se guardaron.</p>}
+              {cfg.modoDemo && <p className="mt-4 rounded-xl border border-dashed p-3 text-xs italic" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)', color: 'var(--theme-card-muted)' }}>Esta es una demostración: los datos no se enviaron ni se guardaron.</p>}
 
               <p
-                className="text-[11px] sm:text-xs text-gray-400 mt-4 italic"
-                style={{ animation: 'rsvpFadeUp 0.6s ease 1.2s both' }}
+                className="text-[11px] sm:text-xs mt-4 italic"
+                style={{ animation: 'rsvpFadeUp 0.6s ease 1.2s both', color: 'var(--theme-card-muted)' }}
               >
                 Guardá tu código como comprobante
               </p>
@@ -266,7 +266,7 @@ export default function Rsvp() {
           ) : (
             <>
               <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">{cfg.rsvp.titulo}</h2>
-              <p className="text-gray-400 mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base">
+              <p className="mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base" style={{ color: 'var(--theme-card-muted)' }}>
                 {cfg.rsvp.subtitulo}
               </p>
 
@@ -287,17 +287,17 @@ export default function Rsvp() {
                   <div
                     className="w-7 h-7 sm:w-8 sm:h-8 rounded-md flex items-center justify-center shrink-0 transition-all duration-300"
                     style={{
-                      background: confirmo ? 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))' : 'rgba(255,255,255,0.6)',
+                      background: confirmo ? 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))' : 'var(--theme-input-bg)',
                       border: confirmo ? 'none' : '2px solid color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)',
                     }}
                   >
                     {confirmo && <Check size={18} strokeWidth={3} className="text-white" />}
                   </div>
                   <div className="text-left flex-1">
-                    <p className={`font-bold text-sm sm:text-base transition-colors ${confirmo ? 'text-bordeaux' : 'text-gray-600'}`}>
+                    <p className="font-bold text-sm sm:text-base transition-colors" style={{ color: confirmo ? 'var(--theme-card-strong)' : 'var(--theme-card-muted)' }}>
                       Confirmo asistencia
                     </p>
-                    <p className="text-xs text-gray-400 italic mt-0.5">
+                    <p className="text-xs italic mt-0.5" style={{ color: 'var(--theme-card-muted)' }}>
                       {confirmo ? '¡Gracias! Contanos cuántos van a ir' : 'Tocá acá para confirmar tu asistencia'}
                     </p>
                   </div>
@@ -378,7 +378,7 @@ export default function Rsvp() {
                         type="text"
                         value={nombre}
                         onChange={(e) => actualizarInvitado(i, e.target.value)}
-                        className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300 transition-all duration-300"
+                        className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base focus:outline-none transition-all duration-300"
                         style={{ borderColor: nombre.trim() ? 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)' : 'color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)' }}
                         placeholder={`Invitado ${i + 1} — Nombre y apellido`}
                       />
@@ -403,7 +403,7 @@ export default function Rsvp() {
                       required={confirmo}
                       value={telefono}
                       onChange={(e) => setTelefono(e.target.value)}
-                      className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
+                      className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base focus:outline-none"
                       style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)' }}
                       placeholder="Ej: 099 123 456"
                     />
@@ -450,24 +450,22 @@ export default function Rsvp() {
         {/* Colaboración */}
         <div
           className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.98), rgba(253,252,251,0.98))',
-          }}
         >
           <h2 className="font-serif text-3xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
             {cfg.rsvp.regalos.titulo}
           </h2>
-          <p className="text-gray-400 mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
+          <p className="mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed" style={{ color: 'var(--theme-card-muted)' }}>
             &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
           </p>
-          {cfg.modoDemo && <p className="mb-6 rounded-xl border border-dashed p-3 text-xs text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)' }}>En la invitación personalizada se puede agregar información útil para los invitados.</p>}
+          {cfg.modoDemo && <p className="mb-6 rounded-xl border border-dashed p-3 text-xs" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)', color: 'var(--theme-card-muted)' }}>En la invitación personalizada se puede agregar información útil para los invitados.</p>}
 
           {/* Abitab */}
           {!cfg.modoDemo && <div
-            className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden mb-3 sm:mb-4"
+            className="p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden mb-3 sm:mb-4"
             style={{
-              borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+              background: 'var(--theme-card-bg-solid)',
+              borderColor: 'var(--theme-card-border)',
+              boxShadow: 'var(--theme-card-shadow)',
             }}
           >
             <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
@@ -494,10 +492,11 @@ export default function Rsvp() {
           {/* Bloque secundario (Santander / Mi Dinero) — solo se renderiza si tiene número configurado */}
           {cfg.rsvp.regalos.miDinero.numero && (
             <div
-              className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden"
+              className="p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden"
               style={{
-                borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+                background: 'var(--theme-card-bg-solid)',
+                borderColor: 'var(--theme-card-border)',
+                boxShadow: 'var(--theme-card-shadow)',
               }}
             >
               <p className="text-gold font-bold uppercase text-sm sm:text-[11px] md:text-[10px] tracking-[0.3em] sm:tracking-[0.4em] md:tracking-[0.5em] mb-2 sm:mb-3 md:mb-4 italic">
@@ -509,7 +508,7 @@ export default function Rsvp() {
                 <div className="space-y-5 sm:space-y-6 mb-5 sm:mb-8">
                   {/* Sucursal */}
                   {cfg.rsvp.regalos.miDinero.sucursal && (
-                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-gray-400 italic">
+                    <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] italic" style={{ color: 'var(--theme-card-muted)' }}>
                       {cfg.rsvp.regalos.miDinero.sucursal}
                     </p>
                   )}

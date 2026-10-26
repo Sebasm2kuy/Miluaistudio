@@ -42,7 +42,7 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
 
   return (
     <nav
-      className="fixed bottom-4 sm:bottom-6 left-1/2 z-[100] rounded-full px-1.5 sm:px-5 md:px-7 py-1.5 sm:py-3 md:py-3.5 flex items-center justify-around shadow-2xl border border-goldLight/12 max-w-[calc(100vw-1.5rem)]"
+      className="bottom-nav fixed bottom-4 sm:bottom-6 left-1/2 z-[100] rounded-full px-1.5 sm:px-5 md:px-7 py-1.5 sm:py-3 md:py-3.5 flex items-center justify-around shadow-2xl border border-goldLight/12 max-w-[calc(100vw-1.5rem)]"
       style={{
         background: 'rgba(255, 255, 255, 0.98)',
         paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
@@ -56,7 +56,8 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
           key={href}
           href={href}
           onClick={(e) => handleClick(e, href)}
-          className="group flex flex-col items-center gap-0 text-gold/70 hover:text-bordeaux transition-colors duration-200 p-1.5 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90"
+          className="group flex flex-col items-center gap-0 p-1.5 sm:p-2.5 rounded-full active:scale-90 transition-colors duration-200"
+          style={{ transition: 'color 0.2s ease, background-color 0.2s ease' }}
           aria-label={label}
         >
           <Icon size={19} strokeWidth={1.5} className="sm:w-[20px] sm:h-[20px]" />
@@ -75,7 +76,7 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
 
       <button
         onClick={scrollToTop}
-        className="text-gold/50 hover:text-bordeaux transition-colors duration-200 p-1.5 sm:p-2.5 rounded-full hover:bg-bordeaux/5 active:scale-90 flex flex-col items-center"
+        className="p-1.5 sm:p-2.5 rounded-full active:scale-90 flex flex-col items-center transition-colors duration-200"
         aria-label="Volver arriba"
       >
         <ArrowUp size={15} strokeWidth={1.5} />

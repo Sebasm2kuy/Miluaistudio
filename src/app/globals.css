@@ -285,6 +285,22 @@
   --theme-ivory: #fdfcfb;
   --theme-background: #050505;
   color: var(--theme-ivory);
+  /* Superficies internas adaptativas: tarjetas de timeline, flip del contador,
+     casillas del formulario, modales y puntos de la línea de tiempo.
+     Los valores por defecto reproducen el look original (tarjetas claras). */
+  --theme-card-bg: rgba(253, 252, 251, 0.85);
+  --theme-card-bg-solid: #fdfcfb;
+  --theme-card-border: color-mix(in srgb, var(--theme-accent, #b8860b) 12%, transparent);
+  --theme-card-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --theme-card-strong: var(--theme-primary, #3d0202);
+  --theme-card-accent: var(--theme-primary, #3d0202);
+  --theme-card-muted: #7d7568;
+  --theme-input-bg: #f9fafb;
+  --theme-dot-bg: #ffffff;
+  /* Íconos de la barra de navegación (píldora siempre clara): acento oscurecido
+     para mantener contraste con acentos claros como oro o azul celeste */
+  --theme-nav-icon: color-mix(in srgb, var(--theme-accent, #b8860b) 52%, #1c1917);
+  --theme-nav-icon-hover: color-mix(in srgb, var(--theme-accent, #b8860b) 32%, #1c1917);
 }
 .invitation-experience .gold-button {
   background: linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 72%, black), var(--theme-accent), var(--theme-accent-light)) !important;
@@ -310,6 +326,19 @@
   color: var(--theme-accent-light) !important;
   border: 1px dashed color-mix(in srgb, var(--theme-accent) 55%, transparent) !important;
   box-shadow: none !important;
+}
+.invitation-experience[data-card-style="dark"] {
+  /* Temas oscuros: superficies internas también oscuras, en capa más clara
+     que la tarjeta exterior para dar jerarquía sin perder contraste */
+  --theme-card-bg: color-mix(in srgb, var(--theme-background, #0a0a0a) 78%, white 22%);
+  --theme-card-bg-solid: color-mix(in srgb, var(--theme-background, #0a0a0a) 86%, white 14%);
+  --theme-card-border: color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent);
+  --theme-card-shadow: 0 4px 18px rgba(0, 0, 0, 0.32);
+  --theme-card-strong: var(--theme-ivory, #f6edd8);
+  --theme-card-accent: var(--theme-accent-light, #d4af37);
+  --theme-card-muted: color-mix(in srgb, var(--theme-ivory, #f6edd8) 72%, transparent);
+  --theme-input-bg: color-mix(in srgb, var(--theme-background, #0a0a0a) 66%, white 34%);
+  --theme-dot-bg: color-mix(in srgb, var(--theme-background, #0a0a0a) 45%, white 55%);
 }
 .invitation-experience[data-card-style="dark"] .glass-card {
   background: color-mix(in srgb, var(--theme-background) 88%, white 12%) !important;
@@ -403,6 +432,23 @@
 }
 .invitation-experience[data-script-font="alex-brush"] .font-cursive {
   font-family: var(--font-cursive), cursive !important;
+}
+/* Inputs elegantes adaptativos: fondo y texto siguen el tema activo
+   (en temas oscuros la casilla se oscurece y el texto pasa a marfil) */
+.invitation-experience .elegant-input {
+  background: var(--theme-input-bg) !important;
+  color: var(--theme-card-strong) !important;
+}
+.invitation-experience .elegant-input::placeholder {
+  color: color-mix(in srgb, var(--theme-card-strong) 45%, transparent) !important;
+}
+/* Barra de navegación: píldora clara fija, íconos con acento oscurecido */
+.invitation-experience .bottom-nav a {
+  color: var(--theme-nav-icon);
+}
+.invitation-experience .bottom-nav a:hover {
+  color: var(--theme-nav-icon-hover);
+  background: rgba(0, 0, 0, 0.05);
 }
 .invitation-experience[data-demo="true"] #confirmar input {
   border-color: color-mix(in srgb, var(--theme-accent) 35%, transparent) !important;

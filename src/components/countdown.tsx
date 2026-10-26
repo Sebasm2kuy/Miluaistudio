@@ -20,15 +20,16 @@ function FlipUnit({ value, label }: { value: number; label: string }) {
       <div
         className="px-2 py-2 sm:px-3 sm:py-2.5 md:px-6 md:py-4 lg:px-8 lg:py-5 rounded-xl sm:rounded-[1.5rem] md:rounded-[2.5rem] border relative overflow-hidden"
         style={{
-          background: 'linear-gradient(180deg, rgba(253,252,251,0.95) 49.5%, rgba(245,244,243,0.95) 50.5%, rgba(240,239,238,0.95) 100%)',
-          borderColor: 'rgba(184, 134, 11, 0.08)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+          background: 'var(--theme-card-bg)',
+          borderColor: 'var(--theme-card-border)',
+          boxShadow: 'var(--theme-card-shadow)',
         }}
       >
-        <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'rgba(0,0,0,0.06)', boxShadow: '0 1px 0 rgba(255,255,255,0.5)' }} />
+        <div className="absolute left-1 sm:left-2 right-1 sm:right-2 top-1/2 h-px z-10" style={{ background: 'color-mix(in srgb, var(--theme-card-strong, #3d0202) 12%, transparent)', boxShadow: '0 1px 0 rgba(255,255,255,0.35)' }} />
         <span
           ref={ref}
-          className="font-light text-bordeaux tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl"
+          className="font-light tracking-tight tabular-nums leading-none select-none text-xl sm:text-3xl md:text-4xl lg:text-5xl"
+          style={{ color: 'var(--theme-card-strong)' }}
         >
           {display}
         </span>

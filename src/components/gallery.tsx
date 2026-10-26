@@ -192,7 +192,7 @@ export default function Gallery() {
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
         <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{cfg.galeria.titulo}</h2>
-        <p className="text-gray-400 italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2">
+        <p className="italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2" style={{ color: 'var(--theme-card-muted)' }}>
           {cfg.galeria.subtitulo}
         </p>
 
@@ -203,13 +203,13 @@ export default function Gallery() {
             onClick={() => scrollCarousel('left')}
             className="hidden md:flex absolute -left-2 xl:-left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
             style={{
-              background: 'rgba(253, 252, 251, 0.92)',
+              background: 'var(--theme-card-bg-solid)',
               borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)',
-              color: 'rgba(184, 134, 11, 0.7)',
+              color: 'var(--theme-card-accent)',
             }}
             aria-label="Foto anterior"
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 50%, transparent)'; e.currentTarget.style.color = 'var(--theme-card-strong, #3d0202)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'var(--theme-card-accent)' }}
           >
             <ChevronLeft size={18} strokeWidth={1.5} />
           </button>
@@ -217,13 +217,13 @@ export default function Gallery() {
             onClick={() => scrollCarousel('right')}
             className="hidden md:flex absolute -right-2 xl:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 xl:w-10 xl:h-10 rounded-full items-center justify-center border shadow-lg transition-[color,border-color,background-color] duration-300"
             style={{
-              background: 'rgba(253, 252, 251, 0.92)',
+              background: 'var(--theme-card-bg-solid)',
               borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)',
-              color: 'rgba(184, 134, 11, 0.7)',
+              color: 'var(--theme-card-accent)',
             }}
             aria-label="Foto siguiente"
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.5)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'rgba(184, 134, 11, 0.7)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 50%, transparent)'; e.currentTarget.style.color = 'var(--theme-card-strong, #3d0202)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)'; e.currentTarget.style.color = 'var(--theme-card-accent)' }}
           >
             <ChevronRight size={18} strokeWidth={1.5} />
           </button>
@@ -241,7 +241,7 @@ export default function Gallery() {
                   key={photo.id}
                   data-carousel-card
                   className="flex-shrink-0 w-[42vw] sm:w-[36vw] md:w-[30%] aspect-[3/4] snap-center rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden cursor-pointer group relative"
-                  style={{ background: '#f5f0eb' }}
+                  style={{ background: 'var(--theme-card-bg)' }}
                   onClick={() => openLightbox(idx)}
                 >
                   {isOriginal ? (
@@ -325,7 +325,7 @@ export default function Gallery() {
         <div
           className="modal-content w-full max-w-md rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
           style={{
-            background: 'rgba(255, 255, 255, 0.98)',
+            background: 'var(--theme-card-bg-solid)',
             border: '1px solid color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)',
             boxShadow: '0 24px 80px rgba(0,0,0,0.3)',
           }}
@@ -333,14 +333,15 @@ export default function Gallery() {
         >
           <button
             onClick={closeUpload}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-[color,background-color]"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-opacity hover:opacity-70"
+            style={{ color: 'var(--theme-card-muted)' }}
             disabled={uploadState === 'compressing' || uploadState === 'uploading'}
           >
             <X size={16} />
           </button>
 
-          <h3 className="font-serif italic text-xl sm:text-2xl text-bordeaux mb-1">Compartí tu foto</h3>
-          <p className="text-gray-400 text-xs sm:text-sm mb-6">Las mejores fotos de la noche</p>
+          <h3 className="font-serif italic text-xl sm:text-2xl mb-1" style={{ color: 'var(--theme-card-strong)' }}>Compartí tu foto</h3>
+          <p className="text-xs sm:text-sm mb-6" style={{ color: 'var(--theme-card-muted)' }}>Las mejores fotos de la noche</p>
 
           {!preview ? (
             <div
@@ -351,20 +352,20 @@ export default function Gallery() {
               <div className="w-14 h-14 rounded-full flex items-center justify-center text-gold" style={{ background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 8%, transparent)' }}>
                 <Upload size={22} strokeWidth={1.5} />
               </div>
-              <p className="text-gray-500 text-xs sm:text-sm font-medium">Tocá para elegir una foto</p>
-              <p className="text-gray-300 text-[10px] sm:text-xs">JPG o PNG</p>
+              <p className="text-xs sm:text-sm font-medium" style={{ color: 'var(--theme-card-muted)' }}>Tocá para elegir una foto</p>
+              <p className="text-[10px] sm:text-xs" style={{ color: 'color-mix(in srgb, var(--theme-card-muted) 65%, transparent)' }}>JPG o PNG</p>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
+              <div className="aspect-[3/4] rounded-xl overflow-hidden" style={{ background: 'var(--theme-input-bg)' }}>
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={() => fileRef.current?.click()}
                   disabled={uploadState === 'compressing' || uploadState === 'uploading'}
-                  className="flex-1 py-3 rounded-xl border text-gray-500 text-xs font-medium hover:bg-gray-50 transition-colors disabled:opacity-40"
-                  style={{ borderColor: 'rgba(0,0,0,0.1)' }}
+                  className="flex-1 py-3 rounded-xl border text-xs font-medium transition-opacity hover:opacity-70"
+                  style={{ borderColor: 'color-mix(in srgb, var(--theme-card-strong, #3d0202) 18%, transparent)', color: 'var(--theme-card-muted)' }}
                 >Cambiar</button>
                 <button
                   onClick={handleUpload}
@@ -385,7 +386,7 @@ export default function Gallery() {
                 </div>
               )}
               {uploadState === 'ok' && (
-                <p className="text-center text-gray-500 text-xs italic mt-2">
+                <p className="text-center text-xs italic mt-2" style={{ color: 'var(--theme-card-muted)' }}>
                   ¡Gracias! Tu foto ya está visible en la galería.
                 </p>
               )}
