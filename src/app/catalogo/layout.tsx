@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Invitaciones digitales personalizadas | Miluaistudio',
   description: 'Explorá invitaciones digitales interactivas para fiestas de 15, bodas y celebraciones. Elegí un diseño y consultá las opciones de personalización.',
-  robots: { index: false, follow: true },
+  // The public storefront must be discoverable. Individual demo pages may
+  // remain noindex until each template has finalized commercial content.
+  robots: { index: true, follow: true },
   openGraph: {
     title: 'Invitaciones digitales personalizadas | Miluaistudio',
     description: 'Diseños web personalizados para compartir los detalles de tu celebración en un solo enlace.',
