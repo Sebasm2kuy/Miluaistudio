@@ -9,10 +9,10 @@
   --font-sans: var(--font-sans);
   --font-cursive: var(--font-cursive);
   --font-serif: var(--font-serif);
-  --color-bordeaux: #3d0202;
-  --color-gold: #b8860b;
-  --color-goldLight: #d4af37;
-  --color-ivory: #fdfcfb;
+  --color-bordeaux: var(--theme-primary, #3d0202);
+  --color-gold: var(--theme-accent, #b8860b);
+  --color-goldLight: var(--theme-accent-light, #d4af37);
+  --color-ivory: var(--theme-ivory, #fdfcfb);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -264,5 +264,114 @@
 @media (max-width: 480px) {
   .gallery-photo {
     object-position: var(--pos-mobile, center top);
+  }
+}
+
+
+/* ===== Runtime invitation themes: defaults preserve the original invitation ===== */
+.invitation-experience {
+  --theme-primary: #3d0202;
+  --theme-accent: #b8860b;
+  --theme-accent-light: #d4af37;
+  --theme-ivory: #fdfcfb;
+  --theme-background: #050505;
+  color: var(--theme-ivory);
+}
+.invitation-experience .gold-button {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--theme-accent) 72%, black), var(--theme-accent), var(--theme-accent-light)) !important;
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--theme-accent) 28%, transparent) !important;
+}
+.invitation-experience .glass-card {
+  border-color: color-mix(in srgb, var(--theme-accent) 18%, transparent);
+}
+.invitation-experience[data-button-style="outline-gold"] .gold-button {
+  background: transparent !important;
+  color: var(--theme-accent-light) !important;
+  border: 1px solid var(--theme-accent) !important;
+  box-shadow: none !important;
+}
+.invitation-experience[data-button-style="filled-dark"] .gold-button {
+  background: color-mix(in srgb, var(--theme-background) 82%, white 18%) !important;
+  color: var(--theme-accent-light) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 60%, transparent) !important;
+  box-shadow: none !important;
+}
+.invitation-experience[data-button-style="minimal"] .gold-button {
+  background: transparent !important;
+  color: var(--theme-accent-light) !important;
+  border: 1px dashed color-mix(in srgb, var(--theme-accent) 55%, transparent) !important;
+  box-shadow: none !important;
+}
+.invitation-experience[data-card-style="dark"] .glass-card {
+  background: color-mix(in srgb, var(--theme-background) 88%, white 12%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 35%, transparent) !important;
+}
+.invitation-experience[data-card-style="dark"] .glass-card .text-bordeaux,
+.invitation-experience[data-card-style="dark"] .glass-card h2,
+.invitation-experience[data-card-style="dark"] .glass-card h3,
+.invitation-experience[data-card-style="dark"] .glass-card p {
+  color: var(--theme-ivory) !important;
+}
+.invitation-experience[data-card-style="dark"] .glass-card .text-gray-400,
+.invitation-experience[data-card-style="dark"] .glass-card .text-gray-500 {
+  color: color-mix(in srgb, var(--theme-ivory) 68%, transparent) !important;
+}
+.invitation-experience[data-invitation-layout="editorial"] header,
+.invitation-experience[data-invitation-layout="split"] header,
+.invitation-experience[data-invitation-layout="modern"] header {
+  text-align: left !important;
+}
+.invitation-experience[data-invitation-layout="editorial"] header > .relative.z-10,
+.invitation-experience[data-invitation-layout="split"] header > .relative.z-10,
+.invitation-experience[data-invitation-layout="modern"] header > .relative.z-10 {
+  align-items: flex-start !important;
+  width: min(100%, 62rem);
+  margin-inline: auto;
+}
+.invitation-experience[data-invitation-layout="editorial"] header .hero-line-3,
+.invitation-experience[data-invitation-layout="split"] header .hero-line-3,
+.invitation-experience[data-invitation-layout="modern"] header .hero-line-3 {
+  margin-left: 0 !important;
+}
+.invitation-experience[data-invitation-layout="split"] header h1 {
+  border-left: 2px solid var(--theme-accent);
+  padding-left: clamp(0.75rem, 3vw, 2rem);
+}
+.invitation-experience[data-invitation-layout="framed"] .glass-card {
+  border-radius: 1rem !important;
+  border-width: 2px !important;
+}
+.invitation-experience[data-invitation-layout="botanical"] .glass-card {
+  border-radius: 2.5rem !important;
+}
+.invitation-experience[data-invitation-layout="rounded"] .glass-card {
+  border-radius: 3rem !important;
+}
+.invitation-experience[data-invitation-layout="modern"] .glass-card {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--theme-background) 35%, transparent) !important;
+}
+.invitation-experience[data-invitation-layout="minimal"] .glass-card {
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+}
+.invitation-experience[data-invitation-layout="cinematic"] header {
+  min-height: 92svh;
+}
+.invitation-experience[data-invitation-layout="arch"] #detalles > div {
+  border-radius: 12rem 12rem 2rem 2rem !important;
+}
+@media (max-width: 640px) {
+  .invitation-experience[data-invitation-layout="arch"] #detalles > div {
+    border-radius: 4rem 4rem 1.5rem 1.5rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .invitation-experience[data-invitation-layout] *,
+  .invitation-experience[data-invitation-layout] *::before,
+  .invitation-experience[data-invitation-layout] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }
