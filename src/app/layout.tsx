@@ -11,6 +11,7 @@ const alexBrush = Alex_Brush({
 
 const playfair = Playfair_Display({
   variable: "--font-serif",
+  style: ["normal", "italic"],
   subsets: ["latin"],
   display: 'swap',
 });
@@ -94,6 +95,7 @@ export default function RootLayout({
           overflowX: 'hidden',
         }}
       >
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         {children}
       </body>
     </html>

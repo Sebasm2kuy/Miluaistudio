@@ -6,6 +6,9 @@ import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-des
 import CatalogScene from '@/components/catalog-scene';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
+import Reveal from '@/components/reveal';
+import { OrnamentDivider } from '@/components/store-ui';
+import { DesignAdornoGlyph } from '@/components/design-ornaments';
 import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink, whatsappLinkDiseno } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
 
@@ -94,10 +97,10 @@ export default function CatalogoPage() {
 
   return (
     <div data-page="storefront" className="min-h-screen bg-[#f7f4ef] text-[#272a2d]">
-      <header className="bg-[#17191b] text-white shadow-sm">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 border-b border-[#3a332c] bg-[#211c17]/95 text-white backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
           <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfbd85]/40 text-[#e6c9a0]"><Heart size={19} /></span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfbd85]/40 bg-white/5 text-[#e6c9a0]"><Heart size={19} /></span>
             <span>
               <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">MILUAISTUDIO</span>
               <span className="block text-[9px] uppercase tracking-[0.2em] text-white/50">Tu historia, en formato digital</span>
@@ -119,14 +122,16 @@ export default function CatalogoPage() {
 
       <main className="mx-auto max-w-[1440px] px-4 pb-14 pt-9 sm:px-6 sm:pb-20 sm:pt-14 lg:px-8">
         <section className="mx-auto max-w-4xl text-center">
-          <h1 className="font-serif text-2xl leading-snug tracking-wide text-[#272a2d] sm:text-3xl lg:text-4xl">
+          <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#c9a26e' }}>La colección</p>
+          <h1 className="mt-2 font-serif text-2xl leading-snug tracking-wide text-[#29241f] sm:text-3xl lg:text-4xl">
             10 diseños únicos
             <span className="mx-2 text-[#b18163]">·</span>
-            <span className="text-[#7d746a]">La invitación perfecta para tu gran momento</span>
+            <em className="italic text-[#7d746a]">La invitación perfecta para tu gran momento</em>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#6e6963] sm:text-base">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#6f675e] sm:text-base">
             Elegí el estilo que más te guste y hacé de tu fiesta un evento inolvidable. Cada diseño incluye una invitación web completa con cuenta regresiva, galería, música y confirmación de asistencia.
           </p>
+          <OrnamentDivider className="mt-6" />
         </section>
 
         <section id="disenos" className="mt-10 scroll-mt-6 sm:mt-12">
@@ -141,10 +146,10 @@ export default function CatalogoPage() {
         </section>
 
         {/* Cómo funciona (3 pasos) */}
-        <section aria-labelledby="como-funciona-titulo" className="mt-14 scroll-mt-6 sm:mt-20">
+        <section aria-labelledby="como-funciona-titulo" className="mt-14 scroll-mt-24 sm:mt-20">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a47d5d]">Cómo funciona</p>
-            <h2 id="como-funciona-titulo" className="mt-2 font-serif text-2xl text-[#292c2f] sm:text-3xl">Tu invitación, en 3 pasos.</h2>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#a8814f' }}>Cómo funciona</p>
+            <h2 id="como-funciona-titulo" className="mt-2 font-serif text-2xl text-[#29241f] sm:text-3xl">Tu invitación, en 3 pasos.</h2>
           </div>
           <ol className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
@@ -152,51 +157,57 @@ export default function CatalogoPage() {
               { icon: MessageSquareText, titulo: 'Nos pasás los datos y la música de tu evento', texto: 'Nombres, fecha, lugar, fotos y la canción que querés de fondo.' },
               { icon: Share2, titulo: 'Recibís tu enlace listo para compartir por WhatsApp', texto: 'Un solo link con todo adentro: lo reenviás y listo.' },
             ].map((paso, pasoIndex) => (
-              <li key={paso.titulo} className="relative rounded-2xl border border-[#e6ddd2] bg-white p-5 shadow-[0_4px_16px_rgba(34,26,19,0.04)] sm:p-6">
-                <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efe6] text-[#a47d5d]">
-                    <paso.icon size={20} strokeWidth={1.8} />
-                  </span>
-                  <span className="font-serif text-3xl font-semibold text-[#e9dfd2]">{pasoIndex + 1}</span>
-                </div>
-                <h3 className="mt-4 text-sm font-semibold leading-snug text-[#2b2e31] sm:text-base">{paso.titulo}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-[#6e6a66] sm:text-sm">{paso.texto}</p>
-              </li>
+              <Reveal key={paso.titulo} delay={pasoIndex * 80}>
+                <li className="relative h-full rounded-2xl border border-[#e6ddd2] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.11)] sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3ead9] text-[#a8814f]">
+                      <paso.icon size={20} strokeWidth={1.8} />
+                    </span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#26221d] font-serif text-sm italic text-[#ecdcc0]">{pasoIndex + 1}</span>
+                  </div>
+                  <h3 className="mt-4 font-serif text-base font-semibold leading-snug text-[#29241f]">{paso.titulo}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-[#6f675e] sm:text-sm">{paso.texto}</p>
+                </li>
+              </Reveal>
             ))}
           </ol>
         </section>
 
         {/* Reseñas / prueba social */}
-        <section aria-labelledby="resenas-titulo" className="mt-14 scroll-mt-6 sm:mt-20">
+        <section aria-labelledby="resenas-titulo" className="mt-14 scroll-mt-24 sm:mt-20">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a47d5d]">Reseñas de clientes</p>
-            <h2 id="resenas-titulo" className="mt-2 font-serif text-2xl text-[#292c2f] sm:text-3xl">Fiestas que ya comparten su enlace.</h2>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#a8814f' }}>Reseñas de clientes</p>
+            <h2 id="resenas-titulo" className="mt-2 font-serif text-2xl text-[#29241f] sm:text-3xl">Fiestas que ya comparten su enlace.</h2>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {TESTIMONIOS.map((t) => (
-              <figure key={t.nombre} className="flex h-full flex-col rounded-2xl border border-[#e6ddd2] bg-white p-5 shadow-[0_4px_16px_rgba(34,26,19,0.04)]">
-                <div className="flex items-center gap-0.5 text-[#e0a83c]" aria-label="Calificación: 5 de 5 estrellas">
-                  {Array.from({ length: 5 }).map((_, starIndex) => (
-                    <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
-                  ))}
-                </div>
-                <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
-                <figcaption className="mt-4 border-t border-[#efe7dc] pt-3">
-                  <span className="block text-sm font-semibold text-[#2b2e31]">{t.nombre}</span>
-                  <span className="block text-xs text-[#8a8178]">{t.evento}</span>
-                </figcaption>
-              </figure>
+            {TESTIMONIOS.map((t, tIndex) => (
+              <Reveal key={t.nombre} delay={tIndex * 50}>
+                <figure className="flex h-full flex-col rounded-2xl border border-[#e6ddd2] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                  <div className="flex items-center gap-0.5 text-[#d9a53f]" aria-label="Calificación: 5 de 5 estrellas">
+                    {Array.from({ length: 5 }).map((_, starIndex) => (
+                      <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
+                    ))}
+                  </div>
+                  <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
+                  <figcaption className="mt-4 border-t border-[#efe7dc] pt-3">
+                    <span className="block text-sm font-semibold text-[#29241f]">{t.nombre}</span>
+                    <span className="block text-xs text-[#9a8f81]">{t.evento}</span>
+                  </figcaption>
+                </figure>
+              </Reveal>
             ))}
           </div>
         </section>
 
-        <section className="mt-12 rounded-3xl border border-[#e6ddd2] bg-white p-6 sm:mt-16 sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-10">
-          <div className="max-w-2xl">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a47d5d]">Una invitación, toda la información</p>
-            <h2 className="mt-2 font-serif text-2xl text-[#292c2f] sm:text-3xl">Tu evento, en un solo enlace.</h2>
-            <p className="mt-3 text-sm leading-relaxed text-[#726a62]">Cuenta regresiva, galería, música, ubicación, calendario y confirmación de asistencia, según la configuración acordada para tu evento.</p>
+        <Reveal>
+        <section className="relative mt-12 overflow-hidden rounded-3xl border border-[#e6d5bd] p-6 sm:mt-16 sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-10" style={{ background: 'linear-gradient(120deg, #fdf3ec 0%, #f8ecdd 48%, #f3e6d3 100%)' }}>
+          <DesignAdornoGlyph adorno="rosas" className="absolute -right-10 -top-10 h-44 w-44 text-[#b98a94]/20" />
+          <div className="relative max-w-2xl">
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#a8814f' }}>Una invitación, toda la información</p>
+            <h2 className="mt-2 font-serif text-2xl text-[#29241f] sm:text-3xl">Tu evento, en un solo enlace.</h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#6f675e]">Cuenta regresiva, galería, música, ubicación, calendario y confirmación de asistencia, según la configuración acordada para tu evento.</p>
           </div>
-          <div className="mt-5 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0">
+          <div className="relative mt-5 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0">
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#191b1d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#343638]">
               Consultar la publicación <ExternalLink size={15} />
             </a>
@@ -205,6 +216,7 @@ export default function CatalogoPage() {
             </a>
           </div>
         </section>
+        </Reveal>
       </main>
 
       {/* Barra de características (como en la referencia) */}
@@ -218,11 +230,11 @@ export default function CatalogoPage() {
         </div>
       </div>
 
-      <footer className="bg-[#17191b] text-white">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
-          <span className="font-serif tracking-[0.12em] text-white/80">MILUAISTUDIO</span>
-          <span>Tu historia, en formato digital.</span>
-          <span>© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
+      <footer className="bg-[#211c17] text-white">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
+          <span className="font-serif tracking-[0.12em] text-white/85">MILUAISTUDIO</span>
+          <span className="text-white/50">Tu historia, en formato digital.</span>
+          <span className="text-white/50">© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
         </div>
       </footer>
 
