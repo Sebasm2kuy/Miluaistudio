@@ -159,7 +159,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     id: "geometria-moderna",
     backgroundPreset: "grafito-cobre",
     name: "Geometría moderna",
-    category: "XV · Cumpleaños",
+    category: "Bodas · XV",
     description: "Formas geométricas, tipografía limpia y acentos vibrantes.",
     palette: "Grafito y cobre",
     background: "#181b20",
