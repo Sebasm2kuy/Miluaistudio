@@ -3,6 +3,7 @@ import {
   Calendar,
   Check,
   Clock3,
+  ExternalLink,
   Heart,
   Image as ImageIcon,
   MapPin,
@@ -36,26 +37,6 @@ const WHATSAPP_BTN =
 const OUTLINE_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full border border-[#d9cec2] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c4b6a3] hover:bg-white';
 
-function Feature({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: typeof Calendar;
-  title: string;
-  description: string;
-}) {
-  return (
-    <article className="group h-full rounded-2xl border border-[#e8e1d8] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(88,63,32,0.12)] sm:p-6">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3ead9] transition group-hover:bg-[#ecdcc0]" style={{ color: GOLD }}>
-        <Icon size={20} strokeWidth={1.7} />
-      </div>
-      <h3 className="mt-4 font-serif text-lg font-semibold text-[#29241f]">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-[#6f675e]">{description}</p>
-    </article>
-  );
-}
-
 export default function Home() {
   const heroDesign = INVITATION_DESIGNS[0];
   const heroSecondary = INVITATION_DESIGNS[1];
@@ -68,14 +49,14 @@ export default function Home() {
 
       {/* ===== Encabezado ===== */}
       <header className="relative z-30 border-b border-[#e8e1d8] bg-[#f7f4ef]/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-          <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Miluaistudio, inicio">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#a8814f] shadow-sm">
-              <Heart size={18} />
+        <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
+          <a href="/Miluaistudio/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Miluaistudio, inicio">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#a8814f] shadow-sm sm:h-10 sm:w-10">
+              <Heart size={17} />
             </span>
-            <span>
-              <span className="block font-serif text-lg tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
-              <span className="block text-[9px] uppercase tracking-[0.24em] text-[#9a8f81]">Invitaciones digitales</span>
+            <span className="min-w-0">
+              <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
+              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#9a8f81] sm:block">Invitaciones digitales</span>
             </span>
           </a>
           <nav aria-label="Navegación principal" className="hidden items-center gap-6 md:flex">
@@ -84,20 +65,60 @@ export default function Home() {
             <a href="#proceso" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Cómo funciona</a>
             <a href="#resenas" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Reseñas</a>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
               <WhatsAppIcon size={17} />
             </a>
-            <a href={CATALOG_URL} className="inline-flex items-center gap-2 rounded-full bg-[#26221d] px-4 py-2.5 text-sm font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b] sm:px-5">
+            <a href={CATALOG_URL} className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b] sm:gap-2 sm:px-5 sm:text-sm">
               Ver diseños <ArrowRight size={15} />
             </a>
           </div>
         </div>
       </header>
 
-      {/* ===== Hero editorial ===== */}
-      <section className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-4 pb-10 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-8 lg:pb-16 lg:pt-20">
-        <div className="relative">
+      {/* ===== Hero editorial — el producto primero en móvil ===== */}
+      <section className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-6 sm:pt-10 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-16 lg:pt-20">
+        {/* Visual — va primero en móvil: la invitación antes que el texto */}
+        <div className="relative order-1 lg:order-2">
+          <div aria-hidden="true" className="absolute -inset-5 rounded-[2.75rem] bg-gradient-to-br from-[#f6e2df]/75 via-[#f3e6d3]/60 to-[#ecdcc0]/70 blur-xl lg:hidden" />
+          {/* Móvil y tablet: maqueta del diseño destacado */}
+          <div className="store-hero-in relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.24)] sm:max-w-[430px] lg:hidden">
+            <CatalogScene design={heroDesign} />
+            <div className="absolute -left-1.5 top-5">
+              <HeroBadge>
+                <Sparkles size={14} className="text-[#a8814f]" /> Demo interactiva · Música y RSVP
+              </HeroBadge>
+            </div>
+          </div>
+          {/* Escritorio: collage editorial */}
+          <div className="store-hero-in-2 relative mx-auto hidden w-full max-w-[440px] pb-12 pr-6 sm:pb-14 sm:pr-10 lg:block">
+            <div aria-hidden="true" className="absolute -inset-6 rounded-[3rem] bg-[#ecdcc0]/45 blur-2xl" />
+            <div className="relative rotate-[-2deg] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.22)]">
+              <img
+                src={heroDesign.scene}
+                alt={'Escena del diseño ' + heroDesign.name}
+                className="aspect-[4/5] w-full object-cover"
+                draggable={false}
+              />
+            </div>
+            <div className="absolute -bottom-0 right-0 w-[46%] rotate-[4deg] overflow-hidden rounded-2xl border-4 border-[#f7f4ef] shadow-[0_22px_50px_rgba(88,63,32,0.28)] sm:-bottom-2">
+              <img
+                src={heroSecondary.scene}
+                alt={'Escena del diseño ' + heroSecondary.name}
+                loading="lazy"
+                className="aspect-[4/5] w-full object-cover"
+                draggable={false}
+              />
+            </div>
+            <div className="absolute -left-2 top-6 sm:-left-6">
+              <HeroBadge>
+                <Sparkles size={14} className="text-[#a8814f]" /> Demo interactiva · Música y RSVP
+              </HeroBadge>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative order-2 mt-9 lg:order-1 lg:mt-0">
           {/* Adornos de fondo */}
           <DesignAdornoGlyph adorno="rosas" className="absolute -left-14 top-6 hidden h-44 w-44 text-[#b98a94]/25 lg:block" />
           <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#a8814f]/20 lg:block" />
@@ -119,10 +140,15 @@ export default function Home() {
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
               <WhatsAppIcon size={16} /> Consultar por WhatsApp
             </a>
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className={OUTLINE_BTN}>
-              Comprar por Mercado Libre
-            </a>
+            <div className="hidden sm:block">
+              <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className={OUTLINE_BTN}>
+                Comprar por Mercado Libre
+              </a>
+            </div>
           </div>
+          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="store-hero-in-3 mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6d5326] underline decoration-[#d9c9ad] underline-offset-4 transition hover:decoration-[#a8814f] sm:hidden">
+            Compralo en Mercado Libre <ExternalLink size={14} />
+          </a>
           <p className="store-hero-in-3 mt-5 text-xs text-[#9a8f81]">
             <strong className="font-semibold text-[#5c5347]">$ 1.200 UYU</strong> · Pago único · Personalización a medida
           </p>
@@ -130,33 +156,6 @@ export default function Home() {
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Personalizada</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Lista para compartir</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Adaptada al celular</span>
-          </div>
-        </div>
-
-        {/* Collage fotográfico */}
-        <div className="store-hero-in-2 relative mx-auto w-full max-w-[440px] pb-12 pr-6 sm:pb-14 sm:pr-10">
-          <div aria-hidden="true" className="absolute -inset-6 rounded-[3rem] bg-[#ecdcc0]/45 blur-2xl" />
-          <div className="relative rotate-[-2deg] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.22)]">
-            <img
-              src={heroDesign.scene}
-              alt={'Escena del diseño ' + heroDesign.name}
-              className="aspect-[4/5] w-full object-cover"
-              draggable={false}
-            />
-          </div>
-          <div className="absolute -bottom-0 right-0 w-[46%] rotate-[4deg] overflow-hidden rounded-2xl border-4 border-[#f7f4ef] shadow-[0_22px_50px_rgba(88,63,32,0.28)] sm:-bottom-2">
-            <img
-              src={heroSecondary.scene}
-              alt={'Escena del diseño ' + heroSecondary.name}
-              loading="lazy"
-              className="aspect-[4/5] w-full object-cover"
-              draggable={false}
-            />
-          </div>
-          <div className="absolute -left-2 top-6 sm:-left-6">
-            <HeroBadge>
-              <Sparkles size={14} className="text-[#a8814f]" /> Demo interactiva · Música y RSVP
-            </HeroBadge>
           </div>
         </div>
       </section>
@@ -204,20 +203,28 @@ export default function Home() {
               sub="Cada invitación reúne las funciones esenciales del evento, configuradas según lo acordado al contratar."
             />
           </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Clock3, title: 'Cuenta regresiva', description: 'Un reloj elegante que acompaña la espera hasta el día de la celebración.' },
-              { icon: ImageIcon, title: 'Galería de fotos', description: 'Compartí imágenes y momentos especiales dentro de la invitación.' },
-              { icon: Music, title: 'Música integrada', description: 'Sumá una banda sonora mediante la integración con Spotify.' },
-              { icon: MapPin, title: 'Ubicación del evento', description: 'Incluí la dirección y el acceso al mapa para tus invitados.' },
-              { icon: Calendar, title: 'Fecha y cronograma', description: 'Presentá los horarios y permití agregar la fecha al calendario.' },
-              { icon: ShieldCheck, title: 'Confirmación de asistencia', description: 'RSVP para organizar las respuestas de los invitados, según la configuración contratada.' },
-            ].map((feature, index) => (
-              <Reveal key={feature.title} delay={index * 60}>
-                <Feature icon={feature.icon} title={feature.title} description={feature.description} />
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={80}>
+            <div className="mt-8 divide-y divide-[#efe7dc] overflow-hidden rounded-2xl border border-[#e8e1d8] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:mt-10 sm:grid sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-3">
+              {[
+                { icon: Clock3, title: 'Cuenta regresiva', description: 'Un reloj elegante que acompaña la espera hasta el día de la celebración.' },
+                { icon: ImageIcon, title: 'Galería de fotos', description: 'Compartí imágenes y momentos especiales dentro de la invitación.' },
+                { icon: Music, title: 'Música integrada', description: 'Sumá una banda sonora mediante la integración con Spotify.' },
+                { icon: MapPin, title: 'Ubicación del evento', description: 'Incluí la dirección y el acceso al mapa para tus invitados.' },
+                { icon: Calendar, title: 'Fecha y cronograma', description: 'Presentá los horarios y permití agregar la fecha al calendario.' },
+                { icon: ShieldCheck, title: 'Confirmación de asistencia', description: 'RSVP para organizar las respuestas de los invitados, según la configuración contratada.' },
+              ].map((feature) => (
+                <div key={feature.title} className="flex items-start gap-4 p-4 sm:block sm:p-6">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f3ead9] sm:h-11 sm:w-11" style={{ color: GOLD }}>
+                    <feature.icon size={20} strokeWidth={1.7} />
+                  </div>
+                  <div className="min-w-0 flex-1 sm:mt-4">
+                    <h3 className="font-serif text-base font-semibold text-[#29241f] sm:text-lg">{feature.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-[#6f675e] sm:mt-2">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
