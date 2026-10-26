@@ -6,15 +6,20 @@ import {
   Heart,
   Image as ImageIcon,
   MapPin,
+  MessageSquareText,
   Music,
+  Search,
+  Share2,
   ShieldCheck,
   Sparkles,
+  Star,
 } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 import MiniInvitation, { miniFromDesign } from '@/components/mini-invitation';
-
-const MERCADO_LIBRE_URL =
-  'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
+import WhatsAppIcon from '@/components/whatsapp-icon';
+import WhatsAppFloat from '@/components/whatsapp-float';
+import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
+import { TESTIMONIOS } from '@/data/testimonios';
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 const FEATURED_DESIGNS = INVITATION_DESIGNS.slice(0, 4);
 
@@ -72,6 +77,7 @@ export default function Home() {
             <a href="#incluye" className="text-sm text-white/65 transition hover:text-white">Qué incluyen</a>
             <a href="#disenos" className="text-sm text-white/65 transition hover:text-white">Diseños</a>
             <a href="#proceso" className="text-sm text-white/65 transition hover:text-white">Cómo funciona</a>
+            <a href="#resenas" className="text-sm text-white/65 transition hover:text-white">Reseñas</a>
           </nav>
           <a href={CATALOG_URL} className="inline-flex items-center gap-2 rounded-full bg-[#dfbd85] px-4 py-2.5 text-sm font-semibold text-[#17120b] transition hover:bg-[#eed5a7] sm:px-5">
             Ver diseños <ArrowRight size={15} />
@@ -95,11 +101,14 @@ export default function Home() {
             <a href={CATALOG_URL} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dfbd85] px-6 py-3.5 text-sm font-semibold text-[#17120b] transition hover:bg-[#eed5a7]">
               Explorar los 10 diseños <ArrowRight size={16} />
             </a>
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#1db957]">
+              <WhatsAppIcon size={16} /> Consultar por WhatsApp
+            </a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3.5 text-sm font-medium text-white/85 transition hover:border-white/30 hover:bg-white/5">
               Comprar por Mercado Libre
             </a>
           </div>
-          <p className="mt-4 text-xs text-white/40">Precio publicado: $ 1.200 UYU · Personalización a medida</p>
+          <p className="mt-4 text-xs text-white/40"><strong className="font-semibold text-white/70">$ 1.200 UYU</strong> · Pago único · Personalización a medida</p>
           <div className="mt-8 flex flex-wrap gap-x-5 gap-y-3 text-xs text-white/55">
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#dfbd85]" /> Personalizada</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#dfbd85]" /> Lista para compartir</span>
@@ -160,14 +169,14 @@ export default function Home() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURED_DESIGNS.map((design) => (
             <article key={design.id} className="rounded-2xl border border-white/10 bg-white/[0.035] p-3 transition hover:-translate-y-1 hover:border-white/20 sm:p-4">
-              <a href={'/Miluaistudio/catalogo/' + design.id + '/'} className="block" aria-label={'Probar ' + design.name}>
+              <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="block" aria-label={'Probar ' + design.name + ' en una pestaña nueva'}>
                 <DesignPreview design={design} />
               </a>
               <div className="px-1 pb-1 pt-4">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accent }}>{design.category}</p>
                 <h3 className="mt-1 text-base font-semibold">{design.name}</h3>
                 <p className="mt-2 min-h-[3.5rem] text-xs leading-relaxed text-white/50">{design.description}</p>
-                <a href={'/Miluaistudio/catalogo/' + design.id + '/'} className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white">
+                <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white/80 hover:text-white">
                   Ver demostración <ArrowRight size={14} />
                 </a>
               </div>
@@ -189,15 +198,45 @@ export default function Home() {
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {[
-              { number: '01', title: 'Nos contás tu idea', text: 'Compartís los datos del evento, tus fotos y el estilo que imaginás.' },
-              { number: '02', title: 'Personalizamos el diseño', text: 'Configuramos la invitación y las funciones acordadas para tu celebración.' },
-              { number: '03', title: 'Recibís tu enlace', text: 'Te entregamos la invitación web lista para compartir con tus invitados.' },
+              { number: '01', icon: Search, title: 'Elegís el diseño que más te gusta', text: 'Explorás el catálogo, abrís las demos y encontrás el estilo ideal para tu evento.' },
+              { number: '02', icon: MessageSquareText, title: 'Nos pasás los datos y la música', text: 'Nombres, fecha, lugar, fotos y la canción que querés sonando de fondo.' },
+              { number: '03', icon: Share2, title: 'Recibís tu enlace listo para compartir', text: 'Te entregamos la invitación web para reenviarla por WhatsApp a tus invitados.' },
             ].map((step) => (
               <article key={step.number} className="rounded-2xl border border-white/10 bg-[#09090b]/70 p-6 sm:p-7">
-                <span className="text-xs font-semibold tracking-[0.2em] text-[#dfbd85]">{step.number}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold tracking-[0.2em] text-[#dfbd85]">{step.number}</span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#dfbd85]/25 bg-[#dfbd85]/10 text-[#dfbd85]">
+                    <step.icon size={18} strokeWidth={1.7} />
+                  </span>
+                </div>
                 <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/55">{step.text}</p>
               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="resenas" className="relative z-10 border-y border-white/10 bg-white/[0.02]">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#dfbd85]">Reseñas de clientes</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Fiestas que ya comparten su enlace.</h2>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {TESTIMONIOS.map((t) => (
+              <figure key={t.nombre} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-5 sm:p-6">
+                <div className="flex items-center gap-0.5 text-[#dfbd85]" aria-label="Calificación: 5 de 5 estrellas">
+                  {Array.from({ length: 5 }).map((_, starIndex) => (
+                    <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
+                  ))}
+                </div>
+                <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-white/65">“{t.comentario}”</blockquote>
+                <figcaption className="mt-4 border-t border-white/10 pt-3">
+                  <span className="block text-sm font-semibold text-white/90">{t.nombre}</span>
+                  <span className="block text-xs text-white/45">{t.evento}</span>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>
@@ -213,6 +252,9 @@ export default function Home() {
           <div className="mt-7 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0">
             <a href={CATALOG_URL} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dfbd85] px-6 py-3.5 text-sm font-semibold text-[#17120b] transition hover:bg-[#eed5a7]">
               Elegir diseño <ArrowRight size={16} />
+            </a>
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#1db957]">
+              <WhatsAppIcon size={16} /> WhatsApp
             </a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3.5 text-sm font-medium text-white/85 transition hover:border-white/30 hover:bg-white/5">
               Ver publicación
@@ -250,19 +292,22 @@ export default function Home() {
       </section>
 
       <footer className="relative z-10 border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pb-28 pt-8 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-8 lg:px-8">
           <div>
             <p className="text-sm font-semibold text-white/75">Miluaistudio</p>
             <p className="mt-1">Invitaciones digitales personalizadas · Uruguay</p>
           </div>
           <div className="flex flex-wrap gap-4">
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-white"><WhatsAppIcon size={13} /> WhatsApp</a>
             <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">Comprar</a>
-            <a href="/Miluaistudio/catalogo/rosa-romantica/" className="transition hover:text-white">Ver demostración</a>
+            <a href="/Miluaistudio/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
           </div>
           <p>© {new Date().getFullYear()} Miluaistudio</p>
         </div>
       </footer>
+
+      <WhatsAppFloat />
     </main>
   );
 }
