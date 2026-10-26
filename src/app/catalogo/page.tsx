@@ -1,188 +1,116 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowDown, ArrowRight, Check, Clock3, ExternalLink, Heart, Sparkles, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Heart, Images, MapPin, Music2, Sparkles, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 
 const MERCADO_LIBRE_URL = 'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
+const SPRITE_URL = '/Miluaistudio/catalogo/previews-sprite.webp';
+const PREVIEW_INDEX: Record<string, number> = {
+  'rosa-romantica': 0,
+  'noche-dorada': 1,
+  'azul-celestial': 2,
+  'jardin-botanico': 3,
+  lavanda: 4,
+  terracota: 5,
+  'blanco-perla': 6,
+  'rojo-glamour': 7,
+  'geometria-moderna': 8,
+  'azul-romantico': 9,
+};
+const DEMO_NAMES: Record<string, string> = {
+  'rosa-romantica': 'Valentina',
+  'noche-dorada': 'Camila',
+  'azul-celestial': 'Lucía',
+  'jardin-botanico': 'Sofía',
+  lavanda: 'Martina',
+  terracota: 'Renata',
+  'blanco-perla': 'Isabella',
+  'rojo-glamour': 'Julieta',
+  'geometria-moderna': 'Valentina & Diego',
+  'azul-romantico': 'Emilia',
+};
 
-function CountdownPreview({ design }: { design: InvitationDesign }) {
-  const values = [
-    { value: '128', label: 'días' },
-    { value: '08', label: 'horas' },
-    { value: '42', label: 'min' },
-  ];
+function SpriteImage({ design, large = false }: { design: InvitationDesign; large?: boolean }) {
+  const index = PREVIEW_INDEX[design.id] ?? 0;
+  const col = index % 5;
+  const row = Math.floor(index / 5);
 
-  return (
-    <div className="mt-5 flex items-center justify-center gap-2.5">
-      {values.map((item) => {
-        const commonText = { color: design.text, fontVariantNumeric: 'tabular-nums' as const };
-        if (design.clock === 'minimal') {
-          return (
-            <div key={item.label} className="min-w-0 text-center">
-              <div className="text-lg font-light leading-none sm:text-xl" style={commonText}>{item.value}</div>
-              <div className="mt-1 text-[7px] uppercase tracking-[0.15em]" style={{ color: design.muted }}>{item.label}</div>
-            </div>
-          );
-        }
-        if (design.clock === 'circles') {
-          return (
-            <div key={item.label} className="flex h-12 w-12 flex-col items-center justify-center rounded-full border sm:h-14 sm:w-14" style={{ borderColor: design.accent, color: design.text }}>
-              <span className="text-xs font-medium">{item.value}</span>
-              <span className="text-[6px] uppercase tracking-wide" style={{ color: design.muted }}>{item.label}</span>
-            </div>
-          );
-        }
-        if (design.clock === 'outline') {
-          return (
-            <div key={item.label} className="min-w-0 flex-1 border-y py-2 text-center" style={{ borderColor: design.accentSoft }}>
-              <div className="text-lg font-light leading-none sm:text-xl" style={commonText}>{item.value}</div>
-              <div className="mt-1 text-[7px] uppercase tracking-[0.15em]" style={{ color: design.muted }}>{item.label}</div>
-            </div>
-          );
-        }
-        return (
-          <div key={item.label} className={`min-w-0 flex-1 py-2 text-center ${design.clock === 'glass' ? 'rounded-xl border backdrop-blur-sm' : 'rounded-md'}`} style={{ background: design.clock === 'glass' ? `${design.accentSoft}66` : design.accentSoft, borderColor: design.clock === 'glass' ? design.accent : 'transparent' }}>
-            <div className="text-lg font-light leading-none sm:text-xl" style={commonText}>{item.value}</div>
-            <div className="mt-1 text-[7px] uppercase tracking-[0.15em]" style={{ color: design.muted }}>{item.label}</div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function Ornament({ design }: { design: InvitationDesign }) {
-  if (design.ornament === 'none') return null;
-  if (design.ornament === 'geometry') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute right-3 top-3 flex gap-1 opacity-70">
-        <span className="h-5 w-5 rotate-45 border" style={{ borderColor: design.accent }} />
-        <span className="h-5 w-5 rounded-full border" style={{ borderColor: design.accent }} />
-      </div>
-    );
-  }
-  if (design.ornament === 'botanical') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute right-3 top-3 flex -rotate-12 items-center gap-1 opacity-70" style={{ color: design.accent }}>
-        <span className="text-2xl">❧</span>
-        <span className="text-lg">✦</span>
-      </div>
-    );
-  }
-  if (design.ornament === 'stars') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" style={{ color: design.accent, opacity: 0.8 }}>
-        <span className="absolute right-4 top-3 text-lg">✦</span>
-        <span className="absolute left-4 top-14 text-xs">✧</span>
-        <span className="absolute bottom-14 right-5 text-xs">✧</span>
-      </div>
-    );
-  }
-  if (design.ornament === 'petals') {
-    return (
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" style={{ color: design.accent, opacity: 0.72 }}>
-        <span className="absolute -left-4 top-5 text-5xl">❋</span>
-        <span className="absolute -right-3 bottom-10 text-5xl">❋</span>
-      </div>
-    );
-  }
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" style={{ color: design.accent, opacity: 0.7 }}>
-      <Sparkles className="absolute right-4 top-4 h-4 w-4" />
-      <Sparkles className="absolute bottom-7 left-4 h-3 w-3" />
-    </div>
-  );
-}
-
-function InvitationMockup({ design, large = false }: { design: InvitationDesign; large?: boolean }) {
-  const isLight = design.text === '#302821';
-  const titleFont = design.font === 'script'
-    ? "var(--font-cursive), cursive"
-    : design.font === 'serif'
-      ? "var(--font-serif), Georgia, serif"
-      : "var(--font-sans), Arial, sans-serif";
-  const titleStyle = { fontFamily: titleFont, color: design.accent };
-  const pad = large ? 'p-8 sm:p-10' : 'p-4 sm:p-5';
   return (
     <div
-      className={`relative isolate flex min-h-[340px] flex-col items-center justify-center overflow-hidden text-center transition-transform duration-300 ${pad} ${large ? 'min-h-[520px]' : ''} ${design.layout === 'rounded' ? 'rounded-[2rem]' : design.layout === 'arch' ? 'rounded-t-[48%] rounded-b-xl' : design.layout === 'framed' ? 'rounded-sm' : 'rounded-xl'}`}
+      role="img"
+      aria-label={'Ejemplo visual del diseño ' + design.name}
+      className={'relative w-full overflow-hidden bg-[#eee8df] ' + (large ? 'aspect-square rounded-2xl' : 'aspect-square')}
       style={{
-        background: design.background,
-        color: design.text,
-        border: design.layout === 'framed' ? `1px solid ${design.accent}` : '1px solid rgba(255,255,255,0.08)',
-        boxShadow: `0 20px 60px ${design.background}66`,
+        backgroundImage: 'url(' + SPRITE_URL + ')',
+        backgroundSize: '500% 200%',
+        backgroundPosition: String(col * 25) + '% ' + String(row * 100) + '%',
+        backgroundRepeat: 'no-repeat',
       }}
-    >
-      {design.layout === 'framed' && <div aria-hidden="true" className="pointer-events-none absolute inset-2 border" style={{ borderColor: `${design.accent}70` }} />}
-      {design.layout === 'arch' && <div aria-hidden="true" className="pointer-events-none absolute inset-x-5 top-5 h-2/3 rounded-t-full border" style={{ borderColor: `${design.accent}66` }} />}
-      {design.layout === 'modern' && <div aria-hidden="true" className="pointer-events-none absolute -right-10 top-12 h-28 w-28 rotate-45 border" style={{ borderColor: `${design.accent}70` }} />}
-      {design.layout === 'botanical' && <div aria-hidden="true" className="pointer-events-none absolute -left-8 bottom-3 -rotate-45 text-8xl" style={{ color: design.accent, opacity: 0.3 }}>❧</div>}
-      <Ornament design={design} />
-      <div className={`relative z-10 w-full ${design.layout === 'editorial' || design.layout === 'split' || design.layout === 'modern' ? 'text-left' : 'text-center'}`}>
-        <div className="mb-3 text-[8px] font-semibold uppercase tracking-[0.3em] sm:text-[9px]" style={{ color: design.muted }}>
-          Una celebración especial
-        </div>
-        {design.layout === 'split' ? (
-          <div className="grid grid-cols-[1fr_auto] items-end gap-3">
-            <div>
-              <p className="text-[9px] uppercase tracking-[0.2em]" style={{ color: design.muted }}>Te invitamos a celebrar</p>
-              <h3 className="mt-2 text-3xl leading-none sm:text-4xl" style={titleStyle}>Tu nombre</h3>
-            </div>
-            <div className="pb-1 text-right text-[10px] uppercase tracking-wider" style={{ color: design.text }}>Sáb.<br/>21:00</div>
-          </div>
-        ) : design.layout === 'editorial' || design.layout === 'modern' ? (
-          <>
-            <div className="mb-1 text-[8px] uppercase tracking-[0.25em]" style={{ color: design.muted }}>La noche es tuya</div>
-            <h3 className={`leading-[0.95] ${large ? 'text-5xl sm:text-6xl' : 'text-4xl sm:text-5xl'}`} style={titleStyle}>Tu nombre</h3>
-            <div className="mt-3 h-px w-16" style={{ background: design.accent }} />
-          </>
-        ) : (
-          <>
-            <h3 className={`leading-[0.95] ${large ? 'text-5xl sm:text-6xl' : 'text-4xl sm:text-5xl'}`} style={titleStyle}>Tu nombre</h3>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.16em]" style={{ color: design.muted }}>Mis XV años</p>
-          </>
-        )}
-        <div className={`mx-auto my-4 h-px ${design.layout === 'editorial' || design.layout === 'split' || design.layout === 'modern' ? 'w-10' : 'w-16'}`} style={{ background: design.accent }} />
-        <div className="text-xs font-medium sm:text-sm" style={{ color: design.text }}>Sábado · 21:00 hs</div>
-        <div className="mt-1 text-[9px] uppercase tracking-[0.17em]" style={{ color: design.muted }}>Montevideo · Uruguay</div>
-        <CountdownPreview design={design} />
-        <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[8px] font-semibold uppercase tracking-[0.18em]" style={{ background: design.accent, color: isLight ? '#fff' : design.background }}>
-          Confirmar asistencia <ArrowRight className="h-3 w-3" />
-        </div>
-      </div>
-      {design.layout === 'minimal' && <div className="absolute bottom-3 h-px w-10" style={{ background: design.accentSoft }} />}
-    </div>
+    />
   );
 }
 
-function DesignCard({ design, onPreview }: { design: InvitationDesign; onPreview: () => void }) {
+function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; index: number; onQuickView: () => void }) {
+  const demoUrl = '/Miluaistudio/catalogo/' + design.id + '/';
+
   return (
-    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] transition hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.055]">
-      <button type="button" onClick={onPreview} className="block w-full p-3 text-left sm:p-4" aria-label={`Previsualizar diseño ${design.name}`}>
-        <InvitationMockup design={design} />
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e8e1d8] bg-white shadow-[0_4px_16px_rgba(34,26,19,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(34,26,19,0.10)]">
+      <button
+        type="button"
+        onClick={onQuickView}
+        className="relative block w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#a77c5a]"
+        aria-label={'Vista rápida: ' + design.name}
+      >
+        <SpriteImage design={design} />
+        <span className="absolute left-3 top-3 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-[#38332e] shadow-sm">
+          {String(index + 1).padStart(2, '0')} / 10
+        </span>
+        <span className="absolute bottom-3 right-3 rounded-full bg-[#151719]/85 px-3 py-1.5 text-[10px] font-semibold text-white opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
+          Vista rápida
+        </span>
       </button>
-      <div className="px-4 pb-4 pt-1 sm:px-5 sm:pb-5">
-        <div className="flex items-start justify-between gap-3">
+
+      <div className="flex flex-1 flex-col p-4 sm:p-4">
+        <div className="flex items-start justify-between gap-2">
           <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: design.accent }}>{design.category}</div>
-            <h2 className="mt-1 text-lg font-semibold text-white">{design.name}</h2>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accentSoft }}>{design.category}</p>
+            <h2 className="mt-1 text-base font-semibold leading-snug text-[#262a2e]">{design.name}</h2>
           </div>
-          <button type="button" onClick={onPreview} className="rounded-full border border-white/15 p-2 text-white/70 transition hover:border-white/35 hover:text-white" aria-label={`Ver detalles de ${design.name}`}>
-            <ArrowRight size={17} />
+          <span className="mt-1 h-3 w-3 shrink-0 rounded-full ring-2 ring-black/5" style={{ background: design.accent }} />
+        </div>
+
+        <p className="mt-2 text-xs font-medium text-[#786d64]">Ejemplo: {DEMO_NAMES[design.id]}</p>
+        <p className="mt-2 min-h-[4.5rem] text-xs leading-relaxed text-[#6e6a66]">{design.description}</p>
+
+        <div className="mt-2 flex flex-wrap gap-1.5" aria-label={'Paleta ' + design.palette}>
+          {[design.background, design.accent, design.accentSoft, design.text].map((color) => (
+            <span key={color} title={color} className="h-3.5 w-3.5 rounded-full border border-black/10" style={{ background: color }} />
+          ))}
+          <span className="ml-1 self-center text-[10px] text-[#82786e]">{design.palette}</span>
+        </div>
+
+        <div className="mt-4 space-y-1.5 border-t border-[#eee8e1] pt-3 text-[10px] text-[#716b64]">
+          <div className="flex items-center gap-1.5"><Clock3 size={12} /> Cuenta regresiva <span className="text-[#c7bfb6]">·</span> <Images size={12} /> Galería</div>
+          <div className="flex items-center gap-1.5"><MapPin size={12} /> Ubicación <span className="text-[#c7bfb6]">·</span> <CalendarDays size={12} /> Calendario <span className="text-[#c7bfb6]">·</span> <Music2 size={12} /> Música</div>
+        </div>
+
+        <div className="mt-auto pt-4">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-[10px] text-[#8a8178]">Precio publicado</span>
+            <strong className="text-sm font-semibold text-[#282a2d]">$ 1.200 UYU</strong>
+          </div>
+          <a
+            href={demoUrl}
+            className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition hover:brightness-95"
+            style={{ background: design.accent, color: design.text === '#302821' ? '#fff' : design.background }}
+          >
+            Ver demostración <ArrowRight size={14} />
+          </a>
+          <button type="button" onClick={onQuickView} className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#e6dfd7] px-3 py-2 text-xs font-medium text-[#62584f] transition hover:bg-[#f8f5f1]">
+            Ver detalles
           </button>
         </div>
-        <p className="mt-2 min-h-10 text-sm leading-relaxed text-white/60">{design.description}</p>
-        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-white/45"><span>Precio publicado</span><strong className="text-sm font-semibold text-white">$ 1.200 UYU</strong></div>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {[design.background, design.accent, design.accentSoft, design.text].map((color) => (
-            <span key={color} title={color} className="h-4 w-4 rounded-full border border-white/15" style={{ background: color }} />
-          ))}
-          <span className="ml-1 self-center text-xs text-white/50">{design.palette}</span>
-        </div>
-        <button type="button" onClick={onPreview} className="mt-4 w-full rounded-xl border border-white/15 px-4 py-2.5 text-sm font-medium text-white transition hover:border-white/35 hover:bg-white/5">
-          Ver diseño
-        </button>
       </div>
     </article>
   );
@@ -192,101 +120,108 @@ export default function CatalogoPage() {
   const [selected, setSelected] = useState<InvitationDesign | null>(null);
 
   return (
-    <div className="fixed inset-0 z-[250] overflow-y-auto bg-[#09090b] text-white" style={{ overscrollBehavior: 'contain' }}>
-      <div className="pointer-events-none fixed inset-0 opacity-80" aria-hidden="true" style={{ background: 'radial-gradient(ellipse at 15% 0%, rgba(153,96,125,0.17), transparent 36%), radial-gradient(ellipse at 90% 15%, rgba(133,112,69,0.12), transparent 35%)' }} />
-      <header className="relative z-10 border-b border-white/10">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f7f4ef] text-[#272a2d]">
+      <header className="bg-[#17191b] text-white shadow-sm">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5"><Heart size={18} /></div>
-            <div>
-              <div className="text-lg font-semibold tracking-tight">Miluaistudio</div>
-              <div className="text-[10px] uppercase tracking-[0.22em] text-white/45">Invitaciones digitales</div>
-            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfbd85]/40 text-[#e6c9a0]"><Heart size={19} /></span>
+            <span>
+              <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">MILUAISTUDIO</span>
+              <span className="block text-[9px] uppercase tracking-[0.2em] text-white/50">Invitaciones digitales interactivas</span>
+            </span>
           </a>
-          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="hidden items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-white/85 sm:inline-flex">
-            Ver oferta <ExternalLink size={15} />
+          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#f5efe6] px-4 py-2.5 text-xs font-semibold text-[#242322] transition hover:bg-white sm:px-5 sm:text-sm">
+            Consultar / contratar <ExternalLink size={14} />
           </a>
-          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="rounded-full border border-white/15 p-2 text-white sm:hidden" aria-label="Ver publicación de compra"><ArrowRight size={18} /></a>
         </div>
       </header>
 
-      <main id="inicio" className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 sm:pt-16 lg:px-8">
-        <section className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/65">
-            <Sparkles size={14} style={{ color: '#d7b46a' }} /> Diseños para momentos únicos
+      <main className="mx-auto max-w-[1440px] px-4 pb-14 pt-9 sm:px-6 sm:pb-20 sm:pt-14 lg:px-8">
+        <section className="mx-auto max-w-4xl text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#e2d7c9] bg-white/70 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#84705d] sm:text-xs">
+            <Sparkles size={14} /> Colección de demostración
           </div>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-            Una invitación que se siente <span className="font-serif italic text-[#dfbd85]">tuya.</span>
+          <h1 className="mt-5 font-serif text-4xl leading-tight tracking-tight text-[#272a2d] sm:text-5xl lg:text-6xl">
+            Diez diseños únicos<span className="text-[#b18163]">.</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
-            Explorá diferentes estilos de invitación web. Elegí la estética que más te representa y conocé una forma simple de compartir todos los detalles de tu celebración en un solo enlace.
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#6e6963] sm:text-base">
+            Elegí el estilo que mejor acompaña tu celebración. Cada ejemplo tiene un nombre ficticio, una estética propia y una invitación web para explorar desde el celular.
           </p>
-          <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a href="#disenos" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dfbd85] px-6 py-3 text-sm font-semibold text-[#17120b] transition hover:bg-[#eed5a7]">
-              Explorar diseños <ArrowDown size={16} />
-            </a>
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm text-white/80 transition hover:bg-white/5">
-              Comprar invitación <ExternalLink size={15} />
-            </a>
-          </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/45">
-            <span className="inline-flex items-center gap-1.5"><Check size={13} /> Diseño personalizado</span>
-            <span className="inline-flex items-center gap-1.5"><Check size={13} /> Experiencia interactiva</span>
-            <span className="inline-flex items-center gap-1.5"><Check size={13} /> Optimizada para celular</span>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] text-[#81766b] sm:text-xs">
+            <span className="inline-flex items-center gap-1.5"><Check size={14} className="text-[#8d9a7b]" /> Diseños personalizables</span>
+            <span className="inline-flex items-center gap-1.5"><Check size={14} className="text-[#8d9a7b]" /> Adaptados a celular</span>
+            <span className="inline-flex items-center gap-1.5"><Check size={14} className="text-[#8d9a7b]" /> Un solo enlace para compartir</span>
           </div>
         </section>
 
-        <section id="disenos" className="mt-14 scroll-mt-8 sm:mt-20">
-          <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <section id="disenos" className="mt-10 scroll-mt-6 sm:mt-14">
+          <div className="mb-5 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#dfbd85]">Colección inicial</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Diez caminos visuales</h2>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#a47d5d]">Los modelos</p>
+              <h2 className="mt-1 font-serif text-2xl text-[#292c2f] sm:text-3xl">Encontrá tu estilo</h2>
             </div>
-            <p className="max-w-xl text-sm leading-relaxed text-white/50">Cada modelo tiene su propia invitación web de demostración para que explores colores, composición y reloj antes de consultar la personalización.</p>
+            <p className="max-w-xl text-xs leading-relaxed text-[#8a8178]">Abrí una vista rápida o entrá a la demostración completa para recorrer la invitación interactiva.</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {INVITATION_DESIGNS.map((design) => <DesignCard key={design.id} design={design} onPreview={() => setSelected(design)} />)}
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
+            {INVITATION_DESIGNS.map((design, index) => (
+              <DesignCard key={design.id} design={design} index={index} onQuickView={() => setSelected(design)} />
+            ))}
           </div>
         </section>
 
-        <section className="mt-16 rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-9 lg:flex lg:items-center lg:justify-between lg:gap-10">
+        <section className="mt-12 rounded-3xl border border-[#e6ddd2] bg-white p-6 sm:mt-16 sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-10">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#dfbd85]">Una invitación, toda la información</p>
-            <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Tu evento, en un solo enlace.</h2>
-            <p className="mt-3 text-sm leading-relaxed text-white/55">El producto actual incluye diseño web personalizado y funciones como cuenta regresiva, galería, música, ubicación y confirmación de asistencia, sujeto a la configuración contratada.</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a47d5d]">Una invitación, toda la información</p>
+            <h2 className="mt-2 font-serif text-2xl text-[#292c2f] sm:text-3xl">Tu evento, en un solo enlace.</h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#726a62]">Cuenta regresiva, galería, música, ubicación, calendario y confirmación de asistencia, según la configuración acordada para tu evento.</p>
           </div>
-          <div className="mt-6 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0">
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/85">Ver publicación <ExternalLink size={15} /></a>
-          </div>
+          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="mt-5 inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#191b1d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#343638] lg:mt-0">
+            Consultar la publicación <ExternalLink size={15} />
+          </a>
         </section>
-
-        <footer className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/35 sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Miluaistudio · Invitaciones digitales</span>
-          <span>Diseños de demostración · Personalización a consultar</span>
-        </footer>
       </main>
 
+      <footer className="bg-[#17191b] text-white">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 py-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <span className="font-serif tracking-[0.12em] text-white/80">MILUAISTUDIO</span>
+          <span>Tu historia, en una invitación única.</span>
+          <span>© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
+        </div>
+      </footer>
+
       {selected && (
-        <div className="fixed inset-0 z-[300] overflow-y-auto bg-black/80 p-3 backdrop-blur-md sm:p-6" role="dialog" aria-modal="true" aria-label={`Vista previa ${selected.name}`}>
-          <div className="mx-auto flex min-h-full max-w-5xl items-center justify-center">
-            <div className="relative grid w-full gap-4 rounded-3xl border border-white/15 bg-[#101012] p-4 sm:p-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-8">
-              <button onClick={() => setSelected(null)} type="button" className="absolute right-3 top-3 z-20 rounded-full border border-white/15 bg-black/50 p-2 text-white/80 hover:text-white" aria-label="Cerrar vista previa"><X size={18} /></button>
-              <div className="mx-auto w-full max-w-sm pt-8 lg:pt-0">
-                <InvitationMockup design={selected} large />
+        <div className="fixed inset-0 z-[300] overflow-y-auto bg-[#17191b]/80 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-label={'Vista previa ' + selected.name} onClick={() => setSelected(null)}>
+          <div className="mx-auto flex min-h-full max-w-4xl items-center justify-center">
+            <div className="relative grid w-full gap-5 rounded-3xl bg-[#fbf8f3] p-4 shadow-2xl sm:p-6 lg:grid-cols-2 lg:gap-8" onClick={(event) => event.stopPropagation()}>
+              <button onClick={() => setSelected(null)} type="button" className="absolute right-3 top-3 z-10 rounded-full border border-[#e5ddd4] bg-white/90 p-2 text-[#4c4844] hover:bg-white" aria-label="Cerrar vista previa"><X size={18} /></button>
+              <div className="pt-8 lg:pt-0">
+                <SpriteImage design={selected} large />
+                <p className="mt-2 text-center text-[10px] text-[#8b8177]">Imagen conceptual generada con IA · Ejemplo ficticio</p>
               </div>
-              <div className="flex flex-col justify-center py-3 pr-1 sm:py-5 lg:pr-5">
-                <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: selected.accent }}>{selected.category}</span>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{selected.name}</h2>
-                <p className="mt-4 text-base leading-relaxed text-white/60">{selected.description}</p>
-                <div className="mt-5 flex items-center gap-2 text-sm text-white/55"><Clock3 size={16} /> Cuenta regresiva con diseño a juego</div>
-                <div className="mt-3 flex items-center gap-2 text-sm text-white/55"><Check size={16} /> Adaptable a pantallas móviles</div>
-                <div className="mt-3 flex items-center gap-2 text-sm text-white/55"><Check size={16} /> Personalizable según el evento</div>
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dfbd85] px-5 py-3 text-sm font-semibold text-[#17120b] hover:bg-[#eed5a7]">Probar invitación completa <ArrowRight size={15} /></a>
-                  <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-white/85">Consultar / comprar <ExternalLink size={15} /></a>
-                  <button type="button" onClick={() => setSelected(null)} className="rounded-full border border-white/15 px-5 py-3 text-sm text-white/80 hover:bg-white/5">Volver al catálogo</button>
+              <div className="flex flex-col justify-center py-2 pr-1 sm:py-5 lg:pr-5">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: selected.accentSoft }}>{selected.category}</span>
+                <h2 className="mt-2 font-serif text-3xl text-[#292c2f] sm:text-4xl">{selected.name}</h2>
+                <p className="mt-2 text-sm font-medium text-[#84766b]">Ejemplo: {DEMO_NAMES[selected.id]}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[#706860]">{selected.description}</p>
+                <div className="mt-5 space-y-2 text-sm text-[#706860]">
+                  <div className="flex items-center gap-2"><Clock3 size={16} /> Cuenta regresiva con diseño a juego</div>
+                  <div className="flex items-center gap-2"><Images size={16} /> Galería de fotos de muestra</div>
+                  <div className="flex items-center gap-2"><MapPin size={16} /> Ubicación y calendario</div>
+                  <div className="flex items-center gap-2"><Music2 size={16} /> Música y funciones interactivas</div>
                 </div>
-                <p className="mt-4 text-xs leading-relaxed text-white/35">La invitación completa funciona en modo demostración: no envía confirmaciones, no usa datos personales ni publica fotos. Los datos reales se configuran al personalizar.</p>
+                <div className="mt-6 flex items-center justify-between border-y border-[#e9e0d7] py-4">
+                  <span className="text-sm text-[#847b72]">Precio publicado</span>
+                  <strong className="text-lg text-[#282a2d]">$ 1.200 UYU</strong>
+                </div>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#252729] px-5 py-3 text-sm font-semibold text-white hover:bg-[#414345]">
+                    Abrir demostración <ArrowRight size={15} />
+                  </a>
+                  <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9cec2] px-5 py-3 text-sm font-semibold text-[#54483e] hover:bg-white">
+                    Consultar / contratar <ExternalLink size={15} />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

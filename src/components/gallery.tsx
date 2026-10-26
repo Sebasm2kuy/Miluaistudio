@@ -31,6 +31,7 @@ interface Photo {
   id: string
   src: string
   type: 'original' | 'uploaded'
+  spriteIndex?: number
 }
 
 type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
@@ -41,11 +42,12 @@ export default function Gallery() {
   const originalPhotos = cfg.galeria.fotos.map(p => ({
     src: p.webp,
     fallback: p.fallback,
+    spriteIndex: (p as typeof p & { spriteIndex?: number }).spriteIndex,
     objectPosition: p.objectPosition || { desktop: 'center 30%', mobile: 'center top' },
   }))
 
   const [photos, setPhotos] = useState<Photo[]>(
-    originalPhotos.map((p, i) => ({ id: `orig-${i}`, src: p.src, type: 'original' as const }))
+    originalPhotos.map((p, i) => ({ id: `orig-${i}`, src: p.src, spriteIndex: p.spriteIndex, type: 'original' as const }))
   )
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -243,19 +245,33 @@ export default function Gallery() {
                   onClick={() => openLightbox(idx)}
                 >
                   {isOriginal ? (
-                    <picture>
-                      {photo.src.toLowerCase().endsWith(".webp") && <source srcSet={photo.src} type="image/webp" />}
-                      <img
-                        src={originalPhotos[origIdx].fallback}
-                        alt={`Momento especial ${origIdx + 1}`}
-                        className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    photo.spriteIndex !== undefined ? (
+                      <div
+                        role="img"
+                        aria-label={'Foto de muestra ' + (photo.spriteIndex + 1)}
+                        className="h-full w-full transition-transform duration-700 group-hover:scale-[1.03]"
                         style={{
-                          ['--pos-desktop' as string]: originalPhotos[origIdx].objectPosition.desktop,
-                          ['--pos-mobile' as string]: originalPhotos[origIdx].objectPosition.mobile,
+                          backgroundImage: 'url(' + photo.src + ')',
+                          backgroundSize: '500% 200%',
+                          backgroundPosition: (photo.spriteIndex % 5) * 25 + '% ' + Math.floor(photo.spriteIndex / 5) * 100 + '%',
+                          backgroundRepeat: 'no-repeat',
                         }}
-                        draggable={false}
                       />
-                    </picture>
+                    ) : (
+                      <picture>
+                        {photo.src.toLowerCase().endsWith(".webp") && <source srcSet={photo.src} type="image/webp" />}
+                        <img
+                          src={originalPhotos[origIdx].fallback}
+                          alt={'Momento especial ' + (origIdx + 1)}
+                          className="gallery-photo w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          style={{
+                            ['--pos-desktop' as string]: originalPhotos[origIdx].objectPosition.desktop,
+                            ['--pos-mobile' as string]: originalPhotos[origIdx].objectPosition.mobile,
+                          }}
+                          draggable={false}
+                        />
+                      </picture>
+                    )
                   ) : (
                     <img
                       src={photo.src}
@@ -397,12 +413,27 @@ export default function Gallery() {
           <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
         {lightboxIdx !== null && (
-          <img
-            src={photos[lightboxIdx].src}
-            alt={`Foto ${lightboxIdx + 1}`}
-            className="modal-content max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+          photos[lightboxIdx].spriteIndex !== undefined ? (
+            <div
+              role="img"
+              aria-label={'Foto de muestra ' + (photos[lightboxIdx].spriteIndex! + 1)}
+              className="modal-content aspect-square w-[min(88vw,620px)] rounded-lg shadow-2xl"
+              style={{
+                backgroundImage: 'url(' + photos[lightboxIdx].src + ')',
+                backgroundSize: '500% 200%',
+                backgroundPosition: (photos[lightboxIdx].spriteIndex! % 5) * 25 + '% ' + Math.floor(photos[lightboxIdx].spriteIndex! / 5) * 100 + '%',
+                backgroundRepeat: 'no-repeat',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <img
+              src={photos[lightboxIdx].src}
+              alt={'Foto ' + (lightboxIdx + 1)}
+              className="modal-content max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          )
         )}
         <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <div className="flex gap-1.5">
