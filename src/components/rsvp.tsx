@@ -80,6 +80,12 @@ export default function Rsvp() {
     // Pequeña demora para que el spinner sea visible y se sienta natural.
     await new Promise((r) => setTimeout(r, 500))
 
+    // Las muestras públicas simulan el flujo, pero nunca envían datos de invitados.
+    if (cfg.modoDemo) {
+      setStatus('ok')
+      return
+    }
+
     // Intentar registrar en el backend (Google Sheet) si está disponible.
     // Si falla, no bloquear al usuario — el flujo sigue por WhatsApp.
     // Usamos GET con query params porque Google Apps Script a veces rechaza
@@ -165,7 +171,7 @@ export default function Rsvp() {
         {/* Confirmar Asistencia */}
         <div
           className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
-          style={{ borderBottomWidth: '3px', borderBottomColor: '#b8860b' }}
+          style={{ borderBottomWidth: '3px', borderBottomColor: 'var(--theme-accent, #b8860b)' }}
         >
           {status === 'ok' ? (
             <div className="py-4 sm:py-8">
@@ -173,8 +179,8 @@ export default function Rsvp() {
               <div
                 className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-5 rounded-full flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, #d4af37, #b8860b)',
-                  boxShadow: '0 8px 32px rgba(184,134,11,0.3)',
+                  background: 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))',
+                  boxShadow: '0 8px 32px color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)',
                   animation: 'springIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both',
                 }}
               >
@@ -185,7 +191,7 @@ export default function Rsvp() {
                 className="font-serif text-2xl sm:text-3xl text-bordeaux italic mb-1"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.4s both' }}
               >
-                ¡Confirmado!
+{cfg.modoDemo ? 'Prueba completada' : '¡Confirmado!'}
               </p>
               <p
                 className="text-gold font-bold text-sm sm:text-base mb-1"
@@ -210,16 +216,18 @@ export default function Rsvp() {
               <div
                 className="inline-block px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl mb-5 sm:mb-6"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(184,134,11,0.08), rgba(212,175,55,0.08))',
-                  border: '1px solid rgba(184,134,11,0.2)',
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--theme-accent, #b8860b) 8%, transparent), color-mix(in srgb, var(--theme-accent-light, #d4af37) 8%, transparent))',
+                  border: '1px solid color-mix(in srgb, var(--theme-accent, #b8860b) 20%, transparent)',
                   animation: 'rsvpFadeUp 0.6s ease 0.6s both',
                 }}
               >
-                <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">Tu código</p>
+                <p className="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-gold/60 mb-0.5">{cfg.modoDemo ? 'Código de muestra' : 'Tu código'}</p>
+                {cfg.modoDemo && <p className="mx-auto mb-3 max-w-sm text-xs leading-relaxed text-gray-500">Esta interacción es solo una prueba visual. No se registró ninguna asistencia ni se enviaron datos.</p>}
                 <p className="text-2xl sm:text-2xl font-bold text-gold tracking-widest tabular-nums">{codigo}</p>
               </div>
 
               {/* Botones post-confirmacion */}
+{!cfg.modoDemo && (
               <div
                 className="space-y-2.5 sm:space-y-3"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.8s both' }}
@@ -245,6 +253,9 @@ export default function Rsvp() {
                 </button>
               </div>
 
+)}
+              {cfg.modoDemo && <p className="mt-4 rounded-xl border border-dashed p-3 text-xs italic text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)' }}>Esta es una demostración: los datos no se enviaron ni se guardaron.</p>}
+
               <p
                 className="text-[11px] sm:text-xs text-gray-400 mt-4 italic"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 1.2s both' }}
@@ -267,8 +278,8 @@ export default function Rsvp() {
                   onClick={toggleConfirmo}
                   className={`w-full flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-4 sm:py-5 rounded-xl border-2 transition-all duration-300 ${confirmo ? 'scale-[1.01]' : 'hover:bg-gold/[0.03]'}`}
                   style={{
-                    borderColor: confirmo ? '#d4af37' : 'rgba(184, 134, 11, 0.2)',
-                    background: confirmo ? 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(184,134,11,0.04))' : 'transparent',
+                    borderColor: confirmo ? 'var(--theme-accent-light, #d4af37)' : 'color-mix(in srgb, var(--theme-accent, #b8860b) 20%, transparent)',
+                    background: confirmo ? 'linear-gradient(135deg, color-mix(in srgb, var(--theme-accent-light, #d4af37) 8%, transparent), rgba(184,134,11,0.04))' : 'transparent',
                     boxShadow: confirmo ? '0 4px 20px rgba(184,134,11,0.12)' : 'none',
                   }}
                 >
@@ -276,8 +287,8 @@ export default function Rsvp() {
                   <div
                     className="w-7 h-7 sm:w-8 sm:h-8 rounded-md flex items-center justify-center shrink-0 transition-all duration-300"
                     style={{
-                      background: confirmo ? 'linear-gradient(135deg, #d4af37, #b8860b)' : 'rgba(255,255,255,0.6)',
-                      border: confirmo ? 'none' : '2px solid rgba(184,134,11,0.3)',
+                      background: confirmo ? 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))' : 'rgba(255,255,255,0.6)',
+                      border: confirmo ? 'none' : '2px solid color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)',
                     }}
                   >
                     {confirmo && <Check size={18} strokeWidth={3} className="text-white" />}
@@ -314,7 +325,7 @@ export default function Rsvp() {
                         onClick={() => cambiarCantidad(-1)}
                         disabled={cantidad <= 1}
                         className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ borderColor: 'rgba(184,134,11,0.3)', color: '#b8860b', background: 'rgba(184,134,11,0.04)' }}
+                        style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)', color: 'var(--theme-accent, #b8860b)', background: 'rgba(184,134,11,0.04)' }}
                         aria-label="Restar persona"
                       >
                         <Minus size={20} strokeWidth={2.5} />
@@ -332,7 +343,7 @@ export default function Rsvp() {
                         onClick={() => cambiarCantidad(1)}
                         disabled={cantidad >= MAX_INVITADOS}
                         className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ borderColor: 'rgba(184,134,11,0.3)', color: '#b8860b', background: 'rgba(184,134,11,0.04)' }}
+                        style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)', color: 'var(--theme-accent, #b8860b)', background: 'rgba(184,134,11,0.04)' }}
                         aria-label="Sumar persona"
                       >
                         <Plus size={20} strokeWidth={2.5} />
@@ -368,7 +379,7 @@ export default function Rsvp() {
                         value={nombre}
                         onChange={(e) => actualizarInvitado(i, e.target.value)}
                         className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300 transition-all duration-300"
-                        style={{ borderColor: nombre.trim() ? 'rgba(184, 134, 11, 0.35)' : 'rgba(184, 134, 11, 0.15)' }}
+                        style={{ borderColor: nombre.trim() ? 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)' : 'color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)' }}
                         placeholder={`Invitado ${i + 1} — Nombre y apellido`}
                       />
                     ))}
@@ -393,7 +404,7 @@ export default function Rsvp() {
                       value={telefono}
                       onChange={(e) => setTelefono(e.target.value)}
                       className="elegant-input w-full px-3 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-xl border text-base text-bordeaux bg-gray-50 focus:outline-none placeholder:text-gray-300"
-                      style={{ borderColor: 'rgba(184, 134, 11, 0.15)' }}
+                      style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 15%, transparent)' }}
                       placeholder="Ej: 099 123 456"
                     />
                   </div>
@@ -449,12 +460,13 @@ export default function Rsvp() {
           <p className="text-gray-400 mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed">
             &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
           </p>
+          {cfg.modoDemo && <p className="mb-6 rounded-xl border border-dashed p-3 text-xs text-gray-500" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)' }}>En la invitación personalizada se puede agregar información útil para los invitados.</p>}
 
           {/* Abitab */}
-          <div
+          {!cfg.modoDemo && <div
             className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden mb-3 sm:mb-4"
             style={{
-              borderColor: 'rgba(184, 134, 11, 0.1)',
+              borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)',
               boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
             }}
           >
@@ -469,7 +481,7 @@ export default function Rsvp() {
             <button
               onClick={copyNumber}
               className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
-              style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+              style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)' }}
             >
               {copied ? (
                 <><Check size={14} strokeWidth={2} /> ¡Copiado!</>
@@ -477,14 +489,14 @@ export default function Rsvp() {
                 <><Copy size={14} strokeWidth={2} /> Copiar número</>
               )}
             </button>
-          </div>
+          </div>}
 
           {/* Bloque secundario (Santander / Mi Dinero) — solo se renderiza si tiene número configurado */}
           {cfg.rsvp.regalos.miDinero.numero && (
             <div
               className="bg-white p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden"
               style={{
-                borderColor: 'rgba(184, 134, 11, 0.1)',
+                borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)',
                 boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
               }}
             >
@@ -513,7 +525,7 @@ export default function Rsvp() {
                     <button
                       onClick={copyMiDinero}
                       className="inline-flex items-center gap-1.5 text-gold font-bold text-[10px] sm:text-xs uppercase tracking-widest border-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
-                      style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                      style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)' }}
                     >
                       {copiedMiDinero ? (
                         <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
@@ -524,7 +536,7 @@ export default function Rsvp() {
                   </div>
 
                   {/* Separador */}
-                  <div className="border-t pt-4" style={{ borderColor: 'rgba(184, 134, 11, 0.1)' }} />
+                  <div className="border-t pt-4" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)' }} />
 
                   {/* Otros bancos */}
                   <div>
@@ -537,7 +549,7 @@ export default function Rsvp() {
                     <button
                       onClick={copyInterbancario}
                       className="inline-flex items-center gap-1.5 text-gold font-bold text-[10px] sm:text-xs uppercase tracking-widest border-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
-                      style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                      style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)' }}
                     >
                       {copiedInterbancario ? (
                         <><Check size={12} strokeWidth={2} /> ¡Copiado!</>
@@ -557,7 +569,7 @@ export default function Rsvp() {
                   <button
                     onClick={copyMiDinero}
                     className="inline-flex items-center gap-2 text-gold font-bold text-sm sm:text-[11px] md:text-xs uppercase tracking-widest border-2 px-5 sm:px-7 md:px-10 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 transition-colors duration-300 hover:border-gold/50"
-                    style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                    style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 25%, transparent)' }}
                   >
                     {copiedMiDinero ? (
                       <><Check size={14} strokeWidth={2} /> ¡Copiado!</>

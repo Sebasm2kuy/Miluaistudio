@@ -18,7 +18,7 @@ export default function Timeline() {
         <div className="relative">
           <div
             className="absolute left-5 sm:left-6 md:left-1/2 top-0 bottom-0 w-px md:-translate-x-px"
-            style={{ background: 'linear-gradient(to bottom, transparent, #d4af37 15%, #d4af37 85%, transparent)' }}
+            style={{ background: 'linear-gradient(to bottom, transparent, var(--theme-accent-light, #d4af37) 15%, var(--theme-accent-light, #d4af37) 85%, transparent)' }}
           />
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
             {timeline.map((item, idx) => (
@@ -31,7 +31,7 @@ export default function Timeline() {
                 </div>
                 <div className={`ml-12 sm:ml-14 md:ml-0 md:w-[45%] ${idx % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left md:ml-auto'}`}>
                   <div className={`inline-block px-4 sm:px-5 py-3 sm:py-4 md:py-5 rounded-2xl sm:rounded-2xl md:rounded-3xl border text-left ${idx % 2 === 0 ? 'md:text-right' : ''}`}
-                    style={{ background: 'rgba(253,252,251,0.85)', borderColor: 'rgba(184, 134, 11, 0.1)', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+                    style={{ background: 'rgba(253,252,251,0.85)', borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
                     <div className="flex items-center gap-2 sm:gap-3 mb-1">
                       <span className="text-lg sm:text-xl md:text-2xl hidden sm:inline">{item.icono}</span>
                       <span className="font-bold text-bordeaux tabular-nums" style={{ fontSize: 'clamp(1rem, 4vw, 1.5rem)' }}>{item.hora} hs</span>

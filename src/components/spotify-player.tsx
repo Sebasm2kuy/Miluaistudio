@@ -47,12 +47,12 @@ export default function SpotifyPlayer() {
           rel="noopener noreferrer"
           className="mt-5 sm:mt-6 md:mt-8 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] no-underline"
           style={{
-            borderColor: 'rgba(184, 134, 11, 0.35)',
-            color: '#b8860b',
-            background: 'rgba(184, 134, 11, 0.06)',
+            borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)',
+            color: 'var(--theme-accent, #b8860b)',
+            background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.1)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.35)'; e.currentTarget.style.color = '#b8860b'; e.currentTarget.style.background = 'rgba(184, 134, 11, 0.06)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)' }}
         >
           <Music size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
           <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>

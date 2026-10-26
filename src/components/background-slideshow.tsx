@@ -16,6 +16,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   const gradientId = isGradient ? photos[0].replace('gradient:', '') : null
   const gradientPreset = gradientId ? BACKGROUND_PRESETS.find(bg => bg.id === gradientId) : null
   const gradientCss = gradientPreset?.css || null
+  const isLightGradient = gradientId === 'perla-clara'
 
   // Preload all images on mount (only for photo mode)
   useEffect(() => {
@@ -68,10 +69,9 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `
-              linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.5) 100%),
-              radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)
-            `,
+            background: isLightGradient
+              ? 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
+              : `linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.5) 100%), radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)`,
           }}
         />
       </div>

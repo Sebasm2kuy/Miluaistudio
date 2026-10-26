@@ -135,12 +135,35 @@ function NeonUnit({ value, label }: { value: number; label: string }) {
   )
 }
 
+
+function CircleUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full border sm:h-20 sm:w-20 md:h-24 md:w-24" style={{ borderColor: 'var(--theme-accent, var(--theme-accent, #b8860b))', background: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 10%, transparent)' }}>
+        <span className="font-light tabular-nums leading-none text-lg sm:text-2xl md:text-3xl" style={{ color: "var(--theme-ivory, #fdfcfb)" }}>{String(value).padStart(2, '0')}</span>
+      </div>
+      <span className="mt-2 text-[9px] uppercase tracking-[0.18em] sm:text-xs" style={{ color: 'var(--theme-accent, var(--theme-accent, #b8860b))' }}>{label}</span>
+    </div>
+  )
+}
+
+function OutlineUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex min-w-0 flex-col items-center border-y py-3 sm:py-4" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 55%, transparent)' }}>
+      <span className="font-light tabular-nums leading-none text-2xl sm:text-4xl md:text-5xl" style={{ color: "var(--theme-ivory, #fdfcfb)" }}>{String(value).padStart(2, '0')}</span>
+      <span className="mt-2 text-[9px] uppercase tracking-[0.18em] sm:text-xs" style={{ color: 'var(--theme-accent, var(--theme-accent, #b8860b))' }}>{label}</span>
+    </div>
+  )
+}
+
 const CLOCK_COMPONENTS: Record<string, React.FC<{ value: number; label: string }>> = {
   classic: FlipUnit,
   minimal: MinimalUnit,
   'gold-glass': GoldGlassUnit,
   'dark-luxury': DarkLuxuryUnit,
   neon: NeonUnit,
+  circles: CircleUnit,
+  outline: OutlineUnit,
 }
 
 export default function Countdown() {
@@ -176,11 +199,14 @@ export default function Countdown() {
     const url = new URL('https://www.google.com/calendar/render')
     url.searchParams.set('action', 'TEMPLATE')
     url.searchParams.set('text', cfg.countdown.calendarioTitulo)
-    url.searchParams.set('dates', `${cfg.evento.fechaEvento.replace(/-/g, '').replace(' ', 'T')}00/20260823T060000`)
+    const start = new Date(cfg.evento.fechaEvento.replace(' ', 'T') + ':00')
+    const end = new Date(start.getTime() + 5 * 60 * 60 * 1000)
+    const formatDate = (date: Date) => date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')
+    url.searchParams.set('dates', `${formatDate(start)}/${formatDate(end)}`)
     url.searchParams.set('location', cfg.countdown.calendarioLocation)
     url.searchParams.set('details', cfg.countdown.calendarioDetalles)
     window.open(url.toString(), '_blank')
-  }, [])
+  }, [cfg])
 
   // Choose background based on clock style
   const cardBg =
@@ -197,9 +223,9 @@ export default function Countdown() {
   // Title color per clock style
   const titleColor =
     clockStyle === 'neon' || clockStyle === 'dark-luxury'
-      ? '#d4af37'
+      ? 'var(--theme-accent-light, #d4af37)'
       : clockStyle === 'minimal'
-        ? '#f5f0e8'
+        ? 'var(--theme-ivory, #f5f0e8)'
         : undefined
 
   const titleStyle = titleColor

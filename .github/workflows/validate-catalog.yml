@@ -1,0 +1,38 @@
+name: Validate Miluaistudio
+
+on:
+  push:
+    branches:
+      - work/miluaistudio-catalogo-20261026
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      # Legacy lint config is currently incompatible with the repository's ESLint 10 setup.
+      # Keep it visible as a warning while the independent build validates the new routes.
+      - name: Lint (legacy configuration; non-blocking)
+        run: npm run lint
+        continue-on-error: true
