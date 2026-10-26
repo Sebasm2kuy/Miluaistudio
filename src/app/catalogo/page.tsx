@@ -196,7 +196,7 @@ export default function CatalogoPage() {
       <div className="pointer-events-none fixed inset-0 opacity-80" aria-hidden="true" style={{ background: 'radial-gradient(ellipse at 15% 0%, rgba(153,96,125,0.17), transparent 36%), radial-gradient(ellipse at 90% 15%, rgba(133,112,69,0.12), transparent 35%)' }} />
       <header className="relative z-10 border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
-          <a href="#inicio" className="flex items-center gap-3">
+          <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5"><Heart size={18} /></div>
             <div>
               <div className="text-lg font-semibold tracking-tight">Miluaistudio</div>
