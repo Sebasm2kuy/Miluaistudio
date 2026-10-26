@@ -33,7 +33,7 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
           className="absolute rounded-2xl"
           style={{
             inset: '-20px',
-            background: 'radial-gradient(ellipse, color-mix(in srgb, var(--theme-accent-light, #d4af37) 15%, transparent) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse, color-mix(in srgb, var(--theme-accent-light, var(--theme-accent-light, #d4af37)) 15%, transparent) 0%, transparent 60%)',
             animation: 'breathe 3s ease-in-out infinite',
           }}
         />
@@ -49,8 +49,8 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
               display: 'block',
               maxWidth: 'calc(100vw - 24px)',
               maxHeight: 'calc(100vh - 24px)',
-              boxShadow: '0 0 40px color-mix(in srgb, var(--theme-accent-light, #d4af37) 15%, transparent), 0 8px 32px rgba(0,0,0,0.4)',
-              border: '1px solid color-mix(in srgb, var(--theme-accent-light, #d4af37) 10%, transparent)',
+              boxShadow: '0 0 40px color-mix(in srgb, var(--theme-accent-light, var(--theme-accent-light, #d4af37)) 15%, transparent), 0 8px 32px rgba(0,0,0,0.4)',
+              border: '1px solid color-mix(in srgb, var(--theme-accent-light, var(--theme-accent-light, #d4af37)) 10%, transparent)',
             }}
           />
         </picture>
