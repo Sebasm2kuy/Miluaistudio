@@ -166,6 +166,14 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
           {progress}%
         </p>
       </div>
+      {cfg.modoDemo && cfg.demoNombreDiseno && (
+        <p
+          className="mt-8 text-center text-[10px] uppercase tracking-[0.28em] sm:text-[11px]"
+          style={{ color: 'color-mix(in srgb, var(--theme-accent) 60%, transparent)' }}
+        >
+          Diseño {cfg.demoNombreDiseno} · Demostración interactiva
+        </p>
+      )}
     </div>
   )
 }

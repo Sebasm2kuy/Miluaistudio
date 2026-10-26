@@ -18,6 +18,8 @@ export interface GalleryPhoto {
 export interface SiteConfig {
   /** Public preview mode: external RSVP/photo submissions are disabled. */
   modoDemo?: boolean;
+  /** Solo demos: nombre del diseño del catálogo, mostrado en la pantalla de carga. */
+  demoNombreDiseno?: string;
   evento: {
     tipo: string
     nombre: string

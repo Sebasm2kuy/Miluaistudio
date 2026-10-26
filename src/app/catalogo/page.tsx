@@ -17,20 +17,21 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e8e1d8] bg-white shadow-[0_4px_16px_rgba(34,26,19,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(34,26,19,0.10)]">
-      <button
-        type="button"
-        onClick={onQuickView}
+      <a
+        href={demoUrl}
+        target="_blank"
+        rel="noreferrer"
         className="relative block aspect-[4/5] w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#a77c5a]"
-        aria-label={'Vista rápida: ' + design.name}
+        aria-label={'Abrir la invitación de muestra ' + design.name + ' en una pestaña nueva'}
       >
         <CatalogScene design={design} />
         <span className="absolute left-3 top-3 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-[#38332e] shadow-sm">
           {String(index + 1).padStart(2, '0')} / 10
         </span>
-        <span className="absolute bottom-3 right-3 rounded-full bg-[#151719]/85 px-3 py-1.5 text-[10px] font-semibold text-white opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
-          Vista rápida
+        <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-[#151719]/85 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm">
+          Abrir invitación <ExternalLink size={11} />
         </span>
-      </button>
+      </a>
 
       <div className="flex flex-1 flex-col p-4 sm:p-4">
         <div className="flex items-start justify-between gap-2">
@@ -141,7 +142,8 @@ export default function CatalogoPage() {
             ))}
           </div>
           <p className="mt-6 text-center text-xs text-[#8a8178]">
-            Abrí cualquier diseño y probá la demostración completa: cuenta regresiva, música, galería y RSVP funcionando.
+            Tocá cualquier tarjeta: la invitación se abre sola en una pestaña nueva, carga con el nombre
+            y arranca la demostración completa — cuenta regresiva, música, galería y RSVP funcionando.
           </p>
         </section>
 

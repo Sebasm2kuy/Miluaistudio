@@ -66,6 +66,7 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
   const profile = DEMO_PROFILES[design.id] ?? DEFAULT_DEMO_PROFILE;
 
   config.modoDemo = true;
+  config.demoNombreDiseno = design.name;
   config.evento = {
     ...config.evento,
     tipo: profile.tipo,

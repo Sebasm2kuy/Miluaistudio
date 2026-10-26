@@ -72,7 +72,12 @@ export default function InvitationExperience() {
     '--theme-background': cfg.colores.fondo,
     '--theme-highlight': cfg.colores.principal === '#3d0202' ? '#fcf6ba' : cfg.colores.doradoClaro,
   } as CSSProperties
-  const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>('envelope')
+  // Las demos abren directo en la pantalla de carga (sin sobre): quien no
+  // conoce la invitación ve al instante que es una web viva y no una imagen.
+  // Las invitaciones reales conservan la apertura clásica con el sobre.
+  const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>(
+    cfg.modoDemo ? 'loading' : 'envelope',
+  )
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const handleOpen = () => setPhase('loading')
@@ -134,7 +139,7 @@ export default function InvitationExperience() {
           <div className="pb-24 sm:pb-32" />
         </div>
 
-        {phase !== 'done' && <Envelope onOpen={handleOpen} />}
+        {phase !== 'done' && !cfg.modoDemo && <Envelope onOpen={handleOpen} />}
         {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
       </div>
     </div>
