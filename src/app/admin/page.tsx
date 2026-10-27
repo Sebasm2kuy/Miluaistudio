@@ -423,15 +423,17 @@ export default function AdminPage() {
       if (savedCfg) {
         const parsed = JSON.parse(savedCfg) as SiteConfig
         if (parsed?.evento?.nombre) {
+          // Carga de configuración persistida: solo posible tras el montaje.
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
         }
       }
       // El token ya NO se persiste en localStorage: vive en sessionStorage
       // (muere al cerrar la pestaña). Si existe un token heredado de versiones
       // anteriores, se migra a sessionStorage y se borra de localStorage.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       const sessionToken = sessionStorage.getItem('milu_github_token')
       if (sessionToken?.trim()) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGithubToken(sessionToken.trim())
       } else {
         const legacy = localStorage.getItem('milu_github_token')
