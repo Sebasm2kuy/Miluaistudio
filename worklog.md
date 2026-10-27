@@ -302,3 +302,4 @@ Stage Summary:
 - Assets del editor en /Miluaistudio/assets-invitaciones/ con validación real; fotos de invitados siguen por moderación; out/uploads sin imágenes.
 - RSVP con estados honestos; prueba del servicio externo pendiente manual (documentada, sin afirmar verificación).
 - PR contra main sin fusionar; publicación real desde el panel y deploy quedan como verificación del propietario.
+- CI del PR #15: run 40568830138 "Validate Miluaistudio" → success (npm ci, npm test 93/93, lint, build con verificaciones). Enlace: https://github.com/Sebasm2kuy/Miluaistudio/actions/runs/40568830138
