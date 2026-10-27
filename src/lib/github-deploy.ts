@@ -1,5 +1,21 @@
 // Deploy via GitHub API — works on static sites (GitHub Pages, etc.)
 
+import {
+  CARPETA_ACTIVOS_INVITACION,
+  validarArchivoImagen,
+  nombreArchivoUnico,
+  sufijoUnico,
+  rutaRepoActivo,
+  urlPublicaActivo,
+} from './activos-editor';
+import {
+  serializarInvitacion,
+  rutaArchivoInvitacion,
+  urlInvitacion,
+  urlPublicaInvitacion,
+  type InvitacionPublicada,
+} from '../data/invitacion-publicada';
+
 const GITHUB_REPO = 'Sebasm2kuy/Miluaistudio'
 const CONFIG_PATH = 'src/data/config.ts'
 const BASE_PATH = '/Miluaistudio'
@@ -127,6 +143,13 @@ export default config
 `
 }
 
+/**
+ * LEGADO: escribe src/data/config.ts en main. Desde el desacople de la
+ * configuración operativa, NINGÚN componente cliente consume ese archivo
+ * (useConfig cae a la base de demostración). Se conserva para no retirar
+ * funcionalidad existente; el flujo funcional de publicación de
+ * invitaciones con URL propia es publicarInvitacionEnGitHub().
+ */
 export async function deployToGitHub(
   configData: Record<string, unknown>,
   token: string,
@@ -184,25 +207,53 @@ export async function deployToGitHub(
   }
 }
 
+type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
+
 /**
  * Upload a file (image) to the repo via GitHub Contents API.
- * The file is stored under `public/uploads/` and served at `/Miluaistudio/uploads/filename`.
+ *
+ * Assets del EDITOR (recursos que el propietario carga para su invitación):
+ * por defecto se guardan en `public/assets-invitaciones/` y se sirven en
+ * `/Miluaistudio/assets-invitaciones/<archivo>` — la URL devuelta coincide
+ * exactamente con la ruta publicada en el export.
+ *
+ * NO es la ruta de las fotos de invitados: esas suben por el backend de
+ * moderación (photo-server.gs) y nunca tocan el repositorio; la regla que
+ * mantiene `out/uploads/` sin imágenes sigue activa en verify-export.
+ *
+ * Validación antes de subir: tamaño, extensión, MIME y firma real del
+ * archivo (magic bytes). Sin dependencia del atributo HTML accept.
+ * Si la subida falla, la URL anterior del campo queda intacta: el panel
+ * conserva el estado y permite reintentar.
  */
 export async function uploadToGitHub(
   file: File,
   token: string,
-  subfolder = 'uploads',
+  subfolder = CARPETA_ACTIVOS_INVITACION,
+  fetchImpl: FetchLike = ((input, init) => fetch(input, init)),
 ): Promise<{ success: boolean; url: string; message: string }> {
   if (!token) {
     return { success: false, url: '', message: 'Falta el GitHub Token' }
   }
 
-  // Sanitize filename: lowercase, remove spaces, add timestamp to avoid collisions
-  const ext = file.name.split('.').pop() || 'jpg'
-  const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase()
-  const timestamp = Date.now().toString(36)
-  const fileName = `${baseName}_${timestamp}.${ext}`
-  const repoPath = `public/${subfolder}/${fileName}`
+  // Validación completa (incluye los primeros bytes para detectar la firma real)
+  let bytes: Uint8Array | undefined
+  try {
+    bytes = new Uint8Array(await file.slice(0, 16).arrayBuffer())
+  } catch {
+    bytes = undefined // sin bytes legibles: valida por extensión + MIME
+  }
+  const validacion = validarArchivoImagen(
+    { name: file.name, type: file.type, size: file.size },
+    bytes,
+  )
+  if (!validacion.ok) {
+    return { success: false, url: '', message: validacion.motivo }
+  }
+
+  // Nombre saneado + sufijo único: sin colisiones ni sobreescrituras accidentales
+  const fileName = nombreArchivoUnico(file.name, sufijoUnico())
+  const repoPath = rutaRepoActivo(fileName, subfolder)
 
   const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${repoPath}`
 
@@ -217,7 +268,7 @@ export async function uploadToGitHub(
     const base64Content = btoa(binary)
 
     // Check if file already exists (get SHA)
-    const getRes = await fetch(apiBase, {
+    const getRes = await fetchImpl(apiBase, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/vnd.github.v3+json',
@@ -231,7 +282,7 @@ export async function uploadToGitHub(
     }
 
     // Push file
-    const putRes = await fetch(apiBase, {
+    const putRes = await fetchImpl(apiBase, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -239,7 +290,7 @@ export async function uploadToGitHub(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: `Upload ${fileName} from admin`,
+        message: `Upload asset de invitación ${fileName}`,
         content: base64Content,
         sha,
         branch: 'main',
@@ -247,7 +298,7 @@ export async function uploadToGitHub(
     })
 
     if (putRes.ok) {
-      const publicUrl = `${BASE_PATH}/${subfolder}/${fileName}`
+      const publicUrl = urlPublicaActivo(fileName, subfolder)
       return { success: true, url: publicUrl, message: `Foto subida: ${fileName}` }
     }
 
@@ -255,5 +306,146 @@ export async function uploadToGitHub(
     return { success: false, url: '', message: `Error al subir: ${err.message || putRes.status}` }
   } catch (err) {
     return { success: false, url: '', message: `Error de red: ${err instanceof Error ? err.message : 'unknown'}` }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Publicación de invitaciones (flujo /i/<slug>/)
+// ---------------------------------------------------------------------------
+
+export interface ResultadoPublicacion {
+  success: boolean
+  /** Slug confirmado de la invitación. */
+  slug: string
+  /** URL relativa dentro del sitio (con basePath). */
+  url: string
+  /** URL absoluta pública (la que comparte el anfitrión). */
+  urlAbsoluta: string
+  /** true = archivo nuevo; false = actualización del mismo slug. */
+  creado: boolean
+  /** Mensaje honesto para la UI (incluye qué pasó y qué sigue). */
+  message: string
+}
+
+function resultadoFallido(parcial: {
+  slug: string
+  creado?: boolean
+  message: string
+}): ResultadoPublicacion {
+  return {
+    success: false,
+    slug: parcial.slug,
+    url: urlInvitacion(parcial.slug),
+    urlAbsoluta: urlPublicaInvitacion(parcial.slug),
+    creado: parcial.creado ?? false,
+    message: parcial.message,
+  }
+}
+
+/**
+ * Guarda la representación publicada de una invitación en
+ * `content/invitaciones/<slug>.json` (rama main) vía GitHub Contents API.
+ *
+ * Garantías del flujo:
+ *  - Cada slug es UN archivo: publicar otra invitación no sobrescribe las
+ *    anteriores; actualizar el mismo slug conserva su enlace y la fecha de
+ *    primera publicación (publicadoEn) leída del archivo existente.
+ *  - El resultado reporta el estado REAL de la operación (creado /
+ *    actualizado / error). Guardar en localStorage o iniciar la petición
+ *    NO se presenta como publicación.
+ *  - Ante error no se modifica nada localmente: la configuración del panel
+ *    queda intacta para reintentar.
+ */
+export async function publicarInvitacionEnGitHub(
+  invitacion: InvitacionPublicada,
+  token: string,
+  fetchImpl: FetchLike = ((input, init) => fetch(input, init)),
+): Promise<ResultadoPublicacion> {
+  const slug = invitacion.slug
+  const urlRelativa = urlInvitacion(slug)
+  const urlAbsoluta = urlPublicaInvitacion(slug)
+
+  if (!token) {
+    return resultadoFallido({
+      slug,
+      message: 'Falta el GitHub Token. Pegalo en la sección Deploy y probá de nuevo.',
+    })
+  }
+
+  const repoPath = rutaArchivoInvitacion(slug)
+  const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${repoPath}`
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github.v3+json',
+  }
+
+  try {
+    // 1. ¿Existe ya una publicación con este slug? (SHA + fecha original)
+    let sha: string | undefined
+    let publicadoEnOriginal: string | undefined
+    const getRes = await fetchImpl(apiBase, { headers })
+    if (getRes.ok) {
+      const data = await getRes.json()
+      sha = data.sha
+      try {
+        const existente = JSON.parse(atob(String(data.content || '').replace(/\n/g, '')))
+        if (existente && typeof existente.publicadoEn === 'string') {
+          publicadoEnOriginal = existente.publicadoEn
+        }
+      } catch {
+        // Contenido previo ilegible: se republisha completo con la fecha actual.
+      }
+    } else if (getRes.status !== 404) {
+      return resultadoFallido({
+        slug,
+        message: `Error GitHub API al leer la publicación existente: ${getRes.status}. Nada se modificó; podés reintentar.`,
+      })
+    }
+
+    // 2. Serializar la representación conservando la fecha de primera publicación
+    const representacion = publicadoEnOriginal
+      ? { ...invitacion, publicadoEn: publicadoEnOriginal }
+      : invitacion
+    const content = btoa(unescape(encodeURIComponent(serializarInvitacion(representacion))))
+
+    // 3. Guardar (crear o actualizar el MISMO archivo del slug)
+    const putRes = await fetchImpl(apiBase, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: sha
+          ? `Publicación de invitación "${slug}" actualizada (mismo slug y enlace)`
+          : `Publicación de invitación "${slug}"`,
+        content,
+        sha,
+        branch: 'main',
+      }),
+    })
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}))
+      return resultadoFallido({
+        slug,
+        creado: !sha,
+        message: `Error al guardar la invitación: ${err.message || putRes.status}. La configuración del panel sigue intacta; podés reintentar.`,
+      })
+    }
+
+    const creado = !sha
+    return {
+      success: true,
+      slug,
+      url: urlRelativa,
+      urlAbsoluta,
+      creado,
+      message: creado
+        ? `Invitación publicada como "${slug}". El enlace queda activo cuando termine el deploy de GitHub Pages (≈2-3 min).`
+        : `Invitación "${slug}" actualizada: se conservaron el mismo slug y el mismo enlace.`,
+    }
+  } catch (err) {
+    return resultadoFallido({
+      slug,
+      message: `Error de red: ${err instanceof Error ? err.message : 'unknown'}. La configuración del panel sigue intacta; podés reintentar.`,
+    })
   }
 }

@@ -15,6 +15,11 @@
     "tests/**/*.ts",
     "src/lib/contrato-backend.ts",
     "src/lib/rsvp-client.ts",
+    "src/lib/activos-editor.ts",
+    "src/lib/github-deploy.ts",
+    "src/lib/invitaciones-publicadas.ts",
+    "src/data/invitacion-publicada.ts",
+    "src/data/config-schema.ts",
     "src/data/store-tokens.ts"
   ]
 }
