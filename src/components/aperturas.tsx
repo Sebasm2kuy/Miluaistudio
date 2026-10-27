@@ -499,9 +499,6 @@ function ContenidoFlores({ cfg, abriendo, accent, accentLight, texto }: { cfg: S
 /* ---------- 10 · Lluvia de confeti ---------- */
 
 function ContenidoConfeti({ cfg, abriendo, accent, accentLight, texto }: { cfg: SiteConfig; abriendo: boolean; accent: string; accentLight: string; texto: string }) {
-  // El compilador de React no puede preservar este memo (prng dentro del cierre
-  // determinista); la memoización manual es intencional y estable por `texto`.
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const piezas = useMemo(() => {
     const rnd = prng(1515)
     const colores = [accent, accentLight, '#ffffff', texto]

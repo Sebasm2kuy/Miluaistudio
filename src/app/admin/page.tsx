@@ -429,12 +429,14 @@ export default function AdminPage() {
       // El token ya NO se persiste en localStorage: vive en sessionStorage
       // (muere al cerrar la pestaña). Si existe un token heredado de versiones
       // anteriores, se migra a sessionStorage y se borra de localStorage.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       const sessionToken = sessionStorage.getItem('milu_github_token')
       if (sessionToken?.trim()) {
         setGithubToken(sessionToken.trim())
       } else {
         const legacy = localStorage.getItem('milu_github_token')
         if (legacy?.trim()) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setGithubToken(legacy.trim())
           sessionStorage.setItem('milu_github_token', legacy.trim())
           localStorage.removeItem('milu_github_token')

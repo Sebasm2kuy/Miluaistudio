@@ -1,9 +1,11 @@
 'use client'
 import { useState, useCallback, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { useConfig } from '@/hooks/useConfig'
 
 export default function Footer() {
   const cfg = useConfig()
+  const router = useRouter()
   const clickCount = useRef(0)
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -15,7 +17,7 @@ export default function Footer() {
 
     if (clickCount.current >= 5) {
       clickCount.current = 0
-      window.location.href = '/Miluaistudio/admin'
+      router.push('/Miluaistudio/admin/')
     }
   }, [cfg.modoDemo])
 
