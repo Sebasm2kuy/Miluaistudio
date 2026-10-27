@@ -6,7 +6,9 @@ import { SparkleGlyph } from '@/components/design-ornaments';
  * encabezados de sección con identidad editorial y divisores ornamentales.
  */
 
-const GOLD = '#a8814f';
+/* Champagne de texto: 4.25:1 sobre blanco y 4.0:1 sobre marfil (antes #a8814f,
+   que no alcanzaba 3:1). Sigue leyéndose como dorado cálido de la marca. */
+const GOLD = '#9a7440';
 const INK_MUTED = '#6f675e';
 
 /** Encabezado de sección: anticódigo serif itálico dorado + título Playfair + bajada */

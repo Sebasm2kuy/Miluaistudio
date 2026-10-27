@@ -186,3 +186,50 @@ Stage Summary:
   nueva implementación; (2) revocar/rotar tokens GitHub expuestos en chats;
   (3) datos del evento real de Milu siguen en el historial git público
   (limpieza requiere reescritura de historial → requiere autorización).
+
+---
+Task ID: CORRECCION-FINAL-2026-10-27
+Agent: Main (Z.AI)
+Task: Corrección final de errores de la auditoría de la web publicada (rama fix/auditoria-final-web)
+
+Work Log:
+- P0 ADMIN: /admin/ ya no se publica. `npm run build` = next build +
+  scripts/prune-export.mjs (elimina out/admin/) + scripts/verify-export.mjs
+  (falla el build si out/admin/ reaparece, si falta alguna ruta comercial de
+  las 13, si el basePath se pierde, si hay secretos en 153+ assets o si
+  vuelven imágenes personales). docs/ADMINISTRACION.md: flujo local del
+  panel (PAT fine-grained en sessionStorage + cierre de sesión) o PR Git.
+- P0 PRIVACIDAD: retirados de public/ el screenshot de celular (1.24 MB,
+  invitación de evento real) y 3 fotos reales de uploads/ (retratos de la
+  cumpleañera adolescente). .gitignore bloquea public/uploads/* salvo
+  .gitkeep. Los archivos siguen en el historial de git → limpieza requiere
+  reescritura de historial (pendiente de autorización del dueño).
+- P1 CONTRASTE (medido WCAG): #8f867c/#a39a8e/#82786e → #787168 (4.5:1+);
+  links #96714a → #8a6a44 (4.69:1); champagne de texto #b58c5a/#a8814f →
+  #9a7440 (4.0:1) e iconos → #9c7443 (3.5:1); botones WhatsApp con texto
+  oscuro #0b3d1e (6.23:1, antes blanco 1.98:1) conservando verde de marca;
+  link verde → #0f6a2d (5.5:1); buttonBg de 7 diseños oscurecidos 4.5:1+
+  (misma familia cromática); storeAccent nuevo para etiquetas de categoría
+  (terracota 4.40 → #61735a 5.11:1). accentSoft intacto (temas de demos).
+- P1 MINIATURAS/SEMÁNTICA: contador falso 120/14/32/05 de las maquetas →
+  guiones ilustrativos aria-hidden; h3 decorativo de miniaturas → div.
+  Título del personalizador sin marca duplicada (template del layout).
+- P1 RSVP/FOTOS: gallery-server.gs queda SOLO RSVP (se retiraron endpoints
+  de fotos sin moderación que competían con photo-server.gs). Lógica de
+  contrato extraída a src/lib/contrato-backend.ts y refactor en rsvp.tsx y
+  gallery.tsx: guardado/publicada solo con respuesta verificable,
+  pendiente ante CORS/ilegible, error explícito. photo-server.gs ya
+  moderaba (pendiente/aprobada, firma JPEG, sin setSharing al recibir).
+- PRUEBAS: npm test = tsc + node --test, 19 pruebas (contrato con datos
+  sintéticos, validación server-side declarada en .gs, aislamiento de
+  demos). typecheck y lint 0 errores. Build + verify-export OK.
+- VERIFICACIÓN NAVEGADOR (build local servido con basePath): portada y
+  catálogo OK a 1366/768/320 sin overflow-x; minis con "––"; botones con
+  texto oscuro; foco visible; /admin/ da 404; demos noindex; título del
+  personalizador sin duplicar.
+
+Stage Summary:
+- 6 commits en rama fix/auditoria-final-web (sin push a main, sin merge).
+- Pendiente humano: revisar PR; re-deploy de los 2 Apps Scripts; decidir
+  limpieza de historial (imágenes + datos del evento real); verificar
+  publicación de Mercado Libre externamente.

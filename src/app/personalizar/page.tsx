@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import PersonalizadorApp from '@/components/personalizador-app';
 
 export const metadata: Metadata = {
-  title: 'Personalizá tu invitación | Miluaistudio',
+  /* El template del layout ya agrega "| Miluaistudio"; no repetir la marca acá
+     (antes renderizaba "…| Miluaistudio | Miluaistudio"). */
+  title: 'Personalizá tu invitación',
   description:
     'Elegí un diseño, cargá tus datos y mirá tu invitación digital en vivo: cuenta regresiva, música, galería y confirmación de asistencia con tu nombre y tu fecha. XV años, bodas y más, en Uruguay.',
   alternates: { canonical: 'https://sebasm2kuy.github.io/Miluaistudio/personalizar/' },

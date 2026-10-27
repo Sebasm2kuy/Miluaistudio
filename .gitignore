@@ -74,3 +74,10 @@ upload/
 
 # Preview local del export estático
 preview/
+
+# Privacidad: ninguna imagen personal en el repo público.
+# Las fotos de invitados suben por el backend de moderación (photo-server.gs),
+# nunca al repositorio. Mantener solo el .gitkeep.
+public/uploads/*
+!public/uploads/.gitkeep
+tests/dist/
