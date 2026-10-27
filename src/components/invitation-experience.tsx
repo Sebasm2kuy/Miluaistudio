@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useCallback, Fragment, type ReactNode } from 'react'
 import { useConfig } from '@/hooks/useConfig'
 import type { CSSProperties } from 'react'
-import Envelope from '@/components/envelope'
+import Apertura from '@/components/aperturas'
 import LoadingScreen from '@/components/loading-screen'
+import MusicaFondo from '@/components/musica-fondo'
 import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
 import Particles from '@/components/particles'
@@ -108,6 +109,7 @@ export default function InvitationExperience() {
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
+      <MusicaFondo visible={phase === 'done'} />
 
       {/* This is the scroll container — prevents iOS fixed-element shift */}
       <div ref={scrollRef} className="scroll-container">
@@ -136,7 +138,7 @@ export default function InvitationExperience() {
           <div className="pb-24 sm:pb-32" />
         </div>
 
-        {phase !== 'done' && mostrarSobre && <Envelope onOpen={handleOpen} />}
+        {phase !== 'done' && mostrarSobre && <Apertura tipo={cfg.apertura?.tipo || 'sobre'} onOpen={handleOpen} />}
         {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
       </div>
     </div>

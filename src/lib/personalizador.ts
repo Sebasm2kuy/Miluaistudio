@@ -1,6 +1,8 @@
 import type { SiteConfig, SeccionesConfig } from '@/data/config';
 import type { InvitationDesign } from '@/data/invitation-designs';
 import { createDemoConfig } from '@/data/demo-config';
+import { APERTURA_DEFAULT, nombreApertura } from '@/lib/aperturas';
+import { tonoPorId } from '@/lib/musica';
 
 /**
  * Motor del personalizador auto-servicio: combina un diseño de la colección
@@ -29,6 +31,18 @@ export interface DatosPersonales {
   frase: string;
   /** URL de Spotify (playlist, álbum o tema) */
   musica: string;
+  /** Apertura animada elegida (id de APERTURAS_META) */
+  apertura: string;
+  /** Tono de música de fondo (id de TONOS_FONDO; vacío = sin música) */
+  musicaFondo: string;
+  /** URL de la foto de portada propia (opcional) */
+  portada: string;
+  /** Combo tipográfico elegido (id de TIPOGRAFIAS_META; vacío = el del diseño) */
+  tipografia: string;
+  /** Color de acento elegido (id de ACENTOS_META; vacío = el del diseño) */
+  acento: string;
+  /** Cronograma editable: momentos de la noche (hora + título) */
+  cronograma: { hora: string; titulo: string }[];
 }
 
 export const TIPOS_EVENTO = [
@@ -43,6 +57,44 @@ export const TIPOS_EVENTO = [
 
 /** Secciones de la invitación que el cliente prende o apaga */
 export type Secciones = Required<SeccionesConfig>;
+
+/** Combos tipográficos: título + firma. Las fuentes se cargan en layout.tsx */
+export const TIPOGRAFIAS_META: {
+  id: string;
+  nombre: string;
+  desc: string;
+  fuenteTitulo: string;
+  fuenteCursiva: string;
+  /** Cómo se ve el nombre en la miniatura (script | serif | sans) */
+  mini: 'script' | 'serif' | 'sans';
+}[] = [
+  { id: 'clasica', nombre: 'Clásica', desc: 'Títulos serif + firma caligráfica', fuenteTitulo: 'playfair', fuenteCursiva: 'alex-brush', mini: 'script' },
+  { id: 'romantica', nombre: 'Romántica', desc: 'Cormorant elegante + firma manuscrita', fuenteTitulo: 'cormorant', fuenteCursiva: 'dancing-script', mini: 'script' },
+  { id: 'moderna', nombre: 'Moderna', desc: 'Sans limpia, sin cursivas', fuenteTitulo: 'montserrat', fuenteCursiva: 'montserrat', mini: 'sans' },
+  { id: 'editorial', nombre: 'Editorial', desc: 'Cormorant con cursiva serif fina', fuenteTitulo: 'cormorant', fuenteCursiva: 'playfair', mini: 'serif' },
+];
+
+/** Paleta de acentos que el cliente puede aplicar sobre cualquier diseño */
+export const ACENTOS_META: { id: string; nombre: string; hex: string }[] = [
+  { id: '', nombre: 'Original del diseño', hex: '' },
+  { id: 'dorado', nombre: 'Dorado', hex: '#c9a227' },
+  { id: 'rosa', nombre: 'Rosa antiguo', hex: '#c4768b' },
+  { id: 'lavanda', nombre: 'Lavanda', hex: '#9a86c8' },
+  { id: 'azul', nombre: 'Azul sereno', hex: '#6d8fb4' },
+  { id: 'esmeralda', nombre: 'Esmeralda', hex: '#5f8a72' },
+  { id: 'vino', nombre: 'Vino tinto', hex: '#a04f5f' },
+];
+
+/** Mezcla un hex con blanco (para el acento claro de los temas oscuros) */
+function aclarar(hex: string, f: number): string {
+  const m = hex.replace('#', '');
+  if (!/^[0-9a-fA-F]{6}$/.test(m)) return hex;
+  const r = parseInt(m.slice(0, 2), 16);
+  const g = parseInt(m.slice(2, 4), 16);
+  const b = parseInt(m.slice(4, 6), 16);
+  const mix = (c: number) => Math.round(c + (255 - c) * f);
+  return '#' + [mix(r), mix(g), mix(b)].map((v) => v.toString(16).padStart(2, '0')).join('');
+}
 
 export const SECCIONES_DEFAULT: Secciones = {
   sobre: true,
@@ -220,6 +272,56 @@ export function createPersonalConfig(
     };
   }
 
+  // Apertura animada elegida por el cliente
+  config.apertura = { tipo: datos.apertura?.trim() || APERTURA_DEFAULT };
+
+  // Música de fondo (tono propio del catálogo; vacío = sin música de fondo)
+  const tono = tonoPorId(datos.musicaFondo);
+  if (tono) {
+    config.musicaFondo = { tono: tono.id, url: tono.src };
+  }
+
+  // Foto de portada propia: la muestra el sobre y el fondo de la invitación
+  const portada = datos.portada.trim();
+  if (/^https?:\/\//i.test(portada)) {
+    config.invitacion = { ...config.invitacion, imagen: portada, imagenFallback: portada };
+    config.fondo = { fotos: [portada] };
+    config.portadaPersonalizada = true;
+  }
+
+  // Tipografía y acento elegidos sobre el diseño base
+  const tipografia = TIPOGRAFIAS_META.find((t) => t.id === datos.tipografia);
+  if (tipografia) {
+    config.estilos = {
+      ...config.estilos,
+      fuenteTitulo: tipografia.fuenteTitulo,
+      fuenteCursiva: tipografia.fuenteCursiva,
+    };
+  }
+  const acento = ACENTOS_META.find((a) => a.id === datos.acento);
+  if (acento?.hex) {
+    config.colores = {
+      ...config.colores,
+      dorado: acento.hex,
+      doradoClaro: aclarar(acento.hex, 0.42),
+    };
+  }
+
+  // Cronograma editable: si el cliente cargó momentos, reemplazan los de muestra
+  const momentos = datos.cronograma.filter((it) => it.hora.trim() && it.titulo.trim());
+  if (momentos.length) {
+    const iconos = ['✦', '♡', '♫', '🥂', '📸', '🎂', '✨', '🎉', '🕰', '💃'];
+    config.timeline = {
+      ...config.timeline,
+      eventos: momentos.slice(0, 10).map((it, i) => ({
+        hora: it.hora.trim(),
+        titulo: it.titulo.trim(),
+        desc: '',
+        icono: iconos[i % iconos.length],
+      })),
+    };
+  }
+
   config.countdown = {
     ...config.countdown,
     calendarioTitulo: tipo + ' · ' + nombre,
@@ -250,6 +352,11 @@ export function mensajeWhatsAppPersonal(
     .filter((m) => !secciones[m.key])
     .map((m) => m.label);
   const historia = datos.historia.trim();
+  const momentos = datos.cronograma.filter((it) => it.hora.trim() && it.titulo.trim());
+  const portada = datos.portada.trim();
+  const tonoElegido = tonoPorId(datos.musicaFondo);
+  const tipografiaElegida = TIPOGRAFIAS_META.find((t) => t.id === datos.tipografia);
+  const acentoElegido = ACENTOS_META.find((a) => a.id === datos.acento);
   const lineas = [
     'Hola! Personalicé mi invitación en la web de Miluaistudio:',
     '',
@@ -263,7 +370,15 @@ export function mensajeWhatsAppPersonal(
     limpiarInstagram(datos.instagram) ? '• Instagram: @' + limpiarInstagram(datos.instagram) : null,
     datos.frase.trim() ? '• Frase: "' + datos.frase.trim() + '"' : null,
     historia ? '• Historia: "' + (historia.length > 90 ? historia.slice(0, 90) + '…' : historia) + '"' : null,
-    datos.musica.trim() ? '• Música: ' + datos.musica.trim() : null,
+    datos.musica.trim() ? '• Playlist de Spotify: ' + datos.musica.trim() : null,
+    '• Apertura: ' + nombreApertura(datos.apertura),
+    tonoElegido ? '• Música de fondo: ' + tonoElegido.nombre : '• Música de fondo: sin música',
+    /^https?:\/\//i.test(portada) ? '• Foto de portada: ' + portada : null,
+    momentos.length
+      ? '• Cronograma:\n' + momentos.slice(0, 10).map((it) => '    ' + it.hora.trim() + ' — ' + it.titulo.trim()).join('\n')
+      : '• Cronograma: lo definimos juntos después',
+    tipografiaElegida ? '• Tipografía: ' + tipografiaElegida.nombre : null,
+    acentoElegido?.hex ? '• Color de acento: ' + acentoElegido.nombre : null,
     '',
     '• Secciones que quiero: ' + (prendidas.join(', ') || '—'),
     apagadas.length ? '• Sin estas secciones: ' + apagadas.join(', ') : null,

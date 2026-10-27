@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
-import { Alex_Brush, Playfair_Display, Montserrat } from "next/font/google";
+import { Alex_Brush, Cormorant_Garamond, Dancing_Script, Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
 
 const alexBrush = Alex_Brush({
   weight: '400',
   variable: "--font-cursive",
+  subsets: ["latin"],
+  display: 'swap',
+});
+
+const cormorant = Cormorant_Garamond({
+  weight: ['400', '500', '600', '700'],
+  variable: "--font-cormorant",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: 'swap',
+});
+
+const dancingScript = Dancing_Script({
+  weight: ['400', '500', '600', '700'],
+  variable: "--font-dancing",
   subsets: ["latin"],
   display: 'swap',
 });
@@ -86,7 +101,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${alexBrush.variable} ${playfair.variable} ${montserrat.variable} antialiased`}
+        className={`${alexBrush.variable} ${cormorant.variable} ${dancingScript.variable} ${playfair.variable} ${montserrat.variable} antialiased`}
         style={{
           margin: 0,
           fontFamily: "'Montserrat', sans-serif",

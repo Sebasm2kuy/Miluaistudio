@@ -422,6 +422,9 @@
 .invitation-experience[data-title-font="alex-brush"] .font-serif {
   font-family: var(--font-cursive), cursive !important;
 }
+.invitation-experience[data-title-font="cormorant"] .font-serif {
+  font-family: var(--font-cormorant), Georgia, serif !important;
+}
 .invitation-experience[data-script-font="playfair"] .font-cursive {
   font-family: var(--font-serif), Georgia, serif !important;
   font-style: italic;
@@ -432,6 +435,9 @@
 }
 .invitation-experience[data-script-font="alex-brush"] .font-cursive {
   font-family: var(--font-cursive), cursive !important;
+}
+.invitation-experience[data-script-font="dancing-script"] .font-cursive {
+  font-family: var(--font-dancing), var(--font-cursive), cursive !important;
 }
 /* Inputs elegantes adaptativos: fondo y texto siguen el tema activo
    (en temas oscuros la casilla se oscurece y el texto pasa a marfil) */
@@ -757,4 +763,51 @@ html:has([data-page="storefront"]) body {
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
   }
+}
+
+/* ============================================================
+   APERTURAS ANIMADAS — 10 estilos de apertura para la invitación
+   ============================================================ */
+@keyframes apLatido {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.13); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.09); }
+  70% { transform: scale(1); }
+}
+@keyframes apFlotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes apTitilar {
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@keyframes apCaerConfeti {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(560deg); opacity: .9; }
+}
+@keyframes apGirarLento {
+  to { transform: rotate(360deg); }
+}
+@keyframes apGirarDisco {
+  to { transform: rotate(360deg); }
+}
+@keyframes apResplandor {
+  0%, 100% { opacity: .45; transform: scale(1); }
+  50% { opacity: .9; transform: scale(1.08); }
+}
+@keyframes apEstallar {
+  0% { transform: translate(0, 0) scale(.4); opacity: 1; }
+  100% { transform: translate(var(--dx, 60px), var(--dy, -80px)) scale(1.15); opacity: 0; }
+}
+@keyframes apDestelloGiro {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.12); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+/* Disco de música de fondo girando mientras suena */
+@keyframes miluaSpin {
+  to { transform: rotate(360deg); }
 }

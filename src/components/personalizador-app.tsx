@@ -1,19 +1,26 @@
 'use client';
 
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import {
   ArrowRight,
   CalendarClock,
   Check,
+  Clock,
   ExternalLink,
   Heart,
+  Image as ImageIcon,
   Instagram,
   LayoutTemplate,
   MapPin,
   Music2,
+  Palette,
   PenLine,
+  Play,
+  Plus,
   Shirt,
   Sparkles,
+  Square,
+  Trash2,
   Type,
   X,
 } from 'lucide-react';
@@ -28,15 +35,19 @@ import WhatsAppFloat from '@/components/whatsapp-float';
 import { MERCADO_LIBRE_URL, whatsappLink } from '@/data/contacto';
 import {
   createPersonalConfig,
+  ACENTOS_META,
   fechaSugerida,
   mensajeWhatsAppPersonal,
   partesFecha,
   SECCIONES_DEFAULT,
   SECCIONES_META,
+  TIPOGRAFIAS_META,
   TIPOS_EVENTO,
   type DatosPersonales,
   type Secciones,
 } from '@/lib/personalizador';
+import { APERTURAS_META, type AperturaMeta } from '@/lib/aperturas';
+import { TONOS_FONDO, type TonoFondo } from '@/lib/musica';
 
 const CATALOGO_URL = '/Miluaistudio/catalogo/';
 const PERSONALIZAR_URL = '/Miluaistudio/personalizar/';
@@ -53,6 +64,15 @@ const DATOS_INICIALES: DatosPersonales = {
   historia: '',
   frase: '',
   musica: '',
+  apertura: 'sobre',
+  musicaFondo: 'vals-dorado',
+  portada: '',
+  tipografia: '',
+  acento: '',
+  cronograma: [
+    { hora: '', titulo: '' },
+    { hora: '', titulo: '' },
+  ],
 };
 
 /** Miniatura del paso 1: la misma maqueta de las galerías */
@@ -153,6 +173,132 @@ function SwitchSeccion({
   );
 }
 
+/** Tarjeta de apertura animada: el cliente elige cómo se abre su invitación */
+function OpcionApertura({ meta, selected, onSelect }: { meta: AperturaMeta; selected: boolean; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      onClick={onSelect}
+      className={
+        'relative rounded-xl border p-3 text-left transition ' +
+        (selected
+          ? 'border-[#f1a46a]/60 bg-white/[0.07] shadow-[0_0_0_1px_rgba(241,164,106,0.4)]'
+          : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+      }
+    >
+      {selected && (
+        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+          <Check size={12} strokeWidth={3} />
+        </span>
+      )}
+      <span className="text-2xl leading-none" aria-hidden="true">{meta.glifo}</span>
+      <span className={'mt-2 block text-sm font-medium ' + (selected ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{meta.nombre}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{meta.desc}</span>
+    </button>
+  );
+}
+
+/** Fila de tono de música de fondo con previsualización */
+function FilaTono({
+  tono,
+  elegido,
+  sonando,
+  onElegir,
+  onPrevisualizar,
+}: {
+  tono: TonoFondo;
+  elegido: boolean;
+  sonando: boolean;
+  onElegir: () => void;
+  onPrevisualizar: () => void;
+}) {
+  return (
+    <div
+      className={
+        'flex items-center gap-3 rounded-xl border px-3 py-2.5 transition ' +
+        (elegido ? 'border-[#f1a46a]/60 bg-white/[0.07]' : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+      }
+    >
+      <button
+        type="button"
+        onClick={onPrevisualizar}
+        aria-label={sonando ? 'Detener la previsualización de ' + tono.nombre : 'Escuchar ' + tono.nombre}
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#f1a46a]/50 text-[#f1a46a] transition hover:bg-[#f1a46a]/15"
+      >
+        {sonando ? <Square size={13} strokeWidth={2.4} /> : <Play size={13} strokeWidth={2.4} className="ml-0.5" />}
+      </button>
+      <button type="button" role="radio" aria-checked={elegido} onClick={onElegir} className="min-w-0 flex-1 text-left">
+        <span className={'block text-sm font-medium ' + (elegido ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{tono.nombre}</span>
+        <span className="block truncate text-[11px] text-[#8b8b92]">{tono.desc}</span>
+      </button>
+      {elegido && (
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+          <Check size={12} strokeWidth={3} />
+        </span>
+      )}
+    </div>
+  );
+}
+
+const FUENTE_SAMPLE: Record<string, string> = {
+  clasica: 'var(--font-serif), Georgia, serif',
+  romantica: 'var(--font-cormorant), Georgia, serif',
+  moderna: 'var(--font-sans), Arial, sans-serif',
+  editorial: 'var(--font-cormorant), Georgia, serif',
+};
+
+/** Tarjeta de combo tipográfico con muestra real de la fuente */
+function OpcionTipografia({ id, nombre, desc, selected, onSelect }: { id: string; nombre: string; desc: string; selected: boolean; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      onClick={onSelect}
+      className={
+        'relative rounded-xl border p-3 text-center transition ' +
+        (selected
+          ? 'border-[#f1a46a]/60 bg-white/[0.07] shadow-[0_0_0_1px_rgba(241,164,106,0.4)]'
+          : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+      }
+    >
+      {selected && (
+        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+          <Check size={12} strokeWidth={3} />
+        </span>
+      )}
+      <span className="block text-2xl leading-tight text-[#f4d1a7]" style={{ fontFamily: FUENTE_SAMPLE[id] ?? undefined }}>
+        Ag
+      </span>
+      <span className={'mt-1.5 block text-sm font-medium ' + (selected ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{nombre}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{desc}</span>
+    </button>
+  );
+}
+
+/** Círculo de color para el acento */
+function SwatchAcento({ id, nombre, hex, selected, onSelect }: { id: string; nombre: string; hex: string; selected: boolean; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      onClick={onSelect}
+      title={nombre}
+      aria-label={'Acento ' + nombre}
+      className={
+        'flex h-10 w-10 items-center justify-center rounded-full border-2 transition ' +
+        (selected ? 'border-[#f1a46a] shadow-[0_0_0_2px_rgba(241,164,106,0.35)]' : 'border-white/20 hover:border-white/40')
+      }
+      style={{ background: hex || 'linear-gradient(135deg, #f1a46a 0%, #f4d1a7 38%, #70d7d0 78%)' }}
+    >
+      {selected && <Check size={14} strokeWidth={3} className={hex ? 'text-white mix-blend-difference' : 'text-[#17191d]'} />}
+    </button>
+  );
+}
+
 export default function PersonalizadorApp() {
   const [designId, setDesignId] = useState<string | null>(null);
   const [datos, setDatos] = useState<DatosPersonales>(DATOS_INICIALES);
@@ -185,17 +331,43 @@ export default function PersonalizadorApp() {
 
   const design = INVITATION_DESIGNS.find((item) => item.id === designId) ?? null;
 
+  // Previsualización de los tonos de música de fondo (un audio a la vez)
+  const audioPreview = useRef<HTMLAudioElement | null>(null);
+  const [tonoSonando, setTonoSonando] = useState<string | null>(null);
+  useEffect(() => {
+    const audio = audioPreview.current;
+    return () => {
+      if (audio) audio.pause();
+    };
+  }, []);
+  const previsualizarTono = (tono: TonoFondo) => {
+    if (tonoSonando === tono.id) {
+      audioPreview.current?.pause();
+      setTonoSonando(null);
+      return;
+    }
+    if (!audioPreview.current) audioPreview.current = new Audio();
+    const audio = audioPreview.current;
+    audio.pause();
+    audio.src = tono.src;
+    audio.volume = 0.7;
+    audio.play().catch(() => {});
+    setTonoSonando(tono.id);
+  };
+
   const previewData = useMemo<MiniInvitationData | null>(() => {
     if (!design) return null;
     const base = miniFromDesign(design);
     const p = partesFecha(datos.fecha, datos.hora);
+    const tipografia = TIPOGRAFIAS_META.find((t) => t.id === datos.tipografia);
     return {
       ...base,
       name: datos.nombre.trim() || 'Tu nombre',
       tipo: datos.tipo.trim() || base.tipo,
       dateLabel: p?.dateLabel ?? base.dateLabel,
+      font: tipografia?.mini ?? base.font,
     };
-  }, [design, datos.nombre, datos.tipo, datos.fecha, datos.hora]);
+  }, [design, datos.nombre, datos.tipo, datos.fecha, datos.hora, datos.tipografia]);
 
   const configCompleta = useMemo(
     () => (design ? createPersonalConfig(design, datos, secciones) : null),
@@ -209,6 +381,32 @@ export default function PersonalizadorApp() {
 
   const set = (campo: keyof DatosPersonales) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setDatos((prev) => ({ ...prev, [campo]: e.target.value }));
+
+  // Al elegir una apertura nos aseguramos de que el módulo esté prendido
+  const elegirApertura = (id: string) => {
+    setDatos((prev) => ({ ...prev, apertura: id }));
+    setSecciones((prev) => (prev.sobre ? prev : { ...prev, sobre: true }));
+  };
+
+  const elegirTono = (id: string) => {
+    setDatos((prev) => ({ ...prev, musicaFondo: id }));
+  };
+
+  const setCrono = (i: number, campo: 'hora' | 'titulo', valor: string) =>
+    setDatos((prev) => ({
+      ...prev,
+      cronograma: prev.cronograma.map((fila, idx) => (idx === i ? { ...fila, [campo]: valor } : fila)),
+    }));
+
+  const agregarMomento = () =>
+    setDatos((prev) =>
+      prev.cronograma.length >= 10 ? prev : { ...prev, cronograma: [...prev.cronograma, { hora: '', titulo: '' }] },
+    );
+
+  const quitarMomento = (i: number) =>
+    setDatos((prev) =>
+      prev.cronograma.length <= 1 ? prev : { ...prev, cronograma: prev.cronograma.filter((_, idx) => idx !== i) },
+    );
 
   const abrirVistaCompleta = () => {
     setOverlayKey((k) => k + 1);
@@ -397,7 +595,19 @@ export default function PersonalizadorApp() {
                       placeholder="https://open.spotify.com/playlist/…"
                       className={INPUT_CLS}
                     />
-                    <p className={HELP_CLS}>Pegá el enlace de una playlist, álbum o tema y sonará en tu invitación.</p>
+                    <p className={HELP_CLS}>Pegá el enlace de una playlist, álbum o tema y quedará como sección de música en tu invitación.</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="p-portada" className={LABEL_CLS}><ImageIcon size={13} className="text-[#f1a46a]" /> Foto de portada (opcional)</label>
+                    <input
+                      id="p-portada"
+                      value={datos.portada}
+                      onChange={set('portada')}
+                      placeholder="https://…/mi-foto.jpg"
+                      maxLength={300}
+                      className={INPUT_CLS}
+                    />
+                    <p className={HELP_CLS}>Pegá el enlace público de una foto tuya (Google Fotos, Drive, etc.) y la usamos en la apertura y de fondo de la invitación.</p>
                   </div>
                 </div>
               </div>
@@ -422,6 +632,155 @@ export default function PersonalizadorApp() {
                   ))}
                 </div>
               </div>
+
+              {/* Panel de apertura animada: 10 estilos para abrir la invitación */}
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
+                  <Sparkles size={17} className="text-[#f1a46a]" /> Apertura animada
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                  Elegí cómo se abre tu invitación — usa los colores de tu diseño. Todas incluidas.
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+                  {APERTURAS_META.map((meta) => (
+                    <OpcionApertura
+                      key={meta.id}
+                      meta={meta}
+                      selected={(datos.apertura || 'sobre') === meta.id}
+                      onSelect={() => elegirApertura(meta.id)}
+                    />
+                  ))}
+                </div>
+                {!secciones.sobre && (
+                  <p className="mt-3 text-[11px] text-[#f1a46a]">
+                    La apertura está apagada en «Secciones» — si elegís una acá la prendemos automáticamente.
+                  </p>
+                )}
+              </div>
+
+              {/* Panel de música de fondo: 10 tonos + sin música */}
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
+                  <Music2 size={17} className="text-[#f1a46a]" /> Música de fondo
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                  Un tono suave que suena mientras tus invitados recorren la invitación. Tocá ▶ para escucharlo antes de elegir.
+                </p>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {TONOS_FONDO.map((tono) => (
+                    <FilaTono
+                      key={tono.id}
+                      tono={tono}
+                      elegido={datos.musicaFondo === tono.id}
+                      sonando={tonoSonando === tono.id}
+                      onElegir={() => elegirTono(tono.id)}
+                      onPrevisualizar={() => previsualizarTono(tono)}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={datos.musicaFondo === ''}
+                  onClick={() => elegirTono('')}
+                  className={
+                    'mt-2.5 w-full rounded-xl border px-3.5 py-3 text-left text-sm transition ' +
+                    (datos.musicaFondo === ''
+                      ? 'border-[#f1a46a]/60 bg-white/[0.07] font-medium text-[#f7f1e8]'
+                      : 'border-white/10 bg-white/[0.02] text-[#b2b1b6] hover:border-white/25')
+                  }
+                >
+                  Sin música de fondo — solo la playlist de Spotify
+                </button>
+              </div>
+
+              {/* Panel de cronograma editable */}
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
+                  <Clock size={17} className="text-[#f1a46a]" /> Cronograma de la noche
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                  Cargá los momentos de tu fiesta hora por hora. Si lo dejás vacío, armamos uno de muestra con tu aprobación.
+                </p>
+                <div className="mt-4 grid gap-2">
+                  {datos.cronograma.map((fila, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input
+                        type="time"
+                        value={fila.hora}
+                        onChange={(e) => setCrono(i, 'hora', e.target.value)}
+                        aria-label={'Hora del momento ' + (i + 1)}
+                        style={{ width: 118 }}
+                        className={INPUT_CLS + ' shrink-0 [color-scheme:dark]'}
+                      />
+                      <input
+                        value={fila.titulo}
+                        onChange={(e) => setCrono(i, 'titulo', e.target.value)}
+                        placeholder={i === 0 ? 'Ej: Recepción' : i === 1 ? 'Ej: Ingreso y vals' : 'Ej: Brindis'}
+                        maxLength={42}
+                        aria-label={'Título del momento ' + (i + 1)}
+                        className={INPUT_CLS}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => quitarMomento(i)}
+                        disabled={datos.cronograma.length <= 1}
+                        aria-label={'Quitar el momento ' + (i + 1)}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-[#8b8b92] transition hover:border-red-400/40 hover:text-red-300 disabled:opacity-30"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={agregarMomento}
+                  disabled={datos.cronograma.length >= 10}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[#f1a46a]/40 px-3 py-2 text-xs font-medium text-[#f1a46a] transition hover:bg-[#f1a46a]/10 disabled:opacity-40"
+                >
+                  <Plus size={13} /> Agregar momento
+                </button>
+              </div>
+
+              {/* Panel de estilo: tipografía y color de acento */}
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
+                  <Palette size={17} className="text-[#f1a46a]" /> Estilo
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                  Afiná los detalles sobre tu diseño: la letra de los títulos y el color de los detalles. Si no tocás nada, queda el estilo original del diseño.
+                </p>
+
+                <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]">Tipografía</p>
+                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+                  {TIPOGRAFIAS_META.map((t) => (
+                    <OpcionTipografia
+                      key={t.id}
+                      id={t.id}
+                      nombre={t.nombre}
+                      desc={t.desc}
+                      selected={datos.tipografia === t.id}
+                      onSelect={() => setDatos((prev) => ({ ...prev, tipografia: prev.tipografia === t.id ? '' : t.id }))}
+                    />
+                  ))}
+                </div>
+
+                <p className="mt-5 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]">Color de acento</p>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {ACENTOS_META.map((a) => (
+                    <SwatchAcento
+                      key={a.id || 'original'}
+                      id={a.id}
+                      nombre={a.nombre}
+                      hex={a.hex}
+                      selected={datos.acento === a.id}
+                      onSelect={() => setDatos((prev) => ({ ...prev, acento: prev.acento === a.id ? '' : a.id }))}
+                    />
+                  ))}
+                  <span className="ml-1 text-xs text-[#8b8b92]">{ACENTOS_META.find((a) => a.id === datos.acento)?.nombre ?? 'Original del diseño'}</span>
+                </div>
+              </div>
               </div>
 
               {/* Columna de vista previa */}
@@ -438,7 +797,7 @@ export default function PersonalizadorApp() {
                     Abrir la invitación completa <ArrowRight size={15} />
                   </button>
                   <p className="mt-2.5 text-[11px] leading-relaxed text-[#8b8b92]">
-                    Cuenta regresiva, galería, música y confirmación de asistencia funcionando con tus datos.
+                    Apertura animada, música de fondo, cronograma, estilo, cuenta regresiva, galería y confirmación funcionando con tus datos.
                   </p>
                 </div>
 

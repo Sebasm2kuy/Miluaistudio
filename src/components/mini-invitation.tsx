@@ -50,7 +50,8 @@ export function miniFromDesign(d: InvitationDesign): MiniInvitationData {
 }
 
 export function miniFromConfig(cfg: SiteConfig): MiniInvitationData {
-  const font = cfg.estilos.fuenteTitulo === 'alex-brush' ? 'script' : cfg.estilos.fuenteTitulo === 'montserrat' ? 'sans' : 'serif';
+  const fuente = cfg.estilos.fuenteTitulo;
+  const font = fuente === 'alex-brush' || fuente === 'dancing-script' ? 'script' : fuente === 'montserrat' ? 'sans' : 'serif';
   return {
     name: cfg.evento.nombre,
     tipo: cfg.evento.tipo,

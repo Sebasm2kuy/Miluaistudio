@@ -10,8 +10,9 @@ export default function Envelope({ onOpen }: EnvelopeProps) {
   const [exiting, setExiting] = useState(false)
   const light = cfg.estilos.modoClaro === true
 
-  // Las demos renderizan la invitación en vivo; la invitación real conserva su imagen configurada
-  const useLiveCover = Boolean(cfg.estilos.adorno)
+  // Las demos renderizan la invitación en vivo; la invitación real conserva su imagen configurada.
+  // Con foto de portada propia del cliente, el sobre muestra esa foto.
+  const useLiveCover = Boolean(cfg.estilos.adorno) && !cfg.portadaPersonalizada
 
   const handleOpen = useCallback(() => {
     if (exiting) return

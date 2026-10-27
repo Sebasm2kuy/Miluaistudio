@@ -44,6 +44,12 @@ export interface SiteConfig {
   demoNombreDiseno?: string;
   /** Secciones prendidas/apagadas (ausente = todas prendidas) */
   secciones?: SeccionesConfig;
+  /** Apertura animada elegida (id de APERTURAS_META; ausente = sobre clásico) */
+  apertura?: { tipo: string };
+  /** Música de fondo en loop (ausente = sin música de fondo) */
+  musicaFondo?: { tono: string; url: string };
+  /** true = el cliente cargó su propia foto de portada (sobre y fondo la usan) */
+  portadaPersonalizada?: boolean;
   /** Sección de Instagram (se muestra solo si `usuario` está cargado) */
   instagram?: { usuario: string; url: string };
   evento: {
