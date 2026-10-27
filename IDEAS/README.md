@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 012 — Prompt para Z.AI: correcciones funcionales posteriores a la auditoría (27-10-2026)](./ITERACION-2026-10-27-012-PROMPT-CORRECCIONES-FUNCIONALES.md)
 - [Iteración 011 — Auditoría de los últimos cambios funcionales (27-10-2026)](./ITERACION-2026-10-27-011-AUDITORIA-ULTIMOS-CAMBIOS-FUNCIONALES.md)
 - [Iteración 010 — Mejoras funcionales: publicación de invitaciones, assets del editor y RSVP (28-10-2026)](./ITERACION-2026-10-28-010-MEJORAS-FUNCIONALES-PUBLICACION.md)
 - [Iteración 009 — Prompt de mejoras funcionales sin abordar privacidad (27-10-2026)](./ITERACION-2026-10-27-009-PROMPT-MEJORAS-FUNCIONALES.md)
