@@ -72,7 +72,10 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
           className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
           style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
         >
-          {cfg.evento.lugar} &bull; {cfg.evento.ubicacion}
+          {cfg.evento.lugar}
+          {cfg.evento.ubicacion ? (
+            <> &bull; {cfg.evento.ubicacion}</>
+          ) : null}
         </p>
       </div>
 

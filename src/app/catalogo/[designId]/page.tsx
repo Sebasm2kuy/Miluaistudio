@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PenLine } from 'lucide-react';
 import InvitationExperience from '@/components/invitation-experience';
 import { INVITATION_DESIGNS } from '@/data/invitation-designs';
 import { createDemoConfig } from '@/data/demo-config';
@@ -68,6 +68,13 @@ export default async function InvitationDemoPage({
         >
           <ArrowLeft size={15} />
           Volver al catálogo
+        </a>
+        <a
+          href={'/Miluaistudio/personalizar/?diseno=' + designId}
+          className="fixed right-3 top-3 z-[9999] inline-flex items-center gap-2 rounded-full border border-[#f1a46a]/50 bg-[#17191d]/85 px-3 py-2 text-xs font-semibold text-[#f6c78f] shadow-lg backdrop-blur-md transition hover:border-[#f1a46a] hover:bg-[#17191d] sm:right-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
+        >
+          <PenLine size={14} />
+          Personalizar este diseño
         </a>
       </>
     </ConfigProvider>
