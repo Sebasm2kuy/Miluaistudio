@@ -31,13 +31,24 @@
  * El script crea automáticamente:
  * - Una hoja de cálculo "MilagrosXV_Galeria_DB" con la pestaña "RSVP"
  *
- * CONTRATO CON EL FRONTEND (src/components/rsvp.tsx):
- *  - GET  ?action=rsvp&codigo=&cantidad=&invitados=[JSON]&telefono=&fecha=
+ * CONTRATO CON EL FRONTEND (src/components/rsvp.tsx → src/lib/rsvp-client.ts):
  *  - POST JSON { tipo: "rsvp_grupo", codigo, cantidad, invitados, telefono, fecha }
+ *    ← contrato ACTIVO: el frontend envía los datos solo en el cuerpo, nunca
+ *      en la query string (privacidad: los datos personales no deben quedar
+ *      en URLs, historiales ni logs intermedios). Se envía con Content-Type
+ *      text/plain (solicitud "simple", sin preflight CORS).
+ *  - GET  ?action=rsvp&...  ← LEGADO: se conserva por compatibilidad con
+ *    versiones anteriores del frontend, pero el frontend actual NO lo usa.
  *  - Respuesta SIEMPRE JSON: { success: true, ... } o { success: false, error }
  *    El frontend distingue guardado (success true), error (success false)
  *    y pendiente (respuesta ilegible / bloqueada por CORS) — nunca afirma un
  *    guardado que no pudo verificar.
+ *
+ * ⚠️ RECORDATORIO DE DESPLIEGUE: editar este archivo NO actualiza el Web App
+ * ya desplegado en Google. Tras cambiar el código hay que crear una NUEVA
+ * implementación (o gestionar "Nueva implementación → Probar
+ * implementaciones") y verificar con una prueba controlada que la URL
+ * productiva responde al contrato POST.
  *
  * ============================================
  */
