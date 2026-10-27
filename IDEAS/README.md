@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 010 — Mejoras funcionales: publicación de invitaciones, assets del editor y RSVP (28-10-2026)](./ITERACION-2026-10-28-010-MEJORAS-FUNCIONALES-PUBLICACION.md)
 - [Iteración 009 — Prompt de mejoras funcionales sin abordar privacidad (27-10-2026)](./ITERACION-2026-10-27-009-PROMPT-MEJORAS-FUNCIONALES.md)
 - [Iteración 008 — Auditoría posterior a los últimos cambios (27-10-2026)](./ITERACION-2026-10-27-008-AUDITORIA-ULTIMOS-CAMBIOS.md)
 - [Iteración 007 — Corrección de riesgos críticos pendientes (28-10-2026)](./ITERACION-2026-10-28-007-CORRECCION-RIESGOS-CRITICOS.md)

@@ -280,3 +280,25 @@ Stage Summary:
 - Pendiente humano: verificar el Web App de RSVP desplegado (POST),
   revisar corridas reales de Actions, decidir purga de historial y rotación
   de credenciales históricas.
+
+---
+Task ID: 2 (iteración funcional 010)
+Agent: Z.AI principal
+Task: Mejoras funcionales — invitación publicada con URL propia (/i/<slug>/), carga de assets compatible con el export, integración RSVP y verificación funcional
+
+Work Log:
+- Base: main actualizada (PR #14 fusionado). Rama feat/publicacion-invitaciones-assets.
+- P0 publicación: src/data/invitacion-publicada.ts (esquema 1, slug normalizado/validado con reservados, serialización pura, URLs con basePath), src/lib/invitaciones-publicadas.ts (colección content/invitaciones/*.json leída en build), ruta src/app/i/[slug]/page.tsx (generateStaticParams + dynamicParams false, metadatos noindex + canonical), /previsualizar/ (vista previa fiel del panel, noindex), publicarInvitacionEnGitHub() en github-deploy.ts (crea/actualiza el JSON del slug vía Contents API, conserva publicadoEn, estado real creado/actualizada/error).
+- Panel admin: sección "Publicar invitación" (slug en vivo, Publicar, Ver vista previa, Descargar JSON publicable); sincronización galería↔fondo extraída a sincronizarFondoConGaleria().
+- P0 assets: src/lib/activos-editor.ts — validación no-dependiente de accept (tamaño ≤5 MB, extensión JPG/PNG/WebP, MIME normalizado, firma real por magic bytes), nombres saneados + sufijo único, urlPublicaActivo() exacta con basePath; uploadToGitHub() sube por defecto a public/assets-invitaciones/ (la carpeta uploads/ sigue bloqueada para fotos de invitados y verify-export mantiene la regla).
+- P1 RSVP: tests nuevos del intérprete de contrato (estados completos, {ok:true} legado → pendiente, wrapper HTML, arrays/vacíos); invitación publicada pasa rsvp.* con modoDemo:false; demos conservan modoDemo:true + endpoints vacíos; docs/PRUEBA-MANUAL-RSVP.md con el guion de prueba manual del Web App desplegado (pendiente de ejecución humana).
+- Fixtures: content/invitaciones/ejemplo-quince.json + ejemplo-boda.json (100% ficticios, imágenes del propio catálogo).
+- verify-export.mjs sección 6: out/i/<slug>/index.html por cada JSON, assets enlazados presentes, rutas i/ sin JSON declarado = fallo.
+- Validación: npm test 93/93 (46+47), lint 0, typecheck 0, build con prune+verify-export+verify-privacy sin errores; out/i/ejemplo-quince (78.769 B) y out/i/ejemplo-boda (70.086 B) generadas; mide-export: portada 652.391 B sin regresión; HTML exportado con título/canonical/noindex correctos.
+- Docs: ADMINISTRACION.md (flujo de publicación), IDEAS iteración 010 + índice, worklog.
+
+Stage Summary:
+- Flujo completo: panel → vista previa fiel → Publicar (estado real) → JSON por slug → página estática /i/<slug>/ verificada en el build; coexistencia y actualización sin duplicados garantizadas por diseño y por tests.
+- Assets del editor en /Miluaistudio/assets-invitaciones/ con validación real; fotos de invitados siguen por moderación; out/uploads sin imágenes.
+- RSVP con estados honestos; prueba del servicio externo pendiente manual (documentada, sin afirmar verificación).
+- PR contra main sin fusionar; publicación real desde el panel y deploy quedan como verificación del propietario.
