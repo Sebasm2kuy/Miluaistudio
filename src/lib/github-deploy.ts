@@ -16,7 +16,8 @@ import {
   type InvitacionPublicada,
 } from '../data/invitacion-publicada';
 
-const GITHUB_REPO = 'Sebasm2kuy/Miluaistudio'
+/** Repositorio donde viven los datos de las invitaciones (compartido por lectura y publicación). */
+export const GITHUB_REPO = 'Sebasm2kuy/Miluaistudio'
 const CONFIG_PATH = 'src/data/config.ts'
 const BASE_PATH = '/Miluaistudio'
 

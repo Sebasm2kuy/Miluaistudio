@@ -1,13 +1,17 @@
 # Prueba manual del editor móvil en un teléfono físico
 
-**Ruta:** `/Miluaistudio/editar/` (solo en desarrollo local — esta página NO se publica)
-**Cómo llegar desde el teléfono:** con `npm run dev` corriendo en la compu, abrir desde el navegador del celular `http://<IP-de-la-compu>:3000/Miluaistudio/editar/` (misma red Wi-Fi). También hay un botón «📱 Editor móvil» en el panel `/admin`.
+**Ruta:** `/Miluaistudio/editar/` — **publicada** desde la iteración 017:
+`https://sebasm2kuy.github.io/Miluaistudio/editar/` (con token de GitHub en
+Ajustes → «Conexión con GitHub» para cargar y publicar la invitación real).
+También funciona en desarrollo local: con `npm run dev` en la compu, abrir desde el
+celular `http://<IP-de-la-compu>:3000/Miluaistudio/editar/` (misma red Wi-Fi), o el
+botón «📱 Editor móvil» del panel `/admin` local.
 
 > Regla de honestidad: marcar cada paso solo si se hizo REALMENTE en el teléfono. Lo probado solo con emulador o navegador de escritorio no cuenta para esta lista.
 
 ## Preparación
 
-- [ ] 1. Con el dev server corriendo, abrir `/Miluaistudio/editar/` en el teléfono. Debe verse la invitación completa con la barra superior (←, Editar/Previa, Guardar) y la barra inferior con «Ajustes».
+- [ ] 1. Abrir `/Miluaistudio/editar/` en el teléfono. Debe verse la invitación completa con la barra superior (Editar/Previa, Guardar) y la barra inferior con «Ajustes». En el sitio publicado no debe haber flecha «volver al panel» (solo existe en dev).
 
 ## Edición directa
 
@@ -52,6 +56,15 @@
 - [ ] 25. Abrir `/admin` en la compu: todo el formulario funciona igual que siempre, con el nuevo botón «📱 Editor móvil».
 - [ ] 26. Editar algo desde `/editar` en la compu y verificar que `/admin` → «Ver vista previa» muestra los mismos cambios (misma fuente localStorage).
 - [ ] 27. Verificar que `/i/ejemplo-boda/` y el resto del sitio público se ven idénticos a antes (sin contornos ni cambios de comportamiento).
+
+## Carga y publicación de la invitación real (sitio publicado)
+
+- [ ] 28. Abrir el editor publicado, tocar «⚙️ Ajustes» → «Invitación publicada». Sin token: «Publicar cambios» debe estar deshabilitado y «Cargar publicada» con un slug debe avisar honestamente que falta el token (sin éxito fingido).
+- [ ] 29. Pegar el token en «Conexión con GitHub» y verificarlo. Luego, en «Invitación publicada», escribir el slug de una invitación real y tocar «Cargar publicada»: la invitación real debe aparecer completa en el editor.
+- [ ] 30. Editar un texto, tocar «Guardar» (borrador) y recargar la página: el borrador y el slug deben recordarse.
+- [ ] 31. Tocar «Publicar cambios»: debe mostrar el estado real (creada/actualizada) y el enlace «Ver la invitación publicada ↗». Esperar el deploy (~2-3 min) y verificar que la invitación real `/i/<slug>/` refleja el cambio.
+- [ ] 32. Publicar con un slug inválido o sin token borrado: los mensajes deben ser honestos y nada debe quedar a medias.
+- [ ] 33. Con cambios sin guardar, tocar «Cargar publicada» de otro slug: debe pedir confirmación antes de reemplazar el borrador.
 
 ## Resultado
 

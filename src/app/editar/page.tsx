@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * EDITOR MÓVIL VISUAL — /editar (herramienta local, NO se publica).
+ * EDITOR MÓVIL VISUAL — /editar (publicado desde la iteración 017).
  *
  * La experiencia pedida para el teléfono:
  *  1. La invitación se muestra completa, como la verá un invitado.
@@ -14,8 +14,11 @@
  *     carga, música, navegación); «Editar» vuelve al modo directo.
  *     Ningún botón propio de la invitación (RSVP, enlaces, mapas,
  *     lightbox) se dispara mientras se edita.
- *  6. «Guardar» persiste con el MISMO flujo del panel (sincronización
- *     fondo ↔ galería + saveConfig). Publicar sigue en /admin.
+ *  6. «Guardar» persiste el BORRADOR en este navegador (localStorage,
+ *     igual que el panel de escritorio). La invitación REAL se carga y
+ *     se publica por slug con el MISMO flujo validado del panel:
+ *     Ajustes → «Invitación publicada» (publicarInvitacionDesdePanel),
+ *     con el token en sessionStorage y estados honestos.
  *
  * En escritorio funciona igual (el panel de escritorio sigue siendo la
  * herramienta principal de PC); esta ruta está pensada para el pulgar:
@@ -27,12 +30,15 @@ import type { CSSProperties } from 'react'
 import { CONFIG_DEMO_BASE, createDemoConfig } from '@/data/demo-config'
 import type { SiteConfig } from '@/data/config-schema'
 import type { InvitationDesign } from '@/data/invitation-designs'
+import { urlPublicaInvitacion } from '@/data/invitacion-publicada'
 import InvitationExperience from '@/components/invitation-experience'
 import { ConfigProvider, saveConfig, leerConfigGuardada } from '@/hooks/useConfig'
 import { sincronizarFondoConGaleria } from '@/lib/activos-editor'
+import { leerInvitacionPublicadaDeGitHub } from '@/lib/carga-invitacion'
+import { publicarInvitacionDesdePanel } from '@/lib/publicacion-panel'
 import { EditorProvider } from '@/components/editor/EditorProvider'
 import PanelEdicion from '@/components/editor/PanelEdicion'
-import PanelAjustes from '@/components/editor/PanelAjustes'
+import PanelAjustes, { type EstadoGithubUI } from '@/components/editor/PanelAjustes'
 import { actualizarCampoEditado } from '@/lib/editor-config'
 import type { AccionSpec } from '@/lib/editor-campos'
 import type { ValorCampo } from '@/components/editor/CampoControl'
@@ -42,6 +48,12 @@ type Modo = 'editar' | 'previsualizar'
 type ValorEdicion = ValorCampo | string[]
 
 const TOKEN_KEY = 'milu_github_token'
+/** Slug activo persistido: al recargar el editor se recuerda qué invitación se edita. */
+const SLUG_KEY = 'milu_editor_slug'
+/** Solo en desarrollo (npm run dev) existe /admin; en el export no se publica. */
+const ES_DEV = process.env.NODE_ENV === 'development'
+
+const GITHUB_EN_REPOSO: EstadoGithubUI = { ocupado: null, mensaje: '', tipoMensaje: 'info' }
 
 export default function PaginaEditar() {
   const [cfg, setCfg] = useState<SiteConfig | null>(null)
@@ -52,6 +64,8 @@ export default function PaginaEditar() {
   const [hintVisible, setHintVisible] = useState(true)
   const [token, setToken] = useState('')
   const [guardadaStr, setGuardadaStr] = useState('')
+  const [slug, setSlug] = useState('')
+  const [github, setGithub] = useState<EstadoGithubUI>(GITHUB_EN_REPOSO)
   const [alturaBarraArriba, setAlturaBarraArriba] = useState(60)
   const [alturaBarraAbajo, setAlturaBarraAbajo] = useState(0)
   const barraArribaRef = useRef<HTMLDivElement>(null)
@@ -59,22 +73,31 @@ export default function PaginaEditar() {
   const avisarSalidaActivoRef = useRef(false)
 
   // Carga inicial: misma fuente que el panel de escritorio (localStorage
-  // con versión) y, si no hay nada, la base demo sintética.
+  // con versión) y, si no hay nada, la base demo sintética. El slug activo
+  // se recuerda de la última sesión y ?slug= de la URL lo preseleccione
+  // (ideal para un marcador /editar/?slug=mi-invitacion en el teléfono).
   useEffect(() => {
     // Carga solo posible tras el montaje (localStorage/sessionStorage no
     // existen durante el render estático): mismo patrón que el panel.
     const inicial = leerConfigGuardada() ?? (JSON.parse(JSON.stringify(CONFIG_DEMO_BASE)) as SiteConfig)
     let tokenSesion = ''
     let hintYaVisto = false
+    let slugRecordado = ''
     try {
       tokenSesion = sessionStorage.getItem(TOKEN_KEY) ?? ''
       hintYaVisto = sessionStorage.getItem('milu_editor_hint') === 'visto'
+      slugRecordado = localStorage.getItem(SLUG_KEY) ?? ''
     } catch { /* storage no disponible */ }
+    let slugUrl = ''
+    try {
+      slugUrl = new URLSearchParams(window.location.search).get('slug') ?? ''
+    } catch { /* URL no disponible */ }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCfg(inicial)
     setGuardadaStr(JSON.stringify(inicial))
     setToken(tokenSesion)
     setHintVisible(!hintYaVisto)
+    setSlug(slugUrl || slugRecordado)
   }, [])
 
   const hayCambios = cfg ? JSON.stringify(cfg) !== guardadaStr : false
@@ -216,6 +239,68 @@ export default function PaginaEditar() {
     } catch { /* storage no disponible */ }
   }, [])
 
+  // ------------------------------------------------------------------
+  // Invitación publicada: cargar por slug y publicar cambios reales
+  // (mismo flujo validado del panel de escritorio, sin duplicarlo)
+  // ------------------------------------------------------------------
+  const recordarSlug = useCallback((nuevo: string) => {
+    setSlug(nuevo)
+    try {
+      if (nuevo) localStorage.setItem(SLUG_KEY, nuevo)
+      else localStorage.removeItem(SLUG_KEY)
+    } catch { /* storage no disponible */ }
+  }, [])
+
+  const cargarInvitacion = useCallback(async (slugCandidato: string) => {
+    if (hayCambios) {
+      const seguir = window.confirm(
+        'Hay cambios sin guardar en este navegador. Cargar la invitación publicada los va a reemplazar. ¿Seguro?',
+      )
+      if (!seguir) return
+    }
+    setGithub({ ocupado: 'cargando', mensaje: '', tipoMensaje: 'info' })
+    const resultado = await leerInvitacionPublicadaDeGitHub({ slug: slugCandidato, token })
+    if (resultado.success && resultado.config) {
+      const cargada = resultado.config
+      setCfg(cargada)
+      setGuardadaStr(JSON.stringify(cargada))
+      saveConfig(cargada)
+      recordarSlug(resultado.slug)
+      setGithub({
+        ocupado: null,
+        mensaje: resultado.message,
+        tipoMensaje: 'ok',
+        urlPublica: urlPublicaInvitacion(resultado.slug),
+      })
+    } else {
+      setGithub({ ocupado: null, mensaje: resultado.message, tipoMensaje: 'error' })
+    }
+  }, [token, hayCambios, recordarSlug])
+
+  const publicarCambios = useCallback(async (slugCandidato: string) => {
+    if (!cfg) return
+    setGithub({ ocupado: 'publicando', mensaje: '', tipoMensaje: 'info' })
+    // Misma unidad que «Publicar invitación» del panel de escritorio:
+    // valida slug y token, sincroniza fondo ↔ galería y muestra el estado real.
+    const resultado = await publicarInvitacionDesdePanel({ slug: slugCandidato, config: cfg, token })
+    if (resultado.success) {
+      recordarSlug(resultado.slug)
+      setGithub({
+        ocupado: null,
+        mensaje: resultado.message,
+        tipoMensaje: 'ok',
+        urlPublica: resultado.urlAbsoluta || urlPublicaInvitacion(resultado.slug),
+      })
+    } else {
+      setGithub({
+        ocupado: null,
+        mensaje: resultado.message,
+        tipoMensaje: 'error',
+        urlPublica: undefined,
+      })
+    }
+  }, [cfg, token, recordarSlug])
+
   const ocultarHint = useCallback(() => {
     setHintVisible(false)
     try {
@@ -265,15 +350,17 @@ export default function PaginaEditar() {
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}
         >
           <div className="mx-auto flex max-w-3xl items-center gap-1.5 px-2 py-2">
-            <a
-              href="/Miluaistudio/admin/"
-              aria-label="Volver al panel de configuración"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#fcf6ba] transition active:scale-95"
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </a>
+            {ES_DEV && (
+              <a
+                href="/Miluaistudio/admin/"
+                aria-label="Volver al panel de configuración (solo existe en desarrollo)"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#fcf6ba] transition active:scale-95"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </a>
+            )}
             <span className="min-w-0 flex-1 truncate text-left">
               <span className="block truncate text-xs font-semibold text-white/90">{nombreEvento}</span>
               <span className="block text-[10px] uppercase tracking-[0.18em] text-white/45">
@@ -316,7 +403,7 @@ export default function PaginaEditar() {
                 'relative min-h-[44px] shrink-0 rounded-full px-3 text-xs font-bold transition active:scale-95 ' +
                 (guardado === 'ok' ? 'bg-[#16a34a] text-white' : 'bg-white/12 text-[#fcf6ba]')
               }
-              aria-label="Guardar los cambios en este navegador"
+              aria-label="Guardar el borrador en este navegador (publicar es aparte, en Ajustes)"
             >
               {guardado === 'guardando' ? '…' : guardado === 'ok' ? 'Guardado ✓' : 'Guardar'}
               {hayCambios && guardado !== 'ok' && (
@@ -387,7 +474,11 @@ export default function PaginaEditar() {
         onCerrar={() => setAjustesAbiertos(false)}
         cfg={cfg}
         token={token}
+        slug={slug}
+        github={github}
         onTokenGuardar={guardarToken}
+        onCargarInvitacion={cargarInvitacion}
+        onPublicarInvitacion={publicarCambios}
         onCambio={cambiarCampo}
         onCambioSeccionesCompletas={(fotos) => cambiarCampo(['fondo', 'fotos'], fotos)}
         onAplicarColores={(colors) => {

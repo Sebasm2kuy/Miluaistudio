@@ -347,3 +347,20 @@ Stage Summary:
 - La edición desde el teléfono ahora es directa y visual: recorrer la invitación, tocar un elemento, cambiarlo y seguir sin perder el lugar; la vista previa es la experiencia real del invitado; ninguna acción propia de la invitación se dispara mientras se edita.
 - La experiencia de PC no perdió capacidades: /admin sigue intacto (objetivos táctiles más grandes y enlace al editor) y toda la lógica de guardado/validación/publicación es la MISMA, sin duplicación.
 - Pendientes del propietario: ejecutar docs/PRUEBA-MANUAL-EDITOR-MOVIL.md en un teléfono físico (con y sin token) y aceptar el PR; sin merge ni deploy hasta autorización explícita.
+
+---
+## Iteración 017 — El editor móvil pasa a estar publicado (fix/editor-movil-publicado)
+
+**Problema reportado:** «No cambió nada: la edición por móvil se sigue viendo exactamente igual a antes» tras fusionar el PR #17. Causa real verificada: el PR sí se fusionó y el deploy terminó, pero `prune-export.mjs` (herencia del P0 de privacidad de /admin) eliminaba out/editar/ del artefacto estático → la ruta /editar/ daba 404 en producción y el editor solo existía en `npm run dev`. Además el flujo quedaba corto incluso publicado: la carga venía de localStorage y publicar vivía en /admin (que tampoco está publicado).
+
+**Cambios:**
+- prune-export.mjs ya no poda out/editar/ (sigue podando out/admin/); verify-export.mjs ahora EXIGE editar/index.html en el artefacto.
+- src/lib/carga-invitacion.ts (nuevo): leer la invitación real content/invitaciones/<slug>.json por la API de GitHub con token; validación con validarInvitacionPublicada(); ResultadoCarga honesto, nunca lanza; fetch inyectable.
+- src/lib/github-deploy.ts: GITHUB_REPO exportado (sin cambios de comportamiento).
+- PanelAjustes: nueva sección «Invitación publicada» (slug + «Cargar publicada» + «Publicar cambios», deshabilitado sin token, mensajes reales, enlace «Ver la invitación publicada ↗»).
+- /editar/page.tsx: carga real por slug (con confirmación si hay cambios sin guardar), publicación por publicarInvitacionDesdePanel() — la MISMA unidad validada del panel de escritorio (conserva publicadoEn, sincroniza fondo↔galería, estados reales); slug persistente (localStorage) y ?slug= para marcadores; «Guardar» aclarado como borrador; botón «volver al panel» solo en dev (en producción /admin no existe).
+- Tests: +8 (tests/carga-invitacion.test.ts, fetch simulado) → 127/127; lint 0; typecheck 0; build + prune + verify-export + verify-privacy sin errores.
+- Verificación del artefacto con navegador (Chromium, 390 px, sobre out/ servido como producción): /editar/ carga sin errores de página, todos los elementos editables registrados, sección «Invitación publicada» operativa, «Publicar cambios» deshabilitado sin token, «Cargar publicada» sin token → «Falta el GitHub Token…» (honesto), Previa/Editar alternan bien, sin desbordamiento horizontal (390=390).
+- Docs: ADMINISTRACION.md (Opción A = editor publicado con marcador ?slug=), PRUEBA-MANUAL-EDITOR-MOVIL.md (acceso publicado + pasos 28-33 de carga/publicación real), IDEAS/ITERACION-2026-10-28-017-EDITOR-MOVIL-PUBLICADO.md + índice.
+
+**Decisión de privacidad (documentada):** el editor se publica como interfaz; la protección real sigue siendo el token del propietario (no la URL oculta). Sin token, un visitante solo puede jugar con el borrador demo de su propio navegador; no puede leer ni escribir datos reales. /admin sigue podado del export.
