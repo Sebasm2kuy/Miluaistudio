@@ -97,7 +97,7 @@ export default function CatalogoPage() {
   const [selected, setSelected] = useState<InvitationDesign | null>(null);
 
   return (
-    <div data-page="storefront" className="min-h-screen bg-[#f7f4ef] text-[#272a2d]">
+    <div data-page="storefront" className="milua-neo min-h-screen bg-[#f7f4ef] text-[#272a2d]">
       <header className="sticky top-0 z-40 border-b border-[#3a332c] bg-[#211c17]/95 text-white backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
           <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
