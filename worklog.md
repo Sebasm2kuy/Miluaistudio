@@ -303,3 +303,21 @@ Stage Summary:
 - RSVP con estados honestos; prueba del servicio externo pendiente manual (documentada, sin afirmar verificación).
 - PR contra main sin fusionar; publicación real desde el panel y deploy quedan como verificación del propietario.
 - CI del PR #15: run 40568830138 "Validate Miluaistudio" → success (npm ci, npm test 93/93, lint, build con verificaciones). Enlace: https://github.com/Sebasm2kuy/Miluaistudio/actions/runs/40568830138
+
+---
+Task ID: 3 (iteración 012/013)
+Agent: Z.AI principal
+Task: Correcciones funcionales posteriores a la auditoría — eliminar confusión del botón heredado «Deploy» (F-01) y fallo seguro si no se leen los bytes de una imagen (F-02); aceptación manual preparada
+
+Work Log:
+- Base: main actualizada (PR #15 fusionado + iteración 011). Rama fix/iteracion-012-correcciones-funcionales.
+- F-01: retirado el botón «Deploy» del encabezado del panel (llamaba a deployToGitHub(), que escribe src/data/config.ts sin consumidor); sección del token renombrada a «Conexión con GitHub (token)» con texto explícito de que pegar el token no publica; handlePublicar delega en la unidad testeable publicarInvitacionDesdePanel() (src/lib/publicacion-panel.ts) que valida slug/token antes de contactar la API y devuelve el estado real vía publicarInvitacionEnGitHub(); deployToGitHub() conservada como LEGADO documentado (no se eliminó a ciegas); sincronización fondo↔galería preservada en Guardar / Ver vista previa / representación publicada; mensajes de token faltante apuntan a la sección correcta.
+- F-02: uploadToGitHub() exige firma real: si file.slice(0,16).arrayBuffer() falla (rechazo o error síncrono) la subida se rechaza con mensaje entendible SIN llamar a la API de GitHub; validarArchivoImagen() mantiene bytes opcional solo para prevalidación de UI; mensajes sin detalles internos.
+- Tests: +13 (tests/publicacion-panel.test.ts con guardas de UI/lib; upload con lectura rota, error síncrono de slice y MIME perfecto con bytes ilegibles — siempre cero llamadas HTTP) → 106/106.
+- Docs: ADMINISTRACION.md con lista de aceptación manual de 7 pasos (todos PENDIENTES, datos 100% ficticios); PRUEBA-MANUAL-RSVP.md con verificación anti-falso-éxito en la UI; IDEAS iteración 013 + índice.
+- Validación: npm test 106/106; lint 0; typecheck 0; build + prune + verify-export + verify-privacy sin errores (21 páginas, /i/ejemplo-boda y /i/ejemplo-quince generadas, out/admin podado, out/uploads sin imágenes); mide-export sin regresión (portada 652.391 B).
+
+Stage Summary:
+- El panel tiene una única acción principal de publicación (flujo por slug) con estados reales; la acción heredada ya no aparece en la interfaz y una guarda de tests impide su regreso.
+- La subida real nunca valida solo por extensión/MIME: sin bytes legibles no hay subida ni llamada a GitHub.
+- Sin merge, sin deploy; aceptación manual del propietario documentada y pendiente (publicación real + Web App RSVP).
