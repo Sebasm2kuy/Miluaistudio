@@ -22,7 +22,7 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
         href={demoUrl}
         target="_blank"
         rel="noreferrer"
-        className="relative block aspect-[4/5] w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b58c5a]"
+        className="relative block aspect-[4/5] w-full overflow-hidden text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8a6534]"
         aria-label={'Abrir la invitación de muestra ' + design.name + ' en una pestaña nueva'}
       >
         <CatalogScene design={design} />
@@ -124,7 +124,7 @@ export default function CatalogoPage() {
 
       <main className="mx-auto max-w-[1440px] px-4 pb-14 pt-9 sm:px-6 sm:pb-20 sm:pt-14 lg:px-8">
         <section className="mx-auto max-w-4xl text-center">
-          <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#b58c5a' }}>La colección</p>
+          <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#8a6534' }}>La colección</p>
           <h1 className="mt-2 font-serif text-2xl leading-snug tracking-wide text-[#292522] sm:text-3xl lg:text-4xl">
             10 diseños únicos
             <span className="mx-2 text-[#b18163]">·</span>
@@ -157,7 +157,7 @@ export default function CatalogoPage() {
         {/* Cómo funciona (3 pasos) */}
         <section aria-labelledby="como-funciona-titulo" className="mt-14 scroll-mt-24 sm:mt-20">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#b58c5a' }}>Cómo funciona</p>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#8a6534' }}>Cómo funciona</p>
             <h2 id="como-funciona-titulo" className="mt-2 font-serif text-2xl text-[#292522] sm:text-3xl">Tu invitación, en 3 pasos.</h2>
           </div>
           <ol className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -185,14 +185,14 @@ export default function CatalogoPage() {
         {/* Reseñas / prueba social */}
         <section aria-labelledby="resenas-titulo" className="mt-14 scroll-mt-24 sm:mt-20">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#b58c5a' }}>Lo que buscamos para cada evento</p>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#8a6534' }}>Lo que buscamos para cada evento</p>
             <h2 id="resenas-titulo" className="mt-2 font-serif text-2xl text-[#292522] sm:text-3xl">Así se ve una buena experiencia.</h2>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {TESTIMONIOS.map((t, tIndex) => (
               <Reveal key={t.nombre} delay={tIndex * 50}>
                 <figure className="flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
-                  <div className="flex items-center gap-0.5 text-[#d9a53f]" aria-label="Calificación: 5 de 5 estrellas">
+                  <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
                     {Array.from({ length: 5 }).map((_, starIndex) => (
                       <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
                     ))}
@@ -217,7 +217,7 @@ export default function CatalogoPage() {
         <section className="relative mt-12 overflow-hidden rounded-3xl border border-[#e6d5bd] p-6 sm:mt-16 sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-10" style={{ background: 'linear-gradient(120deg, #fdf3ec 0%, #f8ecdd 48%, #f3e6d3 100%)' }}>
           <DesignAdornoGlyph adorno="rosas" className="absolute -right-10 -top-10 h-44 w-44 text-[#b98a94]/20" />
           <div className="relative max-w-2xl">
-            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#b58c5a' }}>Una invitación, toda la información</p>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#8a6534' }}>Una invitación, toda la información</p>
             <h2 className="mt-2 font-serif text-2xl text-[#292522] sm:text-3xl">Tu evento, en un solo enlace.</h2>
             <p className="mt-3 text-sm leading-relaxed text-[#716a63]">Cuenta regresiva, galería, música, ubicación, calendario y confirmación de asistencia, según la configuración acordada para tu evento.</p>
           </div>
@@ -238,7 +238,7 @@ export default function CatalogoPage() {
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-4 text-[11px] text-[#716a63] sm:gap-x-8 sm:text-xs">
           {FEATURE_BAR.map(({ icon: Icon, label }) => (
             <span key={label} className="inline-flex items-center gap-1.5">
-              <Icon size={13} className="text-[#b58c5a]" /> {label}
+              <Icon size={13} className="text-[#8a6534]" /> {label}
             </span>
           ))}
         </div>
