@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 014 — Auditoría posterior a las correcciones funcionales (27-10-2026)](./ITERACION-2026-10-27-014-AUDITORIA-POST-CORRECCIONES-FUNCIONALES.md)
 - [Iteración 013 — Correcciones funcionales posteriores a la auditoría: botón heredado Deploy, firma obligatoria en subidas y aceptación manual (28-10-2026)](./ITERACION-2026-10-28-013-CORRECCIONES-FUNCIONALES-POST-AUDITORIA.md)
 - [Iteración 012 — Prompt para Z.AI: correcciones funcionales posteriores a la auditoría (27-10-2026)](./ITERACION-2026-10-27-012-PROMPT-CORRECCIONES-FUNCIONALES.md)
 - [Iteración 011 — Auditoría de los últimos cambios funcionales (27-10-2026)](./ITERACION-2026-10-27-011-AUDITORIA-ULTIMOS-CAMBIOS-FUNCIONALES.md)
