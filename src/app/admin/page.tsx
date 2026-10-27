@@ -325,7 +325,8 @@ function ImageCard({
           <button
             type="button"
             onClick={onRemove}
-            className="text-red-400 hover:text-red-300 text-lg leading-none"
+            aria-label={`Eliminar ${label}`}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xl leading-none transition-colors"
             title="Eliminar"
           >
             &times;
@@ -361,7 +362,7 @@ function ImageCard({
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-[#f0ebe4] text-[#716a63] hover:bg-[#e0d7cb] transition-colors"
+            className="flex-1 min-h-[40px] text-[11px] px-3 py-2 rounded-lg bg-[#f0ebe4] text-[#716a63] hover:bg-[#e0d7cb] transition-colors"
           >
             {uploading ? 'Subiendo...' : url ? 'Cambiar' : 'Subir'}
           </button>
@@ -439,16 +440,23 @@ export default function AdminPage() {
   const [publicando, setPublicando] = useState(false)
   const [resultadoPublicacion, setResultadoPublicacion] = useState<ResultadoPublicacion | null>(null)
 
-  // Force scroll fix on mount
+  // Force scroll fix on mount.
+  // Antes esto vivía en un script bloqueante del layout: mutar <html>/<body>
+  // antes de hidratar genera un desajuste de hidratación (issue en consola).
+  // Tras el montaje es seguro y logra el mismo resultado visual.
   useEffect(() => {
     const html = document.documentElement
     const body = document.body
+    html.classList.add('admin-page')
     html.style.overflow = 'auto'
     html.style.height = 'auto'
     html.style.position = 'static'
+    html.style.background = '#faf8f4'
     body.style.overflow = 'auto'
     body.style.height = 'auto'
     body.style.position = 'static'
+    body.style.background = '#faf8f4'
+    body.style.color = '#292522'
   }, [])
 
   // Load from localStorage on mount
@@ -720,10 +728,19 @@ export default function AdminPage() {
             Panel de Configuración
           </h1>
           <div className="flex items-center gap-2 flex-wrap justify-center">
+            {/* Acceso directo al editor móvil visual (/editar): la edición
+                directa sobre la invitación es más cómoda en el teléfono. */}
+            <a
+              href="/Miluaistudio/editar/"
+              className="px-4 min-h-[40px] inline-flex items-center rounded-lg text-xs font-bold transition-colors"
+              style={{ background: '#8a6534', color: '#fff', border: 'none' }}
+            >
+              📱 Editor móvil
+            </a>
             <button
               type="button"
               onClick={handleSave}
-              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-colors"
+              className="px-4 py-2 min-h-[40px] rounded-lg text-xs font-bold transition-colors"
               style={{
                 background: saved ? '#16a34a' : '#d4af37',
                 color: '#fff',
@@ -735,7 +752,7 @@ export default function AdminPage() {
             <button
               type="button"
               onClick={handleExport}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+              className="px-3 py-2 min-h-[40px] rounded-lg text-xs font-medium transition-colors"
               style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
             >
               JSON
@@ -743,7 +760,7 @@ export default function AdminPage() {
             <button
               type="button"
               onClick={handleImport}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+              className="px-3 py-2 min-h-[40px] rounded-lg text-xs font-medium transition-colors"
               style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
             >
               Importar
@@ -751,12 +768,12 @@ export default function AdminPage() {
             <button
               type="button"
               onClick={handleReset}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors bg-red-950/60 text-red-300 border border-red-800/50 hover:bg-red-900/60"
+              className="px-3 py-2 min-h-[40px] rounded-lg text-xs font-medium transition-colors bg-red-950/60 text-red-300 border border-red-800/50 hover:bg-red-900/60"
             >
               Reset
             </button>
-            <button type="button" onClick={expandAll} className="px-2 py-1.5 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">+</button>
-            <button type="button" onClick={collapseAll} className="px-2 py-1.5 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">-</button>
+            <button type="button" onClick={expandAll} aria-label="Abrir todas las secciones" className="w-10 h-10 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">+</button>
+            <button type="button" onClick={collapseAll} aria-label="Cerrar todas las secciones" className="w-10 h-10 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">−</button>
           </div>
           <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
         </div>
@@ -1030,7 +1047,7 @@ export default function AdminPage() {
                       timeline: { ...prev.timeline, eventos: [...prev.timeline.eventos, { hora: '', titulo: '', desc: '', icono: '' }] },
                     }))
                   }
-                  className="px-3 py-1 rounded-md text-xs font-medium"
+                  className="px-3 py-2 min-h-[40px] rounded-md text-xs font-medium"
                   style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
                 >
                   + Agregar
@@ -1105,7 +1122,7 @@ export default function AdminPage() {
                       galeria: { ...prev.galeria, fotos: [...prev.galeria.fotos, { webp: '', fallback: '' }] },
                     }))
                   }
-                  className="px-3 py-1 rounded-md text-xs font-medium"
+                  className="px-3 py-2 min-h-[40px] rounded-md text-xs font-medium"
                   style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
                 >
                   + Agregar foto

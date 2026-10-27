@@ -321,3 +321,28 @@ Stage Summary:
 - El panel tiene una única acción principal de publicación (flujo por slug) con estados reales; la acción heredada ya no aparece en la interfaz y una guarda de tests impide su regreso.
 - La subida real nunca valida solo por extensión/MIME: sin bytes legibles no hay subida ni llamada a GitHub.
 - Sin merge, sin deploy; aceptación manual del propietario documentada y pendiente (publicación real + Web App RSVP).
+
+---
+Task ID: 5 (iteración 015/016 — editor móvil visual)
+Agent: Z.AI principal
+Task: Editor móvil visual e interactivo — editar la invitación tocando directamente sus elementos desde el teléfono, sin degradar la experiencia de escritorio
+
+Work Log:
+- Base: main actualizada (PR #16 fusionado + iteraciones 014/015 en IDEAS). Diagnóstico confirmado en código: única superficie de edición = formulario /admin (1.657 líneas, sin vista previa integrada), vista previa en OTRA pestaña, objetivos táctiles de 30–36 px, invitación de solo lectura, iframes de mapa/Spotify que se tragan los toques, capas fijas (sobre, carga, música, navegación) y acciones propias (RSVP, lightbox, gesto secreto) que se dispararían al editar.
+- Nuevo editor visual /editar (herramienta local, podada del export igual que /admin): renderiza la invitación REAL con ConfigProvider en vivo; modo Editar (tocar elemento → bottom sheet con SOLO sus campos, cambios en vivo, posición de scroll intacta) y modo Previa (experiencia completa del invitado, sin indicadores).
+- Capa reutilizable: EditorProvider (contexto que solo existe en /editar; fuera devuelve null y todo se comporta igual que hoy), Editable (envoltorio transparente que en modo edición captura el tap y bloquea interiores), InerteEnEdicion (RSVP y zonas propias quedan inertes con pointer-events none + inert), registro editor-campos.ts (30+ elementos → rutas de config con marcador {idx}) y editor-config.ts (actualización inmutable con arrays, fechas evento ↔ datetime-local).
+- Secciones instrumentadas: hero, dedicatoria, countdown, event-info (mapa), timeline (por momento), gallery (por foto + guard de lightbox), spotify (reproductor/botones), rsvp (formulario inerte), footer (gesto secreto tapado), instagram.
+- Fotos desde el teléfono: EditorImagen reutiliza uploadToGitHub + validarArchivoImagen (firma de bytes obligatoria del fix F-02); sin token → mensaje honesto; fallo de API → «Error al subir: Bad credentials» y la URL anterior queda intacta (nunca éxito fingido); token verificado contra la API y guardado en sessionStorage igual que el panel.
+- Ajustes estructurales: plantillas del catálogo (miniaturas + confirmación, conserva el nombre escrito), presets e individuales de color, adorno, tema claro, tipografías/reloj/tarjetas/botones, secciones prendibles, fondo, sobre/música de fondo, cronograma (agregar/quitar), galería (agregar foto), datos especiales, conexión GitHub.
+- Guardar = mismo flujo del panel (sincronizarFondoConGaleria + saveConfig) con indicador de cambios sin guardar y beforeunload en escritorio. Publicar sigue en /admin (botón ← regresa).
+- Escritorio preservado: InvitationExperience ganó prop opcional modoEdicion (default false, cero cambios en páginas públicas); /admin solo suma el botón «📱 Editor móvil» y objetivos táctiles ≥40 px; desajuste de hidratación preexistente de /admin corregido (script bloqueante → montaje), mismo patrón seguro en /editar.
+- Contenedor de scroll respeta las barras del editor (ResizeObserver → variables CSS); paneles usan visualViewport para convivir con el teclado virtual; safe-areas respetadas; sin arrastre como única vía (cierre siempre por botones).
+- Poda y guarda: prune-export.mjs elimina out/editar/ y verify-export.mjs falla si reaparece.
+- Tests: +13 (tests/editor-campos.test.ts: registro completo, rutas existentes en el esquema, {idx} apunta a arrays, ids usados por componentes registrados; tests/editor-config.test.ts: inmutabilidad, arrays fuera de rango sin corromper, fechas) → 119/119; lint 0; typecheck 0; build + prune + verify-export + verify-privacy sin errores (22 páginas).
+- Verificación en navegador (dev server + Chromium): 360/375/430/1280 px sin desbordamiento horizontal; edición en vivo reflejada detrás del panel; Cancelar revierte solo el panel; plantilla Oro Real aplicada conservando nombre; Previa sin contornos con RSVP activo y Editar con RSVP inerte; foto sin token → «hace falta el token…», con token falso → «Error al subir: Bad credentials»; Guardar persiste y recarga conserva cambios; regresiones /, /i/ejemplo-boda/ y /admin OK; 0 errores de consola en /editar y /admin.
+- Docs: IDEAS/ITERACION-2026-10-28-016-EDITOR-MOVIL-VISUAL.md + índice; docs/PRUEBA-MANUAL-EDITOR-MOVIL.md (guion de 27 pasos para teléfono físico, todos pendientes del propietario); ADMINISTRACION.md referencia el editor móvil; worklog del repo.
+
+Stage Summary:
+- La edición desde el teléfono ahora es directa y visual: recorrer la invitación, tocar un elemento, cambiarlo y seguir sin perder el lugar; la vista previa es la experiencia real del invitado; ninguna acción propia de la invitación se dispara mientras se edita.
+- La experiencia de PC no perdió capacidades: /admin sigue intacto (objetivos táctiles más grandes y enlace al editor) y toda la lógica de guardado/validación/publicación es la MISMA, sin duplicación.
+- Pendientes del propietario: ejecutar docs/PRUEBA-MANUAL-EDITOR-MOVIL.md en un teléfono físico (con y sin token) y aceptar el PR; sin merge ni deploy hasta autorización explícita.

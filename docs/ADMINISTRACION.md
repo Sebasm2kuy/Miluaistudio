@@ -14,7 +14,12 @@ falla el build si `out/admin/` reaparece).
    npm run dev
    ```
 2. Abrir `http://localhost:3000/admin` (solo existe en tu máquina).
-3. Pegar el token de GitHub **solo si** vas a publicar desde el panel (sección
+   - **Desde el teléfono:** el botón **📱 Editor móvil** del encabezado lleva a
+     `/Miluaistudio/editar/`, el editor visual donde se edita la invitación
+     tocando directamente sus elementos (textos, fotos, fecha, mapa, botones).
+     Guarda con el mismo flujo del panel; publicar sigue en `/admin`. El guion
+     de prueba para teléfono real está en `docs/PRUEBA-MANUAL-EDITOR-MOVIL.md`.
+3. Pegar el token de GitHub **solo si** vas a publicar o subir imágenes (sección
    **“Conexión con GitHub”**):
    - Usar un *fine-grained PAT* con permiso mínimo: `Contents: Read and write`
      únicamente para el repo `Sebasm2kuy/Miluaistudio`.

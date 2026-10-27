@@ -64,7 +64,18 @@ function AppNavigation({ scrollRef }: { scrollRef: React.RefObject<HTMLDivElemen
   return <Navigation hidden={hidden} scrollContainer={scrollRef} />
 }
 
-export default function InvitationExperience() {
+/**
+ * Props de la experiencia.
+ *  - modoEdicion: SOLO lo usa el editor móvil (/editar). Fuera de ahí
+ *    (invitaciones publicadas, demos, vista previa local, personalizador)
+ *    el valor por defecto false mantiene el comportamiento de siempre:
+ *    sobre, pantalla de carga, música de fondo y navegación intactos.
+ */
+interface InvitationExperienceProps {
+  modoEdicion?: boolean
+}
+
+export default function InvitationExperience({ modoEdicion = false }: InvitationExperienceProps) {
   const cfg = useConfig()
   const rootStyle = {
     '--theme-primary': cfg.colores.principal,
@@ -80,9 +91,11 @@ export default function InvitationExperience() {
   const on = (flag?: boolean) => flag !== false
   // Sobre animado: ON por defecto en invitaciones reales, OFF en demos.
   // El personalizador lo setea explícitamente según el switch del cliente.
+  // En modo edición se salta directo al contenido (el sobre no se edita
+  // tapándolo: se ajusta desde Ajustes).
   const mostrarSobre = s.sobre ?? !cfg.modoDemo
   const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>(
-    mostrarSobre ? 'envelope' : 'loading',
+    modoEdicion ? 'done' : mostrarSobre ? 'envelope' : 'loading',
   )
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -105,11 +118,11 @@ export default function InvitationExperience() {
   if (on(s.confirmacion)) bloques.push({ key: 'confirmar', el: <Rsvp /> })
 
   return (
-    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
+    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} data-modo-edicion={modoEdicion ? "true" : "false"} style={rootStyle}>
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
-      <MusicaFondo visible={phase === 'done'} />
+      {!modoEdicion && <MusicaFondo visible={phase === 'done'} />}
 
       {/* This is the scroll container — prevents iOS fixed-element shift */}
       <div ref={scrollRef} className="scroll-container">
@@ -117,12 +130,12 @@ export default function InvitationExperience() {
         <div
           className="page-reveal"
           style={{
-            opacity: phase === 'done' ? 1 : 0,
-            pointerEvents: phase === 'done' ? 'auto' : 'none',
+            opacity: phase === 'done' || modoEdicion ? 1 : 0,
+            pointerEvents: phase === 'done' || modoEdicion ? 'auto' : 'none',
           }}
         >
-          {phase === 'done' && <AppNavigation scrollRef={scrollRef} />}
-          <Hero active={phase === 'done'} scrollToTop={scrollToTop} />
+          {phase === 'done' && !modoEdicion && <AppNavigation scrollRef={scrollRef} />}
+          <Hero active={phase === 'done' || modoEdicion} scrollToTop={scrollToTop} />
 
           {bloques.map((bloque, i) => (
             <Fragment key={bloque.key}>
@@ -138,8 +151,8 @@ export default function InvitationExperience() {
           <div className="pb-24 sm:pb-32" />
         </div>
 
-        {phase !== 'done' && mostrarSobre && <Apertura tipo={cfg.apertura?.tipo || 'sobre'} onOpen={handleOpen} />}
-        {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
+        {!modoEdicion && phase !== 'done' && mostrarSobre && <Apertura tipo={cfg.apertura?.tipo || 'sobre'} onOpen={handleOpen} />}
+        {!modoEdicion && phase === 'loading' && <LoadingScreen onDone={handleDone} />}
       </div>
     </div>
   )

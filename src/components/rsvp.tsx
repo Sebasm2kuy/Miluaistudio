@@ -4,6 +4,7 @@ import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus
 import { useConfig } from '@/hooks/useConfig'
 import type { ResultadoRsvp } from '@/lib/contrato-backend'
 import { enviarRsvpPost } from '@/lib/rsvp-client'
+import Editable, { InerteEnEdicion } from '@/components/editor/Editable'
 
 
 function generarCodigo() {
@@ -304,11 +305,17 @@ export default function Rsvp() {
             </div>
           ) : (
             <>
-              <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">{cfg.rsvp.titulo}</h2>
-              <p className="mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base" style={{ color: 'var(--theme-card-muted)' }}>
-                {cfg.rsvp.subtitulo}
-              </p>
+              <Editable id="confirmar.titulo">
+                <h2 className="font-serif text-3xl sm:text-3xl md:text-5xl text-bordeaux italic mb-2 sm:mb-3">{cfg.rsvp.titulo}</h2>
+                <p className="mb-6 sm:mb-8 md:mb-12 italic leading-relaxed text-sm sm:text-sm md:text-base" style={{ color: 'var(--theme-card-muted)' }}>
+                  {cfg.rsvp.subtitulo}
+                </p>
+              </Editable>
 
+              {/* El formulario NO se toca en modo edición: InerteEnEdicion
+                  apaga toda interacción (inputs, contador y envío) para que
+                  ninguna confirmación se dispare por accidente. */}
+              <InerteEnEdicion>
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 text-left">
 
                 {/* === Paso 1: Checkbox confirmo asistencia === */}
@@ -472,10 +479,13 @@ export default function Rsvp() {
                   </p>
                 )}
               </form>
+              </InerteEnEdicion>
 
-              <p className="text-xs sm:text-xs md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
-                {cfg.rsvp.fechaLimite}
-              </p>
+              <Editable id="confirmar.fecha-limite">
+                <p className="text-xs sm:text-xs md:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-gold/40 italic mt-4 sm:mt-5">
+                  {cfg.rsvp.fechaLimite}
+                </p>
+              </Editable>
             </>
           )}
         </div>
@@ -485,16 +495,18 @@ export default function Rsvp() {
         <div
           className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
         >
-          <h2 className="font-serif text-3xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
-            {cfg.rsvp.regalos.titulo}
-          </h2>
-          <p className="mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed" style={{ color: 'var(--theme-card-muted)' }}>
-            &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
-          </p>
+          <Editable id="regalos.titulo">
+            <h2 className="font-serif text-3xl sm:text-3xl md:text-4xl text-bordeaux italic mb-4 sm:mb-6">
+              {cfg.rsvp.regalos.titulo}
+            </h2>
+            <p className="mb-6 sm:mb-10 italic text-sm sm:text-xs md:text-sm px-2 sm:px-4 leading-relaxed" style={{ color: 'var(--theme-card-muted)' }}>
+              &ldquo;{cfg.rsvp.regalos.subtitulo}&rdquo;
+            </p>
+          </Editable>
           {cfg.modoDemo && <p className="mb-6 rounded-xl border border-dashed p-3 text-xs" style={{ borderColor: 'color-mix(in srgb, var(--theme-accent, var(--theme-accent, #b8860b)) 35%, transparent)', color: 'var(--theme-card-muted)' }}>En la invitación personalizada se puede agregar información útil para los invitados.</p>}
 
-          {/* Abitab */}
-          {!cfg.modoDemo && <div
+          {/* Abitab — tocable en modo edición para editar título/número */}
+          {!cfg.modoDemo && <Editable id="regalos.abitab"><div
             className="p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden mb-3 sm:mb-4"
             style={{
               background: 'var(--theme-card-bg-solid)',
@@ -521,10 +533,11 @@ export default function Rsvp() {
                 <><Copy size={14} strokeWidth={2} /> Copiar número</>
               )}
             </button>
-          </div>}
+          </div></Editable>}
 
           {/* Bloque secundario (Santander / Mi Dinero) — solo se renderiza si tiene número configurado */}
           {cfg.rsvp.regalos.miDinero.numero && (
+            <Editable id="regalos.midinero">
             <div
               className="p-5 sm:p-8 md:p-12 rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3.5rem] border relative overflow-hidden"
               style={{
@@ -613,6 +626,7 @@ export default function Rsvp() {
                 </>
               )}
             </div>
+            </Editable>
           )}
         </div>
         )}
