@@ -2,6 +2,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useConfig } from '@/hooks/useConfig'
+import Editable from '@/components/editor/Editable'
 
 export default function Footer() {
   const cfg = useConfig()
@@ -42,12 +43,14 @@ export default function Footer() {
         }}
       />
       <div className={`css-fade-up flex flex-col items-center relative z-10`}>
-        <p
-          className={`font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6${shimmer}`}
-          style={glow}
-        >
-          {cfg.footer.apodo}
-        </p>
+        <Editable id="pie.apodo">
+          <p
+            className={`font-cursive text-5xl sm:text-7xl md:text-8xl mb-4 sm:mb-6${shimmer}`}
+            style={glow}
+          >
+            {cfg.footer.apodo}
+          </p>
+        </Editable>
 
         <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
           <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-highlight, #fcf6ba), var(--theme-accent-light, #d4af37))' }} />
@@ -55,45 +58,53 @@ export default function Footer() {
           <div className="h-px w-12 sm:w-16 md:w-20" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), var(--theme-highlight, #fcf6ba), transparent)' }} />
         </div>
 
-        <p
-          className={`uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold${shimmer}`}
-          style={glowSoft}
-        >
-          {cfg.footer.ubicacion}
-        </p>
-
-        <p
-          className={`mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic cursor-default select-none${shimmer}`}
-          style={glowSoft}
-          onClick={handleFraseClick}
-        >
-          {cfg.footer.frase}
-        </p>
-
-        <a
-          href={cfg.evento.hashtagUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 sm:mt-10 md:mt-14 flex items-center gap-2 sm:gap-3 group"
-        >
-          {/* Elegant Instagram icon */}
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5 sm:w-6 sm:h-6 text-goldLight/80 group-hover:text-goldLight transition-colors duration-300"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <Editable id="pie.ubicacion">
+          <p
+            className={`uppercase tracking-[0.4em] sm:tracking-[0.6em] md:tracking-[0.8em] text-sm sm:text-sm md:text-base font-bold${shimmer}`}
+            style={glowSoft}
           >
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="5" />
-            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
-          </svg>
-          <p className={`font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] group-hover:opacity-90 transition-opacity duration-300${shimmer}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
-            {cfg.evento.hashtag}
+            {cfg.footer.ubicacion}
           </p>
-        </a>
+        </Editable>
+
+        {/* En modo edición el Editable tapa el gesto de 5 toques: la frase
+            se edita en su panel y el atajo secreto no se dispara. */}
+        <Editable id="pie.frase">
+          <p
+            className={`mt-5 sm:mt-6 md:mt-8 text-base sm:text-base md:text-lg font-serif italic cursor-default select-none${shimmer}`}
+            style={glowSoft}
+            onClick={handleFraseClick}
+          >
+            {cfg.footer.frase}
+          </p>
+        </Editable>
+
+        <Editable id="pie.hashtag">
+          <a
+            href={cfg.evento.hashtagUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 sm:mt-10 md:mt-14 flex items-center gap-2 sm:gap-3 group"
+          >
+            {/* Elegant Instagram icon */}
+            <svg
+              viewBox="0 0 24 24"
+              className="w-5 h-5 sm:w-6 sm:h-6 text-goldLight/80 group-hover:text-goldLight transition-colors duration-300"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+            <p className={`font-cursive text-xl sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] group-hover:opacity-90 transition-opacity duration-300${shimmer}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
+              {cfg.evento.hashtag}
+            </p>
+          </a>
+        </Editable>
       </div>
     </footer>
   )

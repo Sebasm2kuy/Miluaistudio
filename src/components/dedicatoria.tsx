@@ -1,5 +1,6 @@
 'use client'
 import { useConfig } from '@/hooks/useConfig'
+import Editable from '@/components/editor/Editable'
 
 export default function Dedicatoria() {
   const cfg = useConfig()
@@ -30,21 +31,27 @@ export default function Dedicatoria() {
           }}
         />
 
-        <p className={`css-fade font-serif italic text-[1.75rem] sm:text-2xl md:text-4xl mb-8 sm:mb-8 leading-relaxed relative z-10`} style={{ color: light ? 'var(--theme-primary)' : 'var(--theme-highlight, #fcf6ba)' }}>
-          &ldquo;{cfg.dedicatoria.cita}&rdquo;
-        </p>
-
-        <p className={`css-fade text-base sm:text-base md:text-base leading-relaxed mb-8 sm:mb-8 px-2 sm:px-4 relative z-10`} style={{ color: light ? 'color-mix(in srgb, var(--theme-primary) 80%, var(--theme-ivory))' : 'color-mix(in srgb, var(--theme-highlight, #e8d48b) 65%, transparent)' }}>
-          {cfg.dedicatoria.cuerpo}
-        </p>
-
-        <div className={`css-fade-up flex items-center justify-center gap-3 relative z-10`}>
-          <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-accent-light, #d4af37))' }} />
-          <p className={`font-cursive text-3xl sm:text-3xl md:text-4xl ${light ? '' : 'text-shimmer text-shimmer-once'}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
-            {cfg.dedicatoria.firma}
+        <Editable id="dedicatoria.cita">
+          <p className={`css-fade font-serif italic text-[1.75rem] sm:text-2xl md:text-4xl mb-8 sm:mb-8 leading-relaxed relative z-10`} style={{ color: light ? 'var(--theme-primary)' : 'var(--theme-highlight, #fcf6ba)' }}>
+            &ldquo;{cfg.dedicatoria.cita}&rdquo;
           </p>
-          <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), transparent)' }} />
-        </div>
+        </Editable>
+
+        <Editable id="dedicatoria.cuerpo">
+          <p className={`css-fade text-base sm:text-base md:text-base leading-relaxed mb-8 sm:mb-8 px-2 sm:px-4 relative z-10`} style={{ color: light ? 'color-mix(in srgb, var(--theme-primary) 80%, var(--theme-ivory))' : 'color-mix(in srgb, var(--theme-highlight, #e8d48b) 65%, transparent)' }}>
+            {cfg.dedicatoria.cuerpo}
+          </p>
+        </Editable>
+
+        <Editable id="dedicatoria.firma">
+          <div className={`css-fade-up flex items-center justify-center gap-3 relative z-10`}>
+            <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, transparent, var(--theme-accent-light, #d4af37))' }} />
+            <p className={`font-cursive text-3xl sm:text-3xl md:text-4xl ${light ? '' : 'text-shimmer text-shimmer-once'}`} style={light ? { color: 'var(--theme-accent)' } : undefined}>
+              {cfg.dedicatoria.firma}
+            </p>
+            <div className="h-px w-10 sm:w-16" style={{ background: 'linear-gradient(90deg, var(--theme-accent-light, #d4af37), transparent)' }} />
+          </div>
+        </Editable>
       </div>
     </section>
   )

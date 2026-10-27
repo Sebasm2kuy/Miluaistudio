@@ -1,6 +1,7 @@
 'use client'
 import { useConfig } from '@/hooks/useConfig'
 import { DesignAdornoGlyph, SparkleGlyph } from '@/components/design-ornaments'
+import Editable from '@/components/editor/Editable'
 import type { DesignAdorno } from '@/data/invitation-designs'
 
 interface HeroProps { active: boolean; scrollToTop?: () => void }
@@ -39,17 +40,21 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
       <div className="flex flex-col items-center relative z-10">
 
         {/* LINEA 1: Mis XV Años */}
-        <p
-          className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 font-bold"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
-        >
-          {cfg.evento.tipo}
-        </p>
+        <Editable id="portada.tipo">
+          <p
+            className="hero-line hero-line-1 uppercase tracking-[0.4em] sm:tracking-[0.7em] md:tracking-[1.4em] text-base sm:text-lg md:text-xl mb-6 sm:mb-8 md:mb-10 font-bold"
+            style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
+          >
+            {cfg.evento.tipo}
+          </p>
+        </Editable>
 
         {/* LINEA 2: Nombre — UN solo text-shadow sutil */}
-        <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
-          <span style={{ color: 'var(--theme-highlight, #fcf6ba)', textShadow: light ? '0 2px 18px rgba(255,255,255,0.5)' : '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
-        </h1>
+        <Editable id="portada.nombre">
+          <h1 className="hero-line hero-line-2 font-cursive text-8xl sm:text-[6.5rem] md:text-9xl lg:text-[11rem] leading-none mb-6 sm:mb-8 md:mb-10">
+            <span style={{ color: 'var(--theme-highlight, #fcf6ba)', textShadow: light ? '0 2px 18px rgba(255,255,255,0.5)' : '0 4px 20px rgba(0,0,0,0.7)' }}>{cfg.evento.nombre}</span>
+          </h1>
+        </Editable>
 
         {/* LINEA 3: Línea decorativa */}
         <div
@@ -60,23 +65,27 @@ export default function Hero({ active, scrollToTop }: HeroProps) {
         />
 
         {/* LINEA 4: Fecha */}
-        <p
-          className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
-        >
-          {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'color-mix(in srgb, var(--theme-highlight, #fcf6ba) 40%, transparent)' }}>&bull;</span>{cfg.evento.anio}
-        </p>
+        <Editable id="portada.fecha">
+          <p
+            className="hero-line hero-line-4 font-serif italic text-xl sm:text-2xl md:text-2xl lg:text-4xl tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em]"
+            style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
+          >
+            {cfg.evento.fecha}<span className="mx-2 sm:mx-3 md:mx-4" style={{ color: 'color-mix(in srgb, var(--theme-highlight, #fcf6ba) 40%, transparent)' }}>&bull;</span>{cfg.evento.anio}
+          </p>
+        </Editable>
 
         {/* LINEA 5: Salón */}
-        <p
-          className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
-          style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
-        >
-          {cfg.evento.lugar}
-          {cfg.evento.ubicacion ? (
-            <> &bull; {cfg.evento.ubicacion}</>
-          ) : null}
-        </p>
+        <Editable id="portada.lugar">
+          <p
+            className="hero-line hero-line-5 mt-4 sm:mt-5 md:mt-6 text-sm sm:text-base md:text-base uppercase tracking-[0.3em] sm:tracking-[0.55em] md:tracking-[0.7em] font-bold"
+            style={{ color: 'var(--theme-highlight, #e8d48b)', textShadow }}
+          >
+            {cfg.evento.lugar}
+            {cfg.evento.ubicacion ? (
+              <> &bull; {cfg.evento.ubicacion}</>
+            ) : null}
+          </p>
+        </Editable>
       </div>
 
       {/* Scroll indicator */}

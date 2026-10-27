@@ -18,6 +18,8 @@
     "src/lib/activos-editor.ts",
     "src/lib/github-deploy.ts",
     "src/lib/invitaciones-publicadas.ts",
+    "src/lib/editor-config.ts",
+    "src/lib/editor-campos.ts",
     "src/data/invitacion-publicada.ts",
     "src/data/config-schema.ts",
     "src/data/store-tokens.ts"

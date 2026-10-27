@@ -68,3 +68,22 @@ export function clearConfig(): void {
     // Storage can be unavailable.
   }
 }
+
+/**
+ * Lee la configuración guardada por el panel/editor en este navegador,
+ * con la misma verificación de versión que useConfig(). Devuelve null si
+ * no hay nada guardado, la versión no coincide o el JSON es inválido.
+ * Solo para herramientas locales (panel y editor móvil); la UI pública
+ * sigue usando useConfig()/ConfigProvider sin cambios.
+ */
+export function leerConfigGuardada(): SiteConfig | null {
+  try {
+    const savedVersion = localStorage.getItem(VERSION_KEY)
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (savedVersion !== CONFIG_VERSION || !saved) return null
+    const parsed = JSON.parse(saved) as SiteConfig
+    return parsed?.evento?.nombre ? parsed : null
+  } catch {
+    return null
+  }
+}

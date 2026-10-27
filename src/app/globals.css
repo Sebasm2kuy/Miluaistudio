@@ -618,3 +618,81 @@ html:has([data-page="storefront"]) body {
 @keyframes miluaSpin {
   to { transform: rotate(360deg); }
 }
+
+/* ============================================================
+   EDITOR MÓVIL (/editar) — capa de edición directa
+   ------------------------------------------------------------
+   Solo activa dentro del editor (clase .modo-edicion en la raíz
+   de /editar). En invitaciones publicadas, demos y vista previa
+   estas reglas no existen: la invitación se ve igual que siempre.
+   ============================================================ */
+@keyframes editorSheetSube {
+  from { transform: translateY(28px); opacity: 0.55; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* El contenedor fijo de la invitación respeta las barras del editor:
+   nada de elementos editables queda tapado detrás de una barra. */
+.editor-con-barra .scroll-container {
+  top: var(--editor-bar-arriba, 0px);
+  bottom: var(--editor-bar-abajo, 0px);
+}
+
+/* Elementos tocables: contorno dorado punteado discreto. */
+.modo-edicion [data-editable] {
+  pointer-events: auto;
+  position: relative;
+  outline: 1.5px dashed color-mix(in srgb, #d4af37 55%, transparent);
+  outline-offset: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.modo-edicion [data-editable]:active {
+  outline: 2px solid #d4af37;
+  background: color-mix(in srgb, #d4af37 10%, transparent);
+}
+.modo-edicion [data-editable][data-editable-activo] {
+  outline: 2px solid #d4af37;
+  background: color-mix(in srgb, #d4af37 8%, transparent);
+}
+/* Los controles interiores (enlaces, botones, inputs, iframes) no
+   reciben el tap: todo toque abre el panel de edición del elemento. */
+.modo-edicion [data-editable] > * {
+  pointer-events: none;
+}
+/* Zonas inerte en modo edición (formulario de RSVP, lightbox…). */
+.modo-edicion [data-inerte] {
+  pointer-events: none !important;
+}
+
+/* Distintivo del elemento activo mientras su panel está abierto. */
+.editable-badge {
+  position: absolute;
+  top: -11px;
+  right: -11px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: #d4af37;
+  color: #292522;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* Portada: sin animaciones ni hint de scroll mientras se edita
+   (las líneas deben ser visibles y tocables de inmediato). */
+.modo-edicion .hero-line {
+  opacity: 1 !important;
+  animation: none !important;
+}
+.modo-edicion .hero-scroll {
+  display: none;
+}

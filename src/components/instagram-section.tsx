@@ -1,6 +1,7 @@
 'use client'
 import { Instagram } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
+import Editable from '@/components/editor/Editable'
 
 /**
  * Sección de Instagram: perfil + hashtag para juntar las fotos de los invitados.
@@ -25,14 +26,16 @@ export default function InstagramSection() {
         <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-bordeaux italic mt-4 sm:mt-5">
           Compartí tu noche
         </h2>
-        <p className="mt-3 sm:mt-4 text-sm sm:text-xs md:text-sm leading-relaxed px-2" style={{ color: 'var(--theme-card-muted)' }}>
-          Seguí <span className="text-gold font-semibold">{ig.usuario.startsWith('@') ? ig.usuario : '@' + ig.usuario}</span>
-          {esHashtagReal ? (
-            <> y etiquetá tus fotos con <span className="text-gold font-semibold">{hashtag}</span> para que queden todas juntas.</>
-          ) : (
-            ' para ver y revivir todos los momentos de la celebración.'
-          )}
-        </p>
+        <Editable id="instagram.texto">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-xs md:text-sm leading-relaxed px-2" style={{ color: 'var(--theme-card-muted)' }}>
+            Seguí <span className="text-gold font-semibold">{ig.usuario.startsWith('@') ? ig.usuario : '@' + ig.usuario}</span>
+            {esHashtagReal ? (
+              <> y etiquetá tus fotos con <span className="text-gold font-semibold">{hashtag}</span> para que queden todas juntas.</>
+            ) : (
+              ' para ver y revivir todos los momentos de la celebración.'
+            )}
+          </p>
+        </Editable>
         <a
           href={ig.url}
           target="_blank"

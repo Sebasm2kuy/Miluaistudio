@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { CalendarPlus, PartyPopper } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 import { fechaEventoEnMontevideo } from '@/lib/fechas'
+import Editable from '@/components/editor/Editable'
 
 // Simple digit display — no flip animation, no perspective, no layout recalc
 function FlipUnit({ value, label }: { value: number; label: string }) {
@@ -269,9 +270,11 @@ export default function Countdown() {
         className={`css-fade-up rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-4 sm:p-6 md:p-20 text-center relative overflow-hidden ${clockStyle === 'classic' || clockStyle === 'gold-glass' ? 'glass-card' : ''}`}
         style={{ background: cardBg, border: cardBorder }}
       >
-        <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16" style={titleStyle}>
-          {cfg.countdown.titulo}
-        </h2>
+        <Editable id="detalles.titulo">
+          <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16" style={titleStyle}>
+            {cfg.countdown.titulo}
+          </h2>
+        </Editable>
         {estadoEvento === 'cargando' ? (
           <div className="h-16" aria-hidden="true" />
         ) : estadoEvento === 'pasado' ? (
@@ -302,23 +305,28 @@ export default function Countdown() {
                 <PartyPopper size={14} /> ¡Es hoy!
               </p>
             )}
-            <div className="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4 stagger">
-              {Object.entries(timeLeft).map(([label, val]) => (
-                <div key={label} className="css-fade-up">
-                  <ClockUnit value={val} label={labels[label]} />
-                </div>
-              ))}
-            </div>
-            <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
-              <button
-                onClick={addToCalendar}
-                className="inline-flex items-center gap-2.5 sm:gap-3 text-gold font-bold text-sm sm:text-sm md:text-xs uppercase tracking-widest border-2 px-6 sm:px-7 md:px-10 py-3 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
-                style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
-              >
-                <CalendarPlus size={16} strokeWidth={1.5} />
-                {cfg.countdown.botonCalendario}
-              </button>
-            </div>
+            <Editable id="detalles.etiquetas">
+              <div className="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4 stagger">
+                {Object.entries(timeLeft).map(([label, val]) => (
+                  <div key={label} className="css-fade-up">
+                    <ClockUnit value={val} label={labels[label]} />
+                  </div>
+                ))}
+              </div>
+            </Editable>
+            <Editable id="detalles.calendario">
+              <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
+                <button
+                  type="button"
+                  onClick={addToCalendar}
+                  className="inline-flex items-center gap-2.5 sm:gap-3 text-gold font-bold text-sm sm:text-sm md:text-xs uppercase tracking-widest border-2 px-6 sm:px-7 md:px-10 py-3 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
+                  style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+                >
+                  <CalendarPlus size={16} strokeWidth={1.5} />
+                  {cfg.countdown.botonCalendario}
+                </button>
+              </div>
+            </Editable>
           </>
         )}
       </div>

@@ -30,12 +30,19 @@ const notes = [];
 function fail(msg) { errors.push(msg); }
 function ok(msg) { notes.push('OK  ' + msg); }
 
-// ---- 1. El panel de administración no debe existir en el artefacto ----
+// ---- 1. Las herramientas locales no deben existir en el artefacto ----
+// (panel de administración y editor móvil: solo uso en desarrollo local)
 const ADMIN = join(OUT, 'admin');
 if (existsSync(ADMIN)) {
   fail('RUTA PROHIBIDA: out/admin/ existe en la exportación. El panel de administración no puede publicarse.');
 } else {
   ok('out/admin/ no está en el artefacto público');
+}
+const EDITAR = join(OUT, 'editar');
+if (existsSync(EDITAR)) {
+  fail('RUTA PROHIBIDA: out/editar/ existe en la exportación. El editor móvil no puede publicarse.');
+} else {
+  ok('out/editar/ no está en el artefacto público');
 }
 
 // ---- 2. Rutas obligatorias ----

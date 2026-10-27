@@ -3,6 +3,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 import { interpretarRespuestaFoto, parseGasResponse } from '@/lib/contrato-backend'
+import Editable, { InerteEnEdicion } from '@/components/editor/Editable'
+import { useEditorEdicion } from '@/components/editor/EditorProvider'
 
 const CHUNK_SIZE = 4000
 
@@ -39,6 +41,8 @@ type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'pendiente' | '
 
 export default function Gallery() {
   const cfg = useConfig()
+  const editor = useEditorEdicion()
+  const editando = editor?.modoEdicion === true
   const PHOTO_UPLOAD_URL = cfg.galeria.photoUploadUrl
   const originalPhotos = cfg.galeria.fotos.map(p => ({
     src: p.webp,
@@ -87,7 +91,13 @@ export default function Gallery() {
     fetchPhotos()
   }, [PHOTO_UPLOAD_URL])
 
-  const openLightbox = (idx: number) => setLightboxIdx(idx)
+  const openLightbox = (idx: number) => {
+    // En modo edición el lightbox es una distracción: la foto se toca para
+    // editarla, no para verla ampliada. (El tap sobre la foto ya abre el
+    // editor; esta guardia cubre las fotos subidas por invitados.)
+    if (editando) return
+    setLightboxIdx(idx)
+  }
   const closeLightbox = () => setLightboxIdx(null)
   const prev = () => setLightboxIdx(p => (p !== null ? (p - 1 + photos.length) % photos.length : null))
   const next = () => setLightboxIdx(p => (p !== null ? (p + 1) % photos.length : null))
@@ -207,10 +217,12 @@ export default function Gallery() {
   return (
     <section id="galeria" className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
       <div className={`css-fade-up glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-24 text-center relative overflow-hidden`}>
-        <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{cfg.galeria.titulo}</h2>
-        <p className="italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2" style={{ color: 'var(--theme-card-muted)' }}>
-          {cfg.galeria.subtitulo}
-        </p>
+        <Editable id="galeria.titulo">
+          <h2 className="font-serif italic text-3xl sm:text-3xl md:text-5xl text-bordeaux mb-2 sm:mb-3">{cfg.galeria.titulo}</h2>
+          <p className="italic mb-6 sm:mb-10 md:mb-16 text-sm sm:text-sm md:text-base px-2" style={{ color: 'var(--theme-card-muted)' }}>
+            {cfg.galeria.subtitulo}
+          </p>
+        </Editable>
 
         {/* ===== Horizontal Carousel ===== */}
         <div className="relative">
@@ -252,7 +264,7 @@ export default function Gallery() {
             {photos.map((photo, idx) => {
               const isOriginal = photo.type === 'original'
               const origIdx = isOriginal ? parseInt(photo.id.split('-')[1]) : -1
-              return (
+              const tarjeta = (
                 <div
                   key={photo.id}
                   data-carousel-card
@@ -308,28 +320,42 @@ export default function Gallery() {
                   </div>
                 </div>
               )
+              // Foto propia de la invitación: tocable para editarla (reemplazar,
+              // quitar). Las compartidas por invitados no son editables y solo
+              // abren el lightbox fuera del modo edición.
+              return isOriginal ? (
+                <Editable key={photo.id} id="galeria.foto" idx={origIdx} className="flex-shrink-0 snap-center">
+                  {tarjeta}
+                </Editable>
+              ) : (
+                tarjeta
+              )
             })}
           </div>
         </div>
 
-        {/* Upload button — abre el modal de subida directa */}
-        <button
-          disabled={cfg.modoDemo}
-          onClick={() => setUploadModal(true)}
-          className="mt-6 sm:mt-8 md:mt-10 mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
-          style={{
-            borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)',
-            color: 'var(--theme-accent, #b8860b)',
-            background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)' }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)' }}
-        >
-          <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
-          <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
-            {cfg.galeria.botonSubir}
-          </span>
-        </button>
+        {/* Upload button — abre el modal de subida directa. En modo edición
+            el Editable captura el tap y abre el editor del botón/backend. */}
+        <Editable id="galeria.boton" como="div" className="mt-6 sm:mt-8 md:mt-10">
+          <button
+            type="button"
+            disabled={cfg.modoDemo}
+            onClick={() => setUploadModal(true)}
+            className="mx-auto flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 px-10 sm:px-16 rounded-full border transition-[color,border-color,background-color,transform] duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)',
+              color: 'var(--theme-accent, #b8860b)',
+              background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(184, 134, 11, 0.6)'; e.currentTarget.style.color = '#8a6b0d'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 10%, transparent)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--theme-accent, #b8860b) 35%, transparent)'; e.currentTarget.style.color = 'var(--theme-accent, #b8860b)'; e.currentTarget.style.background = 'color-mix(in srgb, var(--theme-accent, #b8860b) 6%, transparent)' }}
+          >
+            <Camera size={20} className="sm:w-5 sm:h-5" strokeWidth={1.5} />
+            <span className="font-cursive text-xl sm:text-2xl md:text-3xl italic" style={{ color: 'inherit' }}>
+              {cfg.galeria.botonSubir}
+            </span>
+          </button>
+        </Editable>
       </div>
 
       {/* ===== Upload Modal ===== */}

@@ -1,0 +1,60 @@
+# Prueba manual del editor móvil en un teléfono físico
+
+**Ruta:** `/Miluaistudio/editar/` (solo en desarrollo local — esta página NO se publica)
+**Cómo llegar desde el teléfono:** con `npm run dev` corriendo en la compu, abrir desde el navegador del celular `http://<IP-de-la-compu>:3000/Miluaistudio/editar/` (misma red Wi-Fi). También hay un botón «📱 Editor móvil» en el panel `/admin`.
+
+> Regla de honestidad: marcar cada paso solo si se hizo REALMENTE en el teléfono. Lo probado solo con emulador o navegador de escritorio no cuenta para esta lista.
+
+## Preparación
+
+- [ ] 1. Con el dev server corriendo, abrir `/Miluaistudio/editar/` en el teléfono. Debe verse la invitación completa con la barra superior (←, Editar/Previa, Guardar) y la barra inferior con «Ajustes».
+
+## Edición directa
+
+- [ ] 2. Recorrer la invitación completa deslizando hacia arriba y abajo. El scroll debe ser natural, sin cortes ni zonas muertas.
+- [ ] 3. Verificar que los elementos editables tienen un contorno dorado punteado discreto (portada, dedicatoria, cuenta regresiva, ubicación, cronograma, galería, música, confirmación, regalos, cierre). Los NO editables (adornos, divisores) no muestran contorno.
+- [ ] 4. Tocar el nombre de la portada: se abre el panel inferior «Nombre de la portada». Escribir otro nombre: el texto de la invitación debe cambiar EN VIVO detrás del panel.
+- [ ] 5. Tocar «Listo». Volver a tocar el nombre: el valor guardado debe ser el nuevo.
+- [ ] 6. Tocar la fecha de la portada, cambiar el texto y tocar «Cancelar»: el cambio debe revertirse.
+- [ ] 7. Editar la hora/fecha real del evento desde «La Gran Noche» (campo fecha y hora) y verificar que la cuenta regresiva se recalcula.
+- [ ] 8. Tocar el mapa: NO debe abrirse Google Maps; debe abrir el editor del mapa. Ídem el botón «Cómo llegar» (debe editar el enlace, no abrir Maps).
+- [ ] 9. Tocar un momento del cronograma y editarlo. Con el panel abierto, usar «Quitar este momento» (pide confirmación) y verificar que desaparece. Agregar otro desde Ajustes → Cronograma.
+- [ ] 10. Con el panel de un elemento abierto, girar el teléfono (si aplica) y verificar que el panel sigue usable.
+
+## Fotografías
+
+- [ ] 11. Tocar una foto de la galería: se abre «Foto de la galería #N» con vista previa, «Reemplazar foto», «Quitar», y acciones «Agregar otra foto» / «Quitar esta foto».
+- [ ] 12. Tocar «Reemplazar foto» SIN token cargado: debe mostrarse el mensaje honesto «Para subir la foto hace falta el token…» y NO debe decir «Subida».
+- [ ] 13. Pegar el token en Ajustes → Conexión con GitHub, tocar «Verificar y usar» (debe decir «Token válido»).
+- [ ] 14. Repetir el reemplazo con una foto REAL del teléfono: la vista previa aparece mientras sube («Subiendo…»), luego «Foto subida.» y la invitación muestra la foto nueva.
+- [ ] 15. Intentar subir un archivo que no sea imagen (ej. un PDF renombrado .jpg): debe rechazarse con mensaje entendible y la foto anterior debe quedar intacta.
+- [ ] 16. Quitar una foto y agregar una nueva desde Ajustes → Galería. Guardar y verificar en la vista previa.
+
+## Teclado virtual y paneles
+
+- [ ] 17. Con el teclado virtual abierto dentro de un panel: los campos siguen visibles, el panel scrollea y los botones Cancelar/Listo siguen alcanzables.
+- [ ] 18. Cerrar el teclado y verificar que el panel sigue en su lugar. Cerrar el panel con «Listo»: la invitación debe quedar en la MISMA posición de scroll en la que estaba.
+
+## Modos
+
+- [ ] 19. Alternar a «Previa»: desaparecen los contornos, aparece la experiencia completa del invitado (sobre/carga/música/navegación).
+- [ ] 20. En Previa, completar el flujo de confirmación (RSVP) con datos ficticios: el formulario debe funcionar normal.
+- [ ] 21. Volver a «Editar»: el contenido editado sigue ahí y los contornos vuelven.
+
+## Guardado y persistencia
+
+- [ ] 22. Tocar «Guardar» (debe decir «Guardado ✓») y cerrar el navegador del teléfono por completo. Reabrir `/Miluaistudio/editar/`: los cambios deben seguir.
+- [ ] 23. Abrir `/Miluaistudio/previsualizar/`: la invitación debe reflejar los cambios guardados.
+- [ ] 24. Con cambios sin guardar, en escritorio intentar cerrar la pestaña: debe avisar (en el teléfono este aviso puede no aparecer: es mejor esfuerzo del navegador).
+
+## Escritorio (regresión)
+
+- [ ] 25. Abrir `/admin` en la compu: todo el formulario funciona igual que siempre, con el nuevo botón «📱 Editor móvil».
+- [ ] 26. Editar algo desde `/editar` en la compu y verificar que `/admin` → «Ver vista previa» muestra los mismos cambios (misma fuente localStorage).
+- [ ] 27. Verificar que `/i/ejemplo-boda/` y el resto del sitio público se ven idénticos a antes (sin contornos ni cambios de comportamiento).
+
+## Resultado
+
+- Fecha de ejecución: ______
+- Dispositivo / navegador: ______
+- Pasos fallidos (si los hay): ______
