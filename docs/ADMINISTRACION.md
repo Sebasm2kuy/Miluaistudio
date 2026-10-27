@@ -58,3 +58,56 @@ npm run build      # incluye prune + verify de la exportación
 ```
 
 Si `verify-export` falla, no publicar: revisar qué ruta/asset reintrodujo el problema.
+
+## Publicar invitaciones con URL propia (`/i/<slug>/`)
+
+Cada invitación publicada vive en **su propio archivo JSON**
+(`content/invitaciones/<slug>.json`) y genera **su propia página estática**
+(`/i/<slug>/`) durante el build. Publicar una nueva no sobrescribe las
+anteriores; actualizar el mismo slug conserva el enlace y la fecha de primera
+publicación.
+
+### Flujo recomendado (panel local)
+
+1. `npm run dev` → `http://localhost:3000/admin`.
+2. Cargar la configuración de la invitación (o importar el JSON del cliente).
+3. Sección **“Publicar invitación”**:
+   - Elegir el **slug** (sugerido a partir del nombre del evento; minúsculas,
+     números y guiones; no puede chocar con rutas reservadas).
+   - **Ver vista previa**: guarda la configuración en este navegador y abre
+     `/previsualizar/`, que renderiza la MISMA experiencia que verán los
+     invitados (`InvitationExperience` real, no una maqueta).
+   - **Publicar en GitHub**: guarda el JSON en `main` vía API de GitHub y
+     muestra el resultado REAL (creada / actualizada / error) con el slug y
+     la URL. Guardar en el panel o iniciar la petición NO se presenta como
+     publicación; ante un error la configuración queda intacta para reintentar.
+   - **Descargar JSON**: alternativa sin token — baja el JSON publicable
+     (`content/invitaciones/<slug>.json`) para commitearlo a mano por PR.
+4. El deploy a GitHub Pages (~2-3 min) genera `out/i/<slug>/index.html`.
+   `scripts/verify-export.mjs` valida en cada build que cada JSON publicado
+   tenga su página y que los assets que enlaza existan en el export.
+
+### Reglas que sostiene el flujo
+
+- La representación publicada es **JSON puro** (sin funciones ni objetos del
+  editor) con `esquema: 1`, slug, fechas y la `config` completa.
+- Publicar marca `modoDemo: false`: la confirmación de asistencia funciona
+  contra el backend configurado (`rsvp.googleSheetUrl`), con estados
+  guardado / pendiente / error y el fallback de WhatsApp ya existentes.
+- Las demos del catálogo siguen usando `createDemoConfig` (sintéticas,
+  independientes de las invitaciones publicadas).
+- Las invitaciones publicadas van con `noindex` (se comparten con enlace
+  directo a invitados, no se promueven a buscadores).
+
+### Recursos (imágenes) de la invitación
+
+- Imágenes que el **propietario** sube desde el editor para mostrarse en la
+  invitación: carpeta `public/assets-invitaciones/`, servida en
+  `/Miluaistudio/assets-invitaciones/<archivo>`. El uploader valida tamaño
+  (máx. 5 MB), extensión (JPG/PNG/WebP), MIME y la firma real del archivo
+  (magic bytes), con nombres saneados y únicos.
+- Fotos que suben los **invitados** (“Dejale un recuerdo”): siguen por el
+  backend de moderación (`google-apps-script/photo-server.gs` → Google Drive)
+  y NUNCA entran al repositorio. La regla `out/uploads/` sin imágenes sigue
+  activa en `verify-export`.
+

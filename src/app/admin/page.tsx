@@ -17,12 +17,22 @@
  *  Ver docs/ADMINISTRACION.md para el flujo completo.
  */
 
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import type { SiteConfig } from '@/data/config-schema'
 import { CONFIG_DEMO_BASE } from '@/data/demo-config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES, COLOR_PRESETS, BACKGROUND_PRESETS } from '@/data/admin-options'
-import { deployToGitHub, uploadToGitHub } from '@/lib/github-deploy'
+import { deployToGitHub, uploadToGitHub, publicarInvitacionEnGitHub, type ResultadoPublicacion } from '@/lib/github-deploy'
+import { sincronizarFondoConGaleria } from '@/lib/activos-editor'
+import {
+  crearInvitacionPublicada,
+  normalizarSlug,
+  esSlugValido,
+  motivoSlugInvalido,
+  urlInvitacion,
+  urlPublicaInvitacion,
+  serializarInvitacion,
+} from '@/data/invitacion-publicada'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -426,6 +436,11 @@ export default function AdminPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const tokenInputRef = useRef<HTMLInputElement>(null)
 
+  // --- Publicación de invitaciones (/i/<slug>/) ---
+  const [slugPublicacion, setSlugPublicacion] = useState('')
+  const [publicando, setPublicando] = useState(false)
+  const [resultadoPublicacion, setResultadoPublicacion] = useState<ResultadoPublicacion | null>(null)
+
   // Force scroll fix on mount
   useEffect(() => {
     const html = document.documentElement
@@ -590,16 +605,9 @@ export default function AdminPage() {
     // Auto-sync fondo.fotos with galeria.fotos when fondo is in photo mode.
     // This prevents the background from showing stale/removed gallery photos.
     // Mode is "photos" when fondo.fotos is non-empty AND first entry is not a gradient.
+    // Lógica extraída a src/lib/activos-editor.ts para probarla con tests.
     // ------------------------------------------------------------------
-    const isGradientMode = cfg.fondo.fotos[0]?.startsWith('gradient:') === true
-    const cfgToDeploy: SiteConfig = isGradientMode
-      ? cfg
-      : {
-          ...cfg,
-          fondo: {
-            fotos: cfg.galeria.fotos.map(f => f.webp).filter(Boolean),
-          },
-        }
+    const cfgToDeploy: SiteConfig = sincronizarFondoConGaleria(cfg)
 
     sessionStorage.setItem('milu_github_token', token)
     saveConfig(cfgToDeploy)
@@ -619,6 +627,116 @@ export default function AdminPage() {
       setTimeout(() => setDeployResult(null), 8000)
     }
   }, [cfg, githubToken])
+
+  // =====================================================================
+  // Publicación de invitaciones: genera la representación publicable y
+  // la guarda como SU PROPIO archivo (content/invitaciones/<slug>.json).
+  // El resultado muestra el estado real (creada/actualizada/error):
+  // guardar en localStorage o iniciar la petición NO se presenta como
+  // publicación. Ante error la configuración del panel queda intacta.
+  // =====================================================================
+
+  // Slug sugerido a partir del nombre/apodo cargados (editable)
+  const slugSugerido = useMemo(
+    () => normalizarSlug(cfg.evento.apodo || cfg.evento.nombre || ''),
+    [cfg.evento.apodo, cfg.evento.nombre],
+  )
+  const slugFinal = slugPublicacion.trim() ? normalizarSlug(slugPublicacion) : slugSugerido
+  const slugPublicable = slugFinal && esSlugValido(slugFinal) ? slugFinal : ''
+
+  const handlePublicar = useCallback(async () => {
+    const token = githubToken.trim()
+    if (!slugPublicable) {
+      setResultadoPublicacion({
+        success: false,
+        slug: slugFinal,
+        url: '',
+        urlAbsoluta: '',
+        creado: false,
+        message: motivoSlugInvalido(slugFinal) || 'Elegí un slug válido antes de publicar.',
+      })
+      return
+    }
+    if (!token) {
+      setResultadoPublicacion({
+        success: false,
+        slug: slugPublicable,
+        url: '',
+        urlAbsoluta: '',
+        creado: false,
+        message: 'Falta el GitHub Token. Pegalo en la sección Deploy y probá de nuevo.',
+      })
+      return
+    }
+
+    setPublicando(true)
+    setResultadoPublicacion(null)
+    try {
+      const invitacion = crearInvitacionPublicada({
+        slug: slugPublicable,
+        config: cfg,
+        ahora: new Date(),
+      })
+      // La publicación NO toca el estado del panel: ante cualquier error
+      // la configuración queda intacta para reintentar.
+      const resultado = await publicarInvitacionEnGitHub(invitacion, token)
+      setResultadoPublicacion(resultado)
+    } catch (err) {
+      setResultadoPublicacion({
+        success: false,
+        slug: slugPublicable,
+        url: '',
+        urlAbsoluta: '',
+        creado: false,
+        message: err instanceof Error ? err.message : 'Error desconocido al preparar la publicación.',
+      })
+    } finally {
+      setPublicando(false)
+    }
+  }, [cfg, githubToken, slugFinal, slugPublicable])
+
+  // Vista previa fiel ANTES de publicar: guarda en este navegador y abre
+  // la experiencia real de invitación (misma que verán los invitados).
+  const handleVistaPrevia = useCallback(() => {
+    saveConfig(cfg)
+    window.open('/Miluaistudio/previsualizar/', '_blank', 'noopener')
+  }, [cfg])
+
+  // Alternativa sin token: descarga el JSON publicable para commitearlo a mano
+  const handleDescargarPublicable = useCallback(() => {
+    if (!slugPublicable) {
+      setResultadoPublicacion({
+        success: false,
+        slug: slugFinal,
+        url: '',
+        urlAbsoluta: '',
+        creado: false,
+        message: motivoSlugInvalido(slugFinal) || 'Elegí un slug válido para descargar el JSON.',
+      })
+      return
+    }
+    try {
+      const invitacion = crearInvitacionPublicada({ slug: slugPublicable, config: cfg })
+      const blob = new Blob([serializarInvitacion(invitacion)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${slugPublicable}.json`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setResultadoPublicacion({
+        success: false,
+        slug: slugPublicable,
+        url: '',
+        urlAbsoluta: '',
+        creado: false,
+        message: err instanceof Error ? err.message : 'No se pudo generar el JSON publicable.',
+      })
+    }
+  }, [cfg, slugFinal, slugPublicable])
 
   // --- Expand / Collapse all ---
   const expandAll = useCallback(() => {
@@ -822,6 +940,121 @@ export default function AdminPage() {
             </div>
           )}
         </div>
+        {/* PUBLICAR INVITACIÓN — flujo /i/<slug>/ */}
+        <div className="rounded-2xl border overflow-hidden" style={{ borderColor: '#16a34a55', background: '#111111' }}>
+          <div className="px-5 py-4">
+            <p className="flex items-center gap-3 font-cursive text-xl" style={{ color: '#22c55e' }}>
+              <span className="text-xl">🕊️</span> Publicar invitación (enlace propio /i/slug/)
+            </p>
+            <p className="mt-1 text-xs text-[#a39a8e] leading-relaxed">
+              Publica la configuración de este panel como una invitación independiente con su propia URL.
+              Cada invitación vive en su propio archivo: publicar otra no sobrescribe las anteriores y
+              actualizar conserva el mismo slug y el mismo enlace. Vista previa fiel antes de publicar.
+            </p>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+              <div>
+                <label htmlFor="pub-slug" className="text-[10px] font-semibold uppercase tracking-wide text-[#8f867c]">
+                  Slug de la invitación (define la URL)
+                </label>
+                <input
+                  id="pub-slug"
+                  type="text"
+                  value={slugPublicacion}
+                  onChange={(e) => setSlugPublicacion(e.target.value)}
+                  placeholder={slugSugerido || 'ej: quince-de-muestra'}
+                  aria-describedby="pub-slug-ayuda"
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-white border border-[#e8e0d7] text-[#292522] placeholder:text-[#b3aa9d] focus:border-[#16a34a] mt-1"
+                />
+                <p id="pub-slug-ayuda" className="mt-1 text-[10px] text-[#8f867c]">
+                  Minúsculas, números y guiones. Sugerido a partir del nombre del evento; podés cambiarlo.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleVistaPrevia}
+                  className="px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
+                  style={{ background: '#d4af3722', color: '#d4af37', border: '1px solid #d4af3755' }}
+                >
+                  Ver vista previa
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDescargarPublicable}
+                  className="px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
+                  style={{ background: '#d4af3722', color: '#d4af37', border: '1px solid #d4af3755' }}
+                >
+                  Descargar JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePublicar}
+                  disabled={publicando}
+                  className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-colors flex items-center gap-1.5"
+                  style={{ background: publicando ? '#4b5563' : '#16a34a', opacity: publicando ? 0.75 : 1 }}
+                >
+                  {publicando ? (
+                    <>
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Publicando…
+                    </>
+                  ) : (
+                    'Publicar en GitHub'
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Estado en vivo del slug y la URL destino */}
+            <div className="mt-3 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-[11px] leading-relaxed">
+              {slugFinal ? (
+                <>
+                  <span className={slugPublicable ? 'text-green-400' : 'text-red-400'}>
+                    {slugPublicable ? '✓ Slug válido' : '✗ ' + (motivoSlugInvalido(slugFinal) || 'Slug inválido')}
+                  </span>
+                  {slugPublicable && (
+                    <span className="text-[#a39a8e]">
+                      {' '}→ URL: <code className="text-[#8fd4a5]">{urlInvitacion(slugPublicable)}</code>
+                      {' '}· <code className="text-[#8fd4a5]">{urlPublicaInvitacion(slugPublicable)}</code>
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-[#a39a8e]">Cargá el nombre del evento arriba o escribí un slug.</span>
+              )}
+            </div>
+
+            {/* Resultado REAL de la publicación (nunca éxito por solo guardar) */}
+            {resultadoPublicacion && (
+              <div
+                role="status"
+                className={
+                  'mt-3 rounded-lg px-3 py-2.5 text-xs leading-relaxed border ' +
+                  (resultadoPublicacion.success
+                    ? 'bg-green-950/70 text-green-200 border-green-800/60'
+                    : 'bg-red-950/70 text-red-200 border-red-800/60')
+                }
+              >
+                <p className="font-semibold">
+                  {resultadoPublicacion.success
+                    ? (resultadoPublicacion.creado ? 'Invitación creada' : 'Invitación actualizada')
+                    : 'No se publicó'}
+                </p>
+                <p className="mt-0.5">{resultadoPublicacion.message}</p>
+                {resultadoPublicacion.success && (
+                  <p className="mt-1 font-mono text-[11px] break-all">
+                    {resultadoPublicacion.urlAbsoluta || urlPublicaInvitacion(resultadoPublicacion.slug)}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* EVENTO */}
         <Section title={SECTION_META.evento.title} icon={SECTION_META.evento.icon} open={openSections.has('evento')} onToggle={() => toggle('evento')}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

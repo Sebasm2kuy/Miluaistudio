@@ -9,7 +9,11 @@
  *     personalizador, las 10 demos, 404, robots, sitemap).
  *  3. Un asset clave no usa la ruta base /Miluaistudio.
  *  4. Hay indicios de secretos embebidos en el artefacto público.
- *  5. Reaparecen imágenes personales retiradas de public/ por privacidad.
+ *  5. Reaparecen imágenes personales retiradas de public/ por privacidad
+ *     (o aparecen imágenes en out/uploads/, la ruta de fotos de invitados).
+ *  6. Una invitación publicada (content/invitaciones/*.json) no genera su
+ *     ruta out/i/<slug>/index.html, un asset que enlaza no existe en el
+ *     export, o hay rutas i/ sin JSON declarado.
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
@@ -113,10 +117,66 @@ for (const rel of FORBIDDEN_ASSETS) {
 if (existsSync(join(OUT, 'uploads'))) {
   const restantes = readdirSync(join(OUT, 'uploads')).filter((f) => /\.(jpe?g|png|webp|gif|avif)$/i.test(f));
   if (restantes.length > 0) {
-    fail('out/uploads/ contiene imágenes (' + restantes.length + '). Las fotos de invitados no deben publicarse en el repositorio; usan el backend de moderación (photo-server.gs).');
+    fail('out/uploads/ contiene imágenes (' + restantes.length + '). Las fotos de invitados no deben publicarse en el repositorio; usan el backend de moderación (photo-server.gs). Los recursos del editor van a public/assets-invitaciones/.');
   } else {
     ok('out/uploads/ sin imágenes');
   }
+}
+
+// ---- 6. Invitaciones publicadas: rutas /i/<slug>/ y assets enlazados ----
+const DIR_INVITACIONES = join(process.cwd(), 'content', 'invitaciones');
+const OUT_I = join(OUT, 'i');
+if (existsSync(DIR_INVITACIONES)) {
+  const archivos = readdirSync(DIR_INVITACIONES).filter((f) => f.endsWith('.json'));
+  if (archivos.length === 0) ok('content/invitaciones/ presente pero sin invitaciones publicadas');
+  const activosReferenciados = new Set();
+  for (const archivo of archivos) {
+    const slug = archivo.slice(0, -'.json'.length);
+    let data;
+    try {
+      data = JSON.parse(readFileSync(join(DIR_INVITACIONES, archivo), 'utf8'));
+    } catch {
+      fail('invitación publicada con JSON inválido: ' + archivo);
+      continue;
+    }
+    if (!data || data.esquema !== 1 || data.slug !== slug) {
+      fail('invitación con esquema/slug inconsistente (esperado esquema 1 y slug igual al nombre de archivo): ' + archivo);
+      continue;
+    }
+    if (!data.config || !data.config.evento || typeof data.config.evento.nombre !== 'string') {
+      fail('invitación sin config.evento.nombre (no renderizable): ' + archivo);
+      continue;
+    }
+    const rutaGenerada = join(OUT, 'i', slug, 'index.html');
+    if (existsSync(rutaGenerada)) ok('ruta de invitación publicada: i/' + slug + '/');
+    else fail('FALTA la página de la invitación publicada: out/i/' + slug + '/index.html');
+
+    // Assets que la invitación referencia dentro del sitio (ignora gradientes y URLs externas)
+    const anotar = (u) => {
+      if (typeof u === 'string' && u.startsWith(BASE + '/')) activosReferenciados.add(u);
+    };
+    const cfg = data.config;
+    for (const foto of cfg.galeria?.fotos ?? []) { anotar(foto.webp); anotar(foto.fallback); }
+    for (const foto of cfg.fondo?.fotos ?? []) anotar(foto);
+    anotar(cfg.invitacion?.imagen);
+    anotar(cfg.invitacion?.imagenFallback);
+  }
+  for (const ref of activosReferenciados) {
+    const rel = ref.slice((BASE + '/').length);
+    if (existsSync(join(OUT, rel))) ok('asset enlazado por invitación presente: ' + rel);
+    else fail('ASSET ENLAZADO POR UNA INVITACIÓN NO EXISTE en el export: ' + ref);
+  }
+  // Toda ruta i/ del export debe corresponder a un JSON declarado
+  if (existsSync(OUT_I)) {
+    for (const entrada of readdirSync(OUT_I)) {
+      if (!existsSync(join(DIR_INVITACIONES, entrada + '.json'))) {
+        fail('ruta out/i/' + entrada + '/ generada sin JSON declarado en content/invitaciones/');
+      }
+    }
+  }
+} else {
+  ok('sin invitaciones publicadas (content/invitaciones/ ausente)');
+  if (existsSync(OUT_I)) fail('out/i/ existe pero content/invitaciones/ no está en el repo');
 }
 
 console.log('\n=== verify-export ===');
