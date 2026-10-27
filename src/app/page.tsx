@@ -9,6 +9,7 @@ import {
   MapPin,
   MessageSquareText,
   Music,
+  PenLine,
   Search,
   Share2,
   ShieldCheck,
@@ -69,8 +70,8 @@ export default function Home() {
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
               <WhatsAppIcon size={17} />
             </a>
-            <a href={CATALOG_URL} className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b] sm:gap-2 sm:px-5 sm:text-sm">
-              Ver diseños <ArrowRight size={15} />
+            <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b] sm:gap-2 sm:px-5 sm:text-sm">
+              Personalizar <PenLine size={14} />
             </a>
           </div>
         </div>
@@ -127,8 +128,11 @@ export default function Home() {
             Invitaciones web personalizadas para fiestas de 15, bodas y celebraciones. Cuenta regresiva, galería, música y confirmación de asistencia, con el estilo de tu evento.
           </p>
           <div className="store-hero-in-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href={CATALOG_URL} className={PRIMARY_BTN}>
-              Explorar los 10 diseños <ArrowRight size={16} />
+            <a href="/Miluaistudio/personalizar/" className={PRIMARY_BTN}>
+              Personalizar mi invitación <ArrowRight size={16} />
+            </a>
+            <a href={CATALOG_URL} className={OUTLINE_BTN}>
+              Explorar los 10 diseños
             </a>
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
               <WhatsAppIcon size={16} /> Consultar por WhatsApp
@@ -274,8 +278,8 @@ export default function Home() {
           <div className="relative mt-10 grid gap-4 md:grid-cols-3">
             <div aria-hidden="true" className="absolute left-[16%] right-[16%] top-14 hidden border-t border-dashed border-[#d9c9ad] md:block" />
             {[
-              { number: '1', icon: Search, title: 'Elegís el diseño que más te gusta', text: 'Explorás el catálogo, abrís las demos y encontrás el estilo ideal para tu evento.' },
-              { number: '2', icon: MessageSquareText, title: 'Nos pasás los datos y la música', text: 'Nombres, fecha, lugar, fotos y la canción que querés sonando de fondo.' },
+              { number: '1', icon: Search, title: 'Elegís el diseño y lo personalizás', text: 'Abrís el personalizador, cargás tu nombre, fecha y lugar, y ves tu invitación al instante.' },
+              { number: '2', icon: MessageSquareText, title: 'Nos pasás los detalles finales', text: 'Fotos, música y ajustes finos: lo que falte lo resolvemos juntos por WhatsApp.' },
               { number: '3', icon: Share2, title: 'Recibís tu enlace listo para compartir', text: 'Te entregamos la invitación web para reenviarla por WhatsApp a tus invitados.' },
             ].map((step, index) => (
               <Reveal key={step.number} delay={index * 90}>
@@ -365,6 +369,7 @@ export default function Home() {
           <div className="mt-9 space-y-3">
             {[
               { q: '¿Es una imagen o una página web?', a: 'Es una invitación web personalizada que se abre desde un enlace y puede reunir la información y las funciones acordadas para tu celebración.' },
+              { q: '¿Puedo probar la invitación con mis datos antes de comprar?', a: 'Sí. En la sección Personalizar elegís el diseño, cargás nombre, fecha, lugar y música, y la invitación se actualiza al instante con tu información. Después nos enviás esa configuración por WhatsApp y la dejamos lista.' },
               { q: '¿Mis invitados necesitan instalar una aplicación?', a: 'No. La invitación se abre desde un navegador compatible en el celular o la computadora.' },
               { q: '¿Puedo elegir los colores y el estilo?', a: 'Sí. El diseño se personaliza según tus preferencias y las opciones disponibles para el modelo elegido.' },
               { q: '¿Cómo se confirma la asistencia?', a: 'La invitación puede incluir RSVP. El método de registro y las funciones asociadas se confirman al definir la configuración del evento.' },

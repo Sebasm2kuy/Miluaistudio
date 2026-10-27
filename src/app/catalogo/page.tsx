@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Heart, Images, MapPin, MessageSquareText, Music2, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Heart, Images, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 import CatalogScene from '@/components/catalog-scene';
 import WhatsAppIcon from '@/components/whatsapp-icon';
@@ -132,6 +132,12 @@ export default function CatalogoPage() {
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#6f675e] sm:text-base">
             Elegí el estilo que más te guste y hacé de tu fiesta un evento inolvidable. Cada diseño incluye una invitación web completa con cuenta regresiva, galería, música y confirmación de asistencia.
           </p>
+          <a
+            href="/Miluaistudio/personalizar/"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#26221d] px-5 py-2.5 text-sm font-semibold text-[#fdfbf7] shadow-[0_10px_26px_rgba(38,34,29,0.22)] transition hover:-translate-y-0.5 hover:bg-[#3a332b]"
+          >
+            <PenLine size={15} /> Personalizar con mis datos
+          </a>
           <OrnamentDivider className="mt-6" />
         </section>
 
@@ -277,6 +283,9 @@ export default function CatalogoPage() {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <a href={'/Miluaistudio/personalizar/?diseno=' + selected.id} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#26221d] px-5 py-3 text-sm font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b]">
+                    <PenLine size={15} /> Personalizar este diseño
+                  </a>
                   <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:brightness-110" style={{ background: selected.buttonBg, color: selected.buttonText }}>
                     Abrir demostración <ArrowRight size={15} />
                   </a>
