@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 002 — Auditoría profunda de la web publicada (27-10-2026)](./ITERACION-2026-10-27-002-AUDITORIA-WEB.md)
 - [Iteración 001 — Auditoría web, evolución de producto y exploración de marca (27-10-2026)](./ITERACION-2026-10-27-001-AUDITORIA-PRODUCTO-MARCA.md)
 - [Prompt maestro para Z.AI — Auditoría y rediseño](./PROMPT-ZAI-AUDITORIA-REDISENO.md)
 
