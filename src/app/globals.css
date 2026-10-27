@@ -524,3 +524,237 @@ html:has([data-page="storefront"]) body {
 @media (prefers-reduced-motion: reduce) {
   .store-hero-in, .store-hero-in-2, .store-hero-in-3 { animation: none; }
 }
+
+
+/* ===== Miluaistudio · lenguaje visual inspirado en Milu AI Studio =====
+   Alcance limitado a la tienda pública; las invitaciones individuales mantienen
+   sus temas propios. Las escenas originales del catálogo no se sustituyen. */
+.milua-neo {
+  --neo-bg: #101216;
+  --neo-panel: rgba(27, 30, 36, .82);
+  --neo-border: rgba(255, 255, 255, .11);
+  --neo-text: #f7f1e8;
+  --neo-muted: #b2b1b6;
+  --neo-amber: #f1a46a;
+  --neo-teal: #70d7d0;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background:
+    radial-gradient(ellipse 38rem 32rem at 85% 2%, rgba(41, 156, 161, .14), transparent 70%),
+    radial-gradient(ellipse 38rem 30rem at 8% 16%, rgba(222, 126, 62, .13), transparent 68%),
+    #101216 !important;
+  color: var(--neo-text) !important;
+}
+.milua-neo::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: 70rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.035), transparent 68%);
+}
+.milua-neo > header {
+  border-color: var(--neo-border) !important;
+  background: rgba(15, 17, 21, .76) !important;
+  color: var(--neo-text) !important;
+  backdrop-filter: blur(22px) saturate(145%);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+}
+.milua-neo > header a[aria-label] > span:first-child {
+  border-color: rgba(241,164,106,.4) !important;
+  background: rgba(255,255,255,.055) !important;
+  color: var(--neo-amber) !important;
+  box-shadow: 0 0 26px rgba(241,164,106,.08);
+}
+.milua-neo > header nav a { color: var(--neo-muted) !important; }
+.milua-neo > header nav a:hover { color: var(--neo-text) !important; }
+.milua-neo > header a[href="/Miluaistudio/catalogo/"],
+.milua-neo a.bg-\[\#26221d\],
+.milua-neo a.bg-\[\#191b1d\] {
+  background: linear-gradient(110deg, #f1a46a, #f6c78f 48%, #70d7d0) !important;
+  color: #17191d !important;
+  box-shadow: 0 8px 28px rgba(241,164,106,.16);
+}
+.milua-neo h1, .milua-neo h2, .milua-neo h3 {
+  color: var(--neo-text) !important;
+}
+.milua-neo h1 em, .milua-neo h2 em {
+  color: transparent !important;
+  background: linear-gradient(105deg, #f1a46a 0%, #f4d1a7 48%, #70d7d0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.milua-neo p { color: var(--neo-muted); }
+.milua-neo [data-page="storefront"] { color: var(--neo-text); }
+.milua-neo section[id="incluye"] article,
+.milua-neo section[id="incluye"] > div > div > div,
+.milua-neo section[id="disenos"] article,
+.milua-neo section[id="proceso"] article,
+.milua-neo section[id="resenas"] figure,
+.milua-neo main > section[aria-labelledby] li,
+.milua-neo main > section[aria-labelledby] figure {
+  border-color: var(--neo-border) !important;
+  background: linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025)) !important;
+  color: var(--neo-text) !important;
+  box-shadow: 0 16px 45px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.035) !important;
+  backdrop-filter: blur(14px);
+}
+.milua-neo section[id="incluye"] h3,
+.milua-neo section[id="proceso"] h3,
+.milua-neo section[id="resenas"] figcaption span:first-child {
+  color: var(--neo-text) !important;
+}
+.milua-neo section[id="incluye"] p,
+.milua-neo section[id="proceso"] p,
+.milua-neo section[id="resenas"] blockquote,
+.milua-neo section[id="resenas"] figcaption span:last-child {
+  color: var(--neo-muted) !important;
+}
+.milua-neo section[id="incluye"] article svg,
+.milua-neo section[id="proceso"] article svg {
+  color: var(--neo-amber);
+}
+.milua-neo .store-hero-in > span,
+.milua-neo .store-hero-in {
+  border-color: var(--neo-border) !important;
+  background: rgba(255,255,255,.06) !important;
+  color: #e4d9cb !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.18);
+}
+.milua-neo .store-hero-in svg { color: var(--neo-amber) !important; }
+.milua-neo a[class*="border-[#d9cec2]"],
+.milua-neo a[class*="border-[#e6dfd7]"] {
+  border-color: var(--neo-border) !important;
+  color: var(--neo-text) !important;
+  background: rgba(255,255,255,.035);
+}
+.milua-neo a[class*="border-[#d9cec2]"]:hover,
+.milua-neo a[class*="border-[#e6dfd7]"]:hover {
+  background: rgba(255,255,255,.08) !important;
+}
+.milua-neo section[aria-label="Los diez diseños de la colección"] a {
+  border-color: var(--neo-border) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,.24) !important;
+}
+.milua-neo section[aria-label="Los diez diseños de la colección"] p {
+  color: #9d9fa6 !important;
+}
+.milua-neo .float-soft {
+  border-color: rgba(255,255,255,.14) !important;
+  background: rgba(28,30,36,.86) !important;
+  color: #f7f1e8 !important;
+  backdrop-filter: blur(16px);
+}
+.milua-neo main {
+  position: relative;
+}
+.milua-neo main > section:first-child h1 {
+  letter-spacing: -.045em;
+}
+.milua-neo main > section:first-child > p:first-child {
+  color: var(--neo-amber) !important;
+}
+.milua-neo main > section:first-child > p:not(:first-child) {
+  color: var(--neo-muted) !important;
+}
+.milua-neo main > section[id="disenos"] article,
+.milua-neo main > section[id="disenos"] article h2 {
+  color: var(--neo-text) !important;
+}
+.milua-neo main > section[id="disenos"] article p {
+  color: var(--neo-muted);
+}
+.milua-neo main > section[id="disenos"] article a[style] {
+  box-shadow: 0 8px 22px rgba(0,0,0,.18);
+}
+.milua-neo main > section[aria-labelledby] li h3 {
+  color: var(--neo-text) !important;
+}
+.milua-neo main > section[aria-labelledby] li p {
+  color: var(--neo-muted) !important;
+}
+.milua-neo main > section[aria-labelledby] li > div:first-child span {
+  border-color: rgba(241,164,106,.3) !important;
+  background: rgba(241,164,106,.1) !important;
+  color: var(--neo-amber) !important;
+}
+.milua-neo main > section[aria-labelledby] li > div:first-child span:last-child {
+  background: linear-gradient(110deg, #f1a46a, #70d7d0) !important;
+  color: #15171a !important;
+}
+.milua-neo main > section[style],
+.milua-neo main > section > div[style*="linear-gradient"] {
+  border-color: var(--neo-border) !important;
+  background: linear-gradient(125deg, rgba(241,164,106,.12), rgba(112,215,208,.07), rgba(255,255,255,.025)) !important;
+}
+.milua-neo main > section[style] h2,
+.milua-neo main > section[style] p {
+  color: var(--neo-text) !important;
+}
+.milua-neo > div.border-t,
+.milua-neo > div[class*="border-t"][class*="bg-white"] {
+  border-color: var(--neo-border) !important;
+  background: #17191e !important;
+}
+.milua-neo > div.border-t span,
+.milua-neo > div[class*="border-t"][class*="bg-white"] span {
+  color: #b8b6bc !important;
+}
+.milua-neo > footer {
+  border-top: 1px solid var(--neo-border);
+  background: #0b0d10 !important;
+}
+.milua-neo .rounded-3xl[class*="bg-[#fbf8f3]"] {
+  background: #202329 !important;
+  color: var(--neo-text) !important;
+}
+.milua-neo .rounded-3xl[class*="bg-[#fbf8f3]"] p { color: var(--neo-muted) !important; }
+.milua-neo .rounded-3xl[class*="bg-[#fbf8f3]"] h2 { color: var(--neo-text) !important; }
+
+/* Catálogo: superficie oscura, tarjetas de vidrio y CTA con contraste */
+.milua-neo main > section:first-child h1 {
+  color: var(--neo-text) !important;
+}
+.milua-neo article.group {
+  border-color: var(--neo-border) !important;
+  background: linear-gradient(145deg, rgba(34,37,44,.96), rgba(23,25,30,.96)) !important;
+  color: var(--neo-text) !important;
+  box-shadow: 0 16px 42px rgba(0,0,0,.2) !important;
+}
+.milua-neo article.group h2,
+.milua-neo article.group h3,
+.milua-neo article.group strong {
+  color: var(--neo-text) !important;
+}
+.milua-neo article.group p { color: var(--neo-muted) !important; }
+.milua-neo article.group a[style] {
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+}
+.milua-neo main > section > div > div > p { color: var(--neo-muted); }
+.milua-neo main > section:first-child > p:first-child { color: var(--neo-amber) !important; }
+.milua-neo main > section:first-child > p:not(:first-child) { color: var(--neo-muted) !important; }
+.milua-neo main > section[aria-labelledby] li,
+.milua-neo main > section[aria-labelledby] figure {
+  border-color: var(--neo-border) !important;
+  background: linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025)) !important;
+}
+.milua-neo main > section[aria-labelledby] h2,
+.milua-neo main > section[aria-labelledby] h3 { color: var(--neo-text) !important; }
+.milua-neo main > section[aria-labelledby] p,
+.milua-neo main > section[aria-labelledby] blockquote { color: var(--neo-muted) !important; }
+
+@media (max-width: 767px) {
+  .milua-neo > header > div { gap: .5rem; }
+  .milua-neo h1 { text-wrap: balance; }
+  .milua-neo section[id="disenos"] article { border-radius: 1.15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .milua-neo *, .milua-neo *::before, .milua-neo *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

@@ -43,7 +43,7 @@ export default function Home() {
   const featured = INVITATION_DESIGNS.slice(0, 4);
 
   return (
-    <main data-page="storefront" className="min-h-screen bg-[#f7f4ef] text-[#29241f]">
+    <main data-page="storefront" className="milua-neo min-h-screen bg-[#f7f4ef] text-[#29241f]">
       {/* Lavados de color cálidos + adornos de fondo */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(ellipse 60% 40% at 8% 0%, rgba(184,138,148,0.10), transparent 60%), radial-gradient(ellipse 55% 45% at 96% 8%, rgba(168,129,79,0.10), transparent 62%)' }} />
 
