@@ -80,6 +80,8 @@ Cambios aplicados: `store-ui.tsx`, `page.tsx` (token GOLD), `catalogo/page.tsx` 
 - `npm run build` ya incluye, dentro del mismo comando, `prune-export.mjs` + `verify-export.mjs` + `verify-privacy-export.mjs`; el workflow lo documenta y **no duplica** esas verificaciones a propósito.
 - `npm test` no depende de archivos generados previamente (compila con `tsc -p tsconfig.tests.json` y corre `node --test`; la verificación de artefactos vive en el build, no en los tests unitarios).
 
+**Evidencia real de CI:** [Validate Miluaistudio — run 40550777200](https://github.com/Sebasm2kuy/Miluaistudio/actions/runs/40550777200) sobre este PR: resultado **success**; pasos `Tests` → success, `Lint` → success, `Build static site + verificación del export` → success (el paso de build ejecuta prune + verify-export + verify-privacy).
+
 **Hallazgo adicional corregido:** `deploy.yml` tenía el trigger `branches: ain]` (YAML corrupto, probable resto de una edición), de modo que el deploy automático por push a `main` no podía dispararse; solo `workflow_dispatch`. Se restauró `branches: - main`. **Limitación:** no se ejecutaron las Actions remotas desde este entorno (no dispara runs); la evidencia real serán las corridas del PR. No se declara ningún resultado de CI como aprobado sin enlace real.
 
 ## 5. P1 — Peso del export

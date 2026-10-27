@@ -275,7 +275,8 @@ Stage Summary:
 - 46 pruebas (19 previas + 27 nuevas: RSVP simulado, privacidad, contraste)
   pass 46/46; lint y typecheck 0/0; build + verify-export + verify-privacy
   sin errores; literales de config operativa ausentes de todo out/.
-- Rama fix/riesgos-criticos-pendientes → PR contra main (sin merge).
+- Rama fix/riesgos-criticos-pendientes → PR #14 contra main (sin merge).
+- CI real del PR: run 40550777200 success (Tests/Lint/Build+verificación).
 - Pendiente humano: verificar el Web App de RSVP desplegado (POST),
   revisar corridas reales de Actions, decidir purga de historial y rotación
   de credenciales históricas.
