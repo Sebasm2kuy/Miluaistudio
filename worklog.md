@@ -233,3 +233,49 @@ Stage Summary:
 - Pendiente humano: revisar PR; re-deploy de los 2 Apps Scripts; decidir
   limpieza de historial (imágenes + datos del evento real); verificar
   publicación de Mercado Libre externamente.
+
+---
+Task ID: audit-fix-2026-10-28
+Agent: Z.AI (ingeniería frontend/seguridad/privacidad/a11y/rendimiento)
+Task: Corregir los riesgos críticos pendientes (P0 config en bundles, P0 RSVP GET, P1 contraste, P1 tests en CI, P1 peso, P2 re-verificación)
+
+Work Log:
+- P0 CONFIG: medí la fuga (3 chunks públicos con literales de la plantilla
+  operativa) y separé la arquitectura: config-schema.ts (solo tipos),
+  config.ts como archivo operativo que NADIE importa como valor (canarios
+  sintéticos únicos), demo-config.ts 100% autocontenida (CONFIG_DEMO_BASE),
+  useConfig y /admin arrancan de la base de demo. verify-privacy-export.mjs
+  en el build extrae los campos privados de config.ts, escanea out/ y falla
+  sin revelar valores; tests/privacidad-config.test.ts custodia el grafo de
+  imports y los canarios.
+- P0 RSVP: nuevo src/lib/rsvp-client.ts (POST JSON en el cuerpo, text/plain
+  sin preflight, timeout AbortController, redirect follow, sin no-cors) y
+  rsvp.tsx sin URLSearchParams ni reintento opaco. Estados guardado/error/
+  pendiente intactos; WhatsApp queda como alternativa visible en
+  pendiente/error. El GET queda como legado documentado en el .gs.
+- P1 CONTRASTE: token #8a6534 (5.26:1 sobre blanco, 4.96:1 marfil) reemplaza
+  #9a7440 y #b58c5a en texto/bordes/badges; blanco sobre dorado 5.26:1;
+  estrellas #b8860b (3.25:1); bordes de estado sólidos; foco visible.
+  store-tokens.ts + tests/contraste-wcag.test.ts miden y prohíben el regreso
+  de los tonos insuficientes.
+- P1 CI: validate-catalog.yml y deploy.yml corren npm test; deploy.yml
+  tenía el trigger corrupto "branches: ain]" (el deploy por push no podía
+  dispararse) → restaurado "- main". Build documenta que incluye
+  prune + verify-export + verify-privacy.
+- P1 PESO: tira de 10 previews de la portada pasa de maqueta completa a
+  miniatura ligera; portada 907.429 → 652.391 bytes de archivo (−28,1 %,
+  método consistente en scripts/mide-export.mjs). Héroe/destacados/catálogo
+  conservan la maqueta completa (decisión de identidad documentada).
+- P2 REVERIFICACIÓN: out/ sin admin ni uploads con imágenes; basePath OK;
+  SEO/H1/canonical/demos noindex OK; galería y RSVP sin éxitos no
+  verificables; historial Git con datos operativos antiguos documentado
+  (purga requiere aprobación, no se tocó).
+
+Stage Summary:
+- 46 pruebas (19 previas + 27 nuevas: RSVP simulado, privacidad, contraste)
+  pass 46/46; lint y typecheck 0/0; build + verify-export + verify-privacy
+  sin errores; literales de config operativa ausentes de todo out/.
+- Rama fix/riesgos-criticos-pendientes → PR contra main (sin merge).
+- Pendiente humano: verificar el Web App de RSVP desplegado (POST),
+  revisar corridas reales de Actions, decidir purga de historial y rotación
+  de credenciales históricas.
