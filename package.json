@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build && node scripts/prune-export.mjs && node scripts/verify-export.mjs",
+    "build": "next build && node scripts/prune-export.mjs && node scripts/verify-export.mjs && node scripts/verify-privacy-export.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "tsc -p tsconfig.tests.json && node --test tests/dist/tests/*.test.js",
-    "verify:export": "node scripts/verify-export.mjs"
+    "verify:export": "node scripts/verify-export.mjs",
+    "verify:privacy": "node scripts/verify-privacy-export.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
