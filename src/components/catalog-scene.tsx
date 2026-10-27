@@ -1,13 +1,31 @@
+import type { CSSProperties } from 'react';
 import type { InvitationDesign } from '@/data/invitation-designs';
+import { BACKGROUND_PRESETS } from '@/data/admin-options';
 import MiniInvitation, { miniFromDesign } from '@/components/mini-invitation';
+import { DesignAdornoGlyph } from '@/components/design-ornaments';
 
 /**
- * Maqueta comercial de la tarjeta del catálogo: escena fotográfica temática
- * compuesta con el celular y la tarjeta física que representan el diseño real
- * (mismo nombre, fecha, paleta y adornos que la invitación completa).
+ * Maqueta comercial del diseño: el MISMO fondo que la demo real (gradiente del
+ * preset backgroundPreset + overlays idénticos a BackgroundSlideshow) compuesto
+ * con el celular y la tarjeta física que muestran la invitación (mismo nombre,
+ * fecha, paleta y adornos). Así lo que se ve en las galerías es exactamente lo
+ * que se encuentra al abrir la demostración.
  */
 export default function CatalogScene({ design, className }: { design: InvitationDesign; className?: string }) {
   const data = miniFromDesign(design);
+  const preset = BACKGROUND_PRESETS.find((bg) => bg.id === design.backgroundPreset);
+  const light = design.themeMode === 'light';
+
+  // Fondo real de la demo: gradiente del preset (mismo que BackgroundSlideshow)
+  const demoBackground = preset?.css || design.background;
+  // Overlays de profundidad idénticos a los que aplica BackgroundSlideshow en la demo
+  const demoOverlay = light
+    ? 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
+    : 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.5) 100%), radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)';
+
+  const cardShadow: CSSProperties['boxShadow'] = light
+    ? '0 18px 38px rgba(0,0,0,0.32), 0 4px 10px rgba(0,0,0,0.18)'
+    : '0 0 0 1px rgba(255,255,255,0.09), 0 0 54px color-mix(in srgb, ' + design.accent + ' 20%, transparent), 0 24px 46px rgba(0,0,0,0.55)';
 
   return (
     <div
@@ -15,17 +33,33 @@ export default function CatalogScene({ design, className }: { design: Invitation
       aria-label={'Maqueta del diseño ' + design.name + ' con celular y tarjeta de invitación'}
       className={'relative isolate h-full w-full overflow-hidden ' + (className || '')}
     >
-      {/* Escena fotográfica */}
-      <img
-        src={design.scene}
-        alt=""
-        aria-hidden="true"
-        draggable={false}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover"
+      {/* Fondo = el mismo gradiente que ve el invitado al abrir la demo */}
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: demoBackground }} />
+
+      {/* Adornos temáticos tenues (eco de las partículas/adornos de la demo) */}
+      <DesignAdornoGlyph
+        adorno={design.adorno}
+        className="absolute -left-[7%] -top-[5%] h-[40%] w-[40%]"
+        style={{ color: design.accent, opacity: light ? 0.16 : 0.2 }}
       />
-      {/* Profundidad suave */}
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(0,0,0,0.16) 100%)' }} />
+      <DesignAdornoGlyph
+        adorno={design.adorno}
+        flip
+        className="absolute -bottom-[6%] -right-[7%] h-[44%] w-[44%]"
+        style={{ color: design.accent, opacity: light ? 0.14 : 0.18 }}
+      />
+
+      {/* Overlay de profundidad (idéntico al de la demo) */}
+      <div aria-hidden="true" className="absolute inset-0" style={{ background: demoOverlay }} />
+
+      {/* Resplandor suave detrás de las maquetas en temas oscuros (separa el negro del negro) */}
+      {!light && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse 64% 54% at 50% 46%, color-mix(in srgb, ' + design.accent + ' 13%, transparent) 0%, transparent 72%)' }}
+        />
+      )}
 
       {/* Celular con la invitación en pantalla */}
       <div className="absolute" style={{ left: '6.5%', top: '12%', width: '43%', transform: 'rotate(-5deg)', containerType: 'inline-size' }}>
@@ -47,7 +81,7 @@ export default function CatalogScene({ design, className }: { design: Invitation
       <div className="absolute" style={{ right: '5.5%', top: '16%', width: '44%', transform: 'rotate(6deg)' }}>
         <div
           className="relative aspect-[10/16.8] w-full overflow-hidden rounded-[4px]"
-          style={{ boxShadow: '0 18px 38px rgba(0,0,0,0.32), 0 4px 10px rgba(0,0,0,0.18)' }}
+          style={{ boxShadow: cardShadow }}
         >
           <MiniInvitation data={data} variant="card" />
           {/* Brillo de papel */}

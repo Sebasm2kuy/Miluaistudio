@@ -90,25 +90,18 @@ export default function Home() {
               </HeroBadge>
             </div>
           </div>
-          {/* Escritorio: collage editorial */}
+          {/* Escritorio: collage editorial con las maquetas reales (mismo fondo que la demo) */}
           <div className="store-hero-in-2 relative mx-auto hidden w-full max-w-[440px] pb-12 pr-6 sm:pb-14 sm:pr-10 lg:block">
             <div aria-hidden="true" className="absolute -inset-6 rounded-[3rem] bg-[#ecdcc0]/45 blur-2xl" />
             <div className="relative rotate-[-2deg] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.22)]">
-              <img
-                src={heroDesign.scene}
-                alt={'Escena del diseño ' + heroDesign.name}
-                className="aspect-[4/5] w-full object-cover"
-                draggable={false}
-              />
+              <div className="aspect-[4/5] w-full">
+                <CatalogScene design={heroDesign} />
+              </div>
             </div>
             <div className="absolute -bottom-0 right-0 w-[46%] rotate-[4deg] overflow-hidden rounded-2xl border-4 border-[#f7f4ef] shadow-[0_22px_50px_rgba(88,63,32,0.28)] sm:-bottom-2">
-              <img
-                src={heroSecondary.scene}
-                alt={'Escena del diseño ' + heroSecondary.name}
-                loading="lazy"
-                className="aspect-[4/5] w-full object-cover"
-                draggable={false}
-              />
+              <div className="aspect-[4/5] w-full">
+                <CatalogScene design={heroSecondary} />
+              </div>
             </div>
             <div className="absolute -left-2 top-6 sm:-left-6">
               <HeroBadge>
@@ -175,13 +168,9 @@ export default function Home() {
                   className="group relative block aspect-[4/5] w-[7.25rem] shrink-0 overflow-hidden rounded-xl border border-[#e8e1d8] shadow-[0_6px_18px_rgba(88,63,32,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)] sm:w-auto"
                   aria-label={'Probar el diseño ' + design.name}
                 >
-                  <img
-                    src={design.scene}
-                    alt={'Escena del diseño ' + design.name}
-                    loading="lazy"
-                    draggable={false}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.06]"
-                  />
+                <div className="h-full w-full transition duration-500 group-hover:scale-[1.06]">
+                  <CatalogScene design={design} />
+                </div>
                   <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-[#211c17]/55 px-2 py-1 text-center text-[9px] font-medium text-white backdrop-blur-sm sm:text-[10px]">
                     {design.name}
                   </span>
