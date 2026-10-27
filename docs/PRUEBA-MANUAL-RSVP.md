@@ -62,6 +62,11 @@ correcta.
    - Estados esperados: `guardado` si la respuesta es `success:true`;
      `pendiente` si el navegador no puede leer la respuesta (CORS/red) con el
      fallback de WhatsApp VISIBLE; `error` si el backend responde error.
+   - Verificación anti-falso-éxito: tras un envío que termina en `error` (o
+     repetir el paso 4 desde la UI si aplica), comprobar que la interfaz
+     NUNCA muestra “confirmado/guardado” y que NO aparece fila nueva en la
+     hoja. Si la UI afirmara éxito sin `success:true` verificable, registrar
+     el desvío acá: sería un bug del cliente, no del servicio externo.
 
 ## Resultados registrados
 

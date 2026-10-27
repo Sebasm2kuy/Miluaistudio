@@ -144,11 +144,15 @@ export default config
 }
 
 /**
- * LEGADO: escribe src/data/config.ts en main. Desde el desacople de la
- * configuración operativa, NINGÚN componente cliente consume ese archivo
- * (useConfig cae a la base de demostración). Se conserva para no retirar
- * funcionalidad existente; el flujo funcional de publicación de
- * invitaciones con URL propia es publicarInvitacionEnGitHub().
+ * LEGADO — NO publica invitaciones.
+ *
+ * Qué hace: escribe src/data/config.ts en la rama main vía API de GitHub.
+ * Qué NO hace: NO crea ni actualiza ninguna invitación pública; el archivo
+ * que escribe no es consumido por ninguna página (desde el desacople de la
+ * configuración operativa, useConfig cae a la base de demostración).
+ * Ninguna pantalla del panel lo ofrece: la única acción de publicación es
+ * publicarInvitacionEnGitHub() (flujo /i/<slug>/). Se conserva exportada
+ * para usos programáticos explícitos, con este contrato claro.
  */
 export async function deployToGitHub(
   configData: Record<string, unknown>,
@@ -197,7 +201,11 @@ export async function deployToGitHub(
     })
 
     if (putRes.ok) {
-      return { success: true, message: 'Config pusheado a GitHub. El deploy se activara automaticamente (~2 min).' }
+      return {
+        success: true,
+        message:
+          'Config de legado escrito en src/data/config.ts (ninguna página lo consume; esto NO publica una invitación). El build se va a disparar solo (~2 min). Para publicar una invitación usá publicarInvitacionEnGitHub().',
+      }
     }
 
     const err = await putRes.json().catch(() => ({}))
@@ -223,6 +231,9 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
  *
  * Validación antes de subir: tamaño, extensión, MIME y firma real del
  * archivo (magic bytes). Sin dependencia del atributo HTML accept.
+ * La firma es OBLIGATORIA: si los primeros bytes no se pueden leer, la
+ * subida se rechaza con un error entendible SIN llamar a la API de GitHub
+ * (el validador acepta bytes opcionales solo para prevalidaciones de UI).
  * Si la subida falla, la URL anterior del campo queda intacta: el panel
  * conserva el estado y permite reintentar.
  */
@@ -236,13 +247,24 @@ export async function uploadToGitHub(
     return { success: false, url: '', message: 'Falta el GitHub Token' }
   }
 
-  // Validación completa (incluye los primeros bytes para detectar la firma real)
-  let bytes: Uint8Array | undefined
+  // ------------------------------------------------------------------
+  // Firma real OBLIGATORIA en la subida: si los primeros bytes no se
+  // pueden leer, la subida se rechaza acá. Nunca se valida solo por
+  // extensión/MIME en la ruta real ni se contacta a la API de GitHub.
+  // ------------------------------------------------------------------
+  let bytes: Uint8Array
   try {
     bytes = new Uint8Array(await file.slice(0, 16).arrayBuffer())
   } catch {
-    bytes = undefined // sin bytes legibles: valida por extensión + MIME
+    return {
+      success: false,
+      url: '',
+      message:
+        'No se pudo leer el contenido del archivo para verificar que sea una imagen. Volvé a seleccionarlo e intentá de nuevo.',
+    }
   }
+
+  // Validación completa (incluye la firma real recién leída)
   const validacion = validarArchivoImagen(
     { name: file.name, type: file.type, size: file.size },
     bytes,
@@ -327,7 +349,7 @@ export interface ResultadoPublicacion {
   message: string
 }
 
-function resultadoFallido(parcial: {
+export function resultadoFallido(parcial: {
   slug: string
   creado?: boolean
   message: string
@@ -368,7 +390,8 @@ export async function publicarInvitacionEnGitHub(
   if (!token) {
     return resultadoFallido({
       slug,
-      message: 'Falta el GitHub Token. Pegalo en la sección Deploy y probá de nuevo.',
+      message:
+        'Falta el GitHub Token. Pegalo en la sección «Conexión con GitHub» y probá de nuevo.',
     })
   }
 

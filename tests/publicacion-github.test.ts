@@ -10,6 +10,8 @@
  *  - uploadToGitHub: URL del asset en la carpeta de invitaciones,
  *    validación previa (tipo/tamaño) sin llamar a la API, respuesta HTTP
  *    fallida y error de red — siempre simulados
+ *  - Firma real OBLIGATORIA: si los primeros bytes no se pueden leer,
+ *    la subida se rechaza SIN llamar a la API (hallazgo F-02, iter. 011)
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -289,6 +291,80 @@ test('upload: sin token → fallo inmediato', async () => {
   const resultado = await uploadToGitHub(archivoJpeg(), '', undefined, espia);
   assert.equal(resultado.success, false);
   assert.equal(llamado, false);
+});
+
+// ---------------------------------------------------------------------------
+// uploadToGitHub — firma real OBLIGATORIA: si los primeros bytes no se
+// pueden leer, la subida se rechaza SIN llamar a la API de GitHub
+// (hallazgo F-02 de la iteración 011: antes seguía con bytes = undefined
+// y la validación caía a extensión + MIME).
+// ---------------------------------------------------------------------------
+
+/** Copia de un File válido cuyo slice(0,16).arrayBuffer() RECHAZA. */
+function archivoConLecturaRota(nombre = 'disfrazado.jpg'): File {
+  const base = archivoJpeg(nombre);
+  const trampa = {
+    name: base.name,
+    type: base.type,
+    size: base.size,
+    lastModified: base.lastModified,
+    slice: () => ({
+      arrayBuffer: () => Promise.reject(new TypeError('NoReadableError simulado')),
+    }),
+  };
+  return trampa as unknown as File;
+}
+
+test('upload: bytes ilegibles → rechaza la subida y NO llama a la API de GitHub', async () => {
+  let llamado = false;
+  const espia = async () => {
+    llamado = true;
+    throw new Error('no debe llamarse');
+  };
+  const resultado = await uploadToGitHub(archivoConLecturaRota(), 'token-de-prueba', undefined, espia);
+
+  assert.equal(resultado.success, false, 'la subida no se acepta sin firma verificable');
+  assert.equal(resultado.url, '', 'no se devuelve ninguna URL');
+  assert.match(resultado.message, /No se pudo leer el contenido/i, 'mensaje entendible para el usuario');
+  assert.match(resultado.message, /Volvé a seleccionarlo/i, 'el mensaje invita a reintentar');
+  assert.ok(!resultado.message.includes('NoReadableError'), 'no vuelca el error interno');
+  assert.ok(!resultado.message.includes('TypeError'), 'no vuelca detalles técnicos');
+  assert.equal(llamado, false, 'la API de GitHub nunca se contactó');
+});
+
+test('upload: slice() que lanza de forma síncrona → mismo rechazo sin red', async () => {
+  const base = archivoJpeg();
+  const trampa = {
+    name: base.name,
+    type: base.type,
+    size: base.size,
+    slice: () => {
+      throw new TypeError('slice roto simulado');
+    },
+  } as unknown as File;
+  let llamado = false;
+  const espia = async () => {
+    llamado = true;
+    throw new Error('no debe llamarse');
+  };
+  const resultado = await uploadToGitHub(trampa, 'token-de-prueba', undefined, espia);
+  assert.equal(resultado.success, false);
+  assert.match(resultado.message, /No se pudo leer el contenido/i);
+  assert.equal(llamado, false);
+});
+
+test('upload: un archivo con extensión y MIME perfectos pero bytes ilegibles tampoco pasa', async () => {
+  // El nombre/MIME son impecables: la única defensa es exigir los bytes.
+  const inocente = archivoConLecturaRota('imagen-perfecta.png');
+  const trampa = { ...inocente } as unknown as File;
+  Object.defineProperty(trampa, 'type', { value: 'image/png' });
+  const { impl, llamadas } = fetchFalso({
+    get: () => new Response('{"message":"Not Found"}', { status: 404 }),
+    put: () => new Response('{"content":{}}', { status: 201 }),
+  });
+  const resultado = await uploadToGitHub(trampa, 'token-de-prueba', undefined, impl);
+  assert.equal(resultado.success, false);
+  assert.equal(llamadas.length, 0, 'cero llamadas HTTP');
 });
 
 // La carpeta de fotos de invitados (backend de moderación) no cambia:

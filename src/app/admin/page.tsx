@@ -22,10 +22,10 @@ import type { SiteConfig } from '@/data/config-schema'
 import { CONFIG_DEMO_BASE } from '@/data/demo-config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES, COLOR_PRESETS, BACKGROUND_PRESETS } from '@/data/admin-options'
-import { deployToGitHub, uploadToGitHub, publicarInvitacionEnGitHub, type ResultadoPublicacion } from '@/lib/github-deploy'
+import { uploadToGitHub, type ResultadoPublicacion } from '@/lib/github-deploy'
+import { publicarInvitacionDesdePanel, prepararInvitacionDesdePanel } from '@/lib/publicacion-panel'
 import { sincronizarFondoConGaleria } from '@/lib/activos-editor'
 import {
-  crearInvitacionPublicada,
   normalizarSlug,
   esSlugValido,
   motivoSlugInvalido,
@@ -293,7 +293,7 @@ function ImageCard({
     const file = e.target.files?.[0]
     if (!file) return
     if (!token) {
-      setUploadMsg('Falta el GitHub Token')
+      setUploadMsg('Falta el GitHub Token: pegalo en «Conexión con GitHub»')
       setTimeout(() => setUploadMsg(''), 3000)
       return
     }
@@ -428,8 +428,6 @@ export default function AdminPage() {
   const [cfg, setCfg] = useState<SiteConfig>(() => deepClone(CONFIG_DEMO_BASE))
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set(['evento']))
   const [saved, setSaved] = useState(false)
-  const [deploying, setDeploying] = useState(false)
-  const [deployResult, setDeployResult] = useState<string | null>(null)
   const [githubToken, setGithubToken] = useState('')
   const [showToken, setShowToken] = useState(true)
   const [tokenStatus, setTokenStatus] = useState<'idle' | 'checking' | 'ok' | 'error'>('idle')
@@ -555,7 +553,13 @@ export default function AdminPage() {
   }, [])
 
   const handleSave = useCallback(() => {
-    saveConfig(cfg)
+    // «Guardar» = guardar la configuración en ESTE navegador. Antes de
+    // guardar se aplica la sincronización fondo ↔ galería (la misma que
+    // venía aplicando la acción heredada): en modo fotos el fondo usa la
+    // galería vigente y nunca fotos viejas o borradas.
+    const cfgSincronizada = sincronizarFondoConGaleria(cfg)
+    setCfg(cfgSincronizada)
+    saveConfig(cfgSincronizada)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }, [cfg])
@@ -592,42 +596,6 @@ export default function AdminPage() {
     setTokenStatus('idle')
   }, [])
 
-  const handleDeploy = useCallback(async () => {
-    const token = githubToken.trim()
-    if (!token) {
-      setDeployResult('Falta el GitHub Token. Pegalo arriba.')
-      setTimeout(() => setDeployResult(null), 5000)
-      setShowToken(true)
-      return
-    }
-
-    // ------------------------------------------------------------------
-    // Auto-sync fondo.fotos with galeria.fotos when fondo is in photo mode.
-    // This prevents the background from showing stale/removed gallery photos.
-    // Mode is "photos" when fondo.fotos is non-empty AND first entry is not a gradient.
-    // Lógica extraída a src/lib/activos-editor.ts para probarla con tests.
-    // ------------------------------------------------------------------
-    const cfgToDeploy: SiteConfig = sincronizarFondoConGaleria(cfg)
-
-    sessionStorage.setItem('milu_github_token', token)
-    saveConfig(cfgToDeploy)
-    // Also reflect the sync in the local editor state so the user sees it
-    setCfg(cfgToDeploy)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
-    setDeploying(true)
-    setDeployResult(null)
-    try {
-      const result = await deployToGitHub(cfgToDeploy as unknown as Record<string, unknown>, token)
-      setDeployResult(result.message)
-    } catch (err) {
-      setDeployResult(`Error: ${err instanceof Error ? err.message : 'unknown'}`)
-    } finally {
-      setDeploying(false)
-      setTimeout(() => setDeployResult(null), 8000)
-    }
-  }, [cfg, githubToken])
-
   // =====================================================================
   // Publicación de invitaciones: genera la representación publicable y
   // la guarda como SU PROPIO archivo (content/invitaciones/<slug>.json).
@@ -645,46 +613,26 @@ export default function AdminPage() {
   const slugPublicable = slugFinal && esSlugValido(slugFinal) ? slugFinal : ''
 
   const handlePublicar = useCallback(async () => {
-    const token = githubToken.trim()
-    if (!slugPublicable) {
-      setResultadoPublicacion({
-        success: false,
-        slug: slugFinal,
-        url: '',
-        urlAbsoluta: '',
-        creado: false,
-        message: motivoSlugInvalido(slugFinal) || 'Elegí un slug válido antes de publicar.',
-      })
-      return
-    }
-    if (!token) {
-      setResultadoPublicacion({
-        success: false,
-        slug: slugPublicable,
-        url: '',
-        urlAbsoluta: '',
-        creado: false,
-        message: 'Falta el GitHub Token. Pegalo en la sección Deploy y probá de nuevo.',
-      })
-      return
-    }
-
+    // Acción principal de publicación: pasa por publicarInvitacionDesdePanel
+    // (flujo por slug, content/invitaciones/<slug>.json). La unidad valida
+    // slug y token, arma la representación y devuelve el estado REAL:
+    // creada / actualizada / error. Nunca se presenta éxito de publicación
+    // por solo guardar en este navegador o por escribir config.ts.
     setPublicando(true)
     setResultadoPublicacion(null)
     try {
-      const invitacion = crearInvitacionPublicada({
-        slug: slugPublicable,
+      const resultado = await publicarInvitacionDesdePanel({
+        slug: slugFinal,
         config: cfg,
-        ahora: new Date(),
+        token: githubToken.trim(),
       })
-      // La publicación NO toca el estado del panel: ante cualquier error
-      // la configuración queda intacta para reintentar.
-      const resultado = await publicarInvitacionEnGitHub(invitacion, token)
       setResultadoPublicacion(resultado)
     } catch (err) {
+      // Defensa: la unidad no lanza, pero si algo inesperado ocurre el
+      // panel muestra fallo honesto y conserva la configuración intacta.
       setResultadoPublicacion({
         success: false,
-        slug: slugPublicable,
+        slug: slugFinal,
         url: '',
         urlAbsoluta: '',
         creado: false,
@@ -693,12 +641,15 @@ export default function AdminPage() {
     } finally {
       setPublicando(false)
     }
-  }, [cfg, githubToken, slugFinal, slugPublicable])
+  }, [cfg, githubToken, slugFinal])
 
-  // Vista previa fiel ANTES de publicar: guarda en este navegador y abre
-  // la experiencia real de invitación (misma que verán los invitados).
+  // Vista previa fiel ANTES de publicar: guarda en este navegador (con la
+  // misma sincronización fondo ↔ galería que «Guardar») y abre la
+  // experiencia real de invitación (misma que verán los invitados).
   const handleVistaPrevia = useCallback(() => {
-    saveConfig(cfg)
+    const cfgSincronizada = sincronizarFondoConGaleria(cfg)
+    setCfg(cfgSincronizada)
+    saveConfig(cfgSincronizada)
     window.open('/Miluaistudio/previsualizar/', '_blank', 'noopener')
   }, [cfg])
 
@@ -716,7 +667,7 @@ export default function AdminPage() {
       return
     }
     try {
-      const invitacion = crearInvitacionPublicada({ slug: slugPublicable, config: cfg })
+      const invitacion = prepararInvitacionDesdePanel({ slug: slugPublicable, config: cfg })
       const blob = new Blob([serializarInvitacion(invitacion)], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -783,40 +734,6 @@ export default function AdminPage() {
             </button>
             <button
               type="button"
-              onClick={handleDeploy}
-              disabled={deploying}
-              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5"
-              style={{
-                background: deploying ? '#6b7280' : '#2563eb',
-                color: '#fff',
-                border: 'none',
-                opacity: deploying ? 0.7 : 1,
-              }}
-            >
-              {deploying ? (
-                <>
-                  <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Deploying...
-                </>
-              ) : (
-                <>
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                  </svg>
-                  Deploy
-                </>
-              )}
-            </button>
-            {deployResult && (
-              <span className={`text-xs px-2 py-1 rounded-md ${deployResult.startsWith('Error') ? 'bg-red-950/80 text-red-300' : 'bg-green-950/80 text-green-300'}`}>
-                {deployResult}
-              </span>
-            )}
-            <button
-              type="button"
               onClick={handleExport}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
               style={{ background: GOLD + '22', color: GOLD, border: `1px solid ${GOLD}55` }}
@@ -848,7 +765,7 @@ export default function AdminPage() {
       {/* --- Form Body --- */}
       <main className="max-w-4xl mx-auto px-4 py-6 space-y-4 pb-16">
 
-        {/* DEPLOY - GitHub Token */}
+        {/* CONEXIÓN CON GITHUB — token usado por «Publicar invitación» y la subida de imágenes */}
         <div className="rounded-2xl border overflow-hidden" style={{ borderColor: '#2563eb55', background: '#111111' }}>
           <button
             type="button"
@@ -856,8 +773,8 @@ export default function AdminPage() {
             className="w-full flex items-center justify-between px-5 py-4 text-left select-none hover:bg-white/5 transition-colors"
           >
             <span className="flex items-center gap-3">
-              <span className="text-xl">🚀</span>
-              <span className="font-cursive text-xl" style={{ color: '#2563eb' }}>Deploy (Git Push)</span>
+              <span className="text-xl">🔑</span>
+              <span className="font-cursive text-xl" style={{ color: '#2563eb' }}>Conexión con GitHub (token)</span>
             </span>
             <svg className={`w-5 h-5 transition-transform duration-200 ${showToken ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="#2563eb" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -867,7 +784,8 @@ export default function AdminPage() {
             <div className="px-5 pb-5 pt-1 border-t" style={{ borderColor: '#2563eb33' }}>
               <div className="space-y-3">
                 <p className="text-xs text-[#716a63]">
-                  Para deployar y subir fotos, necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">Contents read/write</code>.
+                  Para publicar la invitación y subir imágenes necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">Contents read/write</code>.
+                  Pegar el token acá NO publica nada por sí solo: la publicación se hace desde la sección <strong className="text-blue-300">«Publicar invitación»</strong> (enlace propio /i/slug/).
                 </p>
                 <div className="relative">
                   <input
@@ -913,7 +831,7 @@ export default function AdminPage() {
                 {tokenStatus === 'ok' && (
                   <div className="flex items-center gap-2 text-xs">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-green-400">Token valido - deploy listo</span>
+                    <span className="text-green-400">Token válido: podés publicar la invitación y subir imágenes</span>
                   </div>
                 )}
                 {tokenStatus === 'error' && (
