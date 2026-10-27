@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 005 — Reprueba de la corrección final (27-10-2026)](./ITERACION-2026-10-27-005-REPRUEBA-CORRECCION-FINAL.md)
 - [Iteración 004 — Nueva revisión posterior al prompt de corrección (27-10-2026)](./ITERACION-2026-10-27-004-REVISION-POST-PROMPT.md)
 - [Iteración 003 — Prompt de corrección final para Z.AI (27-10-2026)](./ITERACION-2026-10-27-003-PROMPT-CORRECCION-FINAL.md)
 - [Prompt para Z.AI — Corrección final de Miluaistudio](./PROMPT-ZAI-CORRECCION-FINAL.md)
