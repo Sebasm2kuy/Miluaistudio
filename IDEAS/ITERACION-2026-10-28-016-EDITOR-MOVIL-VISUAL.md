@@ -3,6 +3,7 @@
 **Fecha:** 28-10-2026
 **Tipo:** Implementación funcional (responde al requisito de la Iteración 015)
 **Rama:** `feat/editor-movil-visual`
+**PR:** [#17](https://github.com/Sebasm2kuy/Miluaistudio/pull/17) · CI: [run 40585640122 success](https://github.com/Sebasm2kuy/Miluaistudio/actions/runs/40585640122)
 **Estado:** Implementado y verificado con pruebas automatizadas y navegador (360 / 375 / 430 / 1280 px). Pendiente de validación en teléfono físico.
 
 ## Contexto

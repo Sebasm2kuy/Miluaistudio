@@ -340,6 +340,7 @@ Work Log:
 - Poda y guarda: prune-export.mjs elimina out/editar/ y verify-export.mjs falla si reaparece.
 - Tests: +13 (tests/editor-campos.test.ts: registro completo, rutas existentes en el esquema, {idx} apunta a arrays, ids usados por componentes registrados; tests/editor-config.test.ts: inmutabilidad, arrays fuera de rango sin corromper, fechas) → 119/119; lint 0; typecheck 0; build + prune + verify-export + verify-privacy sin errores (22 páginas).
 - Verificación en navegador (dev server + Chromium): 360/375/430/1280 px sin desbordamiento horizontal; edición en vivo reflejada detrás del panel; Cancelar revierte solo el panel; plantilla Oro Real aplicada conservando nombre; Previa sin contornos con RSVP activo y Editar con RSVP inerte; foto sin token → «hace falta el token…», con token falso → «Error al subir: Bad credentials»; Guardar persiste y recarga conserva cambios; regresiones /, /i/ejemplo-boda/ y /admin OK; 0 errores de consola en /editar y /admin.
+- CI del PR #17: run 40585640122 "Validate Miluaistudio" → success (https://github.com/Sebasm2kuy/Miluaistudio/actions/runs/40585640122).
 - Docs: IDEAS/ITERACION-2026-10-28-016-EDITOR-MOVIL-VISUAL.md + índice; docs/PRUEBA-MANUAL-EDITOR-MOVIL.md (guion de 27 pasos para teléfono físico, todos pendientes del propietario); ADMINISTRACION.md referencia el editor móvil; worklog del repo.
 
 Stage Summary:
