@@ -433,12 +433,10 @@ export default function AdminPage() {
       // anteriores, se migra a sessionStorage y se borra de localStorage.
       const sessionToken = sessionStorage.getItem('milu_github_token')
       if (sessionToken?.trim()) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setGithubToken(sessionToken.trim())
       } else {
         const legacy = localStorage.getItem('milu_github_token')
         if (legacy?.trim()) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setGithubToken(legacy.trim())
           sessionStorage.setItem('milu_github_token', legacy.trim())
           localStorage.removeItem('milu_github_token')
