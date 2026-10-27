@@ -1,17 +1,19 @@
 import type { Metadata } from 'next';
 
 /**
- * /editar — editor móvil visual (herramienta LOCAL, nunca publicada).
+ * /editar — editor móvil visual (publicado desde la iteración 017).
  *
- * Igual que /admin: el build de producción elimina esta ruta del
- * artefacto estático (scripts/prune-export.mjs) y scripts/verify-export.mjs
- * falla si reaparece, porque GitHub Pages no ofrece autenticación y un
- * editor público no puede considerarse protegido.
+ * Es la forma en que el anfitrión edita la invitación desde el teléfono
+ * contra el sitio real. La ruta lleva noindex y no contiene secretos ni
+ * datos privados: toda acción que modifica el sitio (cargar por slug,
+ * publicar, subir fotos) exige el GitHub token del propietario. A
+ * diferencia de /admin (poda del export), esta ruta SÍ se publica y
+ * scripts/verify-export.mjs exige su presencia en el artefacto.
  */
 
 export const metadata: Metadata = {
   title: 'Editor móvil',
-  description: 'Editor visual de la invitación desde el teléfono. Herramienta local.',
+  description: 'Editor visual de la invitación desde el teléfono (requiere token para publicar).',
   robots: { index: false, follow: false },
 };
 

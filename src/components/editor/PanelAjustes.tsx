@@ -33,6 +33,21 @@ interface Props {
   onAgregarFoto: () => void
   token: string
   onTokenGuardar: (token: string) => void
+  /** Slug activo de la invitación cargada/publicada (para preseleccionar el campo). */
+  slug: string
+  /** Estado del vínculo con la invitación publicada (carga y publicación). */
+  github: EstadoGithubUI
+  onCargarInvitacion: (slug: string) => void
+  onPublicarInvitacion: (slug: string) => void
+}
+
+/** Estado compartido página ↔ panel para la invitación publicada. */
+export interface EstadoGithubUI {
+  ocupado: 'cargando' | 'publicando' | null
+  mensaje: string
+  tipoMensaje: 'info' | 'ok' | 'error'
+  /** URL absoluta de la invitación publicada (tras una carga/publicación exitosa). */
+  urlPublica?: string
 }
 
 type EstadoToken = 'indefinido' | 'verificando' | 'ok' | 'error'
@@ -58,11 +73,16 @@ function ContenidoAjustes({
   onAgregarFoto,
   token,
   onTokenGuardar,
+  slug,
+  github,
+  onCargarInvitacion,
+  onPublicarInvitacion,
 }: Props) {
   const [grupoAbierto, setGrupoAbierto] = useState<string | null>('ajustes-plantillas')
   const [alturaDisponible, setAlturaDisponible] = useState<number | null>(null)
   const [tokenBorrador, setTokenBorrador] = useState(token)
   const [estadoToken, setEstadoToken] = useState<EstadoToken>('indefinido')
+  const [slugBorrador, setSlugBorrador] = useState(slug)
 
   // Altura real con teclado virtual
   useEffect(() => {
@@ -262,6 +282,78 @@ function ContenidoAjustes({
           >
             + Agregar foto
           </button>
+        </div>
+      )
+    }
+
+    if (panel.custom === 'github') {
+      return (
+        <div className="space-y-3">
+          <p className="text-xs leading-relaxed text-[#787168]">
+            «Guardar» (arriba) guarda un <strong>borrador en este navegador</strong>. Para que cambie la
+            invitación real (<span className="whitespace-nowrap">/i/slug/</span>), cargá acá la publicada
+            por su slug, editá y tocá «Publicar cambios». Necesita el token de «Conexión con GitHub».
+          </p>
+          <input
+            type="text"
+            value={slugBorrador}
+            onChange={(e) => setSlugBorrador(e.target.value)}
+            placeholder="slug de la invitación · ej: quince-de-muestra"
+            autoCapitalize="none"
+            autoCorrect="off"
+            inputMode="url"
+            className="w-full min-h-[44px] rounded-xl border border-[#e8e0d7] bg-white px-3.5 py-2.5 text-sm text-[#292522] outline-none focus:border-[#2563eb]"
+            aria-label="Slug de la invitación publicada"
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => onCargarInvitacion(slugBorrador)}
+              disabled={github.ocupado !== null}
+              className="min-h-[44px] flex-1 rounded-xl border border-[#2563eb] bg-white text-sm font-bold text-[#2563eb] disabled:opacity-60"
+            >
+              {github.ocupado === 'cargando' ? 'Cargando…' : 'Cargar publicada'}
+            </button>
+            <button
+              type="button"
+              onClick={() => onPublicarInvitacion(slugBorrador)}
+              disabled={github.ocupado !== null || !token}
+              title={token ? undefined : 'Pegá primero el token en «Conexión con GitHub»'}
+              className="min-h-[44px] flex-1 rounded-xl bg-[#16a34a] text-sm font-bold text-white disabled:opacity-60"
+            >
+              {github.ocupado === 'publicando' ? 'Publicando…' : 'Publicar cambios'}
+            </button>
+          </div>
+          {!token && (
+            <p className="text-xs font-semibold text-[#8a6534]">
+              Para cargar o publicar hace falta el token: pegalo en «Conexión con GitHub».
+            </p>
+          )}
+          {github.mensaje && (
+            <p
+              role={github.tipoMensaje === 'error' ? 'alert' : 'status'}
+              className={
+                'rounded-lg px-3 py-2 text-xs font-medium ' +
+                (github.tipoMensaje === 'error'
+                  ? 'bg-red-50 text-red-600'
+                  : github.tipoMensaje === 'ok'
+                    ? 'bg-green-50 text-green-700'
+                    : 'bg-[#f0ebe4] text-[#54483e]')
+              }
+            >
+              {github.mensaje}
+            </p>
+          )}
+          {github.urlPublica && (
+            <a
+              href={github.urlPublica}
+              target="_blank"
+              rel="noreferrer"
+              className="block min-h-[44px] rounded-xl bg-[#292522] px-3 py-2.5 text-center text-xs font-bold text-[#fcf6ba]"
+            >
+              Ver la invitación publicada ↗
+            </a>
+          )}
         </div>
       )
     }

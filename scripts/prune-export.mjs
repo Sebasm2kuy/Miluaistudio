@@ -2,15 +2,21 @@
 /**
  * prune-export.mjs — Poda del artefacto estático tras `next build`.
  *
- * El panel de administración (/admin) y el editor móvil (/editar) son
- * herramientas LOCALES de gestión. Con `output: "export"`, Next.js genera
- * out/admin/ y out/editar/ para cualquier ruta presente en src/app, así
- * que se eliminan físicamente de la exportación: el sitio publicado en
- * GitHub Pages no debe incluir ninguna página de administración o de
- * edición alcanzable (noindex NO es protección).
+ * El panel de administración (/admin) es una herramienta LOCAL de gestión.
+ * Con `output: "export"`, Next.js genera out/admin/ para cualquier ruta
+ * presente en src/app, así que se elimina físicamente de la exportación:
+ * el sitio publicado en GitHub Pages no debe incluir el panel completo de
+ * administración (noindex NO es protección).
+ *
+ * El editor móvil (/editar) SÍ se publica desde la iteración 017: es la
+ * forma en que el anfitrión edita la invitación desde el teléfono. No
+ * contiene secretos ni datos privados; toda acción que modifica el sitio
+ * (cargar por slug, publicar, subir fotos) exige el GitHub token del
+ * propietario, y la ruta lleva noindex. La protección real es el token,
+ * no la URL. Ver scripts/verify-export.mjs, que ahora EXIGE su presencia.
  *
  * Se ejecuta como parte de `npm run build` (ver package.json).
- * `scripts/verify-export.mjs` falla el build si alguna reaparece.
+ * `scripts/verify-export.mjs` falla el build si out/admin reaparece.
  */
 
 import { rmSync, existsSync } from 'node:fs';
@@ -19,7 +25,6 @@ import { join } from 'node:path';
 const OUT = join(process.cwd(), 'out');
 const RUTAS_PROHIBIDAS = [
   { dir: join(OUT, 'admin'), nombre: 'out/admin/' },
-  { dir: join(OUT, 'editar'), nombre: 'out/editar/' },
 ];
 
 for (const ruta of RUTAS_PROHIBIDAS) {

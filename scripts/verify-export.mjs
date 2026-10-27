@@ -6,7 +6,8 @@
  *  1. El panel de administración vuelve a incluirse en la exportación
  *     (out/admin/ o cualquier archivo bajo esa ruta).
  *  2. Falta alguna ruta comercial obligatoria (inicio, catálogo,
- *     personalizador, las 10 demos, 404, robots, sitemap).
+ *     personalizador, las 10 demos, 404, robots, sitemap) o el editor
+ *     móvil (/editar/, publicado desde la iteración 017).
  *  3. Un asset clave no usa la ruta base /Miluaistudio.
  *  4. Hay indicios de secretos embebidos en el artefacto público.
  *  5. Reaparecen imágenes personales retiradas de public/ por privacidad
@@ -31,18 +32,13 @@ function fail(msg) { errors.push(msg); }
 function ok(msg) { notes.push('OK  ' + msg); }
 
 // ---- 1. Las herramientas locales no deben existir en el artefacto ----
-// (panel de administración y editor móvil: solo uso en desarrollo local)
+// (panel de administración: solo uso en desarrollo local. El editor móvil
+// /editar/ SÍ se publica — iteración 017 — y se exige en «rutas obligatorias»)
 const ADMIN = join(OUT, 'admin');
 if (existsSync(ADMIN)) {
   fail('RUTA PROHIBIDA: out/admin/ existe en la exportación. El panel de administración no puede publicarse.');
 } else {
   ok('out/admin/ no está en el artefacto público');
-}
-const EDITAR = join(OUT, 'editar');
-if (existsSync(EDITAR)) {
-  fail('RUTA PROHIBIDA: out/editar/ existe en la exportación. El editor móvil no puede publicarse.');
-} else {
-  ok('out/editar/ no está en el artefacto público');
 }
 
 // ---- 2. Rutas obligatorias ----
@@ -58,6 +54,8 @@ const required = [
   'sitemap.xml',
   'catalogo/index.html',
   'personalizar/index.html',
+  // Editor móvil publicado (iteración 017): debe existir en el artefacto.
+  'editar/index.html',
   ...DESIGNS.map((d) => `catalogo/${d}/index.html`),
   'og-image.jpg',
   'logo.svg',

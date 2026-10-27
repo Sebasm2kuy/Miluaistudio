@@ -359,7 +359,7 @@ export interface PanelAjuste {
   desc?: string;
   campos?: CampoSpec[];
   /** Secciones con interfaz propia en el panel de ajustes */
-  custom?: 'plantillas' | 'colores' | 'fondo' | 'cronograma' | 'galeria' | 'token';
+  custom?: 'plantillas' | 'colores' | 'fondo' | 'cronograma' | 'galeria' | 'token' | 'github';
 }
 
 export const PANELES_AJUSTES: PanelAjuste[] = [
@@ -445,6 +445,13 @@ export const PANELES_AJUSTES: PanelAjuste[] = [
     ],
   },
   { id: 'ajustes-token', titulo: 'Conexión con GitHub', icono: '🔑', custom: 'token' },
+  {
+    id: 'ajustes-github',
+    titulo: 'Invitación publicada',
+    icono: '🕊️',
+    desc: 'Cargar la publicada por su slug y publicar tus cambios reales',
+    custom: 'github',
+  },
 ];
 
 /** Ids de elementos que el editor puede abrir (para validar en runtime) */

@@ -1,12 +1,35 @@
 # Administración de Miluaistudio (flujo seguro)
 
-El panel de administración **ya no se publica** en el sitio público. GitHub Pages es
-estático y no tiene autenticación de servidor: cualquier página alcanzable por URL es
-pública, aunque tenga `noindex`. Por eso el panel vive ahora como herramienta local y
-la exportación de producción se verifica automáticamente (`scripts/verify-export.mjs`
-falla el build si `out/admin/` reaparece).
+El panel de administración `/admin` **no se publica** en el sitio público: cualquier
+página alcanzable por URL en GitHub Pages es pública aunque tenga `noindex`, así que
+el panel completo vive como herramienta local y la exportación de producción se
+verifica automáticamente (`scripts/verify-export.mjs` falla el build si `out/admin/`
+reaparece).
 
-## Opción A — Panel local (recomendada para ediciones rápidas)
+El **editor móvil `/editar` SÍ se publica** (iteración 017): es la forma de editar la
+invitación desde el teléfono. Publica solo la interfaz, sin secretos ni datos: toda
+acción que toca el sitio real (cargar por slug, publicar, subir fotos) exige el token
+de GitHub del propietario.
+
+## Opción A — Editor móvil publicado (recomendada para editar desde el teléfono)
+
+1. Abrir `https://sebasm2kuy.github.io/Miluaistudio/editar/` en el navegador del
+   teléfono y guardarlo en marcadores. Tip: `…/editar/?slug=mi-invitacion` preselecciona
+   el slug (un marcador por invitación).
+2. En Ajustes → **Conexión con GitHub** pegar el token (igual que en el panel) y
+   «Verificar y usar».
+3. En Ajustes → **Invitación publicada**: escribir el slug y tocar **«Cargar
+   publicada»** para traer la invitación real al editor; editar tocando los elementos
+   (los cambios se ven en vivo) y tocar **«Publicar cambios»** para guardar en el
+   repositorio. El botón «Guardar» de arriba solo guarda un borrador en ese navegador.
+4. El deploy de GitHub Pages se dispara solo tras publicar (≈2-3 min) y la invitación
+   real (`/i/<slug>/`) se actualiza.
+
+Sin token, la interfaz del editor funciona con el borrador local/demos y avisa
+honestamente que hace falta el token para cargar o publicar: un visitante no puede
+leer ni modificar datos reales.
+
+## Opción B — Panel local (herramienta principal de escritorio)
 
 1. Clonar el repositorio y instalar dependencias:
    ```bash
@@ -14,11 +37,9 @@ falla el build si `out/admin/` reaparece).
    npm run dev
    ```
 2. Abrir `http://localhost:3000/admin` (solo existe en tu máquina).
-   - **Desde el teléfono:** el botón **📱 Editor móvil** del encabezado lleva a
-     `/Miluaistudio/editar/`, el editor visual donde se edita la invitación
-     tocando directamente sus elementos (textos, fotos, fecha, mapa, botones).
-     Guarda con el mismo flujo del panel; publicar sigue en `/admin`. El guion
-     de prueba para teléfono real está en `docs/PRUEBA-MANUAL-EDITOR-MOVIL.md`.
+   - **Desde el teléfono (dev):** el botón **📱 Editor móvil** del encabezado lleva a
+     `/Miluaistudio/editar/` en el servidor local. Para el uso normal del teléfono no
+     hace falta esto: usá la Opción A.
 3. Pegar el token de GitHub **solo si** vas a publicar o subir imágenes (sección
    **“Conexión con GitHub”**):
    - Usar un *fine-grained PAT* con permiso mínimo: `Contents: Read and write`
@@ -38,7 +59,7 @@ falla el build si `out/admin/` reaparece).
    utilidad de legado documentada en `src/lib/github-deploy.ts` y ninguna
    pantalla la ofrece.
 
-## Opción B — Sin panel (flujo Git / Pull Request)
+## Opción C — Sin panel (flujo Git / Pull Request)
 
 Para cambiar la configuración de una invitación o de la tienda sin usar tokens en el
 navegador:
