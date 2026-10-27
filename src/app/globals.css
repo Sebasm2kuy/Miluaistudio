@@ -109,11 +109,20 @@
     height: 100%;
   }
   /* Las páginas de tienda (portada y catálogo) necesitan scroll normal;
-     el overflow hidden es solo para la experiencia de invitación (iOS-safe). */
-  html:has([data-page="storefront"]),
-  html:has([data-page="storefront"]) body {
+     el overflow hidden es solo para la experiencia de invitación (iOS-safe).
+     El scroll real ocurre en html y el body NO debe ser contenedor de scroll:
+     si lo fuera (overflow-y auto + height creciente), position:sticky —vista
+     previa del personalizador y encabezados— quedaría pegado a un contenedor
+     que nunca se desplaza y dejaría de acompañar el scroll. */
+  html:has([data-page="storefront"]) {
     overflow-x: hidden;
     overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
+  html:has([data-page="storefront"]) body {
+    overflow-x: clip;
+    overflow-y: visible;
     height: auto;
     min-height: 100%;
   }
@@ -227,6 +236,13 @@
 /* ===== Scrollbar hide (for horizontal carousels) ===== */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Columna de vista previa pegajosa del personalizador: cuando la pantalla es
+   baja, la tarjeta se desplaza por dentro con una barra fina y discreta. */
+.sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(241, 164, 106, 0.35) transparent; }
+.sidebar-scroll::-webkit-scrollbar { width: 5px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(241, 164, 106, 0.35); border-radius: 999px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
 
 /* ===== Shimmer text utility ===== */
 .text-shimmer {

@@ -107,7 +107,7 @@ function MiniaturaDiseno({ design, selected, onSelect }: { design: InvitationDes
 /** Vista previa instantánea de la portada dentro de un celular */
 function PhonePreview({ data }: { data: MiniInvitationData }) {
   return (
-    <div className="relative mx-auto w-[218px] rounded-[2.6rem] bg-[#101012] p-[9px] shadow-[0_28px_60px_rgba(0,0,0,0.5),inset_0_0_0_1px_rgba(255,255,255,0.12)] sm:w-[248px]">
+    <div className="relative mx-auto w-[min(218px,26vh)] rounded-[2.6rem] bg-[#101012] p-[9px] shadow-[0_28px_60px_rgba(0,0,0,0.5),inset_0_0_0_1px_rgba(255,255,255,0.12)] sm:w-[min(248px,30vh)]">
       <div className="relative aspect-[9/18.6] w-full overflow-hidden rounded-[2.05rem]">
         <MiniInvitation data={data} variant="screen" />
         <div className="absolute left-1/2 top-[1.6%] h-[3%] w-[40%] -translate-x-1/2 rounded-full bg-[#101012]" />
@@ -783,8 +783,12 @@ export default function PersonalizadorApp() {
               </div>
               </div>
 
-              {/* Columna de vista previa */}
+              {/* Columna de vista previa: pegajosa y siempre a la vista.
+                  El wrapper interno acota la altura a la pantalla: en monitores
+                  bajos la tarjeta se desplaza por dentro sin perder nunca el
+                  celular ni los botones. */}
               <aside className="lg:sticky lg:top-24 lg:self-start">
+                <div className="sidebar-scroll lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1.5">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center">
                   <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#b2b1b6]">Vista previa en vivo</p>
                   {previewData && <PhonePreview data={previewData} />}
@@ -826,6 +830,7 @@ export default function PersonalizadorApp() {
                   <p className="mt-3 text-[11px] leading-relaxed text-[#8b8b92]">
                     Te llega con tu diseño, nombre, fecha, lugar, frase y música. Con el pago lo dejamos publicado con tu enlace final.
                   </p>
+                </div>
                 </div>
               </aside>
             </div>

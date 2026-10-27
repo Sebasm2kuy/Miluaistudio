@@ -107,7 +107,8 @@ export default function RootLayout({
           fontFamily: "'Montserrat', sans-serif",
           backgroundColor: '#050505',
           color: '#fdfcfb',
-          overflowX: 'hidden',
+          /* Sin overflow inline: el control de overflow vive en globals.css
+             (body con overflow-x oculto rompe position:sticky en storefront). */
         }}
       >
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

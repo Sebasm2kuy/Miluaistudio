@@ -115,3 +115,26 @@ Stage Summary:
 - Hashtag con efecto shimmer dorado
 - Sección de fotos regalo con esquinas decorativas doradas
 - Código limpio (imports optimizados)
+
+---
+Task ID: F2-fix-preview
+Agent: Main (sesión actual)
+Task: La vista previa de la derecha debe acompañar el scroll en /personalizar
+
+Work Log:
+- Diagnóstico: body con overflow-x: hidden (inline en layout.tsx + regla storefront) era
+  contenedor de scroll que nunca se desplaza; position:sticky quedaba anclado a él y la
+  columna de vista previa se perdía al bajar.
+- Fix raíz: scroll real en html (overflow-y auto) y body con overflow-x: clip + overflow-y: visible.
+  Removido overflowX inline del body en layout.tsx.
+- Aside del personalizador: wrapper interno con lg:max-h-[calc(100vh-7rem)] + overflow-y auto
+  y scrollbar fina (.sidebar-scroll) para monitores bajos.
+- PhonePreview sensible a la altura: w-[min(218px,26vh)] / sm:w-[min(248px,30vh)].
+- Verificado con agent-browser: 1366x768 (sticky a 96px con scroll de 900 y 2200px, preview
+  100% visible), 1920x1080, móvil 390px sin overflow-x, vista completa con sobre clásico OK,
+  catálogo ahora con header sticky funcionando.
+- Build de export estático OK (18 páginas). Lint falla por incompatibilidad preexistente
+  de ESLint 10 con el lockfile (no afecta el deploy, que solo corre npm run build).
+
+Stage Summary:
+- Commit 3be4e35 listo en local; pendiente push (sin credenciales en este entorno).
