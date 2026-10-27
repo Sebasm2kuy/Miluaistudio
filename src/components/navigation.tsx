@@ -1,6 +1,7 @@
 'use client'
 import { Calendar, MapPin, CheckCircle, Images, Music, ArrowUp } from 'lucide-react'
 import { type RefObject } from 'react'
+import { useConfig } from '@/hooks/useConfig'
 
 const navItems = [
   { icon: Calendar, href: '#detalles', label: 'Detalles' },
@@ -10,12 +11,27 @@ const navItems = [
   { icon: CheckCircle, href: '#confirmar', label: 'Confirmar' },
 ]
 
+/** Visibilidad de cada ancla según las secciones prendidas (ausente = prendida) */
+function useNavItems() {
+  const cfg = useConfig()
+  const s = cfg.secciones ?? {}
+  const on = (flag?: boolean) => flag !== false
+  return navItems.filter(({ href }) => {
+    if (href === '#detalles') return on(s.cuentaRegresiva)
+    if (href === '#galeria') return on(s.galeria)
+    if (href === '#musica') return on(s.musica)
+    if (href === '#confirmar') return on(s.confirmacion)
+    return true
+  })
+}
+
 interface NavigationProps {
   hidden?: boolean
   scrollContainer?: RefObject<HTMLDivElement | null>
 }
 
 export default function Navigation({ hidden = false, scrollContainer }: NavigationProps) {
+  const items = useNavItems()
   const getScrollEl = () => scrollContainer?.current ?? window
 
   const scrollToTop = (e: React.MouseEvent) => {
@@ -51,7 +67,7 @@ export default function Navigation({ hidden = false, scrollContainer }: Navigati
         transition: 'transform 0.3s ease, translate 0.3s ease',
       }}
     >
-      {navItems.map(({ icon: Icon, href, label }) => (
+      {items.map(({ icon: Icon, href, label }) => (
         <a
           key={href}
           href={href}

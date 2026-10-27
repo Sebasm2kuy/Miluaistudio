@@ -45,7 +45,7 @@ export default function EventInfo() {
                 <Shirt size={20} className="sm:w-6 sm:h-6" strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">Gala / Elegante</h3>
+                <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">{cfg.evento.dressCode || 'Gala / Elegante'}</h3>
                 <p className="text-gray-500 font-bold uppercase tracking-widest text-sm sm:text-[11px] md:text-xs mt-2">
                   Código de Vestimenta
                 </p>

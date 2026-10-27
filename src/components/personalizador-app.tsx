@@ -7,8 +7,12 @@ import {
   Check,
   ExternalLink,
   Heart,
+  Instagram,
+  LayoutTemplate,
+  MapPin,
   Music2,
   PenLine,
+  Shirt,
   Sparkles,
   Type,
   X,
@@ -27,8 +31,11 @@ import {
   fechaSugerida,
   mensajeWhatsAppPersonal,
   partesFecha,
+  SECCIONES_DEFAULT,
+  SECCIONES_META,
   TIPOS_EVENTO,
   type DatosPersonales,
+  type Secciones,
 } from '@/lib/personalizador';
 
 const CATALOGO_URL = '/Miluaistudio/catalogo/';
@@ -40,6 +47,10 @@ const DATOS_INICIALES: DatosPersonales = {
   fecha: '',
   hora: '21:00',
   lugar: '',
+  direccion: '',
+  dressCode: '',
+  instagram: '',
+  historia: '',
   frase: '',
   musica: '',
 };
@@ -93,10 +104,59 @@ function PhonePreview({ data }: { data: MiniInvitationData }) {
 const INPUT_CLS =
   'w-full rounded-xl border border-white/10 bg-white/[0.06] px-3.5 py-2.5 text-sm text-[#f7f1e8] placeholder:text-[#8b8b92] outline-none transition focus:border-[#f1a46a]/60 focus:bg-white/[0.09]';
 const LABEL_CLS = 'mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]';
+const HELP_CLS = 'mt-1.5 text-[11px] leading-relaxed text-[#8b8b92]';
+
+/** Interruptor de sección: prende/apaga un módulo de la invitación en vivo */
+function SwitchSeccion({
+  label,
+  desc,
+  checked,
+  onToggle,
+}: {
+  label: string;
+  desc: string;
+  checked: boolean;
+  onToggle: (v: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onToggle(!checked)}
+      className={
+        'flex items-start justify-between gap-3 rounded-xl border px-3.5 py-3 text-left transition ' +
+        (checked
+          ? 'border-[#f1a46a]/40 bg-white/[0.05]'
+          : 'border-white/10 bg-white/[0.02] hover:border-white/20')
+      }
+    >
+      <span>
+        <span className={'block text-sm font-medium ' + (checked ? 'text-[#f7f1e8]' : 'text-[#b2b1b6]')}>{label}</span>
+        <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{desc}</span>
+      </span>
+      <span
+        className={
+          'relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition ' +
+          (checked ? 'bg-[#f1a46a]' : 'bg-white/15')
+        }
+        aria-hidden="true"
+      >
+        <span
+          className={
+            'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ' +
+            (checked ? 'left-[22px]' : 'left-0.5')
+          }
+        />
+      </span>
+    </button>
+  );
+}
 
 export default function PersonalizadorApp() {
   const [designId, setDesignId] = useState<string | null>(null);
   const [datos, setDatos] = useState<DatosPersonales>(DATOS_INICIALES);
+  const [secciones, setSecciones] = useState<Secciones>(SECCIONES_DEFAULT);
   const [vistaPrevia, setVistaPrevia] = useState(false);
   const [overlayKey, setOverlayKey] = useState(0);
 
@@ -138,13 +198,13 @@ export default function PersonalizadorApp() {
   }, [design, datos.nombre, datos.tipo, datos.fecha, datos.hora]);
 
   const configCompleta = useMemo(
-    () => (design ? createPersonalConfig(design, datos) : null),
-    [design, datos],
+    () => (design ? createPersonalConfig(design, datos, secciones) : null),
+    [design, datos, secciones],
   );
 
   const linkWhatsApp = useMemo(
-    () => (design ? whatsappLink(mensajeWhatsAppPersonal(design, datos)) : '#'),
-    [design, datos],
+    () => (design ? whatsappLink(mensajeWhatsAppPersonal(design, datos, secciones)) : '#'),
+    [design, datos, secciones],
   );
 
   const set = (campo: keyof DatosPersonales) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -246,6 +306,8 @@ export default function PersonalizadorApp() {
             </h2>
 
             <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
+              {/* Columna izquierda: formulario + panel de secciones */}
+              <div>
               {/* Formulario */}
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -285,8 +347,22 @@ export default function PersonalizadorApp() {
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="p-lugar" className={LABEL_CLS}><PenLine size={13} className="text-[#f1a46a]" /> Lugar del evento</label>
-                    <input id="p-lugar" value={datos.lugar} onChange={set('lugar')} placeholder="Ej: Salón Imperial, Rambla Gandhi 1234, Montevideo" maxLength={90} className={INPUT_CLS} />
-                    <p className="mt-1.5 text-[11px] text-[#8b8b92]">Escribí el nombre y la dirección completa: el mapa y el botón «Cómo llegar» se actualizan solos.</p>
+                    <input id="p-lugar" value={datos.lugar} onChange={set('lugar')} placeholder="Ej: Salón Imperial" maxLength={60} className={INPUT_CLS} />
+                    <p className={HELP_CLS}>El nombre que verán los invitados. La dirección va en el campo de abajo.</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="p-direccion" className={LABEL_CLS}><MapPin size={13} className="text-[#f1a46a]" /> Dirección</label>
+                    <input id="p-direccion" value={datos.direccion} onChange={set('direccion')} placeholder="Ej: Rambla Gandhi 1234, Montevideo" maxLength={90} className={INPUT_CLS} />
+                    <p className={HELP_CLS}>Alimenta el mapa y el botón «Cómo llegar». Si la dejás vacía usamos el nombre del lugar.</p>
+                  </div>
+                  <div>
+                    <label htmlFor="p-dresscode" className={LABEL_CLS}><Shirt size={13} className="text-[#f1a46a]" /> Dress code</label>
+                    <input id="p-dresscode" value={datos.dressCode} onChange={set('dressCode')} placeholder="Ej: Gala / Elegante" maxLength={40} className={INPUT_CLS} />
+                  </div>
+                  <div>
+                    <label htmlFor="p-instagram" className={LABEL_CLS}><Instagram size={13} className="text-[#f1a46a]" /> Instagram (opcional)</label>
+                    <input id="p-instagram" value={datos.instagram} onChange={set('instagram')} placeholder="@tu.usuario" maxLength={30} className={INPUT_CLS} />
+                    <p className={HELP_CLS}>Agrega una sección para seguirte y juntar las fotos.</p>
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="p-frase" className={LABEL_CLS}><Type size={13} className="text-[#f1a46a]" /> Frase o dedicatoria (opcional)</label>
@@ -301,6 +377,18 @@ export default function PersonalizadorApp() {
                     />
                   </div>
                   <div className="sm:col-span-2">
+                    <label htmlFor="p-historia" className={LABEL_CLS}><Heart size={13} className="text-[#f1a46a]" /> Mi historia (opcional)</label>
+                    <textarea
+                      id="p-historia"
+                      value={datos.historia}
+                      onChange={set('historia')}
+                      rows={3}
+                      maxLength={420}
+                      placeholder="Contá en un párrafo corto tu historia, un agradecimiento o lo que quieras compartir…"
+                      className={INPUT_CLS + ' resize-none'}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
                     <label htmlFor="p-musica" className={LABEL_CLS}><Music2 size={13} className="text-[#f1a46a]" /> Canción de Spotify (opcional)</label>
                     <input
                       id="p-musica"
@@ -309,9 +397,31 @@ export default function PersonalizadorApp() {
                       placeholder="https://open.spotify.com/playlist/…"
                       className={INPUT_CLS}
                     />
-                    <p className="mt-1.5 text-[11px] text-[#8b8b92]">Pegá el enlace de una playlist, álbum o tema y sonará en tu invitación.</p>
+                    <p className={HELP_CLS}>Pegá el enlace de una playlist, álbum o tema y sonará en tu invitación.</p>
                   </div>
                 </div>
+              </div>
+
+              {/* Panel de secciones: el cliente prende y apaga módulos de la invitación */}
+              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
+                  <LayoutTemplate size={17} className="text-[#f1a46a]" /> Secciones de tu invitación
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                  Prendé lo que querés mostrar — todo va incluido en el precio. La vista previa se actualiza al instante y nos llega tu elección junto con el pedido.
+                </p>
+                <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                  {SECCIONES_META.map((m) => (
+                    <SwitchSeccion
+                      key={m.key}
+                      label={m.label}
+                      desc={m.desc}
+                      checked={secciones[m.key]}
+                      onToggle={(v) => setSecciones((prev) => ({ ...prev, [m.key]: v }))}
+                    />
+                  ))}
+                </div>
+              </div>
               </div>
 
               {/* Columna de vista previa */}

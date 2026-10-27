@@ -447,7 +447,8 @@ export default function Rsvp() {
           )}
         </div>
 
-        {/* Colaboración */}
+        {/* Colaboración — regalos y datos bancarios (prendible desde secciones) */}
+        {cfg.secciones?.regalos !== false && (
         <div
           className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
         >
@@ -581,6 +582,7 @@ export default function Rsvp() {
             </div>
           )}
         </div>
+        )}
       </div>
     </section>
   )

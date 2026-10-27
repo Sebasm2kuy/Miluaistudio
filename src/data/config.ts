@@ -15,11 +15,37 @@ export interface GalleryPhoto {
   objectPosition?: { desktop: string; mobile: string }
 }
 
+/**
+ * Secciones prendibles/apagables de la invitación. Todo opcional:
+ * una config sin `secciones` muestra todo (compatibilidad con invitaciones
+ * ya publicadas y con las demos).
+ */
+export interface SeccionesConfig {
+  /** Sobre animado de apertura. En demos/previews sin esto se salta. */
+  sobre?: boolean
+  /** Cuenta regresiva (#detalles) */
+  cuentaRegresiva?: boolean
+  /** Cronograma de la noche (Timeline) */
+  cronograma?: boolean
+  /** Galería de fotos */
+  galeria?: boolean
+  /** Módulo de música (Spotify) */
+  musica?: boolean
+  /** Formulario de confirmación de asistencia */
+  confirmacion?: boolean
+  /** Bloque de regalos y datos bancarios (vive dentro de Confirmación) */
+  regalos?: boolean
+}
+
 export interface SiteConfig {
   /** Public preview mode: external RSVP/photo submissions are disabled. */
   modoDemo?: boolean;
   /** Solo demos: nombre del diseño del catálogo, mostrado en la pantalla de carga. */
   demoNombreDiseno?: string;
+  /** Secciones prendidas/apagadas (ausente = todas prendidas) */
+  secciones?: SeccionesConfig;
+  /** Sección de Instagram (se muestra solo si `usuario` está cargado) */
+  instagram?: { usuario: string; url: string };
   evento: {
     tipo: string
     nombre: string
@@ -31,6 +57,8 @@ export interface SiteConfig {
     lugar: string
     ubicacion: string
     direccion: string
+    /** Texto del código de vestimenta (default: "Gala / Elegante") */
+    dressCode?: string
     mapsUrl: string
     mapsEmbedUrl?: string
     hashtag: string

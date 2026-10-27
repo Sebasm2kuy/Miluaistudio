@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Fragment, type ReactNode } from 'react'
 import { useConfig } from '@/hooks/useConfig'
 import type { CSSProperties } from 'react'
 import Envelope from '@/components/envelope'
@@ -14,6 +14,7 @@ import Countdown from '@/components/countdown'
 import EventInfo from '@/components/event-info'
 import Timeline from '@/components/timeline'
 import Gallery from '@/components/gallery'
+import InstagramSection from '@/components/instagram-section'
 import Rsvp from '@/components/rsvp'
 import SpotifyPlayer from '@/components/spotify-player'
 import Footer from '@/components/footer'
@@ -72,11 +73,15 @@ export default function InvitationExperience() {
     '--theme-background': cfg.colores.fondo,
     '--theme-highlight': cfg.colores.principal === '#3d0202' ? '#fcf6ba' : cfg.colores.doradoClaro,
   } as CSSProperties
-  // Las demos abren directo en la pantalla de carga (sin sobre): quien no
-  // conoce la invitación ve al instante que es una web viva y no una imagen.
-  // Las invitaciones reales conservan la apertura clásica con el sobre.
+  // Secciones prendibles: una config sin `secciones` las muestra todas
+  // (invitaciones publicadas y demos siguen igual que siempre).
+  const s = cfg.secciones ?? {}
+  const on = (flag?: boolean) => flag !== false
+  // Sobre animado: ON por defecto en invitaciones reales, OFF en demos.
+  // El personalizador lo setea explícitamente según el switch del cliente.
+  const mostrarSobre = s.sobre ?? !cfg.modoDemo
   const [phase, setPhase] = useState<'envelope' | 'loading' | 'done'>(
-    cfg.modoDemo ? 'loading' : 'envelope',
+    mostrarSobre ? 'envelope' : 'loading',
   )
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -86,6 +91,17 @@ export default function InvitationExperience() {
   const scrollToTop = useCallback(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
+
+  // Bloques activos: se arman en orden y se intercalan divisores entre ellos
+  const bloques: { key: string; el: ReactNode }[] = []
+  if (on(s.cuentaRegresiva)) bloques.push({ key: 'detalles', el: <Countdown /> })
+  bloques.push({ key: 'dedicatoria', el: <Dedicatoria /> })
+  bloques.push({ key: 'ubicacion', el: <EventInfo /> })
+  if (on(s.cronograma)) bloques.push({ key: 'cronograma', el: <Timeline /> })
+  if (on(s.galeria)) bloques.push({ key: 'galeria', el: <Gallery /> })
+  if (cfg.instagram?.usuario) bloques.push({ key: 'instagram', el: <InstagramSection /> })
+  if (on(s.musica)) bloques.push({ key: 'musica', el: <SpotifyPlayer /> })
+  if (on(s.confirmacion)) bloques.push({ key: 'confirmar', el: <Rsvp /> })
 
   return (
     <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} style={rootStyle}>
@@ -106,40 +122,21 @@ export default function InvitationExperience() {
           {phase === 'done' && <AppNavigation scrollRef={scrollRef} />}
           <Hero active={phase === 'done'} scrollToTop={scrollToTop} />
 
-          <div className="mt-12 sm:mt-16 md:mt-24">
-            <Countdown />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <Dedicatoria />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <EventInfo />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <Timeline />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <Gallery />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <SpotifyPlayer />
-          </div>
-          <Divider />
-          <div className="mt-10 sm:mt-14 md:mt-20">
-            <Rsvp />
-          </div>
+          {bloques.map((bloque, i) => (
+            <Fragment key={bloque.key}>
+              {i > 0 && <Divider />}
+              <div className={i === 0 ? 'mt-12 sm:mt-16 md:mt-24' : 'mt-10 sm:mt-14 md:mt-20'}>
+                {bloque.el}
+              </div>
+            </Fragment>
+          ))}
           <div className="mt-10 sm:mt-14 md:mt-20">
             <Footer />
           </div>
           <div className="pb-24 sm:pb-32" />
         </div>
 
-        {phase !== 'done' && !cfg.modoDemo && <Envelope onOpen={handleOpen} />}
+        {phase !== 'done' && mostrarSobre && <Envelope onOpen={handleOpen} />}
         {phase === 'loading' && <LoadingScreen onDone={handleDone} />}
       </div>
     </div>
