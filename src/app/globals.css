@@ -561,7 +561,7 @@ html:has([data-page="storefront"]) body {
   --store-ink: #292522;       /* texto principal carbón */
   --store-muted: #716A63;     /* texto secundario gris cálido */
   --store-border: #E8E0D7;    /* bordes suaves */
-  --store-accent: #B58C5A;    /* champagne */
+  --store-accent: #8A6534;    /* champagne de texto, auditado WCAG AA (store-tokens.ts) */
   --store-accent-soft: #F3EAD9;
 }
 

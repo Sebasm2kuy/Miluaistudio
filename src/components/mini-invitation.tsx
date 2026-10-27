@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { DesignAdorno, InvitationDesign, ThemeMode } from '@/data/invitation-designs';
 import { DesignAdornoGlyph, CrownGlyph, ButterflyGlyph, SparkleGlyph } from '@/components/design-ornaments';
-import type { SiteConfig } from '@/data/config';
+import type { SiteConfig } from '@/data/config-schema';
 
 export interface MiniInvitationData {
   name: string;

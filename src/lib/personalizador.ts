@@ -1,4 +1,4 @@
-import type { SiteConfig, SeccionesConfig } from '@/data/config';
+import type { SiteConfig, SeccionesConfig } from '@/data/config-schema';
 import type { InvitationDesign } from '@/data/invitation-designs';
 import { createDemoConfig } from '@/data/demo-config';
 import { APERTURA_DEFAULT, nombreApertura } from '@/lib/aperturas';

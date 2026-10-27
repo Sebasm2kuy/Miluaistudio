@@ -1,7 +1,8 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import defaultConfig, { type SiteConfig } from '@/data/config'
+import type { SiteConfig } from '@/data/config-schema'
+import { CONFIG_DEMO_BASE } from '@/data/demo-config'
 
 const STORAGE_KEY = 'milu_config'
 const CONFIG_VERSION = '2026-07-15-solo-abitab'
@@ -15,7 +16,10 @@ export function ConfigProvider({ config, children }: { config: SiteConfig; child
 
 export function useConfig(): SiteConfig {
   const providedConfig = useContext(ConfigContext)
-  const [cfg, setCfg] = useState<SiteConfig>(defaultConfig)
+  // El fallback es la base de demostración (pública y sintética), nunca la
+  // configuración operativa: si defaultConfig entrara acá, sus literales
+  // quedarían embebidos en los bundles públicos del cliente.
+  const [cfg, setCfg] = useState<SiteConfig>(CONFIG_DEMO_BASE)
 
   useEffect(() => {
     // Public catalog previews use an isolated, read-only config and must not

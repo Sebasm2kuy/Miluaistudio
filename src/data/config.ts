@@ -1,177 +1,36 @@
 // ============================================================
-// CONFIGURACIÓN CENTRAL — Editá todo desde acá o desde /admin
-// ============================================================
-
-export interface TimelineEvent {
-  hora: string
-  titulo: string
-  desc: string
-  icono: string
-}
-
-export interface GalleryPhoto {
-  webp: string
-  fallback: string
-  objectPosition?: { desktop: string; mobile: string }
-}
-
-/**
- * Secciones prendibles/apagables de la invitación. Todo opcional:
- * una config sin `secciones` muestra todo (compatibilidad con invitaciones
- * ya publicadas y con las demos).
- */
-export interface SeccionesConfig {
-  /** Sobre animado de apertura. En demos/previews sin esto se salta. */
-  sobre?: boolean
-  /** Cuenta regresiva (#detalles) */
-  cuentaRegresiva?: boolean
-  /** Cronograma de la noche (Timeline) */
-  cronograma?: boolean
-  /** Galería de fotos */
-  galeria?: boolean
-  /** Módulo de música (Spotify) */
-  musica?: boolean
-  /** Formulario de confirmación de asistencia */
-  confirmacion?: boolean
-  /** Bloque de regalos y datos bancarios (vive dentro de Confirmación) */
-  regalos?: boolean
-}
-
-export interface SiteConfig {
-  /** Public preview mode: external RSVP/photo submissions are disabled. */
-  modoDemo?: boolean;
-  /** Solo demos: nombre del diseño del catálogo, mostrado en la pantalla de carga. */
-  demoNombreDiseno?: string;
-  /** Secciones prendidas/apagadas (ausente = todas prendidas) */
-  secciones?: SeccionesConfig;
-  /** Apertura animada elegida (id de APERTURAS_META; ausente = sobre clásico) */
-  apertura?: { tipo: string };
-  /** Música de fondo en loop (ausente = sin música de fondo) */
-  musicaFondo?: { tono: string; url: string };
-  /** true = el cliente cargó su propia foto de portada (sobre y fondo la usan) */
-  portadaPersonalizada?: boolean;
-  /** Sección de Instagram (se muestra solo si `usuario` está cargado) */
-  instagram?: { usuario: string; url: string };
-  evento: {
-    tipo: string
-    nombre: string
-    apellido: string
-    apodo: string
-    fecha: string
-    anio: string
-    fechaEvento: string
-    /** Duración estimada del evento en horas (para el botón de calendario; default 5) */
-    duracionHoras?: number
-    lugar: string
-    ubicacion: string
-    direccion: string
-    /** Texto del código de vestimenta (default: "Gala / Elegante") */
-    dressCode?: string
-    mapsUrl: string
-    mapsEmbedUrl?: string
-    hashtag: string
-    hashtagUrl: string
-  }
-  dedicatoria: {
-    cita: string
-    cuerpo: string
-    firma: string
-  }
-  timeline: {
-    titulo: string
-    subtitulo: string
-    eventos: TimelineEvent[]
-  }
-  galeria: {
-    titulo: string
-    subtitulo: string
-    botonSubir: string
-    photoUploadUrl: string
-    fotos: GalleryPhoto[]
-  }
-  musica: {
-    titulo: string
-    subtitulo: string
-    playlistUrl: string
-    embedUrl: string
-    botonAgregar: string
-    botonSpotify: string
-  }
-  rsvp: {
-    titulo: string
-    subtitulo: string
-    fechaLimite: string
-    fechaLimiteFull: string
-    googleSheetUrl: string
-    hostPhone: string
-    regalos: {
-      titulo: string
-      subtitulo: string
-      abitab: { titulo: string; numero: string }
-      miDinero: { titulo: string; numero: string; numeroInterbancario?: string; sucursal?: string }
-    }
-  }
-  footer: {
-    apodo: string
-    ubicacion: string
-    frase: string
-  }
-  invitacion: {
-    imagen: string
-    imagenFallback: string
-    textoAbrir: string
-  }
-  countdown: {
-    titulo: string
-    labels: { D: string; H: string; M: string; S: string }
-    botonCalendario: string
-    calendarioTitulo: string
-    calendarioLocation: string
-    calendarioDetalles: string
-  }
-  fondo: {
-    fotos: string[]
-    /** Posición de recorte por foto del slideshow (desktop/mobile), opcional */
-    posiciones?: { desktop: string; mobile: string }[]
-  }
-  colores: {
-    principal: string
-    dorado: string
-    doradoClaro: string
-    marfil: string
-    fondo: string
-  }
-  estilos: {
-    modeloComposicion?: string
-    fuenteTitulo: string
-    fuenteCuerpo: string
-    fuenteCursiva: string
-    modeloReloj: string
-    estiloTarjetas: string
-    estiloBotones: string
-    /** true = tema de fondo claro (ajusta overlays, sombras y adornos) */
-    modoClaro?: boolean
-    /** Set de adornos SVG temáticos de la miniatura (rosas, luna-estrellas, etc.) */
-    adorno?: string
-  }
-}
-
-
-// ============================================================
-// VALORES — PLANTILLA NEUTRA (sin datos de celebraciones reales)
+// CONFIGURACIÓN OPERATIVA — PLANTILLA PRIVADA
 // ------------------------------------------------------------
-// Esta configuración base NO debe contener datos personales de un evento
-// real: es el punto de partida del panel /admin. Los datos de cada cliente
-// se cargan desde el panel y se publican sobre esta plantilla.
-// Las demostraciones públicas usan src/data/demo-config.ts, que ya garantiza
-// su propia separación (sin teléfonos, sin endpoints, sin datos bancarios).
+// ⚠️ Este archivo es la plantilla de partida del panel /admin y
+// el archivo que /admin sobrescribe al desplegar (github-deploy).
+// Puede contener datos operativos o privados de un evento real:
+//
+//   NADIE DEBE IMPORTAR SU EXPORT POR DEFECTO EN CÓDIGO CLIENTE.
+//
+// - Las demostraciones públicas usan src/data/demo-config.ts,
+//   que es 100% autocontenida y no importa este módulo.
+// - Los componentes cliente importan los tipos desde
+//   src/data/config-schema.ts (solo tipos, se borran al compilar).
+// - tests/privacidad-config.test.ts y scripts/verify-privacy-export.mjs
+//   fallan si algún literal de este archivo reaparece en out/.
+//
+// Los valores de abajo son canarios sintéticos de plantilla:
+// deliberadamente distintos de los perfiles de demostración para
+// que las pruebas puedan distinguirlos. NO son datos reales.
 // ============================================================
+
+import type { SiteConfig } from './config-schema';
+
+// Los tipos se re-exportan SOLO como tipos: se borran al compilar y
+// no arrastran este módulo a ningún bundle de cliente.
+export type { SiteConfig, TimelineEvent, GalleryPhoto, SeccionesConfig } from './config-schema';
+
 const config: SiteConfig = {
   "evento": {
     "tipo": "Mis XV Años",
-    "nombre": "Valentina",
+    "nombre": "NombreEjemplo",
     "apellido": "",
-    "apodo": "Vale",
+    "apodo": "ApodoPlantilla",
     "fecha": "Sábado 12 de Junio",
     "anio": "2027",
     "fechaEvento": "2027-06-12 21:00",
@@ -180,13 +39,13 @@ const config: SiteConfig = {
     "ubicacion": "Montevideo",
     "direccion": "",
     "mapsUrl": "https://maps.google.com/?q=Montevideo%2C+Uruguay",
-    "hashtag": "#ValentinaXV2027",
-    "hashtagUrl": "https://www.instagram.com/explore/tags/ValentinaXV2027/"
+    "hashtag": "#EjemploPrivado2027",
+    "hashtagUrl": "https://www.instagram.com/explore/tags/EjemploPrivado2027/"
   },
   "dedicatoria": {
     "cita": "Hay momentos que no se repiten, personas que no se olvidan y recuerdos que se guardan para siempre en el corazón.",
     "cuerpo": "Cada persona que está leyendo esto es parte importante de mi historia. Los esperamos con toda la emoción del mundo para compartir juntos esta noche tan especial.",
-    "firma": "Valentina"
+    "firma": "NombreEjemplo"
   },
   "timeline": {
     "titulo": "La Noche",
@@ -301,7 +160,7 @@ const config: SiteConfig = {
     }
   },
   "footer": {
-    "apodo": "Vale",
+    "apodo": "ApodoPlantilla",
     "ubicacion": "Montevideo • Uruguay • 2027",
     "frase": "Con amor, para un día inolvidable"
   },
@@ -319,7 +178,7 @@ const config: SiteConfig = {
       "S": "Seg"
     },
     "botonCalendario": "Agregar al calendario",
-    "calendarioTitulo": "Mis XV Años de Valentina",
+    "calendarioTitulo": "Evento de ejemplo (plantilla privada)",
     "calendarioLocation": "Nombre del salón, Montevideo, Uruguay",
     "calendarioDetalles": "Mis XV Años\nNombre del salón, Montevideo\n21:00 hs\n\n¡Nos vemos!"
   },

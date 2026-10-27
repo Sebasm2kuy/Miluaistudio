@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus, AlertCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
-import { interpretarRespuestaRsvp, parseGasResponseBody, type ResultadoRsvp } from '@/lib/contrato-backend'
+import type { ResultadoRsvp } from '@/lib/contrato-backend'
+import { enviarRsvpPost } from '@/lib/rsvp-client'
 
 
 function generarCodigo() {
@@ -72,41 +73,30 @@ export default function Rsvp() {
 
   /**
    * Registra el grupo en el backend (Google Sheets vía Apps Script).
-   * Devuelve SOLO estados verificables (ver src/lib/contrato-backend.ts):
+   * Envío por POST con los datos SOLO en el cuerpo: los nombres y el teléfono
+   * nunca viajan en la query string. Devuelve SOLO estados verificables
+   * (ver src/lib/contrato-backend.ts y src/lib/rsvp-client.ts):
    *  - 'guardado':  el backend respondió { success: true }
-   *  - 'pendiente': el navegador bloqueó la lectura (CORS/red) o no hubo respuesta
-   *                 legible; el pedido puede haber llegado pero no se puede afirmar.
+   *  - 'pendiente': el navegador bloqueó la lectura (CORS/red), hubo timeout,
+   *                 la respuesta fue ilegible o el backend desplegado todavía
+   *                 no acepta el contrato POST. No se puede afirmar el guardado.
    *  - 'error':     el backend respondió con error explícito.
-   * El contrato del backend (gallery-server.gs) acepta GET action=rsvp con estos
-   * mismos parámetros y POST JSON { tipo: 'rsvp_grupo', ... }.
+   * Si queda 'pendiente', la interfaz ofrece la confirmación por WhatsApp
+   * como alternativa visible, elegida por la persona (nunca envíos en silencio).
    */
   const registrarEnSheets = async (nuevoCodigo: string): Promise<ResultadoRsvp> => {
     if (!cfg.rsvp.googleSheetUrl) return 'pendiente'
 
-    const params = new URLSearchParams({
-      action: 'rsvp',
-      codigo: nuevoCodigo,
-      cantidad: String(cantidad),
-      invitados: JSON.stringify(invitados.map((n) => n.trim()).filter(Boolean)),
-      telefono: telefono.trim(),
-      fecha: new Date().toISOString(),
+    return enviarRsvpPost({
+      url: cfg.rsvp.googleSheetUrl,
+      payload: {
+        codigo: nuevoCodigo,
+        cantidad,
+        invitados: invitados.map((n) => n.trim()).filter(Boolean),
+        telefono: telefono.trim(),
+        fecha: new Date().toISOString(),
+      },
     })
-
-    // 1) GET legible: la respuesta se puede verificar ({ success: true })
-    try {
-      const res = await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, { redirect: 'follow' })
-      const resultado = interpretarRespuestaRsvp(await parseGasResponseBody(res))
-      if (resultado !== 'pendiente') return resultado
-      // Respuesta HTTP recibida pero ilegible: no afirmar guardado.
-      return 'pendiente'
-    } catch {
-      // 2) Lectura bloqueada (CORS/red): reintento opaco fire-and-forget.
-      //    No se puede confirmar el resultado → 'pendiente' (nunca 'ok').
-      try {
-        await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, { method: 'GET', mode: 'no-cors' })
-      } catch { /* sin red: también queda pendiente */ }
-      return 'pendiente'
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
