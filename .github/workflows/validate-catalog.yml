@@ -28,9 +28,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Suite completa de pruebas (tsc + node --test): contrato del backend,
+      # cliente RSVP con fetch simulado, privacidad de la configuración y
+      # contraste WCAG de los tokens. Un test fallido hace fallar la validación.
+      - name: Tests
+        run: npm test
+
       # El lint ya no se oculta: si falla, la validación falla.
       - name: Lint
         run: npm run lint
 
-      - name: Build static site
+      # El build incluye, en este orden y dentro del mismo comando:
+      #   next build && prune-export.mjs && verify-export.mjs && verify-privacy-export.mjs
+      # Es decir: poda del panel /admin, verificación de rutas/basePath/secretos,
+      # y la prueba de canarios de privacidad sobre los artefactos realmente
+      # públicos de out/. No se duplica acá a propósito: sucede en este paso.
+      - name: Build static site + verificación del export
         run: npm run build

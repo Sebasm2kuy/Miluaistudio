@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -31,7 +32,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # El despliegue también corre la suite completa antes de publicar:
+      # un test fallido impone el fallo del job y no se publica nada.
+      - name: Tests
+        run: npm test
+
       - name: Build Next.js
+        # Incluye prune-export + verify-export + verify-privacy-export
+        # (ver package.json → scripts.build).
         run: npm run build
 
       - name: Deploy to GitHub Pages
