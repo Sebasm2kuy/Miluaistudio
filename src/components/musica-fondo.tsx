@@ -17,10 +17,13 @@ export default function MusicaFondo({ visible = true }: { visible?: boolean }) {
 
   useEffect(() => {
     if (!url) return
-    const audio = new Audio(url)
+    const audio = new Audio()
     audio.loop = true
     audio.volume = 0.5
-    audio.preload = 'auto'
+    // Sin precarga: el audio se descarga recién cuando el invitado abre la
+    // invitación (gesto que dispara play()). Ahorra ancho de banda y data.
+    audio.preload = 'none'
+    audio.src = url
     audioRef.current = audio
 
     const intentar = () => {

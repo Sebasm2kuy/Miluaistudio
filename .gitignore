@@ -58,8 +58,10 @@ prompt
 .z-ai-config
 
 # Prisma database
+db/
 db/custom.db
 db/custom.db-journal
+prisma/
 
 # Miluaistudio old project (migrated to Next.js)
 Miluaistudio/
@@ -69,3 +71,6 @@ Miluaistudio/
 
 # Upload folder
 upload/
+
+# Preview local del export estático
+preview/

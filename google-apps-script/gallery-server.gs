@@ -33,8 +33,14 @@ var SHEET_NAME = 'Fotos';
 var RSVP_SHEET_NAME = 'RSVP';
 var MAX_FILE_SIZE_KB = 500;
 
+// Límites anti-abuso del endpoint público de RSVP
+var RSVP_MAX_INVITADOS = 12;
+var RSVP_MAX_NOMBRE = 60;
+var RSVP_MAX_CODIGO = 20;
+var RSVP_RL_POR_HORA = 5; // confirmaciones por teléfono por hora
+
 /**
- * GET handler — procesa getPhotos, chunk y assemble
+ * GET handler — procesa getPhotos, chunk, assemble y rsvp
  */
 function doGet(e) {
   try {
@@ -52,7 +58,11 @@ function doGet(e) {
       return handleAssemble(e);
     }
 
-    return jsonResponse({ error: 'Accion no valida' });
+    if (action === 'rsvp') {
+      return handleRsvp(normalizarRsvpGet(e.parameter));
+    }
+
+    return jsonResponse({ ok: true, message: 'RSVP backend activo' });
   } catch (error) {
     return jsonResponse({ error: error.message });
   }
@@ -313,9 +323,33 @@ function jsonResponse(data) {
 
 var RSVP_HEADERS = ['Fecha Registro', 'Código Grupo', 'Índice', 'Cantidad Total', 'Nombre y Apellido', 'Teléfono'];
 
+/**
+ * Convierte los parámetros de un GET action=rsvp al mismo formato del POST JSON.
+ * El frontend envía: action, codigo, cantidad, invitados (JSON), telefono, fecha.
+ */
+function normalizarRsvpGet(p) {
+  var invitados = [];
+  try { invitados = JSON.parse(p.invitados || '[]'); } catch (err) { invitados = []; }
+  if (typeof invitados === 'string') invitados = [invitados];
+  if (!Array.isArray(invitados)) invitados = [];
+  return {
+    tipo: 'rsvp_grupo',
+    codigo: p.codigo || '',
+    cantidad: parseInt(p.cantidad, 10) || 0,
+    invitados: invitados,
+    telefono: p.telefono || '',
+    fecha: p.fecha || ''
+  };
+}
+
+/**
+ * Valida y registra un RSVP de grupo (GET normalizado o POST JSON).
+ * Devuelve siempre { success: true/false, ... } para que el frontend pueda
+ * distinguir guardado real de error.
+ */
 function handleRsvp(data) {
   try {
-    // Validar
+    // ===== Validación server-side =====
     if (!data || !data.invitados || !Array.isArray(data.invitados) || data.invitados.length === 0) {
       return jsonResponse({ success: false, error: 'Faltan invitados en el grupo' });
     }
@@ -323,20 +357,67 @@ function handleRsvp(data) {
       return jsonResponse({ success: false, error: 'Falta el código de grupo' });
     }
 
+    var codigoGrupo = String(data.codigo).trim().slice(0, RSVP_MAX_CODIGO);
+    if (!codigoGrupo) {
+      return jsonResponse({ success: false, error: 'Código de grupo inválido' });
+    }
+
+    var telefono = String(data.telefono || '').replace(/[^0-9]/g, '').slice(0, 15);
+    if (telefono.length < 6) {
+      return jsonResponse({ success: false, error: 'Teléfono inválido' });
+    }
+
+    var nombres = [];
+    for (var i = 0; i < data.invitados.length && nombres.length < RSVP_MAX_INVITADOS; i++) {
+      var nombre = String(data.invitados[i] || '').trim().slice(0, RSVP_MAX_NOMBRE);
+      if (nombre.length >= 2) nombres.push(nombre);
+    }
+    if (nombres.length === 0) {
+      return jsonResponse({ success: false, error: 'Nombres de invitados inválidos' });
+    }
+
+    var cantidad = parseInt(data.cantidad, 10) || nombres.length;
+    if (cantidad < 1 || cantidad > RSVP_MAX_INVITADOS) {
+      return jsonResponse({ success: false, error: 'Cantidad de invitados fuera de rango' });
+    }
+
+    var fechaRegistro = String(data.fecha || '');
+    if (!/^\d{4}-\d{2}-\d{2}T/.test(fechaRegistro)) fechaRegistro = new Date().toISOString();
+
+    // ===== Anti-abuso: límite por teléfono (CacheService, ventana de 1 hora) =====
+    var cache = CacheService.getScriptCache();
+    var rlKey = 'rsvp_rl_' + telefono;
+    var previos = cache.get(rlKey);
+    var usados = previos ? parseInt(previos, 10) : 0;
+    if (usados >= RSVP_RL_POR_HORA) {
+      return jsonResponse({ success: false, error: 'Demasiadas confirmaciones desde este teléfono. Probá de nuevo más tarde.' });
+    }
+
     var sheet = getOrCreateRsvpSheet();
-    var codigoGrupo = String(data.codigo);
-    var cantidad = data.cantidad || data.invitados.length;
-    var telefono = String(data.telefono || '');
-    var fechaRegistro = data.fecha || new Date().toISOString();
+
+    // ===== Anti-duplicados: mismo código + teléfono ya registrado =====
+    var datos = sheet.getDataRange().getValues();
+    for (var f = 1; f < datos.length; f++) {
+      if (String(datos[f][1]) === codigoGrupo && String(datos[f][5]) === telefono) {
+        cache.put(rlKey, String(usados + 1), 3600);
+        return jsonResponse({
+          success: true,
+          codigo: codigoGrupo,
+          duplicado: true,
+          registrados: parseInt(datos[f][3], 10) || nombres.length,
+          message: 'Este grupo ya estaba registrado'
+        });
+      }
+    }
 
     // Una fila por cada invitado, todas con el mismo código de grupo
-    var filas = data.invitados.map(function(nombre, i) {
+    var filas = nombres.map(function(nombre, i) {
       return [
         fechaRegistro,
         codigoGrupo,
         i + 1,
-        cantidad,
-        String(nombre || '').trim(),
+        Math.min(cantidad, RSVP_MAX_INVITADOS),
+        nombre,
         telefono
       ];
     });
@@ -348,10 +429,12 @@ function handleRsvp(data) {
       sheet.appendRow(filas[0]);
     }
 
+    cache.put(rlKey, String(usados + 1), 3600);
+
     return jsonResponse({
       success: true,
       codigo: codigoGrupo,
-      cantidad: cantidad,
+      cantidad: Math.min(cantidad, RSVP_MAX_INVITADOS),
       registrados: filas.length
     });
   } catch (error) {

@@ -81,7 +81,7 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
   // Photo slideshow mode
   // Elegir la posición por foto desde config (fondo.posiciones[idx]).
   // En mobile usamos el valor mobile, en desktop el desktop.
-  const posicion = cfg.fondo.posiciones?.[idx] || {}
+  const posicion: { desktop?: string; mobile?: string } = cfg.fondo.posiciones?.[idx] ?? {}
   const posicionDesktop = posicion.desktop || 'center 15%'
   const posicionMobile = posicion.mobile || 'center top'
 

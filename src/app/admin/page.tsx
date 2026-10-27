@@ -95,17 +95,17 @@ function Field({
   label: string
   value: string
   onChange: (v: string) => void
-  type?: 'text' | 'url' | 'datetime-local' | 'tel' | 'date'
+  type?: 'text' | 'url' | 'datetime-local' | 'tel' | 'date' | 'number'
   placeholder?: string
   rows?: number
 }) {
   const baseClasses =
-    'w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#d4af37]'
+    'w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-white border border-[#e8e0d7] text-[#292522] placeholder:text-[#8f867c] focus:border-[#d4af37]'
 
   if (rows) {
     return (
       <label className="block space-y-1.5">
-        <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+        <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">{label}</span>
         <textarea
           rows={rows}
           value={value}
@@ -119,7 +119,7 @@ function Field({
 
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+      <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">{label}</span>
       <input
         type={type}
         value={value}
@@ -142,7 +142,7 @@ function ColorField({
 }) {
   return (
     <label className="block space-y-1.5">
-      <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+      <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">{label}</span>
       <div className="flex items-center gap-3">
         <input
           type="color"
@@ -152,14 +152,14 @@ function ColorField({
         />
         <div className="flex items-center gap-2 flex-1">
           <div
-            className="w-6 h-6 rounded-md border border-gray-600 shrink-0"
+            className="w-6 h-6 rounded-md border border-[#ded4c8] shrink-0"
             style={{ backgroundColor: value }}
           />
           <input
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 font-mono focus:border-[#d4af37]"
+            className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-white border border-[#e8e0d7] text-[#292522] font-mono focus:border-[#d4af37]"
             maxLength={7}
           />
         </div>
@@ -194,7 +194,7 @@ function OptionPicker({
 }) {
   return (
     <div className="space-y-2">
-      <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{label}</span>
+      <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">{label}</span>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {options.map((opt) => {
           const isSelected = value === opt.id
@@ -207,7 +207,7 @@ function OptionPicker({
                 className={`rounded-xl border p-3 text-left transition-all duration-200 ${
                   isSelected
                     ? 'border-[#d4af37] bg-[#d4af37]/10 ring-1 ring-[#d4af37]/30'
-                    : 'border-gray-700 bg-gray-900 hover:border-gray-600'
+                    : 'border-[#e8e0d7] bg-white hover:border-[#ded4c8]'
                 }`}
               >
                 {renderOption(opt, isSelected)}
@@ -222,15 +222,15 @@ function OptionPicker({
               className={`rounded-xl border p-3 text-left transition-all duration-200 ${
                 isSelected
                   ? 'border-[#d4af37] bg-[#d4af37]/10 ring-1 ring-[#d4af37]/30'
-                  : 'border-gray-700 bg-gray-900 hover:border-gray-600'
+                  : 'border-[#e8e0d7] bg-white hover:border-[#ded4c8]'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                <span className="text-sm font-medium text-[#292522]">{opt.name}</span>
                 {isSelected && <span className="text-[#d4af37] text-xs font-bold">ACTIVO</span>}
               </div>
               {opt.description && (
-                <p className="text-[10px] text-gray-500">{opt.description}</p>
+                <p className="text-[10px] text-[#8f867c]">{opt.description}</p>
               )}
             </button>
           )
@@ -290,9 +290,9 @@ function ImageCard({
   }
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-3 space-y-2">
+    <div className="rounded-xl border border-[#e8e0d7] bg-white/60 p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-500">{label}</span>
+        <span className="text-xs font-semibold text-[#8f867c]">{label}</span>
         {url && (
           <button
             type="button"
@@ -305,25 +305,25 @@ function ImageCard({
         )}
       </div>
       {url ? (
-        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-800">
+        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[#f0ebe4]">
           <img src={url} alt={label} className="w-full h-full object-cover" />
         </div>
       ) : (
         <div
-          className="aspect-[3/4] rounded-lg border-2 border-dashed border-gray-700 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-gray-500 transition-colors"
+          className="aspect-[3/4] rounded-lg border-2 border-dashed border-[#e8e0d7] flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#c9bbaa] transition-colors"
           onClick={() => fileRef.current?.click()}
         >
           {uploading ? (
-            <svg className="animate-spin h-6 w-6 text-gray-500" viewBox="0 0 24 24" fill="none">
+            <svg className="animate-spin h-6 w-6 text-[#8f867c]" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
           ) : (
             <>
-              <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <svg className="w-6 h-6 text-[#a39a8e]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              <span className="text-[10px] text-gray-600">Subir foto</span>
+              <span className="text-[10px] text-[#a39a8e]">Subir foto</span>
             </>
           )}
         </div>
@@ -333,7 +333,7 @@ function ImageCard({
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 transition-colors"
+            className="flex-1 text-[10px] px-2 py-1.5 rounded-lg bg-[#f0ebe4] text-[#716a63] hover:bg-[#e0d7cb] transition-colors"
           >
             {uploading ? 'Subiendo...' : url ? 'Cambiar' : 'Subir'}
           </button>
@@ -426,8 +426,20 @@ export default function AdminPage() {
           setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
         }
       }
-      const savedToken = localStorage.getItem('milu_github_token')
-      if (savedToken?.trim()) setGithubToken(savedToken.trim())
+      // El token ya NO se persiste en localStorage: vive en sessionStorage
+      // (muere al cerrar la pestaña). Si existe un token heredado de versiones
+      // anteriores, se migra a sessionStorage y se borra de localStorage.
+      const sessionToken = sessionStorage.getItem('milu_github_token')
+      if (sessionToken?.trim()) {
+        setGithubToken(sessionToken.trim())
+      } else {
+        const legacy = localStorage.getItem('milu_github_token')
+        if (legacy?.trim()) {
+          setGithubToken(legacy.trim())
+          sessionStorage.setItem('milu_github_token', legacy.trim())
+          localStorage.removeItem('milu_github_token')
+        }
+      }
     } catch { /* ignore */ }
   }, [])
 
@@ -436,7 +448,8 @@ export default function AdminPage() {
     <K extends keyof SiteConfig>(section: K, field: string, value: string) => {
       setCfg((prev) => ({
         ...prev,
-        [section]: { ...prev[section], [field]: value },
+        // Secciones planas del panel: el spread seguro exige objeto
+        [section]: { ...(prev[section] as unknown as Record<string, unknown>), [field]: value },
       }))
     },
     [],
@@ -446,7 +459,6 @@ export default function AdminPage() {
     (path: string[], value: string) => {
       setCfg((prev) => {
         const next = deepClone(prev)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let obj: any = next
         for (let i = 0; i < path.length - 1; i++) {
           obj = obj[path[i]]
@@ -523,7 +535,8 @@ export default function AdminPage() {
       if (res.ok) {
         setTokenStatus('ok')
         setGithubToken(token)
-        localStorage.setItem('milu_github_token', token)
+        // Token solo para la sesión: no queda en disco al cerrar el navegador
+        sessionStorage.setItem('milu_github_token', token)
       } else {
         setTokenStatus('error')
       }
@@ -531,6 +544,14 @@ export default function AdminPage() {
       setTokenStatus('error')
     }
   }, [githubToken])
+
+  // Borrar el token de TODA la persistencia local y cerrar la sesión local
+  const handleClearToken = useCallback(() => {
+    sessionStorage.removeItem('milu_github_token')
+    localStorage.removeItem('milu_github_token')
+    setGithubToken('')
+    setTokenStatus('idle')
+  }, [])
 
   const handleDeploy = useCallback(async () => {
     const token = githubToken.trim()
@@ -556,7 +577,7 @@ export default function AdminPage() {
           },
         }
 
-    localStorage.setItem('milu_github_token', token)
+    sessionStorage.setItem('milu_github_token', token)
     saveConfig(cfgToDeploy)
     // Also reflect the sync in the local editor state so the user sees it
     setCfg(cfgToDeploy)
@@ -590,14 +611,14 @@ export default function AdminPage() {
 
   return (
     <div
-      className="min-h-screen bg-gray-950 text-gray-100"
+      className="min-h-screen bg-[#faf8f4] text-[#292522]"
       style={{ overflow: 'auto', height: '100vh', position: 'relative' }}
     >
       {/* --- Fixed Header --- */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md border-b"
         style={{
-          background: 'rgba(3, 7, 18, 0.85)',
+          background: 'rgba(250, 248, 244, 0.9)',
           borderColor: GOLD + '44',
         }}
       >
@@ -675,8 +696,8 @@ export default function AdminPage() {
             >
               Reset
             </button>
-            <button type="button" onClick={expandAll} className="px-2 py-1.5 rounded-lg text-xs bg-gray-800 text-gray-300 border border-gray-700">+</button>
-            <button type="button" onClick={collapseAll} className="px-2 py-1.5 rounded-lg text-xs bg-gray-800 text-gray-300 border border-gray-700">-</button>
+            <button type="button" onClick={expandAll} className="px-2 py-1.5 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">+</button>
+            <button type="button" onClick={collapseAll} className="px-2 py-1.5 rounded-lg text-xs bg-[#f0ebe4] text-[#54483e] border border-[#e8e0d7]">-</button>
           </div>
           <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileChange} className="hidden" />
         </div>
@@ -703,7 +724,7 @@ export default function AdminPage() {
           {showToken && (
             <div className="px-5 pb-5 pt-1 border-t" style={{ borderColor: '#2563eb33' }}>
               <div className="space-y-3">
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-[#716a63]">
                   Para deployar y subir fotos, necesitás un GitHub Personal Access Token con permiso de <code className="text-blue-400">Contents read/write</code>.
                 </p>
                 <div className="relative">
@@ -714,11 +735,13 @@ export default function AdminPage() {
                     onChange={(e) => {
                       const v = e.target.value
                       setGithubToken(v)
-                      localStorage.setItem('milu_github_token', v)
+                      // Persistencia de sesión solamente (se borra al cerrar la pestaña)
+                      if (v.trim()) sessionStorage.setItem('milu_github_token', v.trim())
+                      else sessionStorage.removeItem('milu_github_token')
                       setTokenStatus('idle')
                     }}
                     placeholder="Pegá tu token acá..."
-                    className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-gray-900 border border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-[#2563eb] pr-28"
+                    className="w-full rounded-lg px-3 py-2 text-sm outline-none transition-colors bg-white border border-[#e8e0d7] text-[#292522] placeholder:text-[#8f867c] focus:border-[#2563eb] pr-28"
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                     <button
@@ -727,7 +750,7 @@ export default function AdminPage() {
                         const inp = tokenInputRef.current
                         if (inp) inp.type = inp.type === 'password' ? 'text' : 'password'
                       }}
-                      className="px-2 py-1 text-[10px] rounded bg-gray-800 text-gray-400 hover:text-gray-200"
+                      className="px-2 py-1 text-[10px] rounded bg-[#f0ebe4] text-[#716a63] hover:text-[#292522]"
                     >
                       Mostrar
                     </button>
@@ -757,9 +780,20 @@ export default function AdminPage() {
                     <span className="text-red-400">Token invalido o sin permisos. Verificá que tenga Contents read/write.</span>
                   </div>
                 )}
-                <p className="text-[10px] text-gray-600">
-                  Si no tenés token: GitHub &gt; Settings &gt; Developer settings &gt; Personal access tokens &gt; Fine-grained tokens. Dale permiso de &quot;Contents&quot; read/write al repo Miluaistudio.
+                <p className="text-[10px] text-[#a39a8e]">
+                  Si no tenés token: GitHub &gt; Settings &gt; Developer settings &gt; Personal access tokens &gt; Fine-grained tokens. Dale permiso de &quot;Contents&quot; read/write al repo Miluaistudio. El token se guarda solo para esta sesión y se borra al cerrar la pestaña.
                 </p>
+                {githubToken.trim() ? (
+                  <button
+                    type="button"
+                    onClick={handleClearToken}
+                    className="w-full rounded-lg border border-red-500/40 px-3 py-2 text-xs font-semibold text-red-400 transition hover:bg-red-500/10"
+                  >
+                    Borrar el token de este navegador (cerrar sesión)
+                  </button>
+                ) : (
+                  <p className="text-[10px] text-[#8f867c]">No hay token guardado en este navegador.</p>
+                )}
               </div>
             </div>
           )}
@@ -774,10 +808,16 @@ export default function AdminPage() {
             <Field label="Fecha (texto)" value={cfg.evento.fecha} onChange={(v) => setNested('evento', 'fecha', v)} />
             <Field label="Año" value={cfg.evento.anio} onChange={(v) => setNested('evento', 'anio', v)} />
             <Field
-              label="Fecha y Hora del Evento"
+              label="Fecha y Hora del Evento (hora de Montevideo)"
               type="datetime-local"
               value={cfg.evento.fechaEvento}
               onChange={(v) => setNested('evento', 'fechaEvento', v)}
+            />
+            <Field
+              label="Duración del evento en horas (para el calendario)"
+              type="number"
+              value={String(cfg.evento.duracionHoras ?? 5)}
+              onChange={(v) => setNested('evento', 'duracionHoras', v)}
             />
             <Field label="Lugar" value={cfg.evento.lugar} onChange={(v) => setNested('evento', 'lugar', v)} />
             <Field label="Ubicación" value={cfg.evento.ubicacion} onChange={(v) => setNested('evento', 'ubicacion', v)} />
@@ -806,7 +846,7 @@ export default function AdminPage() {
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Eventos</span>
+                <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">Eventos</span>
                 <button
                   type="button"
                   onClick={() =>
@@ -823,9 +863,9 @@ export default function AdminPage() {
               </div>
               <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1 custom-scroll">
                 {cfg.timeline.eventos.map((ev, i) => (
-                  <div key={i} className="relative rounded-xl border border-gray-800 bg-gray-900/60 p-4 space-y-3">
+                  <div key={i} className="relative rounded-xl border border-[#e8e0d7] bg-white/60 p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-500">#{i + 1}</span>
+                      <span className="text-xs font-semibold text-[#8f867c]">#{i + 1}</span>
                       <button
                         type="button"
                         onClick={() =>
@@ -881,7 +921,7 @@ export default function AdminPage() {
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Fotos ({cfg.galeria.fotos.length})</span>
+                <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">Fotos ({cfg.galeria.fotos.length})</span>
                 <button
                   type="button"
                   onClick={() =>
@@ -947,18 +987,18 @@ export default function AdminPage() {
             </div>
             <Field label="Subtítulo" value={cfg.rsvp.subtitulo} onChange={(v) => setNested('rsvp', 'subtitulo', v)} rows={3} />
             <Field label="Google Sheet URL" type="url" value={cfg.rsvp.googleSheetUrl} onChange={(v) => setNested('rsvp', 'googleSheetUrl', v)} />
-            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-4 space-y-4">
+            <div className="rounded-xl border border-[#e8e0d7] bg-white/40 p-4 space-y-4">
               <h4 className="font-cursive text-lg" style={{ color: GOLD }}>🎁 Regalos</h4>
               <Field label="Título" value={cfg.rsvp.regalos.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'titulo'], v)} />
               <Field label="Subtítulo" value={cfg.rsvp.regalos.subtitulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'subtitulo'], v)} rows={2} />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <span className="text-xs font-semibold text-gray-500 uppercase">Abitab</span>
+                  <span className="text-xs font-semibold text-[#8f867c] uppercase">Abitab</span>
                   <Field label="Título" value={cfg.rsvp.regalos.abitab.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'abitab', 'titulo'], v)} />
                   <Field label="Número" value={cfg.rsvp.regalos.abitab.numero} onChange={(v) => setDeep(['rsvp', 'regalos', 'abitab', 'numero'], v)} />
                 </div>
                 <div className="space-y-2">
-                  <span className="text-xs font-semibold text-gray-500 uppercase">Mi Dinero</span>
+                  <span className="text-xs font-semibold text-[#8f867c] uppercase">Mi Dinero</span>
                   <Field label="Título" value={cfg.rsvp.regalos.miDinero.titulo} onChange={(v) => setDeep(['rsvp', 'regalos', 'miDinero', 'titulo'], v)} />
                   <Field label="Número" value={cfg.rsvp.regalos.miDinero.numero} onChange={(v) => setDeep(['rsvp', 'regalos', 'miDinero', 'numero'], v)} />
                 </div>
@@ -1001,8 +1041,8 @@ export default function AdminPage() {
         <Section title={SECTION_META.countdown.title} icon={SECTION_META.countdown.icon} open={openSections.has('countdown')} onToggle={() => toggle('countdown')}>
           <div className="space-y-4">
             <Field label="Título" value={cfg.countdown.titulo} onChange={(v) => setNested('countdown', 'titulo', v)} />
-            <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-4">
-              <span className="text-xs font-semibold text-gray-500 uppercase mb-3 block">Labels (D / H / M / S)</span>
+            <div className="rounded-xl border border-[#e8e0d7] bg-white/40 p-4">
+              <span className="text-xs font-semibold text-[#8f867c] uppercase mb-3 block">Labels (D / H / M / S)</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {(['D', 'H', 'M', 'S'] as const).map((key) => (
                   <Field key={key} label={key} value={cfg.countdown.labels[key]} onChange={(v) => setCfg((prev) => ({ ...prev, countdown: { ...prev.countdown, labels: { ...prev.countdown.labels, [key]: v } } }))} />
@@ -1021,7 +1061,7 @@ export default function AdminPage() {
         {/* FONDO */}
         <Section title={SECTION_META.fondo.title} icon={SECTION_META.fondo.icon} open={openSections.has('fondo')} onToggle={() => toggle('fondo')}>
           <div className="space-y-4">
-            <p className="text-xs text-gray-400 mb-2">Elegí un fondo para tu invitación. Podés usar un degradado o las fotos de la galería.</p>
+            <p className="text-xs text-[#716a63] mb-2">Elegí un fondo para tu invitación. Podés usar un degradado o las fotos de la galería.</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {BACKGROUND_PRESETS.map((bg) => {
                 const isGradientActive = cfg.fondo.fotos[0]?.startsWith('gradient:') === true && cfg.fondo.fotos[0] === `gradient:${bg.id}`
@@ -1068,9 +1108,9 @@ export default function AdminPage() {
                         </div>
                       )}
                     </div>
-                    <div className="px-3 py-2 bg-gray-900/90">
-                      <div className="text-xs font-semibold text-gray-200 truncate">{bg.name}</div>
-                      <div className="text-[10px] text-gray-500 truncate mt-0.5">{bg.description}</div>
+                    <div className="px-3 py-2 bg-white/90">
+                      <div className="text-xs font-semibold text-[#292522] truncate">{bg.name}</div>
+                      <div className="text-[10px] text-[#8f867c] truncate mt-0.5">{bg.description}</div>
                     </div>
                   </button>
                 )
@@ -1082,7 +1122,7 @@ export default function AdminPage() {
         {/* COLORES */}
         <Section title={SECTION_META.colores.title} icon={SECTION_META.colores.icon} open={openSections.has('colores')} onToggle={() => toggle('colores')}>
           <div className="space-y-4">
-            <p className="text-xs text-gray-400 mb-2">Elegí un tema de colores predefinido o personalizá cada uno.</p>
+            <p className="text-xs text-[#716a63] mb-2">Elegí un tema de colores predefinido o personalizá cada uno.</p>
             {/* Color Presets */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {COLOR_PRESETS.map((preset) => {
@@ -1119,8 +1159,8 @@ export default function AdminPage() {
                       <div className="flex-1" style={{ background: preset.colors.marfil }} />
                       <div className="flex-1" style={{ background: preset.colors.fondo }} />
                     </div>
-                    <div className="px-3 py-2 bg-gray-900/90">
-                      <div className="text-[10px] text-gray-500 truncate">{preset.description}</div>
+                    <div className="px-3 py-2 bg-white/90">
+                      <div className="text-[10px] text-[#8f867c] truncate">{preset.description}</div>
                     </div>
                   </button>
                 )
@@ -1128,11 +1168,11 @@ export default function AdminPage() {
             </div>
             {/* Individual Color Pickers */}
             <details className="group">
-              <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-300 transition-colors flex items-center gap-1">
+              <summary className="text-xs text-[#8f867c] cursor-pointer hover:text-[#54483e] transition-colors flex items-center gap-1">
                 <svg className="w-3 h-3 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                 Personalizar colores individualmente
               </summary>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-gray-800">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3 pt-3 border-t border-[#e8e0d7]">
                 <ColorField label="Principal" value={cfg.colores.principal} onChange={(v) => setNested('colores', 'principal', v)} />
                 <ColorField label="Dorado" value={cfg.colores.dorado} onChange={(v) => setNested('colores', 'dorado', v)} />
                 <ColorField label="Dorado Claro" value={cfg.colores.doradoClaro} onChange={(v) => setNested('colores', 'doradoClaro', v)} />
@@ -1155,8 +1195,8 @@ export default function AdminPage() {
               renderOption={(opt, isSelected) => (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
-                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">{opt.category}</span>}
+                    <span className="text-sm font-medium text-[#292522]">{opt.name}</span>
+                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#f0ebe4] text-[#8f867c]">{opt.category}</span>}
                     {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
                   </div>
                   <p className="text-lg truncate" style={{ fontFamily: opt.style, color: '#e8d48b' }}>{opt.preview}</p>
@@ -1172,8 +1212,8 @@ export default function AdminPage() {
               renderOption={(opt, isSelected) => (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
-                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">{opt.category}</span>}
+                    <span className="text-sm font-medium text-[#292522]">{opt.name}</span>
+                    {opt.category && <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#f0ebe4] text-[#8f867c]">{opt.category}</span>}
                     {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
                   </div>
                   <p className="text-sm truncate" style={{ fontFamily: opt.style, color: '#ccc' }}>Texto de ejemplo para ver la fuente</p>
@@ -1189,7 +1229,7 @@ export default function AdminPage() {
               renderOption={(opt, isSelected) => (
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-200">{opt.name}</span>
+                    <span className="text-sm font-medium text-[#292522]">{opt.name}</span>
                     {isSelected && <span className="text-[#d4af37] text-[10px] font-bold">✓</span>}
                   </div>
                   <p className="text-xl truncate" style={{ fontFamily: opt.style, color: '#e8d48b' }}>{opt.preview}</p>
@@ -1199,7 +1239,7 @@ export default function AdminPage() {
 
             {/* Clock Style */}
             <div className="space-y-2">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Modelo de Reloj</span>
+              <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">Modelo de Reloj</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {CLOCK_STYLES.map((opt) => {
                   const s = opt as unknown as typeof CLOCK_STYLES[number]
@@ -1277,14 +1317,14 @@ export default function AdminPage() {
                                 <div
                                   className="w-12 h-14 sm:w-14 sm:h-16 flex items-center justify-center rounded-lg px-2"
                                   style={{
-                                    background: s.containerBg,
-                                    border: `1px solid ${s.containerBorder}`,
+                                    background: (s as Record<string, string>).containerBg,
+                                    border: `1px solid ${(s as Record<string, string>).containerBorder}`,
                                   }}
                                 >
                                   <span
                                     className="text-xl sm:text-2xl font-bold"
                                     style={{
-                                      color: s.previewNumberColor,
+                                      color: (s as Record<string, string>).previewNumberColor,
                                       textShadow: (s as Record<string, unknown>).numberGlow as string
                                         ? (s as Record<string, unknown>).numberGlow as string
                                         : 'none',
@@ -1294,7 +1334,7 @@ export default function AdminPage() {
                                   </span>
                                 </div>
                               )}
-                              <span className="text-[10px] uppercase mt-1" style={{ color: s.previewLabelColor }}>
+                              <span className="text-[10px] uppercase mt-1" style={{ color: (s as Record<string, string>).previewLabelColor }}>
                                 {labels[i]}
                               </span>
                             </div>
@@ -1310,9 +1350,9 @@ export default function AdminPage() {
                         )}
                       </div>
                       {/* Info bar */}
-                      <div className="px-3 py-2 bg-gray-900/90">
-                        <div className="text-xs font-semibold text-gray-200">{s.name}</div>
-                        <div className="text-[10px] text-gray-500">{s.description}</div>
+                      <div className="px-3 py-2 bg-white/90">
+                        <div className="text-xs font-semibold text-[#292522]">{s.name}</div>
+                        <div className="text-[10px] text-[#8f867c]">{s.description}</div>
                       </div>
                     </button>
                   )
@@ -1322,7 +1362,7 @@ export default function AdminPage() {
 
             {/* Card Style */}
             <div className="space-y-2">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Estilo de Tarjetas</span>
+              <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">Estilo de Tarjetas</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {CARD_STYLES.map((opt) => {
                   const s = opt as unknown as typeof CARD_STYLES[number]
@@ -1366,9 +1406,9 @@ export default function AdminPage() {
                         )}
                       </div>
                       {/* Info bar */}
-                      <div className="px-3 py-2 bg-gray-900/90">
-                        <div className="text-[10px] font-semibold text-gray-200">{s.name}</div>
-                        <div className="text-[9px] text-gray-500">{s.description}</div>
+                      <div className="px-3 py-2 bg-white/90">
+                        <div className="text-[10px] font-semibold text-[#292522]">{s.name}</div>
+                        <div className="text-[9px] text-[#8f867c]">{s.description}</div>
                       </div>
                     </button>
                   )
@@ -1378,7 +1418,7 @@ export default function AdminPage() {
 
             {/* Button Style */}
             <div className="space-y-2">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Estilo de Botones</span>
+              <span className="text-xs font-medium text-[#716a63] uppercase tracking-wide">Estilo de Botones</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {BUTTON_STYLES.map((opt) => {
                   const s = opt as unknown as typeof BUTTON_STYLES[number]
@@ -1394,7 +1434,7 @@ export default function AdminPage() {
                       {/* Button preview area */}
                       <div
                         className="p-4 flex items-center justify-center relative"
-                        style={{ minHeight: '72px', background: 'rgba(17,17,17,0.6)' }}
+                        style={{ minHeight: '72px', background: 'rgba(41, 37, 34, 0.45)' }}
                       >
                         <button
                           type="button"
@@ -1417,9 +1457,9 @@ export default function AdminPage() {
                         )}
                       </div>
                       {/* Info bar */}
-                      <div className="px-3 py-2 bg-gray-900/90">
-                        <div className="text-[10px] font-semibold text-gray-200">{s.name}</div>
-                        <div className="text-[9px] text-gray-500">{s.description}</div>
+                      <div className="px-3 py-2 bg-white/90">
+                        <div className="text-[10px] font-semibold text-[#292522]">{s.name}</div>
+                        <div className="text-[9px] text-[#8f867c]">{s.description}</div>
                       </div>
                     </button>
                   )

@@ -85,8 +85,8 @@ function MiniaturaDiseno({ design, selected, onSelect }: { design: InvitationDes
       className={
         'group relative block overflow-hidden rounded-2xl border text-left transition duration-300 hover:-translate-y-1 ' +
         (selected
-          ? 'border-[#f1a46a] shadow-[0_0_0_2px_rgba(241,164,106,0.55),0_18px_40px_rgba(0,0,0,0.35)]'
-          : 'border-white/10 shadow-[0_10px_28px_rgba(0,0,0,0.22)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.4)]')
+          ? 'border-[#b58c5a] shadow-[0_0_0_2px_rgba(181,140,90,0.45),0_18px_40px_rgba(88,63,32,0.18)]'
+          : 'border-[#e8e0d7] shadow-[0_6px_18px_rgba(88,63,32,0.10)] hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)]')
       }
     >
       <span className="block aspect-[4/5] w-full">
@@ -96,7 +96,7 @@ function MiniaturaDiseno({ design, selected, onSelect }: { design: InvitationDes
         {design.name}
       </span>
       {selected && (
-        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d] shadow-lg">
+        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#b58c5a] text-white shadow-lg">
           <Check size={16} strokeWidth={3} />
         </span>
       )}
@@ -122,9 +122,9 @@ function PhonePreview({ data }: { data: MiniInvitationData }) {
 }
 
 const INPUT_CLS =
-  'w-full rounded-xl border border-white/10 bg-white/[0.06] px-3.5 py-2.5 text-sm text-[#f7f1e8] placeholder:text-[#8b8b92] outline-none transition focus:border-[#f1a46a]/60 focus:bg-white/[0.09]';
-const LABEL_CLS = 'mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]';
-const HELP_CLS = 'mt-1.5 text-[11px] leading-relaxed text-[#8b8b92]';
+  'w-full rounded-xl border border-[#e8e0d7] bg-white px-3.5 py-2.5 text-sm text-[#292522] placeholder:text-[#a39a8e] outline-none transition focus:border-[#b58c5a] focus:ring-2 focus:ring-[#b58c5a]/15';
+const LABEL_CLS = 'mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#716a63]';
+const HELP_CLS = 'mt-1.5 text-[11px] leading-relaxed text-[#8f867c]';
 
 /** Interruptor de sección: prende/apaga un módulo de la invitación en vivo */
 function SwitchSeccion({
@@ -147,18 +147,18 @@ function SwitchSeccion({
       className={
         'flex items-start justify-between gap-3 rounded-xl border px-3.5 py-3 text-left transition ' +
         (checked
-          ? 'border-[#f1a46a]/40 bg-white/[0.05]'
-          : 'border-white/10 bg-white/[0.02] hover:border-white/20')
+          ? 'border-[#b58c5a]/45 bg-[#faf6ef]'
+          : 'border-[#e8e0d7] bg-white hover:border-[#c9bbaa]')
       }
     >
       <span>
-        <span className={'block text-sm font-medium ' + (checked ? 'text-[#f7f1e8]' : 'text-[#b2b1b6]')}>{label}</span>
-        <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{desc}</span>
+        <span className={'block text-sm font-medium ' + (checked ? 'text-[#292522]' : 'text-[#716a63]')}>{label}</span>
+        <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{desc}</span>
       </span>
       <span
         className={
           'relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition ' +
-          (checked ? 'bg-[#f1a46a]' : 'bg-white/15')
+          (checked ? 'bg-[#b58c5a]' : 'bg-[#ded4c8]')
         }
         aria-hidden="true"
       >
@@ -184,18 +184,18 @@ function OpcionApertura({ meta, selected, onSelect }: { meta: AperturaMeta; sele
       className={
         'relative rounded-xl border p-3 text-left transition ' +
         (selected
-          ? 'border-[#f1a46a]/60 bg-white/[0.07] shadow-[0_0_0_1px_rgba(241,164,106,0.4)]'
-          : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+          ? 'border-[#b58c5a]/60 bg-[#faf6ef] shadow-[0_0_0_1px_rgba(181,140,90,0.4)]'
+          : 'border-[#e8e0d7] bg-white hover:border-[#c9bbaa]')
       }
     >
       {selected && (
-        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#b58c5a] text-white">
           <Check size={12} strokeWidth={3} />
         </span>
       )}
       <span className="text-2xl leading-none" aria-hidden="true">{meta.glifo}</span>
-      <span className={'mt-2 block text-sm font-medium ' + (selected ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{meta.nombre}</span>
-      <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{meta.desc}</span>
+      <span className={'mt-2 block text-sm font-medium ' + (selected ? 'text-[#292522]' : 'text-[#716a63]')}>{meta.nombre}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{meta.desc}</span>
     </button>
   );
 }
@@ -218,23 +218,23 @@ function FilaTono({
     <div
       className={
         'flex items-center gap-3 rounded-xl border px-3 py-2.5 transition ' +
-        (elegido ? 'border-[#f1a46a]/60 bg-white/[0.07]' : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+        (elegido ? 'border-[#b58c5a]/60 bg-[#faf6ef]' : 'border-[#e8e0d7] bg-white hover:border-[#c9bbaa]')
       }
     >
       <button
         type="button"
         onClick={onPrevisualizar}
         aria-label={sonando ? 'Detener la previsualización de ' + tono.nombre : 'Escuchar ' + tono.nombre}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#f1a46a]/50 text-[#f1a46a] transition hover:bg-[#f1a46a]/15"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#b58c5a]/50 text-[#b58c5a] transition hover:bg-[#b58c5a]/10"
       >
         {sonando ? <Square size={13} strokeWidth={2.4} /> : <Play size={13} strokeWidth={2.4} className="ml-0.5" />}
       </button>
       <button type="button" role="radio" aria-checked={elegido} onClick={onElegir} className="min-w-0 flex-1 text-left">
-        <span className={'block text-sm font-medium ' + (elegido ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{tono.nombre}</span>
-        <span className="block truncate text-[11px] text-[#8b8b92]">{tono.desc}</span>
+        <span className={'block text-sm font-medium ' + (elegido ? 'text-[#292522]' : 'text-[#716a63]')}>{tono.nombre}</span>
+        <span className="block truncate text-[11px] text-[#8f867c]">{tono.desc}</span>
       </button>
       {elegido && (
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#b58c5a] text-white">
           <Check size={12} strokeWidth={3} />
         </span>
       )}
@@ -260,20 +260,20 @@ function OpcionTipografia({ id, nombre, desc, selected, onSelect }: { id: string
       className={
         'relative rounded-xl border p-3 text-center transition ' +
         (selected
-          ? 'border-[#f1a46a]/60 bg-white/[0.07] shadow-[0_0_0_1px_rgba(241,164,106,0.4)]'
-          : 'border-white/10 bg-white/[0.02] hover:border-white/25')
+          ? 'border-[#b58c5a]/60 bg-[#faf6ef] shadow-[0_0_0_1px_rgba(181,140,90,0.4)]'
+          : 'border-[#e8e0d7] bg-white hover:border-[#c9bbaa]')
       }
     >
       {selected && (
-        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#f1a46a] text-[#17191d]">
+        <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#b58c5a] text-white">
           <Check size={12} strokeWidth={3} />
         </span>
       )}
-      <span className="block text-2xl leading-tight text-[#f4d1a7]" style={{ fontFamily: FUENTE_SAMPLE[id] ?? undefined }}>
+      <span className="block text-2xl leading-tight text-[#b58c5a]" style={{ fontFamily: FUENTE_SAMPLE[id] ?? undefined }}>
         Ag
       </span>
-      <span className={'mt-1.5 block text-sm font-medium ' + (selected ? 'text-[#f7f1e8]' : 'text-[#d9d5cf]')}>{nombre}</span>
-      <span className="mt-0.5 block text-[11px] leading-snug text-[#8b8b92]">{desc}</span>
+      <span className={'mt-1.5 block text-sm font-medium ' + (selected ? 'text-[#292522]' : 'text-[#716a63]')}>{nombre}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{desc}</span>
     </button>
   );
 }
@@ -290,11 +290,11 @@ function SwatchAcento({ id, nombre, hex, selected, onSelect }: { id: string; nom
       aria-label={'Acento ' + nombre}
       className={
         'flex h-10 w-10 items-center justify-center rounded-full border-2 transition ' +
-        (selected ? 'border-[#f1a46a] shadow-[0_0_0_2px_rgba(241,164,106,0.35)]' : 'border-white/20 hover:border-white/40')
+        (selected ? 'border-[#b58c5a] shadow-[0_0_0_2px_rgba(181,140,90,0.35)]' : 'border-[#ded4c8] hover:border-[#c9bbaa]')
       }
-      style={{ background: hex || 'linear-gradient(135deg, #f1a46a 0%, #f4d1a7 38%, #70d7d0 78%)' }}
+      style={{ background: hex || 'linear-gradient(135deg, #b58c5a 0%, #b58c5a 38%, #a8814f 78%)' }}
     >
-      {selected && <Check size={14} strokeWidth={3} className={hex ? 'text-white mix-blend-difference' : 'text-[#17191d]'} />}
+      {selected && <Check size={14} strokeWidth={3} className={hex ? 'text-white mix-blend-difference' : 'text-white'} />}
     </button>
   );
 }
@@ -310,7 +310,11 @@ export default function PersonalizadorApp() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const d = params.get('diseno');
+    // Preselección desde la URL: solo existe en el cliente, tras el montaje.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (d && INVITATION_DESIGNS.some((item) => item.id === d)) setDesignId(d);
+    // Fecha sugerida calculada solo en el cliente para evitar desajuste de
+    // hidratación con Date.now(); el estado inicial del servidor queda vacío.
     setDatos((prev) => ({ ...prev, fecha: prev.fecha || fechaSugerida() }));
   }, []);
 
@@ -330,6 +334,13 @@ export default function PersonalizadorApp() {
   }, [vistaPrevia]);
 
   const design = INVITATION_DESIGNS.find((item) => item.id === designId) ?? null;
+
+  // Validación: la fecha del evento no debería estar en el pasado
+  // (fin del día elegido en hora de Montevideo, ya vencido = advertencia)
+  const fechaPasada = useMemo(() => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(datos.fecha)) return false;
+    return new Date(datos.fecha + 'T23:59:59-03:00').getTime() < Date.now();
+  }, [datos.fecha]);
 
   // Previsualización de los tonos de música de fondo (un audio a la vez)
   const audioPreview = useRef<HTMLAudioElement | null>(null);
@@ -414,23 +425,23 @@ export default function PersonalizadorApp() {
   };
 
   return (
-    <div data-page="storefront" className="milua-neo min-h-screen bg-[#f7f4ef] text-[#272a2d]">
+    <div data-page="storefront" className="min-h-screen bg-[#faf8f4] text-[#292522]">
       {/* ===== Encabezado ===== */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f1115]/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <a href="/Miluaistudio/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Miluaistudio">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#f1a46a]/40 bg-white/5 text-[#f1a46a]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#b58c5a]">
               <Heart size={17} />
             </span>
             <span>
               <span className="block font-serif text-base tracking-[0.08em] sm:text-lg">MILUAISTUDIO</span>
-              <span className="hidden text-[9px] uppercase tracking-[0.2em] text-white/50 sm:block">Personalizá tu invitación</span>
+              <span className="hidden text-[9px] uppercase tracking-[0.2em] text-[#8f867c] sm:block">Personalizá tu invitación</span>
             </span>
           </a>
           <div className="flex items-center gap-2">
             <a
               href={CATALOGO_URL}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3.5 py-2 text-xs font-medium text-[#e6e1d8] transition hover:bg-white/10 sm:text-sm"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] px-3.5 py-2 text-xs font-medium text-[#54483e] transition hover:bg-[#f3ead9] sm:text-sm"
             >
               Ver diseños
             </a>
@@ -450,13 +461,13 @@ export default function PersonalizadorApp() {
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-9 sm:px-6 sm:pt-12">
         {/* ===== Intro ===== */}
         <section className="mx-auto max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs text-[#e4d9cb]">
-            <Sparkles size={14} className="text-[#f1a46a]" /> Auto-servicio · Sin registro · Gratis
+          <p className="inline-flex items-center gap-2 rounded-full border border-[#eadfca] bg-white px-3.5 py-1.5 text-xs text-[#7a6f61] shadow-sm">
+            <Sparkles size={14} className="text-[#b58c5a]" /> Auto-servicio · Sin registro · Gratis
           </p>
           <h1 className="mt-5 font-serif text-3xl leading-[1.1] tracking-tight sm:text-5xl">
-            Creá tu invitación <em className="italic" style={{ color: 'transparent', backgroundImage: 'linear-gradient(105deg, #f1a46a 0%, #f4d1a7 48%, #70d7d0 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}>en minutos</em>.
+            Creá tu invitación <em className="italic" style={{ color: '#b58c5a' }}>en minutos</em>.
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#b2b1b6] sm:text-base">
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#716a63] sm:text-base">
             Elegí un diseño, cargá tus datos y mirá cómo queda tu invitación al instante. Si te gusta, nos la enviás por WhatsApp y la dejamos lista para publicar.
           </p>
           <OrnamentDivider className="mt-7" />
@@ -466,16 +477,16 @@ export default function PersonalizadorApp() {
         <section className="mt-10 sm:mt-12">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-serif text-xl sm:text-2xl">
-              <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#f1a46a] font-sans text-xs font-bold not-italic text-[#17191d]">1</span>
+              <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#b58c5a] font-sans text-xs font-bold not-italic text-white">1</span>
               Elegí el diseño
             </h2>
             {design && (
               <button
                 type="button"
                 onClick={() => setDesignId(null)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs text-[#e6e1d8] transition hover:bg-white/10"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] px-3 py-1.5 text-xs text-[#54483e] transition hover:bg-[#f3ead9]"
               >
-                <PenLine size={13} /> Cambiar diseño: <strong className="font-semibold text-[#f1a46a]">{design.name}</strong>
+                <PenLine size={13} /> Cambiar diseño: <strong className="font-semibold text-[#b58c5a]">{design.name}</strong>
               </button>
             )}
           </div>
@@ -487,9 +498,9 @@ export default function PersonalizadorApp() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm text-[#b2b1b6]">
-                Elegiste <strong className="font-semibold text-[#f7f1e8]">{design.name}</strong> — {design.description.split('.')[0]}. Ahora completá tus datos:
+            <div className="rounded-2xl border border-[#e8e0d7] bg-white p-4 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+              <p className="text-sm text-[#716a63]">
+                Elegiste <strong className="font-semibold text-[#292522]">{design.name}</strong> — {design.description.split('.')[0]}. Ahora completá tus datos:
               </p>
             </div>
           )}
@@ -499,7 +510,7 @@ export default function PersonalizadorApp() {
         {design && (
           <section className="mt-10 sm:mt-12">
             <h2 className="mb-5 font-serif text-xl sm:text-2xl">
-              <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#f1a46a] font-sans text-xs font-bold not-italic text-[#17191d]">2</span>
+              <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#b58c5a] font-sans text-xs font-bold not-italic text-white">2</span>
               Tus datos — la vista previa se actualiza al instante
             </h2>
 
@@ -507,10 +518,10 @@ export default function PersonalizadorApp() {
               {/* Columna izquierda: formulario + panel de secciones */}
               <div>
               {/* Formulario */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
+              <div className="rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="p-tipo" className={LABEL_CLS}><Type size={13} className="text-[#f1a46a]" /> Tipo de evento</label>
+                    <label htmlFor="p-tipo" className={LABEL_CLS}><Type size={13} className="text-[#b58c5a]" /> Tipo de evento</label>
                     <input
                       id="p-tipo"
                       list="p-tipos"
@@ -525,7 +536,7 @@ export default function PersonalizadorApp() {
                     </datalist>
                   </div>
                   <div>
-                    <label htmlFor="p-nombre" className={LABEL_CLS}><Sparkles size={13} className="text-[#f1a46a]" /> Nombre(s)</label>
+                    <label htmlFor="p-nombre" className={LABEL_CLS}><Sparkles size={13} className="text-[#b58c5a]" /> Nombre(s)</label>
                     <input
                       id="p-nombre"
                       value={datos.nombre}
@@ -536,34 +547,39 @@ export default function PersonalizadorApp() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="p-fecha" className={LABEL_CLS}><CalendarClock size={13} className="text-[#f1a46a]" /> Fecha del evento</label>
-                    <input id="p-fecha" type="date" value={datos.fecha} onChange={set('fecha')} className={INPUT_CLS + ' [color-scheme:dark]'} />
+                    <label htmlFor="p-fecha" className={LABEL_CLS}><CalendarClock size={13} className="text-[#b58c5a]" /> Fecha del evento</label>
+                    <input id="p-fecha" type="date" value={datos.fecha} onChange={set('fecha')} className={INPUT_CLS + ' [color-scheme:light]'} />
+                    {fechaPasada && (
+                      <p className="mt-1.5 text-[11px] font-medium text-red-500" role="alert">
+                        Esta fecha ya pasó. Cargá la fecha real de tu celebración para que la cuenta regresiva funcione bien.
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <label htmlFor="p-hora" className={LABEL_CLS}><CalendarClock size={13} className="text-[#f1a46a]" /> Hora</label>
-                    <input id="p-hora" type="time" value={datos.hora} onChange={set('hora')} className={INPUT_CLS + ' [color-scheme:dark]'} />
+                    <label htmlFor="p-hora" className={LABEL_CLS}><CalendarClock size={13} className="text-[#b58c5a]" /> Hora</label>
+                    <input id="p-hora" type="time" value={datos.hora} onChange={set('hora')} className={INPUT_CLS + ' [color-scheme:light]'} />
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-lugar" className={LABEL_CLS}><PenLine size={13} className="text-[#f1a46a]" /> Lugar del evento</label>
+                    <label htmlFor="p-lugar" className={LABEL_CLS}><PenLine size={13} className="text-[#b58c5a]" /> Lugar del evento</label>
                     <input id="p-lugar" value={datos.lugar} onChange={set('lugar')} placeholder="Ej: Salón Imperial" maxLength={60} className={INPUT_CLS} />
                     <p className={HELP_CLS}>El nombre que verán los invitados. La dirección va en el campo de abajo.</p>
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-direccion" className={LABEL_CLS}><MapPin size={13} className="text-[#f1a46a]" /> Dirección</label>
+                    <label htmlFor="p-direccion" className={LABEL_CLS}><MapPin size={13} className="text-[#b58c5a]" /> Dirección</label>
                     <input id="p-direccion" value={datos.direccion} onChange={set('direccion')} placeholder="Ej: Rambla Gandhi 1234, Montevideo" maxLength={90} className={INPUT_CLS} />
                     <p className={HELP_CLS}>Alimenta el mapa y el botón «Cómo llegar». Si la dejás vacía usamos el nombre del lugar.</p>
                   </div>
                   <div>
-                    <label htmlFor="p-dresscode" className={LABEL_CLS}><Shirt size={13} className="text-[#f1a46a]" /> Dress code</label>
+                    <label htmlFor="p-dresscode" className={LABEL_CLS}><Shirt size={13} className="text-[#b58c5a]" /> Dress code</label>
                     <input id="p-dresscode" value={datos.dressCode} onChange={set('dressCode')} placeholder="Ej: Gala / Elegante" maxLength={40} className={INPUT_CLS} />
                   </div>
                   <div>
-                    <label htmlFor="p-instagram" className={LABEL_CLS}><Instagram size={13} className="text-[#f1a46a]" /> Instagram (opcional)</label>
+                    <label htmlFor="p-instagram" className={LABEL_CLS}><Instagram size={13} className="text-[#b58c5a]" /> Instagram (opcional)</label>
                     <input id="p-instagram" value={datos.instagram} onChange={set('instagram')} placeholder="@tu.usuario" maxLength={30} className={INPUT_CLS} />
                     <p className={HELP_CLS}>Agrega una sección para seguirte y juntar las fotos.</p>
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-frase" className={LABEL_CLS}><Type size={13} className="text-[#f1a46a]" /> Frase o dedicatoria (opcional)</label>
+                    <label htmlFor="p-frase" className={LABEL_CLS}><Type size={13} className="text-[#b58c5a]" /> Frase o dedicatoria (opcional)</label>
                     <textarea
                       id="p-frase"
                       value={datos.frase}
@@ -575,7 +591,7 @@ export default function PersonalizadorApp() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-historia" className={LABEL_CLS}><Heart size={13} className="text-[#f1a46a]" /> Mi historia (opcional)</label>
+                    <label htmlFor="p-historia" className={LABEL_CLS}><Heart size={13} className="text-[#b58c5a]" /> Mi historia (opcional)</label>
                     <textarea
                       id="p-historia"
                       value={datos.historia}
@@ -587,7 +603,7 @@ export default function PersonalizadorApp() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-musica" className={LABEL_CLS}><Music2 size={13} className="text-[#f1a46a]" /> Canción de Spotify (opcional)</label>
+                    <label htmlFor="p-musica" className={LABEL_CLS}><Music2 size={13} className="text-[#b58c5a]" /> Canción de Spotify (opcional)</label>
                     <input
                       id="p-musica"
                       value={datos.musica}
@@ -598,7 +614,7 @@ export default function PersonalizadorApp() {
                     <p className={HELP_CLS}>Pegá el enlace de una playlist, álbum o tema y quedará como sección de música en tu invitación.</p>
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-portada" className={LABEL_CLS}><ImageIcon size={13} className="text-[#f1a46a]" /> Foto de portada (opcional)</label>
+                    <label htmlFor="p-portada" className={LABEL_CLS}><ImageIcon size={13} className="text-[#b58c5a]" /> Foto de portada (opcional)</label>
                     <input
                       id="p-portada"
                       value={datos.portada}
@@ -613,11 +629,11 @@ export default function PersonalizadorApp() {
               </div>
 
               {/* Panel de secciones: el cliente prende y apaga módulos de la invitación */}
-              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
-                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
-                  <LayoutTemplate size={17} className="text-[#f1a46a]" /> Secciones de tu invitación
+              <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
+                  <LayoutTemplate size={17} className="text-[#b58c5a]" /> Secciones de tu invitación
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
                   Prendé lo que querés mostrar — todo va incluido en el precio. La vista previa se actualiza al instante y nos llega tu elección junto con el pedido.
                 </p>
                 <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
@@ -634,11 +650,11 @@ export default function PersonalizadorApp() {
               </div>
 
               {/* Panel de apertura animada: 10 estilos para abrir la invitación */}
-              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
-                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
-                  <Sparkles size={17} className="text-[#f1a46a]" /> Apertura animada
+              <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
+                  <Sparkles size={17} className="text-[#b58c5a]" /> Apertura animada
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
                   Elegí cómo se abre tu invitación — usa los colores de tu diseño. Todas incluidas.
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
@@ -652,18 +668,18 @@ export default function PersonalizadorApp() {
                   ))}
                 </div>
                 {!secciones.sobre && (
-                  <p className="mt-3 text-[11px] text-[#f1a46a]">
+                  <p className="mt-3 text-[11px] text-[#b58c5a]">
                     La apertura está apagada en «Secciones» — si elegís una acá la prendemos automáticamente.
                   </p>
                 )}
               </div>
 
               {/* Panel de música de fondo: 10 tonos + sin música */}
-              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
-                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
-                  <Music2 size={17} className="text-[#f1a46a]" /> Música de fondo
+              <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
+                  <Music2 size={17} className="text-[#b58c5a]" /> Música de fondo
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
                   Un tono suave que suena mientras tus invitados recorren la invitación. Tocá ▶ para escucharlo antes de elegir.
                 </p>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -686,8 +702,8 @@ export default function PersonalizadorApp() {
                   className={
                     'mt-2.5 w-full rounded-xl border px-3.5 py-3 text-left text-sm transition ' +
                     (datos.musicaFondo === ''
-                      ? 'border-[#f1a46a]/60 bg-white/[0.07] font-medium text-[#f7f1e8]'
-                      : 'border-white/10 bg-white/[0.02] text-[#b2b1b6] hover:border-white/25')
+                      ? 'border-[#b58c5a]/60 bg-[#faf6ef] font-medium text-[#292522]'
+                      : 'border-[#e8e0d7] bg-white text-[#716a63] hover:border-[#c9bbaa]')
                   }
                 >
                   Sin música de fondo — solo la playlist de Spotify
@@ -695,11 +711,11 @@ export default function PersonalizadorApp() {
               </div>
 
               {/* Panel de cronograma editable */}
-              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
-                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
-                  <Clock size={17} className="text-[#f1a46a]" /> Cronograma de la noche
+              <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
+                  <Clock size={17} className="text-[#b58c5a]" /> Cronograma de la noche
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
                   Cargá los momentos de tu fiesta hora por hora. Si lo dejás vacío, armamos uno de muestra con tu aprobación.
                 </p>
                 <div className="mt-4 grid gap-2">
@@ -711,7 +727,7 @@ export default function PersonalizadorApp() {
                         onChange={(e) => setCrono(i, 'hora', e.target.value)}
                         aria-label={'Hora del momento ' + (i + 1)}
                         style={{ width: 118 }}
-                        className={INPUT_CLS + ' shrink-0 [color-scheme:dark]'}
+                        className={INPUT_CLS + ' shrink-0 [color-scheme:light]'}
                       />
                       <input
                         value={fila.titulo}
@@ -726,7 +742,7 @@ export default function PersonalizadorApp() {
                         onClick={() => quitarMomento(i)}
                         disabled={datos.cronograma.length <= 1}
                         aria-label={'Quitar el momento ' + (i + 1)}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-[#8b8b92] transition hover:border-red-400/40 hover:text-red-300 disabled:opacity-30"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#e8e0d7] text-[#8f867c] transition hover:border-red-400/40 hover:text-red-300 disabled:opacity-30"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -737,22 +753,22 @@ export default function PersonalizadorApp() {
                   type="button"
                   onClick={agregarMomento}
                   disabled={datos.cronograma.length >= 10}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[#f1a46a]/40 px-3 py-2 text-xs font-medium text-[#f1a46a] transition hover:bg-[#f1a46a]/10 disabled:opacity-40"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[#b58c5a]/40 px-3 py-2 text-xs font-medium text-[#b58c5a] transition hover:bg-[#b58c5a]/10 disabled:opacity-40"
                 >
                   <Plus size={13} /> Agregar momento
                 </button>
               </div>
 
               {/* Panel de estilo: tipografía y color de acento */}
-              <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7">
-                <p className="flex items-center gap-2 font-serif text-lg text-[#f7f1e8]">
-                  <Palette size={17} className="text-[#f1a46a]" /> Estilo
+              <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
+                  <Palette size={17} className="text-[#b58c5a]" /> Estilo
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8b8b92]">
+                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
                   Afiná los detalles sobre tu diseño: la letra de los títulos y el color de los detalles. Si no tocás nada, queda el estilo original del diseño.
                 </p>
 
-                <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]">Tipografía</p>
+                <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#716a63]">Tipografía</p>
                 <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
                   {TIPOGRAFIAS_META.map((t) => (
                     <OpcionTipografia
@@ -766,7 +782,7 @@ export default function PersonalizadorApp() {
                   ))}
                 </div>
 
-                <p className="mt-5 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#b2b1b6]">Color de acento</p>
+                <p className="mt-5 mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#716a63]">Color de acento</p>
                 <div className="flex flex-wrap items-center gap-2.5">
                   {ACENTOS_META.map((a) => (
                     <SwatchAcento
@@ -778,7 +794,7 @@ export default function PersonalizadorApp() {
                       onSelect={() => setDatos((prev) => ({ ...prev, acento: prev.acento === a.id ? '' : a.id }))}
                     />
                   ))}
-                  <span className="ml-1 text-xs text-[#8b8b92]">{ACENTOS_META.find((a) => a.id === datos.acento)?.nombre ?? 'Original del diseño'}</span>
+                  <span className="ml-1 text-xs text-[#8f867c]">{ACENTOS_META.find((a) => a.id === datos.acento)?.nombre ?? 'Original del diseño'}</span>
                 </div>
               </div>
               </div>
@@ -789,26 +805,26 @@ export default function PersonalizadorApp() {
                   celular ni los botones. */}
               <aside className="lg:sticky lg:top-24 lg:self-start">
                 <div className="sidebar-scroll lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1.5">
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center">
-                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#b2b1b6]">Vista previa en vivo</p>
+                <div className="rounded-2xl border border-[#e8e0d7] bg-white p-5 text-center shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#716a63]">Vista previa en vivo</p>
                   {previewData && <PhonePreview data={previewData} />}
                   <button
                     type="button"
                     onClick={abrirVistaCompleta}
-                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-[#17191d] shadow-[0_10px_26px_rgba(241,164,106,0.25)] transition hover:brightness-110"
-                    style={{ background: 'linear-gradient(110deg, #f1a46a, #f6c78f 48%, #70d7d0)' }}
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_26px_rgba(181,140,90,0.3)] transition hover:brightness-110"
+                    style={{ background: 'linear-gradient(110deg, #c9a26e, #b58c5a 55%, #a8814f)' }}
                   >
                     Abrir la invitación completa <ArrowRight size={15} />
                   </button>
-                  <p className="mt-2.5 text-[11px] leading-relaxed text-[#8b8b92]">
+                  <p className="mt-2.5 text-[11px] leading-relaxed text-[#8f867c]">
                     Apertura animada, música de fondo, cronograma, estilo, cuenta regresiva, galería y confirmación funcionando con tus datos.
                   </p>
                 </div>
 
                 {/* Paso 3 · Pedir */}
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+                <div className="mt-4 rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
                   <p className="mb-3 font-serif text-lg">
-                    <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#f1a46a] font-sans text-xs font-bold not-italic text-[#17191d]">3</span>
+                    <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#b58c5a] font-sans text-xs font-bold not-italic text-white">3</span>
                     ¿Te gusta? Pedila lista
                   </p>
                   <a
@@ -823,11 +839,11 @@ export default function PersonalizadorApp() {
                     href={MERCADO_LIBRE_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2.5 text-xs font-medium text-[#e6e1d8] transition hover:bg-white/10"
+                    className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#e8e0d7] px-4 py-2.5 text-xs font-medium text-[#54483e] transition hover:bg-[#f3ead9]"
                   >
                     Comprar por Mercado Libre <ExternalLink size={13} />
                   </a>
-                  <p className="mt-3 text-[11px] leading-relaxed text-[#8b8b92]">
+                  <p className="mt-3 text-[11px] leading-relaxed text-[#8f867c]">
                     Te llega con tu diseño, nombre, fecha, lugar, frase y música. Con el pago lo dejamos publicado con tu enlace final.
                   </p>
                 </div>
@@ -838,13 +854,13 @@ export default function PersonalizadorApp() {
         )}
 
         {/* ===== Nota final ===== */}
-        <section className="mt-14 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center sm:p-8">
-          <p className="font-serif text-lg italic text-[#f4d1a7] sm:text-xl">¿Preferís que lo hagamos por vos?</p>
-          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-[#b2b1b6]">
+        <section className="mt-14 rounded-2xl border border-[#e8e0d7] bg-white p-6 text-center shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-8">
+          <p className="font-serif text-lg italic text-[#b58c5a] sm:text-xl">¿Preferís que lo hagamos por vos?</p>
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-[#716a63]">
             Elegí el diseño y escribinos: cargamos todos los datos por vos, te mandamos la vista previa y publicamos cuando la apruebes.
           </p>
           <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
-            <a href={CATALOGO_URL} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-[#e6e1d8] transition hover:bg-white/10">
+            <a href={CATALOGO_URL} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#e8e0d7] px-5 py-2.5 text-sm font-medium text-[#54483e] transition hover:bg-[#f3ead9]">
               Explorar los 10 diseños <ArrowRight size={15} />
             </a>
             <a
@@ -860,8 +876,8 @@ export default function PersonalizadorApp() {
       </main>
 
       {/* ===== Pie ===== */}
-      <footer className="border-t border-white/10 bg-[#0b0d10]">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <footer className="border-t border-[#e8e0d7] bg-[#211c17]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span className="font-serif tracking-[0.12em] text-white/85">MILUAISTUDIO</span>
           <span>Personalización auto-servicio · tu vista previa no se guarda ni se comparte.</span>
           <span>© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
@@ -879,7 +895,7 @@ export default function PersonalizadorApp() {
           <button
             type="button"
             onClick={() => setVistaPrevia(false)}
-            className="fixed left-3 top-3 z-[600] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/75 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-md transition hover:border-white/40 hover:bg-black/90 sm:left-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
+            className="fixed left-3 top-3 z-[600] inline-flex items-center gap-2 rounded-full border border-[#ded4c8] bg-black/75 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-md transition hover:border-[#c9bbaa] hover:bg-black/90 sm:left-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
           >
             <X size={15} /> Cerrar vista previa
           </button>

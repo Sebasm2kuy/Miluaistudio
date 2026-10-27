@@ -34,6 +34,9 @@ export function useConfig(): SiteConfig {
 
       if (saved) {
         const parsed = JSON.parse(saved) as SiteConfig
+        // Carga de configuración persistida: solo posible tras el montaje
+        // (localStorage no existe durante el render estático).
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (parsed?.evento?.nombre) setCfg(parsed)
       }
     } catch {

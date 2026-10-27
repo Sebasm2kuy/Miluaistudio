@@ -1,7 +1,8 @@
 'use client'
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { CalendarPlus } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { CalendarPlus, PartyPopper } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
+import { fechaEventoEnMontevideo } from '@/lib/fechas'
 
 // Simple digit display — no flip animation, no perspective, no layout recalc
 function FlipUnit({ value, label }: { value: number; label: string }) {
@@ -169,7 +170,12 @@ const CLOCK_COMPONENTS: Record<string, React.FC<{ value: number; label: string }
 
 export default function Countdown() {
   const cfg = useConfig()
-  const eventMs = new Date(cfg.evento.fechaEvento + ' GMT-0300').getTime()
+  // Fecha absoluta del evento en hora de Montevideo (offset -03:00 explícito);
+  // independiente de la zona horaria del dispositivo del invitado.
+  const evento = useMemo(() => fechaEventoEnMontevideo(cfg.evento.fechaEvento), [cfg.evento.fechaEvento])
+  const eventMs = evento ? evento.getTime() : NaN
+  const duracionHoras = Number(cfg.evento.duracionHoras) > 0 ? Number(cfg.evento.duracionHoras) : 5
+  const finEventoMs = isNaN(eventMs) ? NaN : eventMs + duracionHoras * 3600000
   const labels: Record<string, string> = cfg.countdown.labels
   const clockStyle = cfg.estilos?.modeloReloj || 'classic'
   const ClockUnit = CLOCK_COMPONENTS[clockStyle] || FlipUnit
@@ -186,28 +192,52 @@ export default function Countdown() {
   }
 
   const [timeLeft, setTimeLeft] = useState<{ D: number; H: number; M: number; S: number }>({ D: 0, H: 0, M: 0, S: 0 })
+  // Estado del ciclo de vida del evento, resuelto tras el montaje (evita
+  // desajuste de hidratación): 'previo' | 'hoy' | 'pasado'
+  const [estadoEvento, setEstadoEvento] = useState<'previo' | 'hoy' | 'pasado' | 'cargando'>('cargando')
 
   // Update after mount to avoid SSR/hydration mismatch (React error #418).
   // Server and client must render the same initial text; Date.now() differs.
   useEffect(() => {
-    setTimeLeft(calcTimeLeft())
-    const timer = setInterval(() => setTimeLeft(calcTimeLeft()), 1000)
+    const resolver = () => {
+      const ahora = Date.now()
+      if (isNaN(eventMs)) {
+        setEstadoEvento('pasado')
+        return
+      }
+      if (ahora < eventMs) setEstadoEvento('previo')
+      else if (ahora <= finEventoMs) setEstadoEvento('hoy')
+      else setEstadoEvento('pasado')
+    }
+    resolver()
+    const timer = setInterval(() => {
+      resolver()
+      if (!isNaN(eventMs) && Date.now() < eventMs) {
+        setTimeLeft(calcTimeLeft())
+      }
+    }, 1000)
+    // Estado inicial real tras el montaje (el servidor renderiza ceros para
+    // evitar el desajuste de hidratación; aquí se calcula el valor verdadero).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTimeLeft(isNaN(eventMs) || Date.now() >= eventMs ? { D: 0, H: 0, M: 0, S: 0 } : calcTimeLeft())
     return () => clearInterval(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventMs])
+  }, [eventMs, finEventoMs])
 
   const addToCalendar = useCallback(() => {
+    if (isNaN(eventMs)) return
     const url = new URL('https://www.google.com/calendar/render')
     url.searchParams.set('action', 'TEMPLATE')
     url.searchParams.set('text', cfg.countdown.calendarioTitulo)
-    const start = new Date(cfg.evento.fechaEvento.replace(' ', 'T') + ':00')
-    const end = new Date(start.getTime() + 5 * 60 * 60 * 1000)
+    // Fechas en ISO UTC absoluto: el evento queda a la hora correcta de
+    // Montevideo sin importar desde qué zona horaria se agrega.
+    const start = new Date(eventMs)
+    const end = new Date(eventMs + duracionHoras * 60 * 60 * 1000)
     const formatDate = (date: Date) => date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z')
     url.searchParams.set('dates', `${formatDate(start)}/${formatDate(end)}`)
     url.searchParams.set('location', cfg.countdown.calendarioLocation)
     url.searchParams.set('details', cfg.countdown.calendarioDetalles)
     window.open(url.toString(), '_blank')
-  }, [cfg])
+  }, [cfg, eventMs, duracionHoras])
 
   // Choose background based on clock style
   const cardBg =
@@ -242,23 +272,55 @@ export default function Countdown() {
         <h2 className="font-serif italic text-3xl sm:text-4xl md:text-5xl text-bordeaux mb-8 sm:mb-12 md:mb-16" style={titleStyle}>
           {cfg.countdown.titulo}
         </h2>
-        <div className="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4 stagger">
-          {Object.entries(timeLeft).map(([label, val]) => (
-            <div key={label} className="css-fade-up">
-              <ClockUnit value={val} label={labels[label]} />
+        {estadoEvento === 'cargando' ? (
+          <div className="h-16" aria-hidden="true" />
+        ) : estadoEvento === 'pasado' ? (
+          /* Evento finalizado: mensaje apropiado en lugar de ceros confusos */
+          <div className="css-fade-up flex flex-col items-center gap-4 pb-2">
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-full"
+              style={{
+                background: 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))',
+                boxShadow: '0 8px 28px color-mix(in srgb, var(--theme-accent, #b8860b) 28%, transparent)',
+              }}
+            >
+              <PartyPopper size={28} className="text-white" strokeWidth={1.6} />
             </div>
-          ))}
-        </div>
-        <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
-          <button
-            onClick={addToCalendar}
-            className="inline-flex items-center gap-2.5 sm:gap-3 text-gold font-bold text-sm sm:text-sm md:text-xs uppercase tracking-widest border-2 px-6 sm:px-7 md:px-10 py-3 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
-            style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
-          >
-            <CalendarPlus size={16} strokeWidth={1.5} />
-            {cfg.countdown.botonCalendario}
-          </button>
-        </div>
+            <p className="font-serif text-xl italic sm:text-2xl" style={{ color: titleColor || 'var(--theme-card-strong, var(--theme-primary, #3d0202))' }}>
+              {isNaN(eventMs) ? 'La fecha del evento se anunciará pronto.' : '¡Esta celebración ya tuvo lugar!'}
+            </p>
+            {!isNaN(eventMs) && (
+              <p className="max-w-md text-sm leading-relaxed" style={{ color: 'var(--theme-card-muted)' }}>
+                Gracias por ser parte de este día tan especial. Los recuerdos quedan para siempre en el corazón.
+              </p>
+            )}
+          </div>
+        ) : (
+          <>
+            {estadoEvento === 'hoy' && (
+              <p className="css-fade-up mb-5 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em]" style={{ background: 'color-mix(in srgb, var(--theme-accent, #b8860b) 12%, transparent)', color: 'var(--theme-accent, #b8860b)' }}>
+                <PartyPopper size={14} /> ¡Es hoy!
+              </p>
+            )}
+            <div className="grid grid-cols-4 gap-1 sm:gap-2 md:gap-4 stagger">
+              {Object.entries(timeLeft).map(([label, val]) => (
+                <div key={label} className="css-fade-up">
+                  <ClockUnit value={val} label={labels[label]} />
+                </div>
+              ))}
+            </div>
+            <div className={`css-fade-up mt-8 sm:mt-12 md:mt-16`}>
+              <button
+                onClick={addToCalendar}
+                className="inline-flex items-center gap-2.5 sm:gap-3 text-gold font-bold text-sm sm:text-sm md:text-xs uppercase tracking-widest border-2 px-6 sm:px-7 md:px-10 py-3 sm:py-3 md:py-4 rounded-full hover:bg-gold/5 active:scale-95 transition-[background-color,transform] duration-200"
+                style={{ borderColor: 'rgba(184, 134, 11, 0.25)' }}
+              >
+                <CalendarPlus size={16} strokeWidth={1.5} />
+                {cfg.countdown.botonCalendario}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   )

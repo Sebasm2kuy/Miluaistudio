@@ -34,13 +34,13 @@ export async function generateMetadata({
       locale: 'es_UY',
       siteName: 'Miluaistudio · Invitaciones digitales',
       url: `https://sebasm2kuy.github.io/Miluaistudio/catalogo/${design.id}/`,
-      images: [{ url: 'https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg', width: 900, height: 1200, alt: 'Invitación de demostración de Miluaistudio' }],
+      images: [{ url: 'https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Miluaistudio' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${design.name} · Miluaistudio`,
       description: design.description,
-      images: ['https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg'],
+      images: ['https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg'],
     },
   };
 }

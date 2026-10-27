@@ -77,11 +77,11 @@ export const metadata: Metadata = {
     siteName: "Miluaistudio · Invitaciones digitales",
     images: [
       {
-        url: "https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg",
-        width: 900,
-        height: 1200,
-        alt: "Invitación digital de demostración de Miluaistudio",
-        type: "image/svg+xml",
+        url: "https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Miluaistudio — invitaciones digitales personalizadas",
+        type: "image/jpeg",
       },
     ],
   },
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Miluaistudio | Invitaciones digitales personalizadas",
     description: "Diseños web personalizados para fiestas de 15, bodas y celebraciones.",
-    images: ["https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg"],
+    images: ["https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg"],
   },
 };
 
@@ -99,16 +99,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="es-UY" className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${alexBrush.variable} ${cormorant.variable} ${dancingScript.variable} ${playfair.variable} ${montserrat.variable} antialiased`}
         style={{
           margin: 0,
           fontFamily: "'Montserrat', sans-serif",
-          backgroundColor: '#050505',
-          color: '#fdfcfb',
-          /* Sin overflow inline: el control de overflow vive en globals.css
-             (body con overflow-x oculto rompe position:sticky en storefront). */
+          /* Fondo y color los controla globals.css: oscuro para la
+             experiencia de invitación y marfil para las páginas de tienda
+             (html:has([data-page="storefront"])). Sin inline styles acá:
+             pisarían cualquier regla de tema. Sin overflow inline: el control
+             de overflow vive en globals.css (body con overflow-x oculto rompe
+             position:sticky en storefront). */
         }}
       >
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

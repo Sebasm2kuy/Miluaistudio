@@ -34,7 +34,7 @@ interface Photo {
   spriteIndex?: number
 }
 
-type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'error'
+type UploadState = 'idle' | 'compressing' | 'uploading' | 'ok' | 'pendiente' | 'error'
 
 export default function Gallery() {
   const cfg = useConfig()
@@ -101,7 +101,7 @@ export default function Gallery() {
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStart === null) return
     const diff = touchStart - e.changedTouches[0].clientX
-    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev() }
+    if (Math.abs(diff) > 50) { if (diff > 0) { next() } else { prev() } }
     setTouchStart(null)
   }
 
@@ -127,6 +127,11 @@ export default function Gallery() {
       // Backend no configurado — mostrar mensaje claro en lugar del error genérico
       alert('La subida de fotos todavía no está activa. Avisale a Milu para que configure el backend.')
       setUploadState('error')
+      return
+    }
+    // Guarda básica en el cliente: archivos absurdamente grandes no se procesan
+    if (selectedFile.size > 20 * 1024 * 1024) {
+      alert('La foto es muy grande. Elegí una de menos de 20 MB.')
       return
     }
 
@@ -156,8 +161,18 @@ export default function Gallery() {
       const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
       const data = await parseGasResponse(res)
 
-      if (data && data.success && data.url) {
-        // Auto-publicación: la foto ya está visible, la agregamos al carousel.
+      if (data && data.success && data.estado === 'pendiente') {
+        // Moderación activa: la foto NO se publica todavía. La interfaz lo
+        // comunica con claridad y no la agrega al carousel.
+        setUploadState('pendiente')
+        setTimeout(() => {
+          setUploadModal(false)
+          setSelectedFile(null)
+          setPreview(null)
+          setUploadState('idle')
+        }, 2600)
+      } else if (data && data.success && data.url) {
+        // Compatibilidad con un backend anterior de publicación automática
         setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' as const }])
         setUploadState('ok')
         setTimeout(() => {
@@ -183,8 +198,8 @@ export default function Gallery() {
     setUploadModal(false); setSelectedFile(null); setPreview(null); setUploadState('idle')
   }
 
-  const statusText = uploadState === 'compressing' ? 'Comprimiendo...' : uploadState === 'uploading' ? 'Subiendo...' : uploadState === 'ok' ? '¡Foto enviada!' : uploadState === 'error' ? 'Error, intentá de nuevo' : ''
-  const statusColor = uploadState === 'error' ? 'text-red-500' : uploadState === 'ok' ? 'text-green-600' : 'text-gold'
+  const statusText = uploadState === 'compressing' ? 'Comprimiendo...' : uploadState === 'uploading' ? 'Subiendo...' : uploadState === 'ok' ? '¡Foto publicada!' : uploadState === 'pendiente' ? '¡Recibida! Va a aparecer cuando la aprueben' : uploadState === 'error' ? 'Error, intentá de nuevo' : ''
+  const statusColor = uploadState === 'error' ? 'text-red-500' : uploadState === 'ok' ? 'text-green-600' : uploadState === 'pendiente' ? 'text-amber-500' : 'text-gold'
   const statusSpinning = uploadState === 'compressing' || uploadState === 'uploading'
   const showStatus = uploadState !== 'idle'
 
@@ -341,7 +356,10 @@ export default function Gallery() {
           </button>
 
           <h3 className="font-serif italic text-xl sm:text-2xl mb-1" style={{ color: 'var(--theme-card-strong)' }}>Compartí tu foto</h3>
-          <p className="text-xs sm:text-sm mb-6" style={{ color: 'var(--theme-card-muted)' }}>Las mejores fotos de la noche</p>
+          <p className="text-xs sm:text-sm mb-2" style={{ color: 'var(--theme-card-muted)' }}>Las mejores fotos de la noche</p>
+          <p className="text-[11px] leading-relaxed mb-5" style={{ color: 'var(--theme-card-muted)' }}>
+            Tu foto llega a los organizadores y aparece en la galería cuando la aprueben. Para pedir que la borren, escribinos por WhatsApp.
+          </p>
 
           {!preview ? (
             <div
@@ -353,7 +371,7 @@ export default function Gallery() {
                 <Upload size={22} strokeWidth={1.5} />
               </div>
               <p className="text-xs sm:text-sm font-medium" style={{ color: 'var(--theme-card-muted)' }}>Tocá para elegir una foto</p>
-              <p className="text-[10px] sm:text-xs" style={{ color: 'color-mix(in srgb, var(--theme-card-muted) 65%, transparent)' }}>JPG o PNG</p>
+              <p className="text-[10px] sm:text-xs" style={{ color: 'color-mix(in srgb, var(--theme-card-muted) 65%, transparent)' }}>JPG, PNG o WebP · máx. 20 MB</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -388,6 +406,11 @@ export default function Gallery() {
               {uploadState === 'ok' && (
                 <p className="text-center text-xs italic mt-2" style={{ color: 'var(--theme-card-muted)' }}>
                   ¡Gracias! Tu foto ya está visible en la galería.
+                </p>
+              )}
+              {uploadState === 'pendiente' && (
+                <p className="text-center text-xs italic mt-2" style={{ color: 'var(--theme-card-muted)' }}>
+                  ¡Gracias! Tu foto fue recibida y la van a revisar antes de publicarla.
                 </p>
               )}
             </div>

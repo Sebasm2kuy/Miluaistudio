@@ -27,7 +27,7 @@ function preloadImages(urls: string[]): Promise<void> {
 
 function waitForFonts(timeoutMs = 5000): Promise<void> {
   if (typeof document === 'undefined') return Promise.resolve()
-  const fontsReady: Promise<void> = document.fonts?.ready ?? Promise.resolve()
+  const fontsReady: Promise<void> = document.fonts?.ready.then(() => {}) ?? Promise.resolve()
   return Promise.race([
     fontsReady,
     new Promise<void>((r) => setTimeout(r, timeoutMs)),

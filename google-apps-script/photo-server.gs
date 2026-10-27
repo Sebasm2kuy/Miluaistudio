@@ -138,36 +138,45 @@ function handleAssemble(e) {
     }
 
     var decodedBytes = Utilities.base64Decode(base64);
+
+    // Validar MIME real: el flujo del cliente comprime a JPEG (canvas),
+    // así que esperamos la firma JPEG (FF D8). Rechaza archivos malformados.
+    if (decodedBytes.length < 3 || decodedBytes[0] !== 0xFF || decodedBytes[1] !== 0xD8) {
+      cleanupChunks(cache, uid, totalChunks);
+      return jsonResponse({ error: 'El archivo no es una imagen válida.', success: false });
+    }
+
     var blob = Utilities.newBlob(decodedBytes, 'image/jpeg', 'foto_' + Date.now() + '.jpg');
 
-    // ===== Publicación automática (sin moderación) =====
-    // La foto se guarda directo en la carpeta Aprobadas y se hace pública.
-    var folder = getOrCreateFolder(FOLDER_APROBADAS);
+    // ===== Política de MODERACIÓN (coherente con la documentación) =====
+    // La foto se guarda en la carpeta Pendientes SIN compartirse públicamente
+    // y con estado "pendiente". Solo queda visible en la galería cuando los
+    // organizadores la aprueban (menú "🎭 Moderación" en el spreadsheet).
+    var folder = getOrCreateFolder(FOLDER_PENDIENTES);
     var file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
+    // Sin setSharing: el archivo permanece privado hasta su aprobación.
 
     var fileId = file.getId();
-    var publicUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
+    var pendienteUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
 
-    // Registrar en la hoja con estado "aprobada" y URL pública
+    // Registrar en la hoja con estado "pendiente"
     var sheet = getOrCreateSheet();
     sheet.appendRow([
       new Date().toISOString(),
-      publicUrl,      // URL pública (visible en galería)
-      publicUrl,      // URL pendiente (mantenida por compatibilidad del schema)
+      '',             // URL Pública (se completa al aprobar)
+      pendienteUrl,   // URL pendiente (vista previa privada para los organizadores)
       fileId,
-      'aprobada',
-      '=IMAGE("' + publicUrl + '=s120")'  // Thumbnail en el sheet
+      'pendiente',
+      '=IMAGE("' + pendienteUrl + '=s120")'  // Thumbnail en el sheet (privado)
     ]);
 
     cleanupChunks(cache, uid, totalChunks);
 
     return jsonResponse({
       success: true,
-      url: publicUrl,        // URL pública — el frontend la usa para agregar al carousel
-      publicUrl: publicUrl,
+      estado: 'pendiente',
       fileId: fileId,
-      message: 'Foto publicada en la galería.'
+      message: 'Foto recibida. Quedará visible en la galería cuando sea aprobada.'
     });
 
   } catch (error) {

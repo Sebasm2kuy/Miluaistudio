@@ -60,6 +60,8 @@ export interface SiteConfig {
     fecha: string
     anio: string
     fechaEvento: string
+    /** Duración estimada del evento en horas (para el botón de calendario; default 5) */
+    duracionHoras?: number
     lugar: string
     ubicacion: string
     direccion: string
@@ -129,6 +131,8 @@ export interface SiteConfig {
   }
   fondo: {
     fotos: string[]
+    /** Posición de recorte por foto del slideshow (desktop/mobile), opcional */
+    posiciones?: { desktop: string; mobile: string }[]
   }
   colores: {
     principal: string
@@ -154,28 +158,35 @@ export interface SiteConfig {
 
 
 // ============================================================
-// VALORES — Auto-generated from admin panel
+// VALORES — PLANTILLA NEUTRA (sin datos de celebraciones reales)
+// ------------------------------------------------------------
+// Esta configuración base NO debe contener datos personales de un evento
+// real: es el punto de partida del panel /admin. Los datos de cada cliente
+// se cargan desde el panel y se publican sobre esta plantilla.
+// Las demostraciones públicas usan src/data/demo-config.ts, que ya garantiza
+// su propia separación (sin teléfonos, sin endpoints, sin datos bancarios).
 // ============================================================
 const config: SiteConfig = {
   "evento": {
     "tipo": "Mis XV Años",
-    "nombre": "Milagros",
-    "apellido": "Cabrera",
-    "apodo": "Milu",
-    "fecha": "Sábado 22 de Agosto",
-    "anio": "2026",
-    "fechaEvento": "2026-08-22 21:00",
-    "lugar": "Salón My Father",
+    "nombre": "Valentina",
+    "apellido": "",
+    "apodo": "Vale",
+    "fecha": "Sábado 12 de Junio",
+    "anio": "2027",
+    "fechaEvento": "2027-06-12 21:00",
+    "duracionHoras": 5,
+    "lugar": "Nombre del salón",
     "ubicacion": "Montevideo",
-    "direccion": "Granaderos 3875, Montevideo",
-    "mapsUrl": "https://maps.app.goo.gl/uXq5HCuF54u8DqJj8",
-    "hashtag": "#MilagrosXV2026",
-    "hashtagUrl": "https://www.instagram.com/explore/tags/MilagrosXV2026/"
+    "direccion": "",
+    "mapsUrl": "https://maps.google.com/?q=Montevideo%2C+Uruguay",
+    "hashtag": "#ValentinaXV2027",
+    "hashtagUrl": "https://www.instagram.com/explore/tags/ValentinaXV2027/"
   },
   "dedicatoria": {
     "cita": "Hay momentos que no se repiten, personas que no se olvidan y recuerdos que se guardan para siempre en el corazón.",
     "cuerpo": "Cada persona que está leyendo esto es parte importante de mi historia. Los esperamos con toda la emoción del mundo para compartir juntos esta noche tan especial.",
-    "firma": "Milagros"
+    "firma": "Valentina"
   },
   "timeline": {
     "titulo": "La Noche",
@@ -189,7 +200,7 @@ const config: SiteConfig = {
       },
       {
         "hora": "22:00",
-        "titulo": "Ingreso de Milu",
+        "titulo": "Ingreso de la cumpleañera",
         "desc": "Vals y comienzo de la fiesta",
         "icono": "👑"
       },
@@ -223,35 +234,35 @@ const config: SiteConfig = {
     "titulo": "Galería",
     "subtitulo": "Momentos que hacen esta celebración inolvidable",
     "botonSubir": "Dejale un recuerdo",
-    "photoUploadUrl": "https://script.google.com/macros/s/AKfycbzsrC1JqjXIVsHKJ6Thl4Ho6B4FDwdovPKYpg2SIbYfiBgXe5c12lzbhs2_D3mwhgsYFg/exec",
+    "photoUploadUrl": "",
     "fotos": [
       {
-        "webp": "/Miluaistudio/gallery/gallery1.webp",
-        "fallback": "/Miluaistudio/gallery/gallery1.jpg",
+        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
+        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
         "objectPosition": {
           "desktop": "12% 50%",
           "mobile": "12% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
-        "fallback": "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
+        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
+        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
         "objectPosition": {
           "desktop": "23% 50%",
           "mobile": "23% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
-        "fallback": "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
+        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
+        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
         "objectPosition": {
           "desktop": "90% 50%",
           "mobile": "90% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg",
-        "fallback": "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg",
+        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg",
+        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg",
         "objectPosition": {
           "desktop": "50% 0%",
           "mobile": "50% 0%"
@@ -262,24 +273,24 @@ const config: SiteConfig = {
   "musica": {
     "titulo": "Nuestra Playlist",
     "subtitulo": "Escuchá nuestra selección y ayudanos con la música de la noche",
-    "playlistUrl": "https://open.spotify.com/playlist/4RAVjizGdBtJx18kkwttqn?si=_KpUTq3UQ_SoEML4raJ_-Q&pt=49c1f1ada05b26c6b262295469aee275&pi=oPZinDCrSqWSc",
-    "embedUrl": "https://open.spotify.com/embed/playlist/4RAVjizGdBtJx18kkwttqn?utm_source=generator&theme=0&si=cefb9bcb1cdf470c&pt=c7fa8ec582e71775cd0ebda794d251d0",
+    "playlistUrl": "https://open.spotify.com/",
+    "embedUrl": "https://open.spotify.com/embed/",
     "botonAgregar": "Agregar canciones",
-    "botonSpotify": "Hagamos una playlist en equipo. Únete y edítala: Milu XV "
+    "botonSpotify": "Hagamos una playlist en equipo"
   },
   "rsvp": {
     "titulo": "Confirmar",
     "subtitulo": "Espero poder contar contigo para hacer de esta noche algo inolvidable.",
-    "fechaLimite": "10/08",
-    "fechaLimiteFull": "10/08/2026",
-    "googleSheetUrl": "https://script.google.com/macros/s/AKfycbw2h-bSsSwlb6CEWO77C4PfBPTnqytSKjCZSGoOn-RIDONJPkzvmjwBa_OvTl-thhrS/exec",
-    "hostPhone": "59895239386",
+    "fechaLimite": "",
+    "fechaLimiteFull": "",
+    "googleSheetUrl": "",
+    "hostPhone": "",
     "regalos": {
       "titulo": "Regalos",
       "subtitulo": "Si deseas tener un detalle conmigo, te dejo las opciones donde podés hacerlo.",
       "abitab": {
-        "titulo": "Abitab — Milagros 15 Años",
-        "numero": "147168"
+        "titulo": "",
+        "numero": ""
       },
       "miDinero": {
         "titulo": "",
@@ -290,8 +301,8 @@ const config: SiteConfig = {
     }
   },
   "footer": {
-    "apodo": "Milu",
-    "ubicacion": "Montevideo • Uruguay • 2026",
+    "apodo": "Vale",
+    "ubicacion": "Montevideo • Uruguay • 2027",
     "frase": "Con amor, para un día inolvidable"
   },
   "invitacion": {
@@ -308,16 +319,16 @@ const config: SiteConfig = {
       "S": "Seg"
     },
     "botonCalendario": "Agregar al calendario",
-    "calendarioTitulo": "XV Años de Milagros",
-    "calendarioLocation": "Salón My Father, Granaderos 3875, Montevideo",
-    "calendarioDetalles": "XV Años de Milagros Cabrera\nSalón My Father - Granaderos 3875, Montevideo\n21:00 hs\n\n¡Nos vemos!"
+    "calendarioTitulo": "Mis XV Años de Valentina",
+    "calendarioLocation": "Nombre del salón, Montevideo, Uruguay",
+    "calendarioDetalles": "Mis XV Años\nNombre del salón, Montevideo\n21:00 hs\n\n¡Nos vemos!"
   },
   "fondo": {
     "fotos": [
-      "/Miluaistudio/gallery/gallery1.webp",
-      "/Miluaistudio/uploads/8861f927-8212-402e-89e0-62fc77e82d90_mqqvhw6u.jpg",
-      "/Miluaistudio/uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg",
-      "/Miluaistudio/uploads/7e4d0e80-a737-404b-a5f5-ffeb013fa77c_mqqviamj.jpg"
+      "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
+      "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
+      "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
+      "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg"
     ]
   },
   "colores": {

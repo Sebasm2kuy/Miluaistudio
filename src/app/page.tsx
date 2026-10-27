@@ -25,18 +25,19 @@ import { SectionHeading, OrnamentDivider, HeroBadge } from '@/components/store-u
 import { DesignAdornoGlyph } from '@/components/design-ornaments';
 import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
+import { PRECIO } from '@/data/precio';
 
 const CATALOG_URL = '/Miluaistudio/catalogo/';
-const GOLD = '#a8814f';
-const INK = '#29241f';
-const INK_MUTED = '#6f675e';
+const GOLD = '#b58c5a';
+const INK = '#292522';
+const INK_MUTED = '#716a63';
 
 const PRIMARY_BTN =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-[#26221d] px-6 py-3.5 text-sm font-semibold text-[#fdfbf7] shadow-[0_12px_28px_rgba(38,34,29,0.22)] transition hover:-translate-y-0.5 hover:bg-[#3a332b]';
+  'inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(41,37,34,0.22)] transition hover:-translate-y-0.5 hover:bg-[#3d3830]';
 const WHATSAPP_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(37,211,102,0.28)] transition hover:-translate-y-0.5 hover:bg-[#1db957]';
 const OUTLINE_BTN =
-  'inline-flex items-center justify-center gap-2 rounded-full border border-[#d9cec2] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c4b6a3] hover:bg-white';
+  'inline-flex items-center justify-center gap-2 rounded-full border border-[#ded4c8] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c9bbaa] hover:bg-white';
 
 export default function Home() {
   const heroDesign = INVITATION_DESIGNS[0];
@@ -44,12 +45,12 @@ export default function Home() {
   const featured = INVITATION_DESIGNS.slice(0, 4);
 
   return (
-    <main data-page="storefront" className="milua-neo min-h-screen bg-[#f7f4ef] text-[#29241f]">
+    <main data-page="storefront" className="min-h-screen bg-[#faf8f4] text-[#292522]">
       {/* Lavados de color cálidos + adornos de fondo */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(ellipse 60% 40% at 8% 0%, rgba(184,138,148,0.10), transparent 60%), radial-gradient(ellipse 55% 45% at 96% 8%, rgba(168,129,79,0.10), transparent 62%)' }} />
 
       {/* ===== Encabezado ===== */}
-      <header className="relative z-30 border-b border-[#e8e1d8] bg-[#f7f4ef]/85 backdrop-blur-md">
+      <header className="relative z-30 border-b border-[#e8e0d7] bg-[#faf8f4]/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
           <a href="/Miluaistudio/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Miluaistudio, inicio">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#a8814f] shadow-sm sm:h-10 sm:w-10">
@@ -57,20 +58,20 @@ export default function Home() {
             </span>
             <span className="min-w-0">
               <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
-              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#9a8f81] sm:block">Invitaciones digitales</span>
+              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#8f867c] sm:block">Invitaciones digitales</span>
             </span>
           </a>
           <nav aria-label="Navegación principal" className="hidden items-center gap-6 md:flex">
-            <a href="#incluye" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Qué incluyen</a>
-            <a href="#disenos" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Diseños</a>
-            <a href="#proceso" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Cómo funciona</a>
-            <a href="#resenas" className="text-sm text-[#6f675e] transition hover:text-[#29241f]">Reseñas</a>
+            <a href="#incluye" className="text-sm text-[#716a63] transition hover:text-[#292522]">Qué incluyen</a>
+            <a href="#disenos" className="text-sm text-[#716a63] transition hover:text-[#292522]">Diseños</a>
+            <a href="#proceso" className="text-sm text-[#716a63] transition hover:text-[#292522]">Cómo funciona</a>
+            <a href="#resenas" className="text-sm text-[#716a63] transition hover:text-[#292522]">Reseñas</a>
           </nav>
           <div className="flex shrink-0 items-center gap-2">
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
               <WhatsAppIcon size={17} />
             </a>
-            <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-[#fdfbf7] transition hover:bg-[#3a332b] sm:gap-2 sm:px-5 sm:text-sm">
+            <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830] sm:gap-2 sm:px-5 sm:text-sm">
               Personalizar <PenLine size={14} />
             </a>
           </div>
@@ -124,7 +125,7 @@ export default function Home() {
           <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.6rem] font-medium leading-[1.06] tracking-tight sm:text-6xl">
             Una invitación que se siente <em className="italic" style={{ color: GOLD }}>tuya</em>, en un solo enlace.
           </h1>
-          <p className="store-hero-in-2 mt-6 max-w-lg text-base leading-relaxed text-[#6f675e] sm:text-lg">
+          <p className="store-hero-in-2 mt-6 max-w-lg text-base leading-relaxed text-[#716a63] sm:text-lg">
             Invitaciones web personalizadas para fiestas de 15, bodas y celebraciones. Cuenta regresiva, galería, música y confirmación de asistencia, con el estilo de tu evento.
           </p>
           <div className="store-hero-in-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -146,10 +147,10 @@ export default function Home() {
           <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="store-hero-in-3 mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6d5326] underline decoration-[#d9c9ad] underline-offset-4 transition hover:decoration-[#a8814f] sm:hidden">
             Compralo en Mercado Libre <ExternalLink size={14} />
           </a>
-          <p className="store-hero-in-3 mt-5 text-xs text-[#9a8f81]">
-            <strong className="font-semibold text-[#5c5347]">$ 1.200 UYU</strong> · Pago único · Personalización a medida
+          <p className="store-hero-in-3 mt-5 text-xs text-[#8f867c]">
+            <strong className="font-semibold text-[#5c5347]">{PRECIO.texto}</strong> · {PRECIO.condicion} · Personalización a medida
           </p>
-          <div className="store-hero-in-3 mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-[#6f675e]">
+          <div className="store-hero-in-3 mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-[#716a63]">
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Personalizada</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Lista para compartir</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Adaptada al celular</span>
@@ -169,19 +170,19 @@ export default function Home() {
                   href={'/Miluaistudio/catalogo/' + design.id + '/'}
                   target="_blank"
                   rel="noreferrer"
-                  className="group relative block aspect-[4/5] w-[7.25rem] shrink-0 overflow-hidden rounded-xl border border-[#e8e1d8] shadow-[0_6px_18px_rgba(88,63,32,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)] sm:w-auto"
+                  className="group relative block aspect-[4/5] w-[7.25rem] shrink-0 overflow-hidden rounded-xl border border-[#e8e0d7] shadow-[0_6px_18px_rgba(88,63,32,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)] sm:w-auto"
                   aria-label={'Probar el diseño ' + design.name}
                 >
                 <div className="h-full w-full transition duration-500 group-hover:scale-[1.06]">
                   <CatalogScene design={design} />
                 </div>
-                  <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-[#211c17]/55 px-2 py-1 text-center text-[9px] font-medium text-white backdrop-blur-sm sm:text-[10px]">
+                  <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-[#292522]/55 px-2 py-1 text-center text-[9px] font-medium text-white backdrop-blur-sm sm:text-[10px]">
                     {design.name}
                   </span>
                 </a>
               ))}
             </div>
-            <p className="mt-4 text-center text-[11px] text-[#9a8f81]">Tocá cualquier diseño para abrir su demostración completa.</p>
+            <p className="mt-4 text-center text-[11px] text-[#8f867c]">Tocá cualquier diseño para abrir su demostración completa.</p>
           </div>
         </Reveal>
       </section>
@@ -197,7 +198,7 @@ export default function Home() {
             />
           </Reveal>
           <Reveal delay={80}>
-            <div className="mt-8 divide-y divide-[#efe7dc] overflow-hidden rounded-2xl border border-[#e8e1d8] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:mt-10 sm:grid sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-3">
+            <div className="mt-8 divide-y divide-[#f0e9df] overflow-hidden rounded-2xl border border-[#e8e0d7] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:mt-10 sm:grid sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-3">
               {[
                 { icon: Clock3, title: 'Cuenta regresiva', description: 'Un reloj elegante que acompaña la espera hasta el día de la celebración.' },
                 { icon: ImageIcon, title: 'Galería de fotos', description: 'Compartí imágenes y momentos especiales dentro de la invitación.' },
@@ -211,8 +212,8 @@ export default function Home() {
                     <feature.icon size={20} strokeWidth={1.7} />
                   </div>
                   <div className="min-w-0 flex-1 sm:mt-4">
-                    <h3 className="font-serif text-base font-semibold text-[#29241f] sm:text-lg">{feature.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-[#6f675e] sm:mt-2">{feature.description}</p>
+                    <h3 className="font-serif text-base font-semibold text-[#292522] sm:text-lg">{feature.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-[#716a63] sm:mt-2">{feature.description}</p>
                   </div>
                 </div>
               ))}
@@ -231,7 +232,7 @@ export default function Home() {
                 eyebrow="La colección"
                 title={<>Encontrá el estilo que <em className="italic" style={{ color: GOLD }}>te representa</em>.</>}
               />
-              <a href={CATALOG_URL} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#8a6b3a] transition hover:text-[#6d5326]">
+              <a href={CATALOG_URL} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#96714a] transition hover:text-[#7a5e3d]">
                 Ver los diez diseños <ArrowRight size={16} />
               </a>
             </div>
@@ -239,7 +240,7 @@ export default function Home() {
           <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((design, index) => (
               <Reveal key={design.id} delay={index * 70}>
-                <article className="group h-full overflow-hidden rounded-2xl border border-[#e8e1d8] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(88,63,32,0.14)]">
+                <article className="group h-full overflow-hidden rounded-2xl border border-[#e8e0d7] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(88,63,32,0.14)]">
                   <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="block aspect-[4/5] overflow-hidden" aria-label={'Probar ' + design.name + ' en una pestaña nueva'}>
                     <div className="h-full w-full transition duration-500 group-hover:scale-[1.03]">
                       <CatalogScene design={design} />
@@ -248,7 +249,7 @@ export default function Home() {
                   <div className="px-4 pb-4 pt-3.5">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accentSoft }}>{design.category}</p>
                     <h3 className="mt-1 font-serif text-lg font-semibold">{design.name}</h3>
-                    <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6b3a] transition hover:text-[#6d5326]">
+                    <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#96714a] transition hover:text-[#7a5e3d]">
                       Ver demostración <ArrowRight size={13} />
                     </a>
                   </div>
@@ -283,13 +284,13 @@ export default function Home() {
               { number: '3', icon: Share2, title: 'Recibís tu enlace listo para compartir', text: 'Te entregamos la invitación web para reenviarla por WhatsApp a tus invitados.' },
             ].map((step, index) => (
               <Reveal key={step.number} delay={index * 90}>
-                <article className="relative h-full rounded-2xl border border-[#e8e1d8] bg-white p-6 text-center shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-7">
+                <article className="relative h-full rounded-2xl border border-[#e8e0d7] bg-white p-6 text-center shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-7">
                   <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#dfc9a4] bg-[#f3ead9]" style={{ color: GOLD }}>
                     <step.icon size={22} strokeWidth={1.7} />
                     <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#26221d] font-serif text-xs italic text-[#ecdcc0]">{step.number}</span>
                   </div>
                   <h3 className="mt-4 font-serif text-lg font-semibold leading-snug">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#6f675e]">{step.text}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#716a63]">{step.text}</p>
                 </article>
               </Reveal>
             ))}
@@ -302,23 +303,28 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <SectionHeading
-              eyebrow="Reseñas de clientes"
-              title={<>Fiestas que ya comparten <em className="italic" style={{ color: GOLD }}>su enlace</em>.</>}
+              eyebrow="Lo que buscamos para cada evento"
+              title={<>Así se ve <em className="italic" style={{ color: GOLD }}>una buena experiencia</em>.</>}
             />
           </Reveal>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {TESTIMONIOS.map((t, index) => (
               <Reveal key={t.nombre} delay={index * 50}>
-                <figure className="flex h-full flex-col rounded-2xl border border-[#e8e1d8] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-6">
+                <figure className="flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-6">
                   <div className="flex items-center gap-0.5 text-[#d9a53f]" aria-label="Calificación: 5 de 5 estrellas">
                     {Array.from({ length: 5 }).map((_, starIndex) => (
                       <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
                     ))}
                   </div>
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
-                  <figcaption className="mt-4 border-t border-[#efe7dc] pt-3">
-                    <span className="block text-sm font-semibold text-[#29241f]">{t.nombre}</span>
-                    <span className="block text-xs text-[#9a8f81]">{t.evento}</span>
+                  <figcaption className="mt-4 border-t border-[#f0e9df] pt-3">
+                    <span className="block text-sm font-semibold text-[#292522]">{t.nombre}</span>
+                    <span className="block text-xs text-[#8f867c]">{t.evento}</span>
+                    {t.estado !== 'verificado' && (
+                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#8f867c]">
+                        Ejemplo de referencia
+                      </span>
+                    )}
                   </figcaption>
                 </figure>
               </Reveal>
@@ -338,7 +344,7 @@ export default function Home() {
               <h2 className="mt-3 font-serif text-3xl leading-[1.15] tracking-tight sm:text-4xl">
                 Elegí un diseño y <em className="italic" style={{ color: GOLD }}>hacelo tuyo</em>.
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#6f675e] sm:text-base">
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#716a63] sm:text-base">
                 Explorá la colección, probá las demostraciones y consultá las condiciones de personalización antes de comprar.
               </p>
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
@@ -358,7 +364,7 @@ export default function Home() {
       </section>
 
       {/* ===== Preguntas frecuentes ===== */}
-      <section className="relative z-10 border-t border-[#e8e1d8] bg-white/60">
+      <section className="relative z-10 border-t border-[#e8e0d7] bg-white/60">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
           <Reveal>
             <SectionHeading
@@ -366,6 +372,9 @@ export default function Home() {
               title={<>Antes de elegir <em className="italic" style={{ color: GOLD }}>tu invitación</em>.</>}
             />
           </Reveal>
+          <p className="mt-4 text-center text-xs text-[#8f867c]">
+            Comentarios de muestra para ilustrar el servicio. Las reseñas de clientes reales se publicarán una vez autorizadas.
+          </p>
           <div className="mt-9 space-y-3">
             {[
               { q: '¿Es una imagen o una página web?', a: 'Es una invitación web personalizada que se abre desde un enlace y puede reunir la información y las funciones acordadas para tu celebración.' },
@@ -373,17 +382,17 @@ export default function Home() {
               { q: '¿Mis invitados necesitan instalar una aplicación?', a: 'No. La invitación se abre desde un navegador compatible en el celular o la computadora.' },
               { q: '¿Puedo elegir los colores y el estilo?', a: 'Sí. El diseño se personaliza según tus preferencias y las opciones disponibles para el modelo elegido.' },
               { q: '¿Cómo se confirma la asistencia?', a: 'La invitación puede incluir RSVP. El método de registro y las funciones asociadas se confirman al definir la configuración del evento.' },
-              { q: '¿Cuánto cuesta?', a: 'La publicación enlazada muestra actualmente un precio de $ 1.200 UYU, pago único. Revisá la publicación para confirmar el precio y las condiciones vigentes antes de comprar.' },
+              { q: '¿Cuánto cuesta?', a: 'El precio vigente es ' + PRECIO.texto + ', ' + PRECIO.condicion.toLowerCase() + '. Revisá la publicación enlazada para confirmar el precio y las condiciones antes de comprar.' },
             ].map((item, index) => (
               <Reveal key={item.q} delay={index * 40}>
-                <details className="group rounded-2xl border border-[#e8e1d8] bg-white px-5 py-4 shadow-[0_3px_12px_rgba(88,63,32,0.04)]">
-                  <summary className="cursor-pointer list-none font-serif text-base font-semibold text-[#29241f] marker:hidden">
+                <details className="group rounded-2xl border border-[#e8e0d7] bg-white px-5 py-4 shadow-[0_3px_12px_rgba(88,63,32,0.04)]">
+                  <summary className="cursor-pointer list-none font-serif text-base font-semibold text-[#292522] marker:hidden">
                     <span className="flex items-center justify-between gap-4">
                       {item.q}
                       <span className="text-xl font-light transition group-open:rotate-45" style={{ color: GOLD }}>+</span>
                     </span>
                   </summary>
-                  <p className="pt-3 text-sm leading-relaxed text-[#6f675e]">{item.a}</p>
+                  <p className="pt-3 text-sm leading-relaxed text-[#716a63]">{item.a}</p>
                 </details>
               </Reveal>
             ))}
@@ -392,7 +401,7 @@ export default function Home() {
       </section>
 
       {/* ===== Pie ===== */}
-      <footer className="relative z-10 bg-[#211c17] text-[#d8d0c5]">
+      <footer className="relative z-10 bg-[#292522] text-[#d8d0c5]">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pb-28 pt-10 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-10 lg:px-8">
           <div>
             <p className="font-serif text-base tracking-[0.08em] text-[#f0e8da]">MILUAISTUDIO</p>

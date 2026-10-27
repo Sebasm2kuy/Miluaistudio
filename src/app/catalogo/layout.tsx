@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   // The public storefront must be discoverable. Individual demo pages may
   // remain noindex until each template has finalized commercial content.
   robots: { index: true, follow: true },
+  alternates: { canonical: 'https://sebasm2kuy.github.io/Miluaistudio/catalogo/' },
   openGraph: {
     title: 'Invitaciones digitales personalizadas | Miluaistudio',
     description: 'Diseños web personalizados para compartir los detalles de tu celebración en un solo enlace.',
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
     url: 'https://sebasm2kuy.github.io/Miluaistudio/catalogo/',
     images: [
       {
-        url: 'https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg',
-        width: 900,
-        height: 1200,
+        url: 'https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg',
+        width: 1200,
+        height: 630,
         alt: 'Invitación digital de demostración de Miluaistudio',
       },
     ],
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Invitaciones digitales personalizadas | Miluaistudio',
     description: 'Explorá diseños web personalizados para tus celebraciones.',
-    images: ['https://sebasm2kuy.github.io/Miluaistudio/catalogo/demo-cover.svg'],
+    images: ['https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg'],
   },
 };
 

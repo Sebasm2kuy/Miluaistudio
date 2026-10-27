@@ -138,3 +138,51 @@ Work Log:
 
 Stage Summary:
 - Commit 3be4e35 listo en local; pendiente push (sin credenciales en este entorno).
+
+---
+Task ID: AUDITORIA-2026-10-27
+Agent: Main (Z.ai)
+Task: Auditoría e mejora integral (10 fases del prompt maestro)
+
+Work Log:
+- SEGURIDAD: .env y db/custom.db desrastreados (git rm --cached); eliminados
+  prisma/, db/, src/lib/db.ts, examples/, mini-services/ (legado sin uso;
+  @prisma/client ni siquiera estaba en package.json). .gitignore reforzado.
+- ADMIN: el token de GitHub ya no se persiste en localStorage; vive en
+  sessionStorage (migración automática + botón "Borrar token").
+- RSVP: el frontend ya no usa no-cors ciego. GET legible con verificación
+  {success:true} → ok; si el navegador bloquea la lectura → estado "pendiente"
+  con confirmación por WhatsApp (nunca finge guardado); error explícito →
+  reintento. Backend gallery-server.gs: GET action=rsvp validado + dedupe por
+  código+teléfono + rate-limit 5/h + límites de tamaño (repo alineado al
+  despliegue real, que ya aceptaba GET rsvp).
+- FOTOS: photo-server.gs pasa de publicación automática a MODERACIÓN
+  (carpeta Pendientes, estado pendiente, sin sharing público); MIME JPEG
+  verificado server-side; galería honesta con estado "pendiente" + texto de
+  consentimiento/eliminación.
+- BUILD: tsc limpio (7 errores corregidos), ignoreBuildErrors eliminado,
+  ESLint 10→9 (compat con eslint-config-next), lint 0 errores/0 warnings,
+  validate-catalog.yml con lint bloqueante y trigger en main.
+- FECHAS: src/lib/fechas.ts con offset -03:00 explícito; countdown con estados
+  previo/hoy/pasado (sin ceros eternos); calendario con duración configurable
+  (evento.duracionHoras, default 5) y fechas absolutas UTC.
+- VISUAL: bloque oscuro .milua-neo (-8KB CSS) eliminado; paleta boutique
+  marfil #FAF8F4 / carbón #292522 / champagne #B58C5A aplicada a portada,
+  catálogo, personalizador y admin; fondo del body controlado por CSS (sin
+  inline styles en layout.tsx); demos e invitaciones conservan su identidad.
+- CONVERSIÓN: precio centralizado en src/data/precio.ts (0 hardcodes);
+  testimonios marcados como "Ejemplo de referencia" hasta validación real.
+- PERSONALIZADOR: validación de fecha pasada junto al campo; tarjetas e
+  inputs claros; advertencia visible.
+- SEO: lang es-UY, canónicos por página, OG/Twitter con og-image.jpg 1200x630
+  (antes SVG que las redes no renderizan), sitemap.xml + Sitemap en robots.txt.
+- PRUEBAS: build estático OK (18 rutas); verificación en navegador local de
+  portada/catálogo/personalizar/demo/admin a 1366px y 320px sin overflow-x;
+  flujo RSVP demo honesto; 0 errores de consola.
+
+Stage Summary:
+- 10 fases implementadas; pendiente de acción manual del dueño: (1) repegar
+  gallery-server.gs y photo-server.gs actualizados en Apps Script y crear
+  nueva implementación; (2) revocar/rotar tokens GitHub expuestos en chats;
+  (3) datos del evento real de Milu siguen en el historial git público
+  (limpieza requiere reescritura de historial → requiere autorización).

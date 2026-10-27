@@ -3,7 +3,7 @@ name: Validate Miluaistudio
 on:
   push:
     branches:
-      - work/miluaistudio-catalogo-20261026
+      - main
   pull_request:
     branches:
       - main
@@ -28,11 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # El lint ya no se oculta: si falla, la validación falla.
+      - name: Lint
+        run: npm run lint
+
       - name: Build static site
         run: npm run build
-
-      # Legacy lint config is currently incompatible with the repository's ESLint 10 setup.
-      # Keep it visible as a warning while the independent build validates the new routes.
-      - name: Lint (legacy configuration; non-blocking)
-        run: npm run lint
-        continue-on-error: true

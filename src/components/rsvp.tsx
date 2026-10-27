@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus } from 'lucide-react'
+import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus, AlertCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
 
 
@@ -28,7 +28,7 @@ export default function Rsvp() {
   const [cantidad, setCantidad] = useState(1)
   const [invitados, setInvitados] = useState<string[]>([''])
   const [telefono, setTelefono] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'pendiente' | 'error'>('idle')
   const [codigo, setCodigo] = useState('')
   const [copied, setCopied] = useState(false)
   const [copiedMiDinero, setCopiedMiDinero] = useState(false)
@@ -69,6 +69,57 @@ export default function Rsvp() {
   const nombresValidos = invitados.filter(n => n.trim().length >= 2)
   const formularioValido = confirmo && nombresValidos.length === cantidad && cantidad >= 1 && telefono.trim().length >= 6
 
+  // Lee el JSON de la respuesta del Apps Script (tolera el wrapper HTML de la redirección)
+  const parseGasResponse = async (res: Response): Promise<Record<string, unknown> | null> => {
+    try {
+      const text = await res.text()
+      try { return JSON.parse(text) as Record<string, unknown> } catch {
+        const match = text.match(/\{[\s\S]*\}/)
+        if (match) { try { return JSON.parse(match[0]) as Record<string, unknown> } catch { return null } }
+        return null
+      }
+    } catch { return null }
+  }
+
+  /**
+   * Registra el grupo en el backend (Google Sheets vía Apps Script).
+   * Devuelve SOLO estados verificables:
+   *  - 'guardado':  el backend respondió { success: true }
+   *  - 'pendiente': el navegador bloqueó la lectura (CORS/red) o no hubo respuesta
+   *                 legible; el pedido puede haber llegado pero no se puede afirmar.
+   *  - 'error':     el backend respondió con error explícito.
+   * El contrato del backend (gallery-server.gs) acepta GET action=rsvp con estos
+   * mismos parámetros y POST JSON { tipo: 'rsvp_grupo', ... }.
+   */
+  const registrarEnSheets = async (nuevoCodigo: string): Promise<'guardado' | 'pendiente' | 'error'> => {
+    if (!cfg.rsvp.googleSheetUrl) return 'pendiente'
+
+    const params = new URLSearchParams({
+      action: 'rsvp',
+      codigo: nuevoCodigo,
+      cantidad: String(cantidad),
+      invitados: JSON.stringify(invitados.map((n) => n.trim()).filter(Boolean)),
+      telefono: telefono.trim(),
+      fecha: new Date().toISOString(),
+    })
+
+    // 1) GET legible: la respuesta se puede verificar ({ success: true })
+    try {
+      const res = await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, { redirect: 'follow' })
+      const data = await parseGasResponse(res)
+      if (data && data.success === true) return 'guardado'
+      if (data && data.error) return 'error'
+      return 'pendiente'
+    } catch {
+      // 2) Lectura bloqueada (CORS/red): reintento opaco fire-and-forget.
+      //    No se puede confirmar el resultado → 'pendiente' (nunca 'ok').
+      try {
+        await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, { method: 'GET', mode: 'no-cors' })
+      } catch { /* sin red: también queda pendiente */ }
+      return 'pendiente'
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formularioValido) return
@@ -78,7 +129,7 @@ export default function Rsvp() {
     setCodigo(nuevoCodigo)
 
     // Pequeña demora para que el spinner sea visible y se sienta natural.
-    await new Promise((r) => setTimeout(r, 500))
+    await new Promise((r) => setTimeout(r, 400))
 
     // Las muestras públicas simulan el flujo, pero nunca envían datos de invitados.
     if (cfg.modoDemo) {
@@ -86,30 +137,10 @@ export default function Rsvp() {
       return
     }
 
-    // Intentar registrar en el backend (Google Sheet) si está disponible.
-    // Si falla, no bloquear al usuario — el flujo sigue por WhatsApp.
-    // Usamos GET con query params porque Google Apps Script a veces rechaza
-    // POSTs con 405 (depende de la versión deployada). El limite de URL es
-    // ~16KB, suficiente para grupos de hasta 10 nombres.
-    try {
-      const params = new URLSearchParams({
-        action: 'rsvp',
-        codigo: nuevoCodigo,
-        cantidad: String(cantidad),
-        invitados: JSON.stringify(invitados.map(n => n.trim())),
-        telefono: telefono.trim(),
-        fecha: new Date().toISOString(),
-      })
-      // no-cors + redirect manual: el navegador hace la request sin esperar respuesta
-      await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, {
-        method: 'GET',
-        mode: 'no-cors',
-      })
-    } catch {
-      // Backend caído — no afecta el flujo del usuario
-    }
-
-    setStatus('ok')
+    const resultado = await registrarEnSheets(nuevoCodigo)
+    if (resultado === 'guardado') setStatus('ok')
+    else if (resultado === 'error') setStatus('error')
+    else setStatus('pendiente')
   }
 
   const enviarConfirmacion = () => {
@@ -173,26 +204,45 @@ export default function Rsvp() {
           className="glass-card rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[4rem] p-5 sm:p-8 md:p-16 text-center flex flex-col justify-center relative overflow-hidden"
           style={{ borderBottomWidth: '3px', borderBottomColor: 'var(--theme-accent, #b8860b)' }}
         >
-          {status === 'ok' ? (
+          {status === 'ok' || status === 'pendiente' || status === 'error' ? (
             <div className="py-4 sm:py-8">
-              {/* Check animado */}
+              {/* Check animado (amarillo en pendiente, rojo en error) */}
               <div
                 className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-5 rounded-full flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))',
-                  boxShadow: '0 8px 32px color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)',
+                  background:
+                    status === 'error'
+                      ? 'linear-gradient(135deg, #ef4444, #b91c1c)'
+                      : status === 'pendiente'
+                        ? 'linear-gradient(135deg, #f59e0b, #b45309)'
+                        : 'linear-gradient(135deg, var(--theme-accent-light, #d4af37), var(--theme-accent, #b8860b))',
+                  boxShadow:
+                    status === 'ok'
+                      ? '0 8px 32px color-mix(in srgb, var(--theme-accent, #b8860b) 30%, transparent)'
+                      : '0 8px 32px rgba(0,0,0,0.18)',
                   animation: 'springIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both',
                 }}
               >
-                <Check size={36} className="sm:w-10 sm:h-10 text-white" strokeWidth={2} />
+                {status === 'ok' ? (
+                  <Check size={36} className="sm:w-10 sm:h-10 text-white" strokeWidth={2} />
+                ) : (
+                  <AlertCircle size={36} className="sm:w-10 sm:h-10 text-white" strokeWidth={2} />
+                )}
               </div>
 
               <p
                 className="font-serif text-2xl sm:text-3xl text-bordeaux italic mb-1"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.4s both' }}
               >
-{cfg.modoDemo ? 'Prueba completada' : '¡Confirmado!'}
+{cfg.modoDemo ? 'Prueba completada' : status === 'ok' ? '¡Confirmado!' : status === 'pendiente' ? 'Casi listo' : 'No se pudo registrar'}
               </p>
+              {status !== 'ok' && !cfg.modoDemo && (
+                <p className="mx-auto max-w-sm text-xs sm:text-sm leading-relaxed mb-1" style={{ animation: 'rsvpFadeUp 0.6s ease 0.45s both', color: 'var(--theme-card-muted)' }}>
+                  {status === 'pendiente'
+                    ? 'No pudimos verificar el registro automático. Para asegurar tu lugar, confirmá también por WhatsApp.'
+                    : 'Hubo un problema al registrar la asistencia. Podés reintentar o confirmar directamente por WhatsApp.'}
+                </p>
+              )}
               <p
                 className="text-gold font-bold text-sm sm:text-base mb-1"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.5s both' }}
@@ -232,16 +282,26 @@ export default function Rsvp() {
                 className="space-y-2.5 sm:space-y-3"
                 style={{ animation: 'rsvpFadeUp 0.6s ease 0.8s both' }}
               >
+                {status !== 'error' ? (
                 <button
                   onClick={enviarConfirmacion}
                   className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-xs sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                 >
                   <Send size={14} strokeWidth={1.5} />
-                  Enviar confirmación
+                  {status === 'pendiente' ? 'Confirmar también por WhatsApp' : 'Enviar confirmación'}
                 </button>
+                ) : (
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="gold-button w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-xs sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
+                >
+                  <Send size={14} strokeWidth={1.5} />
+                  Reintentar el registro
+                </button>
+                )}
 
                 <button
-                  onClick={guardarComprobante}
+                  onClick={status === 'error' ? enviarConfirmacion : guardarComprobante}
                   className="w-full py-3 sm:py-3.5 rounded-full flex items-center justify-center gap-2 text-white font-semibold tracking-[0.1em] text-xs sm:text-xs transition-transform duration-300 hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #25D366, #128C7E)',
@@ -249,7 +309,7 @@ export default function Rsvp() {
                   }}
                 >
                   <MessageCircle size={14} strokeWidth={1.5} />
-                  Guardar mi comprobante
+                  {status === 'error' ? 'Confirmar por WhatsApp' : 'Guardar mi comprobante'}
                 </button>
               </div>
 
@@ -430,12 +490,6 @@ export default function Rsvp() {
                 {!formularioValido && confirmo && (
                   <p className="text-xs text-gold/60 text-center italic">
                     Completá todos los nombres y el teléfono para confirmar
-                  </p>
-                )}
-
-                {status === 'error' && (
-                  <p className="text-red-500 text-xs sm:text-xs text-center italic">
-                    Hubo un error, intentá de nuevo
                   </p>
                 )}
               </form>

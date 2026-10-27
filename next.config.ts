@@ -7,10 +7,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  /* config options here */
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  /* Los errores de TypeScript ya no se ocultan: el build falla si hay
+     errores de tipos (anteriormente ignoreBuildErrors: true). */
   reactStrictMode: false,
 };
 
