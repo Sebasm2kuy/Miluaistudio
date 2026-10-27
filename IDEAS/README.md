@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 006 — Prompt para corregir riesgos críticos pendientes (27-10-2026)](./ITERACION-2026-10-27-006-PROMPT-PENDIENTES-CRITICOS.md)
 - [Iteración 005 — Reprueba de la corrección final (27-10-2026)](./ITERACION-2026-10-27-005-REPRUEBA-CORRECCION-FINAL.md)
 - [Iteración 004 — Nueva revisión posterior al prompt de corrección (27-10-2026)](./ITERACION-2026-10-27-004-REVISION-POST-PROMPT.md)
 - [Iteración 003 — Prompt de corrección final para Z.AI (27-10-2026)](./ITERACION-2026-10-27-003-PROMPT-CORRECCION-FINAL.md)
