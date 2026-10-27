@@ -138,7 +138,7 @@ export default function Rsvp() {
       `👥 Cantidad: ${cantidad} persona(s)\n` +
       `👤 Invitados:\n${listaNombres}\n` +
       `📅 ${cfg.evento.fechaEvento}\n` +
-      `📍 ${cfg.evento.lugar}, ${cfg.evento.ubicacion}\n\n` +
+      `📍 ${[cfg.evento.lugar, cfg.evento.ubicacion].filter(Boolean).join(', ')}\n\n` +
       `¡Nos vemos! 💛`
     )
     window.open(`https://wa.me/${telefonoLimpio}?text=${msg}`, '_blank')

@@ -77,6 +77,30 @@ function primerNombre(nombre: string): string {
   return nombre.trim().split(/\s+/)[0] || '';
 }
 
+/**
+ * "Salón Imperial, Rambla Gandhi 1234, Montevideo" → título corto + dirección completa
+ * (mismo patrón que las demos: lugar = nombre del salón, direccion = calle y ciudad)
+ */
+function partirLugar(texto: string): { lugar: string; direccion: string } {
+  const i = texto.indexOf(',');
+  if (i > 0) {
+    const nombre = texto.slice(0, i).trim();
+    const resto = texto.slice(i + 1).trim();
+    if (nombre && resto && nombre.length <= 40) return { lugar: nombre, direccion: resto };
+  }
+  return { lugar: texto, direccion: texto };
+}
+
+/** Mapa y botón "Cómo llegar" con el lugar del cliente (sesgo Uruguay salvo que ya lo indique) */
+function urlsMapa(texto: string): { mapsUrl: string; mapsEmbedUrl: string } {
+  const consulta = /uruguay/i.test(texto) ? texto : `${texto}, Uruguay`;
+  const q = encodeURIComponent(consulta);
+  return {
+    mapsUrl: `https://www.google.com/maps/search/?api=1&query=${q}`,
+    mapsEmbedUrl: `https://maps.google.com/maps?q=${q}&t=&z=16&ie=UTF8&iwloc=&output=embed`,
+  };
+}
+
 /** Config completa de la invitación con los datos del cliente sobre la base del diseño */
 export function createPersonalConfig(design: InvitationDesign, datos: DatosPersonales): SiteConfig {
   const config = createDemoConfig(design);
@@ -84,7 +108,12 @@ export function createPersonalConfig(design: InvitationDesign, datos: DatosPerso
   const p = partesFecha(datos.fecha, datos.hora);
   const nombre = datos.nombre.trim() || config.evento.nombre;
   const tipo = datos.tipo.trim() || config.evento.tipo;
-  const lugar = datos.lugar.trim() || config.evento.lugar;
+  const lugarCliente = datos.lugar.trim();
+  // Con la dirección completa del cliente el mapa y "Cómo llegar" se actualizan;
+  // sin ella, la invitación conserva el lugar de muestra del diseño.
+  const { lugar, direccion } = lugarCliente
+    ? partirLugar(lugarCliente)
+    : { lugar: config.evento.lugar, direccion: config.evento.direccion };
   const apodo = primerNombre(nombre) || config.evento.apodo;
 
   config.modoDemo = true;
@@ -95,9 +124,11 @@ export function createPersonalConfig(design: InvitationDesign, datos: DatosPerso
     apellido: '',
     apodo,
     lugar,
-    // Si el cliente escribió el lugar completo (ej: "Salón Imperial, Montevideo")
-    // no repetimos la ciudad al lado; la dejamos solo cuando usa el lugar de muestra.
-    ubicacion: datos.lugar.trim() ? '' : config.evento.ubicacion,
+    // Si el cliente escribió el lugar completo no repetimos la ciudad al lado;
+    // la dejamos solo cuando usa el lugar de muestra.
+    ubicacion: lugarCliente ? '' : config.evento.ubicacion,
+    direccion,
+    ...(lugarCliente ? urlsMapa(lugarCliente) : {}),
     ...(p ? { fecha: p.fecha, anio: p.anio, fechaEvento: p.fechaEvento } : {}),
   };
 
@@ -121,7 +152,8 @@ export function createPersonalConfig(design: InvitationDesign, datos: DatosPerso
   config.countdown = {
     ...config.countdown,
     calendarioTitulo: tipo + ' · ' + nombre,
-    calendarioLocation: lugar + ', Uruguay',
+    // En el evento de calendario va la dirección completa, no solo el nombre del salón
+    calendarioLocation: (lugarCliente || lugar) + ', Uruguay',
   };
 
   config.footer = {

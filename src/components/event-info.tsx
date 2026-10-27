@@ -31,9 +31,11 @@ export default function EventInfo() {
               </div>
               <div>
                 <h3 className="font-serif text-xl sm:text-xl md:text-3xl text-bordeaux italic">{cfg.evento.lugar}</h3>
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-sm sm:text-[11px] md:text-xs mt-2">
-                  {cfg.evento.direccion}
-                </p>
+                {cfg.evento.direccion && cfg.evento.direccion !== cfg.evento.lugar && (
+                  <p className="text-gray-500 font-bold uppercase tracking-widest text-sm sm:text-[11px] md:text-xs mt-2">
+                    {cfg.evento.direccion}
+                  </p>
+                )}
               </div>
             </div>
 

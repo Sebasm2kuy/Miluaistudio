@@ -285,7 +285,8 @@ export default function PersonalizadorApp() {
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="p-lugar" className={LABEL_CLS}><PenLine size={13} className="text-[#f1a46a]" /> Lugar del evento</label>
-                    <input id="p-lugar" value={datos.lugar} onChange={set('lugar')} placeholder="Ej: Salón Imperial, Jardín Magnolia…" maxLength={60} className={INPUT_CLS} />
+                    <input id="p-lugar" value={datos.lugar} onChange={set('lugar')} placeholder="Ej: Salón Imperial, Rambla Gandhi 1234, Montevideo" maxLength={90} className={INPUT_CLS} />
+                    <p className="mt-1.5 text-[11px] text-[#8b8b92]">Escribí el nombre y la dirección completa: el mapa y el botón «Cómo llegar» se actualizan solos.</p>
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="p-frase" className={LABEL_CLS}><Type size={13} className="text-[#f1a46a]" /> Frase o dedicatoria (opcional)</label>
