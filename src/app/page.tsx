@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { INVITATION_DESIGNS } from '@/data/invitation-designs';
 import CatalogScene from '@/components/catalog-scene';
+import MiniInvitation, { miniFromDesign } from '@/components/mini-invitation';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
 import Reveal from '@/components/reveal';
@@ -30,7 +31,7 @@ import { PRECIO } from '@/data/precio';
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 /* Champagne de texto: se oscurece el dorado decorativo para cumplir 3:1+
    (texto grande) sobre marfil y los gradientes cálidos. Medido: 4.0:1. */
-const GOLD = '#9a7440';
+const GOLD = '#8a6534'; /* auditado WCAG AA: ≥4.84:1 sobre superficies claras (ver store-tokens.ts) */
 const INK = '#292522';
 const INK_MUTED = '#716a63';
 /* Texto oscuro sobre el verde de marca de WhatsApp: 6.23:1 (blanco era 1.98:1). */
@@ -177,8 +178,15 @@ export default function Home() {
                   className="group relative block aspect-[4/5] w-[7.25rem] shrink-0 overflow-hidden rounded-xl border border-[#e8e0d7] shadow-[0_6px_18px_rgba(88,63,32,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)] sm:w-auto"
                   aria-label={'Probar el diseño ' + design.name}
                 >
+                {/* Miniatura ligera: en una tira de 10 solo-previews, la maqueta
+                    completa (celular + tarjeta × 2 mini-invitaciones + adornos)
+                    multiplicaba el HTML sin aportar detalle visible a este
+                    tamaño. La miniatura muestra el mismo diseño (nombre, fecha,
+                    paleta y adorno) con una fracción del marcado; la maqueta
+                    completa se conserva en el héroe, los destacados y el
+                    catálogo, y la versión interactiva vive en cada demo. */}
                 <div className="h-full w-full transition duration-500 group-hover:scale-[1.06]">
-                  <CatalogScene design={design} />
+                  <MiniInvitation data={miniFromDesign(design)} />
                 </div>
                   <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-[#292522]/55 px-2 py-1 text-center text-[9px] font-medium text-white backdrop-blur-sm sm:text-[10px]">
                     {design.name}
@@ -315,7 +323,7 @@ export default function Home() {
             {TESTIMONIOS.map((t, index) => (
               <Reveal key={t.nombre} delay={index * 50}>
                 <figure className="flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-6">
-                  <div className="flex items-center gap-0.5 text-[#d9a53f]" aria-label="Calificación: 5 de 5 estrellas">
+                  <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
                     {Array.from({ length: 5 }).map((_, starIndex) => (
                       <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
                     ))}
