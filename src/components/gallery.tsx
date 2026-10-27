@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera, Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
+import { interpretarRespuestaFoto, parseGasResponse } from '@/lib/contrato-backend'
 
 const CHUNK_SIZE = 4000
 
@@ -58,15 +59,6 @@ export default function Gallery() {
   const fileRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const parseGasResponse = async (res: Response): Promise<any> => {
-    const text = await res.text()
-    try { return JSON.parse(text) } catch {
-      const match = text.match(/\{[\s\S]*\}/)
-      if (match) { try { return JSON.parse(match[0]) } catch { /* ignore */ } }
-      return null
-    }
-  }
-
   // Fetch de fotos aprobadas por la moderación
   useEffect(() => {
     if (!PHOTO_UPLOAD_URL) return
@@ -74,9 +66,12 @@ export default function Gallery() {
       try {
         const res = await fetch(`${PHOTO_UPLOAD_URL}?action=getPhotos`)
         if (res.ok) {
-          const data = await parseGasResponse(res)
-          if (data && Array.isArray(data.photos) && data.photos.length > 0) {
-            const uploaded: Photo[] = data.photos.map((url: string, i: number) => ({
+          const data = await parseGasResponse(await res.text())
+          const urls = data && Array.isArray(data.photos)
+            ? data.photos.filter((u): u is string => typeof u === 'string' && u.trim() !== '')
+            : []
+          if (urls.length > 0) {
+            const uploaded: Photo[] = urls.map((url, i) => ({
               id: `srv-${i}`, src: url, type: 'uploaded' as const,
             }))
             setPhotos(prev => {
@@ -157,11 +152,13 @@ export default function Gallery() {
         )
       }
 
-      // 4. Ensamblar en el servidor
+      // 4. Ensamblar en el servidor y calificar la respuesta según contrato:
+      //    pendiente (moderación), publicada (solo backend legacy con url) o error.
       const res = await fetch(`${PHOTO_UPLOAD_URL}?action=assemble&uid=${uploadId}`, { redirect: 'follow' })
-      const data = await parseGasResponse(res)
+      const data = await parseGasResponse(await res.text())
+      const resultado = interpretarRespuestaFoto(data)
 
-      if (data && data.success && data.estado === 'pendiente') {
+      if (resultado === 'pendiente') {
         // Moderación activa: la foto NO se publica todavía. La interfaz lo
         // comunica con claridad y no la agrega al carousel.
         setUploadState('pendiente')
@@ -171,9 +168,12 @@ export default function Gallery() {
           setPreview(null)
           setUploadState('idle')
         }, 2600)
-      } else if (data && data.success && data.url) {
+      } else if (resultado === 'publicada') {
         // Compatibilidad con un backend anterior de publicación automática
-        setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: data.url, type: 'uploaded' as const }])
+        const urlPublica = typeof data?.url === 'string' ? data.url : ''
+        if (urlPublica) {
+          setPhotos(prev => [...prev, { id: `upload-${Date.now()}`, src: urlPublica, type: 'uploaded' as const }])
+        }
         setUploadState('ok')
         setTimeout(() => {
           setUploadModal(false)
@@ -188,6 +188,7 @@ export default function Gallery() {
           }
         }, 1500)
       } else {
+        // Respuesta ilegible o error explícito: nunca afirmar publicación.
         setUploadState('error')
       }
     } catch { setUploadState('error') }

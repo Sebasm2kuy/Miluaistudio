@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Copy, Check, Send, Loader2, MessageCircle, UserPlus, Users, Minus, Plus, AlertCircle } from 'lucide-react'
 import { useConfig } from '@/hooks/useConfig'
+import { interpretarRespuestaRsvp, parseGasResponseBody, type ResultadoRsvp } from '@/lib/contrato-backend'
 
 
 function generarCodigo() {
@@ -69,21 +70,9 @@ export default function Rsvp() {
   const nombresValidos = invitados.filter(n => n.trim().length >= 2)
   const formularioValido = confirmo && nombresValidos.length === cantidad && cantidad >= 1 && telefono.trim().length >= 6
 
-  // Lee el JSON de la respuesta del Apps Script (tolera el wrapper HTML de la redirección)
-  const parseGasResponse = async (res: Response): Promise<Record<string, unknown> | null> => {
-    try {
-      const text = await res.text()
-      try { return JSON.parse(text) as Record<string, unknown> } catch {
-        const match = text.match(/\{[\s\S]*\}/)
-        if (match) { try { return JSON.parse(match[0]) as Record<string, unknown> } catch { return null } }
-        return null
-      }
-    } catch { return null }
-  }
-
   /**
    * Registra el grupo en el backend (Google Sheets vía Apps Script).
-   * Devuelve SOLO estados verificables:
+   * Devuelve SOLO estados verificables (ver src/lib/contrato-backend.ts):
    *  - 'guardado':  el backend respondió { success: true }
    *  - 'pendiente': el navegador bloqueó la lectura (CORS/red) o no hubo respuesta
    *                 legible; el pedido puede haber llegado pero no se puede afirmar.
@@ -91,7 +80,7 @@ export default function Rsvp() {
    * El contrato del backend (gallery-server.gs) acepta GET action=rsvp con estos
    * mismos parámetros y POST JSON { tipo: 'rsvp_grupo', ... }.
    */
-  const registrarEnSheets = async (nuevoCodigo: string): Promise<'guardado' | 'pendiente' | 'error'> => {
+  const registrarEnSheets = async (nuevoCodigo: string): Promise<ResultadoRsvp> => {
     if (!cfg.rsvp.googleSheetUrl) return 'pendiente'
 
     const params = new URLSearchParams({
@@ -106,9 +95,9 @@ export default function Rsvp() {
     // 1) GET legible: la respuesta se puede verificar ({ success: true })
     try {
       const res = await fetch(`${cfg.rsvp.googleSheetUrl}?${params.toString()}`, { redirect: 'follow' })
-      const data = await parseGasResponse(res)
-      if (data && data.success === true) return 'guardado'
-      if (data && data.error) return 'error'
+      const resultado = interpretarRespuestaRsvp(await parseGasResponseBody(res))
+      if (resultado !== 'pendiente') return resultado
+      // Respuesta HTTP recibida pero ilegible: no afirmar guardado.
       return 'pendiente'
     } catch {
       // 2) Lectura bloqueada (CORS/red): reintento opaco fire-and-forget.
