@@ -80,3 +80,4 @@ preview/
 # nunca al repositorio. Mantener solo el .gitkeep.
 public/uploads/*
 !public/uploads/.gitkeep
+tests/dist/
