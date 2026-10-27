@@ -1,5 +1,15 @@
-import defaultConfig, { type SiteConfig } from '@/data/config';
+import type { SiteConfig } from '@/data/config-schema';
 import type { InvitationDesign } from '@/data/invitation-designs';
+
+// ============================================================
+// CONFIGURACIÓN DE DEMOSTRACIÓN — 100% SINTÉTICA Y AUTOCONTENIDA
+// ------------------------------------------------------------
+// Este módulo NO importa la configuración operativa
+// (src/data/config.ts): define su propia base con valores
+// ficticios y endpoints de escritura vacíos. Así ningún valor
+// operativo puede llegar a los bundles públicos a través de las
+// demos, el personalizador o las vistas previas.
+// ============================================================
 
 type DemoProfile = {
   tipo: string;
@@ -52,9 +62,111 @@ function demoGallery(designId: string) {
   }));
 }
 
-function cloneConfig(): SiteConfig {
-  return JSON.parse(JSON.stringify(defaultConfig)) as SiteConfig;
-}
+/**
+ * Base pública y autocontenida sobre la que se montan las demos.
+ * - Perfiles, textos y lugares son ficticios.
+ * - Endpoints de escritura (RSVP, fotos) y teléfonos van vacíos.
+ * - No hay datos bancarios ni datos de contacto reales.
+ */
+export const CONFIG_DEMO_BASE: SiteConfig = {
+  modoDemo: true,
+  evento: {
+    tipo: 'Una celebración especial',
+    nombre: 'Valentina',
+    apellido: '',
+    apodo: 'Vale',
+    fecha: '15 de noviembre',
+    anio: '2027',
+    fechaEvento: '2027-11-15 21:00',
+    lugar: 'Jardín Magnolia',
+    ubicacion: 'Montevideo',
+    direccion: 'Montevideo, Uruguay',
+    mapsUrl: 'https://maps.google.com/?q=Montevideo%2C+Uruguay',
+    mapsEmbedUrl: 'https://maps.google.com/maps?q=Montevideo%2C%20Uruguay&t=&z=13&ie=UTF8&iwloc=&output=embed',
+    hashtag: '#CelebracionDeMuestra',
+    hashtagUrl: 'https://www.instagram.com/',
+  },
+  dedicatoria: {
+    cita: 'Los mejores momentos se vuelven inolvidables cuando los compartimos.',
+    cuerpo: 'Esta es una invitación de demostración. Los textos, colores y detalles se pueden adaptar a tu celebración.',
+    firma: 'Valentina',
+  },
+  timeline: {
+    titulo: 'La celebración',
+    subtitulo: 'Un adelanto de los momentos especiales',
+    eventos: [
+      { hora: '20:30', titulo: 'Recepción', desc: 'Bienvenida a los invitados', icono: '✦' },
+      { hora: '21:00', titulo: 'Comienza la celebración', desc: 'Un momento para compartir', icono: '♡' },
+      { hora: '22:00', titulo: 'Música y baile', desc: 'Que empiece la fiesta', icono: '♫' },
+      { hora: '23:30', titulo: 'Brindis', desc: 'Por los recuerdos que vendrán', icono: '🥂' },
+    ],
+  },
+  galeria: {
+    titulo: 'Galería',
+    subtitulo: 'Detalles de muestra para imaginar tu propia invitación',
+    botonSubir: 'Galería de demostración',
+    photoUploadUrl: '',
+    fotos: [],
+  },
+  musica: {
+    titulo: 'La banda sonora',
+    subtitulo: 'La música también forma parte del recuerdo',
+    playlistUrl: 'https://open.spotify.com/',
+    embedUrl: 'https://open.spotify.com/embed/',
+    botonAgregar: 'Explorar Spotify',
+    botonSpotify: 'Abrir Spotify',
+  },
+  rsvp: {
+    titulo: 'Confirmar asistencia',
+    subtitulo: 'En una invitación real, tus invitados podrían confirmar aquí.',
+    fechaLimite: 'Confirmación de demostración',
+    fechaLimiteFull: '',
+    googleSheetUrl: '',
+    hostPhone: '',
+    regalos: {
+      titulo: 'Información del evento',
+      subtitulo: 'En una invitación real este espacio puede incluir información útil para los invitados.',
+      abitab: { titulo: '', numero: '' },
+      miDinero: { titulo: '', numero: '', numeroInterbancario: '', sucursal: '' },
+    },
+  },
+  footer: {
+    apodo: 'Vale',
+    ubicacion: 'Montevideo · Uruguay',
+    frase: 'Una invitación hecha a tu estilo',
+  },
+  invitacion: {
+    imagen: '/Miluaistudio/catalogo/demo-cover.svg',
+    imagenFallback: '/Miluaistudio/catalogo/demo-cover.svg',
+    textoAbrir: 'Tocá para explorar',
+  },
+  countdown: {
+    titulo: 'La cuenta regresiva',
+    labels: { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' },
+    botonCalendario: 'Agregar a tu calendario',
+    calendarioTitulo: 'Una celebración especial · Valentina',
+    calendarioLocation: 'Jardín Magnolia, Montevideo, Uruguay',
+    calendarioDetalles: 'Invitación web de demostración. Los datos reales se configuran al personalizar tu evento.',
+  },
+  fondo: { fotos: ['gradient:rosa-suave'] },
+  colores: {
+    principal: '#9d5f6f',
+    dorado: '#c4768b',
+    doradoClaro: '#c4768b',
+    marfil: '#4a343b',
+    fondo: '#fbf1f2',
+  },
+  estilos: {
+    fuenteTitulo: 'alex-brush',
+    fuenteCuerpo: 'montserrat',
+    fuenteCursiva: 'alex-brush',
+    modeloReloj: 'classic',
+    estiloTarjetas: 'glass',
+    estiloBotones: 'outline-gold',
+    modoClaro: true,
+    adorno: 'rosas',
+  },
+};
 
 /**
  * Builds a privacy-safe config for a public catalog sample.
@@ -62,7 +174,7 @@ function cloneConfig(): SiteConfig {
  * are always replaced before this config reaches the browser.
  */
 export function createDemoConfig(design: InvitationDesign): SiteConfig {
-  const config = cloneConfig();
+  const config: SiteConfig = JSON.parse(JSON.stringify(CONFIG_DEMO_BASE)) as SiteConfig;
   const profile = DEMO_PROFILES[design.id] ?? DEFAULT_DEMO_PROFILE;
 
   config.modoDemo = true;
@@ -77,83 +189,28 @@ export function createDemoConfig(design: InvitationDesign): SiteConfig {
     anio: profile.anio,
     fechaEvento: profile.fechaEvento,
     lugar: profile.lugar,
-    ubicacion: 'Montevideo',
-    direccion: 'Montevideo, Uruguay',
-    mapsUrl: 'https://maps.google.com/?q=Montevideo%2C+Uruguay',
-    mapsEmbedUrl: 'https://maps.google.com/maps?q=Montevideo%2C%20Uruguay&t=&z=13&ie=UTF8&iwloc=&output=embed',
     hashtag: profile.hashtag,
-    hashtagUrl: 'https://www.instagram.com/',
   };
 
   config.dedicatoria = {
-    cita: 'Los mejores momentos se vuelven inolvidables cuando los compartimos.',
-    cuerpo: 'Esta es una invitación de demostración. Los textos, colores y detalles se pueden adaptar a tu celebración.',
+    ...config.dedicatoria,
     firma: profile.nombre,
   };
 
-  config.timeline = {
-    titulo: 'La celebración',
-    subtitulo: 'Un adelanto de los momentos especiales',
-    eventos: [
-      { hora: '20:30', titulo: 'Recepción', desc: 'Bienvenida a los invitados', icono: '✦' },
-      { hora: '21:00', titulo: 'Comienza la celebración', desc: 'Un momento para compartir', icono: '♡' },
-      { hora: '22:00', titulo: 'Música y baile', desc: 'Que empiece la fiesta', icono: '♫' },
-      { hora: '23:30', titulo: 'Brindis', desc: 'Por los recuerdos que vendrán', icono: '🥂' },
-    ],
-  };
-
   config.galeria = {
-    titulo: 'Galería',
-    subtitulo: 'Detalles de muestra para imaginar tu propia invitación',
-    botonSubir: 'Galería de demostración',
-    photoUploadUrl: '',
+    ...config.galeria,
     fotos: demoGallery(design.id),
   };
 
-  config.musica = {
-    titulo: 'La banda sonora',
-    subtitulo: 'La música también forma parte del recuerdo',
-    playlistUrl: 'https://open.spotify.com/',
-    embedUrl: 'https://open.spotify.com/embed/',
-    botonAgregar: 'Explorar Spotify',
-    botonSpotify: 'Abrir Spotify',
-  };
-
-  config.rsvp = {
-    titulo: 'Confirmar asistencia',
-    subtitulo: 'En una invitación real, tus invitados podrían confirmar aquí.',
-    fechaLimite: 'Confirmación de demostración',
-    fechaLimiteFull: '',
-    googleSheetUrl: '',
-    hostPhone: '',
-    regalos: {
-      titulo: 'Información del evento',
-      subtitulo: 'En una invitación real este espacio puede incluir información útil para los invitados.',
-      abitab: { titulo: '', numero: '' },
-      miDinero: { titulo: '', numero: '', numeroInterbancario: '', sucursal: '' },
-    },
-  };
-
   config.footer = {
+    ...config.footer,
     apodo: profile.apodo,
-    ubicacion: 'Montevideo · Uruguay',
-    frase: 'Una invitación hecha a tu estilo',
-  };
-
-  config.invitacion = {
-    imagen: '/Miluaistudio/catalogo/demo-cover.svg',
-    imagenFallback: '/Miluaistudio/catalogo/demo-cover.svg',
-    textoAbrir: 'Tocá para explorar',
   };
 
   config.countdown = {
     ...config.countdown,
-    titulo: 'La cuenta regresiva',
-    labels: { D: 'Días', H: 'Horas', M: 'Min', S: 'Seg' },
-    botonCalendario: 'Agregar a tu calendario',
     calendarioTitulo: profile.tipo + ' · ' + profile.nombre,
     calendarioLocation: profile.lugar + ', Montevideo, Uruguay',
-    calendarioDetalles: 'Invitación web de demostración. Los datos reales se configuran al personalizar tu evento.',
   };
 
   config.fondo = { fotos: [`gradient:${design.backgroundPreset}`] };

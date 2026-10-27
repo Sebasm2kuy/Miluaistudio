@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties, type Rea
 import { useConfig } from '@/hooks/useConfig'
 import Envelope from '@/components/envelope'
 import { fechaVisual } from '@/components/mini-invitation'
-import type { SiteConfig } from '@/data/config'
+import type { SiteConfig } from '@/data/config-schema'
 
 /**
  * Apertura animada de la invitación. `tipo` viene de APERTURAS_META

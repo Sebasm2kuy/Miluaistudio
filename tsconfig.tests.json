@@ -11,5 +11,10 @@
     "esModuleInterop": true,
     "types": ["node"]
   },
-  "include": ["tests/**/*.ts", "src/lib/contrato-backend.ts"]
+  "include": [
+    "tests/**/*.ts",
+    "src/lib/contrato-backend.ts",
+    "src/lib/rsvp-client.ts",
+    "src/data/store-tokens.ts"
+  ]
 }

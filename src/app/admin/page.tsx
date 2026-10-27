@@ -18,7 +18,8 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import config, { type SiteConfig } from '@/data/config'
+import type { SiteConfig } from '@/data/config-schema'
+import { CONFIG_DEMO_BASE } from '@/data/demo-config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES, COLOR_PRESETS, BACKGROUND_PRESETS } from '@/data/admin-options'
 import { deployToGitHub, uploadToGitHub } from '@/lib/github-deploy'
@@ -410,7 +411,11 @@ const SECTION_META: Record<SectionKey, { title: string; icon: string }> = {
 }
 
 export default function AdminPage() {
-  const [cfg, setCfg] = useState<SiteConfig>(deepClone(config))
+  // Punto de partida del editor: la base de demostración (pública y
+  // sintética). El panel ya NO importa la configuración operativa
+  // (src/data/config.ts): ese archivo puede llegar a contener datos
+  // privados de un evento real y no debe entrar al grafo del cliente.
+  const [cfg, setCfg] = useState<SiteConfig>(() => deepClone(CONFIG_DEMO_BASE))
   const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set(['evento']))
   const [saved, setSaved] = useState(false)
   const [deploying, setDeploying] = useState(false)
@@ -442,7 +447,7 @@ export default function AdminPage() {
         if (parsed?.evento?.nombre) {
           // Carga de configuración persistida: solo posible tras el montaje.
           // eslint-disable-next-line react-hooks/set-state-in-effect
-          setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
+          setCfg((prev) => ({ ...deepClone(prev), ...parsed, estilos: { ...prev.estilos, ...parsed.estilos } }))
         }
       }
       // El token ya NO se persiste en localStorage: vive en sessionStorage
@@ -515,7 +520,7 @@ export default function AdminPage() {
         try {
           const parsed = JSON.parse(ev.target?.result as string) as SiteConfig
           // Merge with defaults
-          setCfg((prev) => ({ ...deepClone(config), ...parsed, estilos: { ...config.estilos, ...parsed.estilos } }))
+          setCfg((prev) => ({ ...deepClone(prev), ...parsed, estilos: { ...prev.estilos, ...parsed.estilos } }))
         } catch {
           alert('Archivo JSON inválido')
         }
@@ -528,7 +533,7 @@ export default function AdminPage() {
 
   const handleReset = useCallback(() => {
     if (confirm('¿Restaurar todos los valores por defecto? Se eliminarán los cambios guardados.')) {
-      setCfg(deepClone(config))
+      setCfg(deepClone(CONFIG_DEMO_BASE))
       clearConfig()
       setSaved(false)
     }
