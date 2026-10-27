@@ -68,11 +68,16 @@ export function miniFromConfig(cfg: SiteConfig): MiniInvitationData {
   };
 }
 
+/* Cuenta regresiva ILUSTRATIVA de la maqueta: usa guiones, nunca números que
+   puedan leerse como una cuenta real. Cada diseño de muestra tiene una fecha
+   ficticia distinta, así que mostrar un valor fijo (120/14/32/05) daba la
+   impresión de una cuenta regresiva falsa. El contador REAL vive dentro de
+   cada invitación (countdown.tsx) y se prueba aparte. */
 const COUNTDOWN: Array<{ value: string; label: string }> = [
-  { value: '120', label: 'Días' },
-  { value: '14', label: 'Horas' },
-  { value: '32', label: 'Min' },
-  { value: '05', label: 'Seg' },
+  { value: '––', label: 'Días' },
+  { value: '––', label: 'Horas' },
+  { value: '––', label: 'Min' },
+  { value: '––', label: 'Seg' },
 ];
 
 function nameStyle(data: MiniInvitationData): CSSProperties {
@@ -155,9 +160,12 @@ export default function MiniInvitation({ data, variant = 'screen', className, st
           {data.tipo}
         </p>
 
-        <h3 style={{ ...nameStyle(data), color: data.accent, marginTop: '2.2cqw', textShadow: light ? 'none' : `0 0 ${'3cqw'} color-mix(in srgb, ${data.accent} 30%, transparent)` }}>
+        {/* Nombre decorativo de la maqueta: no es un encabezado del documento,
+            solo parte del arte ilustrativo. Se usa div para no romper la
+            jerarquía semántica del H1 comercial de cada página. */}
+        <div style={{ ...nameStyle(data), color: data.accent, marginTop: '2.2cqw', textShadow: light ? 'none' : `0 0 ${'3cqw'} color-mix(in srgb, ${data.accent} 30%, transparent)` }}>
           {data.name}
-        </h3>
+        </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '2cqw', margin: '3.4cqw 0' }}>
           <span style={{ width: '14cqw', height: '1px', background: `linear-gradient(90deg, transparent, ${data.accent})` }} />
@@ -170,7 +178,7 @@ export default function MiniInvitation({ data, variant = 'screen', className, st
         </p>
 
         {(
-          <div style={{ marginTop: '4.5cqw', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2.4cqw', width: '78%' }}>
+          <div aria-hidden="true" style={{ marginTop: '4.5cqw', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2.4cqw', width: '78%' }}>
           {COUNTDOWN.map((item) => (
             <div
               key={item.label}
