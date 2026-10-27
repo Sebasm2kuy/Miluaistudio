@@ -37,7 +37,7 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
       <div className="flex flex-1 flex-col p-4 sm:p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accentSoft }}>{design.category}</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.storeAccent ?? design.accentSoft }}>{design.category}</p>
             <h2 className="mt-1 font-serif text-base font-semibold leading-snug text-[#292522] sm:text-lg">{design.name}</h2>
           </div>
         </div>
@@ -48,7 +48,7 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
           {design.paletteDots.map((color, dotIndex) => (
             <span key={design.id + '-' + dotIndex} title={color} className="h-3.5 w-3.5 rounded-full border border-black/10" style={{ background: color }} />
           ))}
-          <span className="ml-1 truncate text-[10px] text-[#82786e]">{design.palette}</span>
+          <span className="ml-1 truncate text-[10px] text-[#787168]">{design.palette}</span>
         </div>
 
         <div className="mt-auto pt-4">
@@ -71,7 +71,7 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
             href={whatsappLinkDiseno(design.name)}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25d366] px-3 py-3 text-xs font-semibold text-white shadow-[0_6px_16px_rgba(37,211,102,0.24)] transition hover:bg-[#1db957]"
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25d366] px-3 py-3 text-xs font-semibold text-[#0b3d1e] shadow-[0_6px_16px_rgba(37,211,102,0.24)] transition hover:bg-[#1db957]"
           >
             <WhatsAppIcon size={15} /> Consultar por WhatsApp
           </a>
@@ -102,14 +102,14 @@ export default function CatalogoPage() {
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 text-[#292522] backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
           <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#b58c5a]"><Heart size={19} /></span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443]"><Heart size={19} /></span>
             <span>
               <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">MILUAISTUDIO</span>
-              <span className="block text-[9px] uppercase tracking-[0.2em] text-[#8f867c]">Tu historia, en formato digital</span>
+              <span className="block text-[9px] uppercase tracking-[0.2em] text-[#787168]">Tu historia, en formato digital</span>
             </span>
           </a>
           <div className="flex items-center gap-2">
-            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25d366] px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#1db957] sm:text-sm">
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#25d366] px-3.5 py-2.5 text-xs font-semibold text-[#0b3d1e] transition hover:bg-[#1db957] sm:text-sm">
               <WhatsAppIcon size={16} />
               <span className="hidden sm:inline">Consultar por WhatsApp</span>
             </a>
@@ -148,7 +148,7 @@ export default function CatalogoPage() {
               <DesignCard key={design.id} design={design} index={index} onQuickView={() => setSelected(design)} />
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-[#8f867c]">
+          <p className="mt-6 text-center text-xs text-[#787168]">
             Tocá cualquier tarjeta: la invitación se abre sola en una pestaña nueva, carga con el nombre
             y arranca la demostración completa — cuenta regresiva, música, galería y RSVP funcionando.
           </p>
@@ -169,7 +169,7 @@ export default function CatalogoPage() {
               <Reveal key={paso.titulo} delay={pasoIndex * 80}>
                 <li className="relative h-full rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.11)] sm:p-6">
                   <div className="flex items-center justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3ead9] text-[#a8814f]">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3ead9] text-[#9c7443]">
                       <paso.icon size={20} strokeWidth={1.8} />
                     </span>
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#292522] font-serif text-sm italic text-[#ecdcc0]">{pasoIndex + 1}</span>
@@ -200,9 +200,9 @@ export default function CatalogoPage() {
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
                   <figcaption className="mt-4 border-t border-[#f0e9df] pt-3">
                     <span className="block text-sm font-semibold text-[#292522]">{t.nombre}</span>
-                    <span className="block text-xs text-[#8f867c]">{t.evento}</span>
+                    <span className="block text-xs text-[#787168]">{t.evento}</span>
                     {t.estado !== 'verificado' && (
-                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#8f867c]">
+                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
                         Ejemplo de referencia
                       </span>
                     )}
@@ -225,7 +225,7 @@ export default function CatalogoPage() {
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3d3830]">
               Consultar la publicación <ExternalLink size={15} />
             </a>
-            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25d366] px-5 py-3 text-sm font-semibold text-[#17903f] transition hover:bg-[#25d366]/10">
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25d366] px-5 py-3 text-sm font-semibold text-[#0f6a2d] transition hover:bg-[#25d366]/10">
               <WhatsAppIcon size={16} /> WhatsApp
             </a>
           </div>
@@ -263,18 +263,18 @@ export default function CatalogoPage() {
                 <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl">
                   <CatalogScene design={selected} />
                 </div>
-                <p className="mt-2 text-center text-[10px] text-[#8f867c]">Maqueta del diseño · Invitación web interactiva de muestra</p>
+                <p className="mt-2 text-center text-[10px] text-[#787168]">Maqueta del diseño · Invitación web interactiva de muestra</p>
               </div>
               <div className="flex flex-col justify-center py-2 pr-1 sm:py-5 lg:pr-5">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: selected.accentSoft }}>{selected.category}</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: selected.storeAccent ?? selected.accentSoft }}>{selected.category}</span>
                 <h2 className="mt-2 font-serif text-3xl text-[#292522] sm:text-4xl">{selected.name}</h2>
-                <p className="mt-2 text-sm font-medium text-[#8f867c]">Ejemplo: {selected.mockupName}</p>
+                <p className="mt-2 text-sm font-medium text-[#787168]">Ejemplo: {selected.mockupName}</p>
                 <p className="mt-4 text-sm leading-relaxed text-[#716a63]">{selected.description}</p>
                 <div className="mt-4 flex items-center gap-2" aria-label={'Paleta ' + selected.palette}>
                   {selected.paletteDots.map((color, dotIndex) => (
                     <span key={selected.id + '-qv-' + dotIndex} title={color} className="h-4 w-4 rounded-full border border-black/10" style={{ background: color }} />
                   ))}
-                  <span className="ml-1 text-[11px] text-[#82786e]">{selected.palette}</span>
+                  <span className="ml-1 text-[11px] text-[#787168]">{selected.palette}</span>
                 </div>
                 <div className="mt-5 space-y-2 text-sm text-[#716a63]">
                   <div className="flex items-center gap-2"><Clock3 size={16} /> Cuenta regresiva con diseño a juego</div>
@@ -295,7 +295,7 @@ export default function CatalogoPage() {
                   <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:brightness-110" style={{ background: selected.buttonBg, color: selected.buttonText }}>
                     Abrir demostración <ArrowRight size={15} />
                   </a>
-                  <a href={whatsappLinkDiseno(selected.name)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1db957]">
+                  <a href={whatsappLinkDiseno(selected.name)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-[#0b3d1e] transition hover:bg-[#1db957]">
                     <WhatsAppIcon size={16} /> Consultar por WhatsApp
                   </a>
                   <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9cec2] px-5 py-3 text-sm font-semibold text-[#54483e] hover:bg-white">

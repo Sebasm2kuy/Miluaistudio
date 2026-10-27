@@ -42,9 +42,11 @@ export interface InvitationDesign {
   mockupTipo: string;
   /** Fecha de la demo en formato visual "DD · MM · YYYY" */
   mockupDate: string;
-  /** Botón "Ver invitación" de la tarjeta del catálogo */
+  /** Botón "Ver invitación" de la tarjeta del catálogo. Se mantiene en 4.5:1+ con texto blanco (WCAG AA). */
   buttonBg: string;
   buttonText: string;
+  /** Color de texto de la etiqueta de categoría en la tienda. Si falta, se usa accentSoft. Solo se define cuando accentSoft no alcanza 4.5:1 sobre blanco. */
+  storeAccent?: string;
   /** Color base de la tarjeta/miniatura de invitación */
   cardBg: string;
   cardText: string;
@@ -79,7 +81,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Valentina",
     mockupTipo: "Mis XV años",
     mockupDate: "15 · 11 · 2027",
-    buttonBg: "#c48b8f",
+    buttonBg: "#976b6e",
     buttonText: "#ffffff",
     cardBg: "#fdf3f1",
     cardText: "#4a343b",
@@ -135,8 +137,9 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Renata",
     mockupTipo: "Mis XV años",
     mockupDate: "13 · 07 · 2027",
-    buttonBg: "#8f8a80",
+    buttonBg: "#756f66",
     buttonText: "#ffffff",
+    storeAccent: "#61735a",
     cardBg: "#fbfaf3",
     cardText: "#41463c",
     scene: "/Miluaistudio/catalogo/scenes/terracota.jpg",
@@ -163,7 +166,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Lucía",
     mockupTipo: "Mis XV años",
     mockupDate: "07 · 12 · 2027",
-    buttonBg: "#7189ab",
+    buttonBg: "#5d7191",
     buttonText: "#ffffff",
     cardBg: "#12233d",
     cardText: "#eef5fd",
@@ -191,7 +194,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Isabella",
     mockupTipo: "Mis XV años",
     mockupDate: "10 · 10 · 2027",
-    buttonBg: "#a39a8c",
+    buttonBg: "#756e63",
     buttonText: "#ffffff",
     cardBg: "#f8f5ee",
     cardText: "#322c25",
@@ -219,7 +222,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Martina",
     mockupTipo: "Mis XV años",
     mockupDate: "23 · 04 · 2027",
-    buttonBg: "#9d6fc3",
+    buttonBg: "#8a60ac",
     buttonText: "#ffffff",
     cardBg: "#faf5fd",
     cardText: "#443a52",
@@ -303,7 +306,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Valentina & Diego",
     mockupTipo: "Nuestra boda",
     mockupDate: "08 · 08 · 2027",
-    buttonBg: "#dd8451",
+    buttonBg: "#a2603c",
     buttonText: "#ffffff",
     cardBg: "#f8f1e7",
     cardText: "#3f332b",
@@ -331,7 +334,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     mockupName: "Emilia",
     mockupTipo: "Mis XV años",
     mockupDate: "22 · 09 · 2027",
-    buttonBg: "#c98b8b",
+    buttonBg: "#946768",
     buttonText: "#ffffff",
     cardBg: "#fdf6ee",
     cardText: "#463437",

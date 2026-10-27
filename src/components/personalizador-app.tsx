@@ -122,9 +122,9 @@ function PhonePreview({ data }: { data: MiniInvitationData }) {
 }
 
 const INPUT_CLS =
-  'w-full rounded-xl border border-[#e8e0d7] bg-white px-3.5 py-2.5 text-sm text-[#292522] placeholder:text-[#a39a8e] outline-none transition focus:border-[#b58c5a] focus:ring-2 focus:ring-[#b58c5a]/15';
+  'w-full rounded-xl border border-[#e8e0d7] bg-white px-3.5 py-2.5 text-sm text-[#292522] placeholder:text-[#787168] outline-none transition focus:border-[#b58c5a] focus:ring-2 focus:ring-[#b58c5a]/15';
 const LABEL_CLS = 'mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#716a63]';
-const HELP_CLS = 'mt-1.5 text-[11px] leading-relaxed text-[#8f867c]';
+const HELP_CLS = 'mt-1.5 text-[11px] leading-relaxed text-[#787168]';
 
 /** Interruptor de sección: prende/apaga un módulo de la invitación en vivo */
 function SwitchSeccion({
@@ -153,7 +153,7 @@ function SwitchSeccion({
     >
       <span>
         <span className={'block text-sm font-medium ' + (checked ? 'text-[#292522]' : 'text-[#716a63]')}>{label}</span>
-        <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{desc}</span>
+        <span className="mt-0.5 block text-[11px] leading-snug text-[#787168]">{desc}</span>
       </span>
       <span
         className={
@@ -195,7 +195,7 @@ function OpcionApertura({ meta, selected, onSelect }: { meta: AperturaMeta; sele
       )}
       <span className="text-2xl leading-none" aria-hidden="true">{meta.glifo}</span>
       <span className={'mt-2 block text-sm font-medium ' + (selected ? 'text-[#292522]' : 'text-[#716a63]')}>{meta.nombre}</span>
-      <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{meta.desc}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#787168]">{meta.desc}</span>
     </button>
   );
 }
@@ -231,7 +231,7 @@ function FilaTono({
       </button>
       <button type="button" role="radio" aria-checked={elegido} onClick={onElegir} className="min-w-0 flex-1 text-left">
         <span className={'block text-sm font-medium ' + (elegido ? 'text-[#292522]' : 'text-[#716a63]')}>{tono.nombre}</span>
-        <span className="block truncate text-[11px] text-[#8f867c]">{tono.desc}</span>
+        <span className="block truncate text-[11px] text-[#787168]">{tono.desc}</span>
       </button>
       {elegido && (
         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#b58c5a] text-white">
@@ -273,7 +273,7 @@ function OpcionTipografia({ id, nombre, desc, selected, onSelect }: { id: string
         Ag
       </span>
       <span className={'mt-1.5 block text-sm font-medium ' + (selected ? 'text-[#292522]' : 'text-[#716a63]')}>{nombre}</span>
-      <span className="mt-0.5 block text-[11px] leading-snug text-[#8f867c]">{desc}</span>
+      <span className="mt-0.5 block text-[11px] leading-snug text-[#787168]">{desc}</span>
     </button>
   );
 }
@@ -435,7 +435,7 @@ export default function PersonalizadorApp() {
             </span>
             <span>
               <span className="block font-serif text-base tracking-[0.08em] sm:text-lg">MILUAISTUDIO</span>
-              <span className="hidden text-[9px] uppercase tracking-[0.2em] text-[#8f867c] sm:block">Personalizá tu invitación</span>
+              <span className="hidden text-[9px] uppercase tracking-[0.2em] text-[#787168] sm:block">Personalizá tu invitación</span>
             </span>
           </a>
           <div className="flex items-center gap-2">
@@ -633,7 +633,7 @@ export default function PersonalizadorApp() {
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
                   <LayoutTemplate size={17} className="text-[#b58c5a]" /> Secciones de tu invitación
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
+                <p className="mt-1 text-xs leading-relaxed text-[#787168]">
                   Prendé lo que querés mostrar — todo va incluido en el precio. La vista previa se actualiza al instante y nos llega tu elección junto con el pedido.
                 </p>
                 <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
@@ -654,7 +654,7 @@ export default function PersonalizadorApp() {
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
                   <Sparkles size={17} className="text-[#b58c5a]" /> Apertura animada
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
+                <p className="mt-1 text-xs leading-relaxed text-[#787168]">
                   Elegí cómo se abre tu invitación — usa los colores de tu diseño. Todas incluidas.
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
@@ -679,7 +679,7 @@ export default function PersonalizadorApp() {
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
                   <Music2 size={17} className="text-[#b58c5a]" /> Música de fondo
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
+                <p className="mt-1 text-xs leading-relaxed text-[#787168]">
                   Un tono suave que suena mientras tus invitados recorren la invitación. Tocá ▶ para escucharlo antes de elegir.
                 </p>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -715,7 +715,7 @@ export default function PersonalizadorApp() {
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
                   <Clock size={17} className="text-[#b58c5a]" /> Cronograma de la noche
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
+                <p className="mt-1 text-xs leading-relaxed text-[#787168]">
                   Cargá los momentos de tu fiesta hora por hora. Si lo dejás vacío, armamos uno de muestra con tu aprobación.
                 </p>
                 <div className="mt-4 grid gap-2">
@@ -742,7 +742,7 @@ export default function PersonalizadorApp() {
                         onClick={() => quitarMomento(i)}
                         disabled={datos.cronograma.length <= 1}
                         aria-label={'Quitar el momento ' + (i + 1)}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#e8e0d7] text-[#8f867c] transition hover:border-red-400/40 hover:text-red-300 disabled:opacity-30"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#e8e0d7] text-[#787168] transition hover:border-red-400/40 hover:text-red-300 disabled:opacity-30"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -764,7 +764,7 @@ export default function PersonalizadorApp() {
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
                   <Palette size={17} className="text-[#b58c5a]" /> Estilo
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#8f867c]">
+                <p className="mt-1 text-xs leading-relaxed text-[#787168]">
                   Afiná los detalles sobre tu diseño: la letra de los títulos y el color de los detalles. Si no tocás nada, queda el estilo original del diseño.
                 </p>
 
@@ -794,7 +794,7 @@ export default function PersonalizadorApp() {
                       onSelect={() => setDatos((prev) => ({ ...prev, acento: prev.acento === a.id ? '' : a.id }))}
                     />
                   ))}
-                  <span className="ml-1 text-xs text-[#8f867c]">{ACENTOS_META.find((a) => a.id === datos.acento)?.nombre ?? 'Original del diseño'}</span>
+                  <span className="ml-1 text-xs text-[#787168]">{ACENTOS_META.find((a) => a.id === datos.acento)?.nombre ?? 'Original del diseño'}</span>
                 </div>
               </div>
               </div>
@@ -816,7 +816,7 @@ export default function PersonalizadorApp() {
                   >
                     Abrir la invitación completa <ArrowRight size={15} />
                   </button>
-                  <p className="mt-2.5 text-[11px] leading-relaxed text-[#8f867c]">
+                  <p className="mt-2.5 text-[11px] leading-relaxed text-[#787168]">
                     Apertura animada, música de fondo, cronograma, estilo, cuenta regresiva, galería y confirmación funcionando con tus datos.
                   </p>
                 </div>
@@ -843,7 +843,7 @@ export default function PersonalizadorApp() {
                   >
                     Comprar por Mercado Libre <ExternalLink size={13} />
                   </a>
-                  <p className="mt-3 text-[11px] leading-relaxed text-[#8f867c]">
+                  <p className="mt-3 text-[11px] leading-relaxed text-[#787168]">
                     Te llega con tu diseño, nombre, fecha, lugar, frase y música. Con el pago lo dejamos publicado con tu enlace final.
                   </p>
                 </div>

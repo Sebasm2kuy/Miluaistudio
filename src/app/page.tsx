@@ -28,14 +28,18 @@ import { TESTIMONIOS } from '@/data/testimonios';
 import { PRECIO } from '@/data/precio';
 
 const CATALOG_URL = '/Miluaistudio/catalogo/';
-const GOLD = '#b58c5a';
+/* Champagne de texto: se oscurece el dorado decorativo para cumplir 3:1+
+   (texto grande) sobre marfil y los gradientes cálidos. Medido: 4.0:1. */
+const GOLD = '#9a7440';
 const INK = '#292522';
 const INK_MUTED = '#716a63';
+/* Texto oscuro sobre el verde de marca de WhatsApp: 6.23:1 (blanco era 1.98:1). */
+const WA_TEXT = 'text-[#0b3d1e]';
 
 const PRIMARY_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(41,37,34,0.22)] transition hover:-translate-y-0.5 hover:bg-[#3d3830]';
 const WHATSAPP_BTN =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(37,211,102,0.28)] transition hover:-translate-y-0.5 hover:bg-[#1db957]';
+  `inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold ${WA_TEXT} shadow-[0_12px_28px_rgba(37,211,102,0.28)] transition hover:-translate-y-0.5 hover:bg-[#1db957]`;
 const OUTLINE_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full border border-[#ded4c8] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c9bbaa] hover:bg-white';
 
@@ -53,12 +57,12 @@ export default function Home() {
       <header className="relative z-30 border-b border-[#e8e0d7] bg-[#faf8f4]/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
           <a href="/Miluaistudio/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Miluaistudio, inicio">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#a8814f] shadow-sm sm:h-10 sm:w-10">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443] shadow-sm sm:h-10 sm:w-10">
               <Heart size={17} />
             </span>
             <span className="min-w-0">
               <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
-              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#8f867c] sm:block">Invitaciones digitales</span>
+              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#787168] sm:block">Invitaciones digitales</span>
             </span>
           </a>
           <nav aria-label="Navegación principal" className="hidden items-center gap-6 md:flex">
@@ -68,7 +72,7 @@ export default function Home() {
             <a href="#resenas" className="text-sm text-[#716a63] transition hover:text-[#292522]">Reseñas</a>
           </nav>
           <div className="flex shrink-0 items-center gap-2">
-            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
+            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-[#0b3d1e] shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
               <WhatsAppIcon size={17} />
             </a>
             <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830] sm:gap-2 sm:px-5 sm:text-sm">
@@ -88,7 +92,7 @@ export default function Home() {
             <CatalogScene design={heroDesign} />
             <div className="absolute -left-1.5 top-5">
               <HeroBadge>
-                <Sparkles size={14} className="text-[#a8814f]" /> Demo interactiva · Música y RSVP
+                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
               </HeroBadge>
             </div>
           </div>
@@ -107,7 +111,7 @@ export default function Home() {
             </div>
             <div className="absolute -left-2 top-6 sm:-left-6">
               <HeroBadge>
-                <Sparkles size={14} className="text-[#a8814f]" /> Demo interactiva · Música y RSVP
+                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
               </HeroBadge>
             </div>
           </div>
@@ -116,10 +120,10 @@ export default function Home() {
         <div className="relative order-2 mt-9 lg:order-1 lg:mt-0">
           {/* Adornos de fondo */}
           <DesignAdornoGlyph adorno="rosas" className="absolute -left-14 top-6 hidden h-44 w-44 text-[#b98a94]/25 lg:block" />
-          <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#a8814f]/20 lg:block" />
+          <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#9c7443]/20 lg:block" />
 
           <div className="store-hero-in inline-flex items-center gap-2 rounded-full border border-[#eadfca] bg-white px-3.5 py-1.5 text-xs text-[#7a6f61] shadow-sm">
-            <Sparkles size={14} className="text-[#a8814f]" />
+            <Sparkles size={14} className="text-[#9c7443]" />
             Diseñadas para celebrar a tu manera
           </div>
           <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.6rem] font-medium leading-[1.06] tracking-tight sm:text-6xl">
@@ -147,13 +151,13 @@ export default function Home() {
           <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="store-hero-in-3 mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6d5326] underline decoration-[#d9c9ad] underline-offset-4 transition hover:decoration-[#a8814f] sm:hidden">
             Compralo en Mercado Libre <ExternalLink size={14} />
           </a>
-          <p className="store-hero-in-3 mt-5 text-xs text-[#8f867c]">
+          <p className="store-hero-in-3 mt-5 text-xs text-[#787168]">
             <strong className="font-semibold text-[#5c5347]">{PRECIO.texto}</strong> · {PRECIO.condicion} · Personalización a medida
           </p>
           <div className="store-hero-in-3 mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-[#716a63]">
-            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Personalizada</span>
-            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Lista para compartir</span>
-            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#a8814f]" /> Adaptada al celular</span>
+            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Personalizada</span>
+            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Lista para compartir</span>
+            <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Adaptada al celular</span>
           </div>
         </div>
       </section>
@@ -182,7 +186,7 @@ export default function Home() {
                 </a>
               ))}
             </div>
-            <p className="mt-4 text-center text-[11px] text-[#8f867c]">Tocá cualquier diseño para abrir su demostración completa.</p>
+            <p className="mt-4 text-center text-[11px] text-[#787168]">Tocá cualquier diseño para abrir su demostración completa.</p>
           </div>
         </Reveal>
       </section>
@@ -232,7 +236,7 @@ export default function Home() {
                 eyebrow="La colección"
                 title={<>Encontrá el estilo que <em className="italic" style={{ color: GOLD }}>te representa</em>.</>}
               />
-              <a href={CATALOG_URL} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#96714a] transition hover:text-[#7a5e3d]">
+              <a href={CATALOG_URL} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#8a6a44] transition hover:text-[#7a5e3d]">
                 Ver los diez diseños <ArrowRight size={16} />
               </a>
             </div>
@@ -247,9 +251,9 @@ export default function Home() {
                     </div>
                   </a>
                   <div className="px-4 pb-4 pt-3.5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.accentSoft }}>{design.category}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.storeAccent ?? design.accentSoft }}>{design.category}</p>
                     <h3 className="mt-1 font-serif text-lg font-semibold">{design.name}</h3>
-                    <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#96714a] transition hover:text-[#7a5e3d]">
+                    <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6a44] transition hover:text-[#7a5e3d]">
                       Ver demostración <ArrowRight size={13} />
                     </a>
                   </div>
@@ -319,9 +323,9 @@ export default function Home() {
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
                   <figcaption className="mt-4 border-t border-[#f0e9df] pt-3">
                     <span className="block text-sm font-semibold text-[#292522]">{t.nombre}</span>
-                    <span className="block text-xs text-[#8f867c]">{t.evento}</span>
+                    <span className="block text-xs text-[#787168]">{t.evento}</span>
                     {t.estado !== 'verificado' && (
-                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#8f867c]">
+                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
                         Ejemplo de referencia
                       </span>
                     )}
@@ -338,7 +342,7 @@ export default function Home() {
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-[#e6d5bd] p-7 sm:p-11 lg:p-14" style={{ background: 'linear-gradient(120deg, #fdf3ec 0%, #f8ecdd 48%, #f3e6d3 100%)' }}>
             <DesignAdornoGlyph adorno="rosas" className="absolute -left-8 -top-8 h-40 w-40 text-[#b98a94]/20" />
-            <DesignAdornoGlyph adorno="eucalipto" className="absolute -bottom-10 -right-8 h-44 w-44 -scale-x-100 text-[#a8814f]/20" />
+            <DesignAdornoGlyph adorno="eucalipto" className="absolute -bottom-10 -right-8 h-44 w-44 -scale-x-100 text-[#9c7443]/20" />
             <div className="relative mx-auto max-w-2xl text-center">
               <p className="font-serif text-xl italic sm:text-2xl" style={{ color: GOLD }}>Tu celebración empieza acá</p>
               <h2 className="mt-3 font-serif text-3xl leading-[1.15] tracking-tight sm:text-4xl">
@@ -372,7 +376,7 @@ export default function Home() {
               title={<>Antes de elegir <em className="italic" style={{ color: GOLD }}>tu invitación</em>.</>}
             />
           </Reveal>
-          <p className="mt-4 text-center text-xs text-[#8f867c]">
+          <p className="mt-4 text-center text-xs text-[#787168]">
             Comentarios de muestra para ilustrar el servicio. Las reseñas de clientes reales se publicarán una vez autorizadas.
           </p>
           <div className="mt-9 space-y-3">
