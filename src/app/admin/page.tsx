@@ -1,5 +1,22 @@
 'use client'
 
+/**
+ * ⚠️ HERRAMIENTA LOCAL DE ADMINISTRACIÓN — NO SE PUBLICA.
+ *
+ * Esta ruta existe para usarse SOLO en desarrollo local (`npm run dev`
+ * → http://localhost:3000/admin). El build de producción la elimina del
+ * artefacto estático (scripts/prune-export.mjs) y scripts/verify-export.mjs
+ * falla si vuelve a generarse, porque GitHub Pages no ofrece autenticación
+ * de servidor y un panel público no puede considerarse protegido.
+ *
+ * Reglas de seguridad de esta herramienta:
+ *  - El token de GitHub NO se guarda en localStorage. Vive en sessionStorage
+ *    (muere al cerrar la pestaña) y se puede borrar con "Cerrar sesión".
+ *  - No incrustar tokens en el código, ni en NEXT_PUBLIC_*, ni en commits.
+ *  - Alternativa sin panel: editar src/data/config.ts y abrir un Pull Request.
+ *  Ver docs/ADMINISTRACION.md para el flujo completo.
+ */
+
 import { useState, useRef, useCallback, useEffect } from 'react'
 import config, { type SiteConfig } from '@/data/config'
 import { saveConfig, clearConfig } from '@/hooks/useConfig'
