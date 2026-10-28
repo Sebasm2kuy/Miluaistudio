@@ -1,5 +1,5 @@
-import type { SiteConfig } from '@/data/config-schema';
-import type { InvitationDesign } from '@/data/invitation-designs';
+import type { SiteConfig } from './config-schema';
+import type { InvitationDesign } from './invitation-designs';
 
 // ============================================================
 // CONFIGURACIÓN DE DEMOSTRACIÓN — 100% SINTÉTICA Y AUTOCONTENIDA

@@ -1,8 +1,8 @@
-import type { SiteConfig, SeccionesConfig } from '@/data/config-schema';
-import type { InvitationDesign } from '@/data/invitation-designs';
-import { createDemoConfig } from '@/data/demo-config';
-import { APERTURA_DEFAULT, nombreApertura } from '@/lib/aperturas';
-import { tonoPorId } from '@/lib/musica';
+import type { SiteConfig, SeccionesConfig } from '../data/config-schema';
+import type { InvitationDesign } from '../data/invitation-designs';
+import { createDemoConfig } from '../data/demo-config';
+import { APERTURA_DEFAULT, nombreApertura } from './aperturas';
+import { tonoPorId } from './musica';
 
 /**
  * Motor del personalizador auto-servicio: combina un diseño de la colección

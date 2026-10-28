@@ -20,8 +20,14 @@
     "src/lib/invitaciones-publicadas.ts",
     "src/lib/editor-config.ts",
     "src/lib/editor-campos.ts",
+    "src/lib/importar-whatsapp.ts",
+    "src/lib/personalizador.ts",
+    "src/lib/aperturas.ts",
+    "src/lib/musica.ts",
     "src/data/invitacion-publicada.ts",
     "src/data/config-schema.ts",
-    "src/data/store-tokens.ts"
+    "src/data/store-tokens.ts",
+    "src/data/invitation-designs.ts",
+    "src/data/demo-config.ts"
   ]
 }
