@@ -378,3 +378,14 @@ Stage Summary:
 - Docs: IDEAS/ITERACION-2026-10-28-018-ENTRADA-EDITOR-PUBLICADA.md + índice; PRUEBA-MANUAL-EDITOR-MOVIL.md con pasos 0a-0c (llegar al editor desde el sitio publicado).
 
 **Pendientes del propietario:** ejecutar los pasos 0a-0c + 28-33 de docs/PRUEBA-MANUAL-EDITOR-MOVIL.md en un teléfono físico.
+
+---
+## Iteración 019 — El botón «Editar tocando la invitación» pasa a ser visible en el móvil (fix/boton-editor-movil-paso-1)
+
+**Problema reportado:** en PC se ve el botón «Editar tocando la invitación» en la tarjeta de vista previa que se desplaza a la derecha; en el móvil «no se llega a ver». Causa: el botón vive en el `aside` del paso 2 con `lg:sticky`; en pantallas < lg la grilla colapsa y ese aside cae al FINAL de todo el formulario (datos, frase, música, cronograma, secciones, estilo + paso 3), varias pantallas hacia abajo. El botón existía y funcionaba (PR #19 publicado y verificado en el HTML de Pages), pero quedaba inalcanzable en la práctica.
+
+**Cambios:**
+- src/components/personalizador-app.tsx: nueva tarjeta en el paso 1, debajo de «Elegiste {diseño}…» y encima del paso 2, con `lg:hidden` — solo pantallas chicas. Reutiliza el mismo mecanismo: `<a href={EDITOR_URL} onClick={editarSobreInvitacion}>` (saveConfig antes de navegar, funciona sin JS). Texto de apoyo de una línea. En PC no se duplica (allí está el de la columna pegajosa).
+- Docs: IDEAS/ITERACION-2026-10-28-019-BOTON-EDITOR-VISIBLE-MOVIL.md + índice; paso 0b del guion manual actualizado con la nueva ubicación.
+
+**Pruebas:** 127/127 tests, lint OK, typecheck OK, build OK (verify-export §7 intacto). Emulador 390×844: la tarjeta aparece al elegir diseño sin scroll previo y abre /editar/ con los datos cargados; 1280×800 sin regresión. Pendiente: teléfono físico (paso 0b).
