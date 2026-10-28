@@ -511,11 +511,32 @@ export default function PersonalizadorApp() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-[#e8e0d7] bg-white p-4 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
-              <p className="text-sm text-[#716a63]">
-                Elegiste <strong className="font-semibold text-[#292522]">{design.name}</strong> — {design.description.split('.')[0]}. Ahora completá tus datos:
-              </p>
-            </div>
+            <>
+              <div className="rounded-2xl border border-[#e8e0d7] bg-white p-4 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
+                <p className="text-sm text-[#716a63]">
+                  Elegiste <strong className="font-semibold text-[#292522]">{design.name}</strong> — {design.description.split('.')[0]}. Ahora completá tus datos:
+                </p>
+              </div>
+              {/* Acceso directo al editor móvil, apenas se elige el diseño.
+                  En PC el botón vive en la tarjeta de vista previa pegajosa de
+                  la derecha (siempre a la vista); en el celular esa tarjeta
+                  queda al pie de un formulario larguísimo y no se encuentra.
+                  Este bloque aparece en su lugar, debajo del paso 1. */}
+              <div className="mt-3 rounded-2xl border border-[#dfc9a4] bg-[#fdf9f1] p-4 lg:hidden">
+                <a
+                  href={EDITOR_URL}
+                  onClick={editarSobreInvitacion}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_26px_rgba(181,140,90,0.3)] transition hover:brightness-110"
+                  style={{ background: 'linear-gradient(110deg, #c9a26e, #8a6534 55%, #a8814f)' }}
+                  aria-label="Abrir el editor móvil con estos datos: tocar elementos de la invitación para editarlos"
+                >
+                  <PenLine size={15} /> Editar tocando la invitación
+                </a>
+                <p className="mt-2 text-[11px] leading-relaxed text-[#787168]">
+                  Se abre el editor con estos datos: tocás un texto o una foto de la invitación y lo cambiás directo.
+                </p>
+              </div>
+            </>
           )}
         </section>
 

@@ -81,3 +81,4 @@ preview/
 public/uploads/*
 !public/uploads/.gitkeep
 tests/dist/
+.serve/

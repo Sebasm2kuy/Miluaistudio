@@ -12,7 +12,7 @@ botón «📱 Editor móvil» del panel `/admin` local.
 ## Llegar al editor desde el sitio publicado (iteración 018)
 
 - [ ] 0a. Abrir `https://sebasm2kuy.github.io/Miluaistudio/` en el teléfono: en el pie debe verse el enlace «Editor de invitaciones» y llevar a `/editar/`.
-- [ ] 0b. Ir a «Personalizar» desde el sitio, elegir un diseño y completar el nombre: en la tarjeta «Vista previa en vivo» debe aparecer el botón «Editar tocando la invitación». Tocarlo: debe abrir el editor con LOS DATOS que cargaste (nombre, fecha, lugar), no la demo de ejemplo.
+- [ ] 0b. Ir a «Personalizar» desde el sitio, elegir un diseño y completar el nombre: en el teléfono, debajo del paso 1 (tarjeta «Elegiste…») debe verse el botón dorado «Editar tocando la invitación». Tocarlo: debe abrir el editor con LOS DATOS que cargaste (nombre, fecha, lugar), no la demo de ejemplo. En PC el mismo botón sigue estando en la tarjeta «Vista previa en vivo» de la derecha.
 - [ ] 0c. En `/editar/` con el navegador «limpio» (sin borrador): debajo del aviso de «Tocá cualquier elemento…» debe verse la franja «Esta es una invitación de ejemplo…». Tocarla abre Ajustes directamente, con la sección «Invitación publicada».
 
 ## Preparación
