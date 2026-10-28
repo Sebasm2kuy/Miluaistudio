@@ -424,6 +424,10 @@ export default function Home() {
             <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">Comprar</a>
             <a href="/Miluaistudio/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
+            {/* Editor móvil visual: edición directa tocando la invitación
+                (público por diseño; los datos reales exigen el token del
+                propietario — ver IDEAS iteración 017). */}
+            <a href="/Miluaistudio/editar/" className="transition hover:text-white">Editor de invitaciones</a>
           </div>
           <p className="text-[#a1988a]">© {new Date().getFullYear()} Miluaistudio</p>
         </div>

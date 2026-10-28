@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 018 — El editor móvil pasa a ser alcanzable desde el sitio publicado (28-10-2026)](./ITERACION-2026-10-28-018-ENTRADA-EDITOR-PUBLICADA.md)
 - [Iteración 017 — El editor móvil pasa a estar publicado: editar la invitación real desde el teléfono (28-10-2026)](./ITERACION-2026-10-28-017-EDITOR-MOVIL-PUBLICADO.md)
 - [Iteración 016 — Editor móvil visual: edición directa sobre la invitación (28-10-2026)](./ITERACION-2026-10-28-016-EDITOR-MOVIL-VISUAL.md)
 - [Iteración 015 — Edición móvil de tarjetas: diagnóstico y mejora responsive (27-10-2026)](./ITERACION-2026-10-27-015-EDICION-MOVIL-TARJETAS.md)

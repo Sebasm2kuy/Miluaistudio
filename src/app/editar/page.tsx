@@ -68,6 +68,10 @@ export default function PaginaEditar() {
   const [github, setGithub] = useState<EstadoGithubUI>(GITHUB_EN_REPOSO)
   const [alturaBarraArriba, setAlturaBarraArriba] = useState(60)
   const [alturaBarraAbajo, setAlturaBarraAbajo] = useState(0)
+  /** La pantalla arrancó con el ejemplo base (no había borrador guardado). */
+  const [demoPura, setDemoPura] = useState(false)
+  /** Se cargó la invitación publicada por slug (al menos una vez en la sesión). */
+  const [invitacionCargada, setInvitacionCargada] = useState(false)
   const barraArribaRef = useRef<HTMLDivElement>(null)
   const barraAbajoRef = useRef<HTMLDivElement>(null)
   const avisarSalidaActivoRef = useRef(false)
@@ -79,7 +83,8 @@ export default function PaginaEditar() {
   useEffect(() => {
     // Carga solo posible tras el montaje (localStorage/sessionStorage no
     // existen durante el render estático): mismo patrón que el panel.
-    const inicial = leerConfigGuardada() ?? (JSON.parse(JSON.stringify(CONFIG_DEMO_BASE)) as SiteConfig)
+    const inicialGuardada = leerConfigGuardada()
+    const inicial = inicialGuardada ?? (JSON.parse(JSON.stringify(CONFIG_DEMO_BASE)) as SiteConfig)
     let tokenSesion = ''
     let hintYaVisto = false
     let slugRecordado = ''
@@ -98,6 +103,9 @@ export default function PaginaEditar() {
     setToken(tokenSesion)
     setHintVisible(!hintYaVisto)
     setSlug(slugUrl || slugRecordado)
+    // Sin borrador propio, lo que se ve en pantalla es el ejemplo base:
+    // la franja de onboarding ayuda a conectar la invitación real.
+    setDemoPura(!inicialGuardada)
   }, [])
 
   const hayCambios = cfg ? JSON.stringify(cfg) !== guardadaStr : false
@@ -266,6 +274,7 @@ export default function PaginaEditar() {
       setGuardadaStr(JSON.stringify(cargada))
       saveConfig(cargada)
       recordarSlug(resultado.slug)
+      setInvitacionCargada(true)
       setGithub({
         ocupado: null,
         mensaje: resultado.message,
@@ -453,6 +462,24 @@ export default function PaginaEditar() {
                   Entendido
                 </button>
               </div>
+            )}
+            {/* Onboarding cuando lo que se ve es el ejemplo base: la invitación
+                real no se cargó todavía. Toca abrir Ajustes, donde vive la
+                sección «Invitación publicada» (slug + token + cargar/publicar).
+                Se oculta en cuanto se carga la publicada en esta sesión. */}
+            {demoPura && !invitacionCargada && (
+              <button
+                type="button"
+                onClick={() => setAjustesAbiertos(true)}
+                className="mx-auto mt-2 flex w-[calc(100%-1.5rem)] max-w-3xl items-center gap-2.5 rounded-xl border border-[#d4af37]/45 bg-[#d4af37]/12 px-3 py-2.5 text-left transition active:scale-[0.99]"
+                aria-label="Abrir Ajustes para cargar tu invitación publicada"
+              >
+                <span aria-hidden="true" className="text-lg leading-none">🕊️</span>
+                <span className="flex-1 text-[11px] leading-snug text-[#fcf6ba]">
+                  Esta es una invitación de ejemplo. Para editar la tuya: <strong className="font-bold">Ajustes → Invitación publicada</strong> → escribí el slug y tocá «Cargar publicada» (necesitás tu token, que se pega una vez por sesión).
+                </span>
+                <span aria-hidden="true" className="shrink-0 text-base text-[#fcf6ba]/70">›</span>
+              </button>
             )}
             <div className="mx-auto flex max-w-3xl items-center gap-2 px-3 py-2">
               <p className="flex-1 text-[10px] uppercase tracking-[0.16em] text-white/40">Modo edición</p>
