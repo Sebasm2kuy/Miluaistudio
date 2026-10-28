@@ -364,3 +364,17 @@ Stage Summary:
 - Docs: ADMINISTRACION.md (Opción A = editor publicado con marcador ?slug=), PRUEBA-MANUAL-EDITOR-MOVIL.md (acceso publicado + pasos 28-33 de carga/publicación real), IDEAS/ITERACION-2026-10-28-017-EDITOR-MOVIL-PUBLICADO.md + índice.
 
 **Decisión de privacidad (documentada):** el editor se publica como interfaz; la protección real sigue siendo el token del propietario (no la URL oculta). Sin token, un visitante solo puede jugar con el borrador demo de su propio navegador; no puede leer ni escribir datos reales. /admin sigue podado del export.
+
+---
+## Iteración 018 — El editor móvil pasa a ser alcanzable desde el sitio publicado (fix/editor-movil-entrada-publicada)
+
+**Problema reportado:** «la versión de editar la invitación por móvil sigue igual, no cambió nada» tras fusionar los PR #17 y #18. Verificación del sitio publicado: /editar/ existe (HTTP 200) y el deploy de Pages se ejecutó con el último commit de main, pero NINGUNA página publicada enlaza al editor — el único enlace del código vive en /admin (podado del export). El editor quedó como una isla: solo accesible tipeando la URL a mano. Además, al llegar sin borrador la pantalla muestra la demo de ejemplo sin explicar cómo conectar la invitación real.
+
+**Cambios:**
+- src/components/personalizador-app.tsx: botón «✏️ Editar tocando la invitación» en la tarjeta de vista previa — guarda la configuración vigente con la MISMA saveConfig() del editor y navega (enlace real <a>, funciona sin JS); el editor levanta los datos con leerConfigGuardada() → se edita LO CARGADO, no la demo. Enlace «Editor de invitaciones» en el pie del personalizador.
+- src/app/page.tsx: enlace «Editor de invitaciones» en el pie del sitio (superficie pública ya decidida en la 017).
+- src/app/editar/page.tsx: franja de onboarding en la barra inferior cuando la pantalla arrancó con el ejemplo base (demoPura) y no se cargó ninguna publicada en la sesión; tocarla abre Ajustes (donde vive «Invitación publicada» → slug + token + Cargar publicada/Publicar cambios). Desaparece al cargar la publicada o con borrador propio (p. ej. viniendo del personalizador).
+- scripts/verify-export.mjs: nueva sección 7 — el build FALLA si index.html o personalizar/index.html dejan de contener href="/Miluaistudio/editar/" (protege contra repetir esta causa raíz exacta).
+- Docs: IDEAS/ITERACION-2026-10-28-018-ENTRADA-EDITOR-PUBLICADA.md + índice; PRUEBA-MANUAL-EDITOR-MOVIL.md con pasos 0a-0c (llegar al editor desde el sitio publicado).
+
+**Pendientes del propietario:** ejecutar los pasos 0a-0c + 28-33 de docs/PRUEBA-MANUAL-EDITOR-MOVIL.md en un teléfono físico.

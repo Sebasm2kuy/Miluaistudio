@@ -28,7 +28,7 @@ import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-des
 import MiniInvitation, { miniFromDesign, type MiniInvitationData } from '@/components/mini-invitation';
 import CatalogScene from '@/components/catalog-scene';
 import InvitationExperience from '@/components/invitation-experience';
-import { ConfigProvider } from '@/hooks/useConfig';
+import { ConfigProvider, saveConfig } from '@/hooks/useConfig';
 import { OrnamentDivider } from '@/components/store-ui';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
@@ -51,6 +51,8 @@ import { TONOS_FONDO, type TonoFondo } from '@/lib/musica';
 
 const CATALOGO_URL = '/Miluaistudio/catalogo/';
 const PERSONALIZAR_URL = '/Miluaistudio/personalizar/';
+/** Editor móvil visual: edición directa tocando la invitación. */
+const EDITOR_URL = '/Miluaistudio/editar/';
 
 const DATOS_INICIALES: DatosPersonales = {
   tipo: 'Mis XV años',
@@ -422,6 +424,17 @@ export default function PersonalizadorApp() {
   const abrirVistaCompleta = () => {
     setOverlayKey((k) => k + 1);
     setVistaPrevia(true);
+  };
+
+  /* Puente hacia el editor móvil (/editar): guarda lo cargado acá como
+     borrador del editor (misma unidad saveConfig que usa el propio editor
+     al guardar) y navega. El editor lo levanta con leerConfigGuardada(),
+     así la persona empieza a tocar SU invitación, no la demo. El botón es
+     una acción explícita: el borrador previo del editor en este navegador
+     se reemplaza por la configuración vigente del personalizador. */
+  const editarSobreInvitacion = () => {
+    if (configCompleta) saveConfig(configCompleta);
+    /* La navegación la hace el <a href> (funciona también sin JS). */
   };
 
   return (
@@ -816,8 +829,16 @@ export default function PersonalizadorApp() {
                   >
                     Abrir la invitación completa <ArrowRight size={15} />
                   </button>
+                  <a
+                    href={EDITOR_URL}
+                    onClick={editarSobreInvitacion}
+                    className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#dfc9a4] bg-white px-4 py-3 text-sm font-semibold text-[#8a6534] transition hover:bg-[#f3ead9]"
+                    aria-label="Abrir el editor móvil con estos datos: tocar elementos de la invitación para editarlos"
+                  >
+                    <PenLine size={15} /> Editar tocando la invitación
+                  </a>
                   <p className="mt-2.5 text-[11px] leading-relaxed text-[#787168]">
-                    Apertura animada, música de fondo, cronograma, estilo, cuenta regresiva, galería y confirmación funcionando con tus datos.
+                    Apertura animada, música de fondo, cronograma, estilo, cuenta regresiva, galería y confirmación funcionando con tus datos. En el celular, «Editar tocando la invitación» abre el editor con lo que cargaste acá: tocás un texto o una foto y lo cambiás directo.
                   </p>
                 </div>
 
@@ -879,7 +900,12 @@ export default function PersonalizadorApp() {
       <footer className="border-t border-[#e8e0d7] bg-[#211c17]">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span className="font-serif tracking-[0.12em] text-white/85">MILUAISTUDIO</span>
-          <span>Personalización auto-servicio · tu vista previa no se guarda ni se comparte.</span>
+          <span>
+            Personalización auto-servicio · tu vista previa no se guarda ni se comparte. ·{' '}
+            <a href={EDITOR_URL} className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
+              Editor de invitaciones
+            </a>
+          </span>
           <span>© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
         </div>
       </footer>

@@ -15,6 +15,8 @@
  *  6. Una invitación publicada (content/invitaciones/*.json) no genera su
  *     ruta out/i/<slug>/index.html, un asset que enlaza no existe en el
  *     export, o hay rutas i/ sin JSON declarado.
+ *  7. Las páginas publicadas dejan de enlazar al editor móvil (/editar/),
+ *     que lo dejaría inalcanzable desde el sitio (causa raíz de la 018).
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
@@ -182,6 +184,24 @@ if (existsSync(DIR_INVITACIONES)) {
 } else {
   ok('sin invitaciones publicadas (content/invitaciones/ ausente)');
   if (existsSync(OUT_I)) fail('out/i/ existe pero content/invitaciones/ no está en el repo');
+}
+
+// ---- 7. El editor móvil debe ser alcanzable desde el sitio publicado ----
+// Causa raíz de la iteración 018: /editar/ estaba publicado pero SIN ningún
+// enlace desde el sitio (el único vivía en /admin, que no se publica). El
+// editor quedó como una isla y el propietario no veía ningún cambio. Si
+// estas páginas dejan de enlazar al editor, el build falla a propósito.
+const EDITOR_HREF = 'href="' + BASE + '/editar/"';
+const PAGINAS_CON_ENLACE_EDITOR = [
+  'index.html',
+  'personalizar/index.html',
+];
+for (const rel of PAGINAS_CON_ENLACE_EDITOR) {
+  const file = join(OUT, rel);
+  if (!existsSync(file)) continue; // la existencia ya la exigió la sección 2
+  const html = readFileSync(file, 'utf8');
+  if (html.includes(EDITOR_HREF)) ok('enlace al editor móvil presente: ' + rel);
+  else fail('SIN ENLACE AL EDITOR: ' + rel + ' no contiene ' + EDITOR_HREF + ' — el editor móvil volvería a quedar inalcanzable desde el sitio publicado.');
 }
 
 console.log('\n=== verify-export ===');
