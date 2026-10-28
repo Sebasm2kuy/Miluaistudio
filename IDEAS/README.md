@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 020 — Importar el pedido por WhatsApp: los datos del cliente cargan solos (29-10-2026)](./ITERACION-2026-10-29-020-IMPORTAR-PEDIDO-WHATSAPP.md)
 - [Iteración 019 — El botón «Editar tocando la invitación» pasa a ser visible en el móvil (28-10-2026)](./ITERACION-2026-10-28-019-BOTON-EDITOR-VISIBLE-MOVIL.md)
 - [Iteración 018 — El editor móvil pasa a ser alcanzable desde el sitio publicado (28-10-2026)](./ITERACION-2026-10-28-018-ENTRADA-EDITOR-PUBLICADA.md)
 - [Iteración 017 — El editor móvil pasa a estar publicado: editar la invitación real desde el teléfono (28-10-2026)](./ITERACION-2026-10-28-017-EDITOR-MOVIL-PUBLICADO.md)

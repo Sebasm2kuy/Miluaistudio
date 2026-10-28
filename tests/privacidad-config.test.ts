@@ -135,6 +135,10 @@ test('privacidad: los valores privados de la plantilla no aparecen en la demo', 
 
 test('privacidad: la demo exporta base autocontenida y endpoints vacíos', () => {
   assert.match(DEMO, /export const CONFIG_DEMO_BASE/);
-  assert.doesNotMatch(DEMO, /from '@\/data\/config'/, 'la demo no debe importar la config operativa');
-  assert.match(DEMO, /from '@\/data\/config-schema'/, 'la demo debe tiparse desde el esquema');
+  // El import puede ser por alias ('@/data/config-schema') o relativo
+  // ('./config-schema', forma que usan los módulos incluidos en la suite
+  // de Node): lo que importa es tiparse desde EL ESQUEMA y nunca desde
+  // la config operativa ('@/data/config' o './config').
+  assert.doesNotMatch(DEMO, /from '(@\/data|\.)\/config'/, 'la demo no debe importar la config operativa');
+  assert.match(DEMO, /from '(@\/data|\.)\/config-schema'/, 'la demo debe tiparse desde el esquema');
 });

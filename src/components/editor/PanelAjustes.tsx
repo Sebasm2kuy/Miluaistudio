@@ -19,6 +19,8 @@ import CatalogScene from '@/components/catalog-scene'
 import { ELEMENTOS_EDITABLES, PANELES_AJUSTES, type AccionSpec, type PanelAjuste } from '@/lib/editor-campos'
 import { leerEnConfig } from '@/lib/editor-config'
 import CampoControl, { type ValorCampo } from './CampoControl'
+import PanelImportarWhatsApp from './PanelImportarWhatsApp'
+import type { ResultadoImportacion } from '@/lib/importar-whatsapp'
 import type { SiteConfig } from '@/data/config-schema'
 
 interface Props {
@@ -39,6 +41,10 @@ interface Props {
   github: EstadoGithubUI
   onCargarInvitacion: (slug: string) => void
   onPublicarInvitacion: (slug: string) => void
+  /** Lee el mensaje de WhatsApp pegado y devuelve la importación (sin aplicar). */
+  onImportarLeer: (mensaje: string) => ResultadoImportacion
+  /** Aplica la importación leída: reemplaza el borrador del editor. */
+  onImportarAplicar: (resultado: ResultadoImportacion) => void
 }
 
 /** Estado compartido página ↔ panel para la invitación publicada. */
@@ -77,6 +83,8 @@ function ContenidoAjustes({
   github,
   onCargarInvitacion,
   onPublicarInvitacion,
+  onImportarLeer,
+  onImportarAplicar,
 }: Props) {
   const [grupoAbierto, setGrupoAbierto] = useState<string | null>('ajustes-plantillas')
   const [alturaDisponible, setAlturaDisponible] = useState<number | null>(null)
@@ -284,6 +292,10 @@ function ContenidoAjustes({
           </button>
         </div>
       )
+    }
+
+    if (panel.custom === 'importar-wa') {
+      return <PanelImportarWhatsApp onLeer={onImportarLeer} onAplicar={onImportarAplicar} />
     }
 
     if (panel.custom === 'github') {

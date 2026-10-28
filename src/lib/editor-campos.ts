@@ -359,10 +359,17 @@ export interface PanelAjuste {
   desc?: string;
   campos?: CampoSpec[];
   /** Secciones con interfaz propia en el panel de ajustes */
-  custom?: 'plantillas' | 'colores' | 'fondo' | 'cronograma' | 'galeria' | 'token' | 'github';
+  custom?: 'plantillas' | 'colores' | 'fondo' | 'cronograma' | 'galeria' | 'token' | 'github' | 'importar-wa';
 }
 
 export const PANELES_AJUSTES: PanelAjuste[] = [
+  {
+    id: 'ajustes-importar-wa',
+    titulo: 'Importar pedido por WhatsApp',
+    icono: '📥',
+    desc: 'Pegá el mensaje que te mandó el cliente y cargá sus datos sin re-escribirlos',
+    custom: 'importar-wa',
+  },
   { id: 'ajustes-plantillas', titulo: 'Plantilla del diseño', icono: '🎨', custom: 'plantillas' },
   {
     id: 'ajustes-colores',

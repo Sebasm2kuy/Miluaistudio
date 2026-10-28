@@ -29,13 +29,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { CONFIG_DEMO_BASE, createDemoConfig } from '@/data/demo-config'
 import type { SiteConfig } from '@/data/config-schema'
-import type { InvitationDesign } from '@/data/invitation-designs'
+import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs'
 import { urlPublicaInvitacion } from '@/data/invitacion-publicada'
 import InvitationExperience from '@/components/invitation-experience'
 import { ConfigProvider, saveConfig, leerConfigGuardada } from '@/hooks/useConfig'
 import { sincronizarFondoConGaleria } from '@/lib/activos-editor'
 import { leerInvitacionPublicadaDeGitHub } from '@/lib/carga-invitacion'
 import { publicarInvitacionDesdePanel } from '@/lib/publicacion-panel'
+import { createPersonalConfig } from '@/lib/personalizador'
+import { mensajeAConfigPersonal, type ResultadoImportacion } from '@/lib/importar-whatsapp'
 import { EditorProvider } from '@/components/editor/EditorProvider'
 import PanelEdicion from '@/components/editor/PanelEdicion'
 import PanelAjustes, { type EstadoGithubUI } from '@/components/editor/PanelAjustes'
@@ -236,6 +238,29 @@ export default function PaginaEditar() {
 
   const cambiarModo = useCallback((nuevo: Modo) => {
     setModo(nuevo)
+    setAjustesAbiertos(false)
+  }, [])
+
+  /* Importación del pedido por WhatsApp: el cliente manda el mensaje generado
+     por el personalizador («Enviar mi configuración») y acá se lee de vuelta.
+     Leer es puro (vista previa); aplicar reemplaza el borrador por la misma
+     vía del puente personalizador → editor (createPersonalConfig + saveConfig),
+     así la importación se comporta exactamente igual que ese flujo probado. */
+  const importarLeer = useCallback(
+    (mensaje: string): ResultadoImportacion => mensajeAConfigPersonal(mensaje),
+    [],
+  )
+
+  const importarAplicar = useCallback((r: ResultadoImportacion) => {
+    const design = INVITATION_DESIGNS.find((d) => d.id === r.designId)
+    if (!r.ok || !design) return
+    const nueva = createPersonalConfig(design, r.datos, r.secciones)
+    setCfgPrevia(null)
+    setModo('editar')
+    setCfg(nueva)
+    saveConfig(nueva) // persiste ya mismo; «Guardar» re-sincroniza el fondo
+    setGuardadaStr(JSON.stringify(nueva))
+    setDemoPura(false)
     setAjustesAbiertos(false)
   }, [])
 
@@ -506,6 +531,8 @@ export default function PaginaEditar() {
         onTokenGuardar={guardarToken}
         onCargarInvitacion={cargarInvitacion}
         onPublicarInvitacion={publicarCambios}
+        onImportarLeer={importarLeer}
+        onImportarAplicar={importarAplicar}
         onCambio={cambiarCampo}
         onCambioSeccionesCompletas={(fotos) => cambiarCampo(['fondo', 'fotos'], fotos)}
         onAplicarColores={(colors) => {

@@ -389,3 +389,12 @@ Stage Summary:
 - Docs: IDEAS/ITERACION-2026-10-28-019-BOTON-EDITOR-VISIBLE-MOVIL.md + índice; paso 0b del guion manual actualizado con la nueva ubicación.
 
 **Pruebas:** 127/127 tests, lint OK, typecheck OK, build OK (verify-export §7 intacto). Emulador 390×844: la tarjeta aparece al elegir diseño sin scroll previo y abre /editar/ con los datos cargados; 1280×800 sin regresión. Pendiente: teléfono físico (paso 0b).
+
+---
+## Iteración 020 — Importar el pedido por WhatsApp (feat/importar-pedido-whatsapp)
+
+**Necesidad:** el mensaje que el cliente manda con «Enviar mi configuración» llegaba como texto y había que re-copiar los datos a mano. Ahora se importa: Ajustes → «Importar pedido por WhatsApp» → pegar el mensaje → «Leer el mensaje» (vista previa con ✓ por campo y ⚠ por avisos honestos: historia recortada a ~90 caracteres, sin fecha, tonos no reconocidos) → «Cargar en la invitación» reemplaza el borrador por la misma vía del puente personalizador→editor (createPersonalConfig + saveConfig). Publicar sigue exigiendo el token del propietario.
+
+**Cambios:** src/lib/importar-whatsapp.ts (parser tolerante a negritas/viñetas/«—»/comillas, nunca lanza) + PanelImportarWhatsApp.tsx + panel primero en PANELES_AJUSTES + props onImportarLeer/onImportarAplicar en PanelAjustes + callbacks en editar/page.tsx. Imports relativos en el cierre incluido en la suite de Node (convención editor-campos) y guardia de privacidad de la demo ampliado a alias o relativo (misma intención).
+
+**Pruebas:** 138/138 tests (11 nuevos, incluido round-trip mensajeWhatsAppPersonal → importador), lint/typecheck/build OK, verify-export §7 y verify-privacy intactos. Emulador 390×844: mensaje real pegado → 15 campos leídos, 0 avisos → cargar → editor muestra la invitación con todos los datos y borrador persistido. Pendiente: mensaje real recibido por WhatsApp (paso 0d del guion).
