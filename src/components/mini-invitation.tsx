@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { DesignAdorno, InvitationDesign, ThemeMode } from '@/data/invitation-designs';
+import { BACKGROUND_PRESETS } from '@/data/admin-options';
 import { DesignAdornoGlyph, CrownGlyph, ButterflyGlyph, SparkleGlyph } from '@/components/design-ornaments';
 import type { SiteConfig } from '@/data/config-schema';
 
@@ -16,6 +17,8 @@ export interface MiniInvitationData {
   font: 'script' | 'serif' | 'sans';
   themeMode: ThemeMode;
   layout?: string;
+  /** Imagen de fondo premium (colección «fondos de autor»), si el diseño la usa */
+  bgImage?: string;
 }
 
 const MESES: Record<string, string> = {
@@ -33,6 +36,7 @@ export function fechaVisual(fecha: string, anio: string): string {
 }
 
 export function miniFromDesign(d: InvitationDesign): MiniInvitationData {
+  const preset = BACKGROUND_PRESETS.find((bg) => bg.id === d.backgroundPreset);
   return {
     name: d.mockupName,
     tipo: d.mockupTipo,
@@ -46,6 +50,7 @@ export function miniFromDesign(d: InvitationDesign): MiniInvitationData {
     font: d.font,
     themeMode: d.themeMode,
     layout: d.layout,
+    bgImage: preset?.image,
   };
 }
 
@@ -129,6 +134,26 @@ export default function MiniInvitation({ data, variant = 'screen', className, st
         ...style,
       }}
     >
+      {/* Fondo premium con imagen: cubre el gradiente base + velo para legibilidad */}
+      {data.bgImage && (
+        <>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${data.bgImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ background: light ? 'rgba(253,249,244,0.42)' : 'rgba(8,6,14,0.45)' }}
+          />
+        </>
+      )}
       {/* Adornos de esquina */}
       <DesignAdornoGlyph
         adorno={data.adorno}

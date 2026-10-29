@@ -138,7 +138,7 @@ export default function Home() {
               Personalizar mi invitación <ArrowRight size={16} />
             </a>
             <a href={CATALOG_URL} className={OUTLINE_BTN}>
-              Explorar los 10 diseños
+              Explorar los {INVITATION_DESIGNS.length} diseños
             </a>
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
               <WhatsAppIcon size={16} /> Consultar por WhatsApp

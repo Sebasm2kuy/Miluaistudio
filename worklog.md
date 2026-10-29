@@ -398,3 +398,17 @@ Stage Summary:
 **Cambios:** src/lib/importar-whatsapp.ts (parser tolerante a negritas/viñetas/«—»/comillas, nunca lanza) + PanelImportarWhatsApp.tsx + panel primero en PANELES_AJUSTES + props onImportarLeer/onImportarAplicar en PanelAjustes + callbacks en editar/page.tsx. Imports relativos en el cierre incluido en la suite de Node (convención editor-campos) y guardia de privacidad de la demo ampliado a alias o relativo (misma intención).
 
 **Pruebas:** 138/138 tests (11 nuevos, incluido round-trip mensajeWhatsAppPersonal → importador), lint/typecheck/build OK, verify-export §7 y verify-privacy intactos. Emulador 390×844: mensaje real pegado → 15 campos leídos, 0 avisos → cargar → editor muestra la invitación con todos los datos y borrador persistido. Pendiente: mensaje real recibido por WhatsApp (paso 0d del guion).
+
+---
+## Iteración 021 — Colección «Fondos de autor»: cascada de rosas + neón 3D (feat/fondos-premium-rosas-neon)
+
+**Pedido:** los fondos eran «demasiado simples» (gradientes planos). Incorporar al menos 5 fondos del estilo del pin de Pinterest de marco floral (cascada de rosas sobre papel claro) y 5 del pin «3d Neon» (bloques 3D oscuros con neón entre las juntas).
+
+**Cambios:**
+- Arte: 10 fondos fotográficos 768×1344 generados con IA y revisados uno por uno contra los pines (5 florales claros: rosas-cascada, arco-rosado, jardin-durazno, rosas-rubi, blancas-eucalipto; 5 neón oscuros: violeta, azul, fucsia, turquesa, dorado) en public/catalogo/fondos/ (~0,9 MB). Galerías demo de los 10 diseños generadas recortando 4 detalles del propio fondo (40 JPG, ~1,6 MB).
+- Sistema: BackgroundPreset gana image?/position? (css queda de respaldo); 10 presets img-* nuevos; BackgroundSlideshow, CatalogScene y MiniInvitation componen la imagen; velo marfil de legibilidad en claros con imagen + halo en el titular; swatches del selector «Fondo» (editor móvil y admin) muestran la imagen.
+- Fix estructural: el scroll-container de temas claros pintaba var(--theme-background) opaco y tapaba el fondo fijo; ahora la experiencia expone data-fondo-imagen y el contenedor pasa a transparente solo cuando el preset tiene imagen (temas claros sin imagen: idénticos a antes).
+- Catálogo: 10 diseños nuevos completos con perfiles demo sintéticos y categorías nuevas «Cumpleaños · Fiestas»/«Bodas»; contadores «10» → INVITATION_DESIGNS.length (chip NN/20, H1 y enlaces «Explorar los N diseños»).
+- Tests: tests/fondos-premium.test.ts (8): archivos y peso de fondos, rutas canónicas, presets existentes, ids únicos, 5+5, perfil demo por diseño, galería demo completa, contraste AA de botones y etiquetas de categoría.
+
+**Pruebas:** 146/146 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: catálogo con 20 tarjetas fotográficas, demos rosas-cascada/neon-violeta/neon-azul con imagen de fondo, velo, halo, galería y tarjetas glass legibles; personalizador y Ajustes → Fondo con los nuevos swatches. 1280×800 sin regresiones. Pendiente: revisión del propietario en teléfono físico y elección de favoritos.

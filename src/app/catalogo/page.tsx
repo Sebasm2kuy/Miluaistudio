@@ -27,7 +27,7 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
       >
         <CatalogScene design={design} />
         <span className="absolute left-3 top-3 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] text-[#38332e] shadow-sm">
-          {String(index + 1).padStart(2, '0')} / 10
+          {String(index + 1).padStart(2, '0')} / {INVITATION_DESIGNS.length}
         </span>
         <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-[#151719]/85 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm">
           Abrir invitación <ExternalLink size={11} />
@@ -126,7 +126,7 @@ export default function CatalogoPage() {
         <section className="mx-auto max-w-4xl text-center">
           <p className="font-serif text-xl italic sm:text-2xl" style={{ color: '#8a6534' }}>La colección</p>
           <h1 className="mt-2 font-serif text-2xl leading-snug tracking-wide text-[#292522] sm:text-3xl lg:text-4xl">
-            10 diseños únicos
+            {INVITATION_DESIGNS.length} diseños únicos
             <span className="mx-2 text-[#b18163]">·</span>
             <em className="italic text-[#7d746a]">La invitación perfecta para tu gran momento</em>
           </h1>

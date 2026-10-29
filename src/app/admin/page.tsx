@@ -1283,7 +1283,7 @@ export default function AdminPage() {
                     <div
                       className="h-24 flex items-center justify-center relative"
                       style={{
-                        background: bg.css || 'rgba(255,255,255,0.05)',
+                        background: bg.image ? `url(${bg.image}) center/cover` : (bg.css || 'rgba(255,255,255,0.05)'),
                       }}
                     >
                       {bg.id === 'fotos' ? (
