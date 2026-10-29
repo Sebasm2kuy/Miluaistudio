@@ -1,5 +1,8 @@
 /**
- * Iteración 020 — Colección «Fondos de autor» (rosas + neón 3D).
+ * Iteraciones 020/022 — Colección «Fondos de autor».
+ *
+ * 020: 5 florales (rosas) + 5 neón 3D.  022: 3 flores de papel + 3 gala dorada
+ * + 3 disco (pistas del propietario en Pinterest).
  *
  * Barra la integridad del sistema de fondos con imagen:
  *  1. Cada preset con `image` apunta a un archivo real y liviano en public/.
@@ -17,7 +20,16 @@ import { INVITATION_DESIGNS } from '../src/data/invitation-designs.js';
 import { createDemoConfig } from '../src/data/demo-config.js';
 
 const RAIZ_PUBLIC = resolve(process.cwd(), 'public');
-const PESO_MAX_FONDO = 400 * 1024; // presupuestado: 10 fondos ≈ 1 MB total
+const PESO_MAX_FONDO = 400 * 1024; // presupuestado: 19 fondos ≈ 2,5 MB total
+
+// Colección por familias: papel/gala/disco se suman a rosas/neón de 020
+const FAMILIAS = {
+  florales: ['rosas-cascada', 'arco-rosado', 'jardin-durazno', 'rosas-rubi', 'blancas-eucalipto'],
+  neon: ['neon-violeta', 'neon-azul', 'neon-fucsia', 'neon-turquesa', 'neon-dorado'],
+  papel: ['papel-rosado', 'papel-crema', 'papel-malva'],
+  gala: ['gala-estrellas', 'gala-cortinas', 'gala-espejos'],
+  disco: ['disco-pista', 'disco-fucsia', 'disco-espejos'],
+} as const;
 
 function luminancia(hex: string): number {
   const m = hex.replace('#', '');
@@ -35,8 +47,8 @@ const FONDOS_AUTOR = INVITATION_DESIGNS.filter((d) => d.backgroundPreset.startsW
 
 test('fondos: cada preset con imagen existe en public/ y pesa menos de 400 KB', () => {
   const conImagen = BACKGROUND_PRESETS.filter((bg) => typeof bg.image === 'string' && bg.image.length > 0);
-  // La colección 020 aporta exactamente 10 fondos con imagen (5 rosas + 5 neón)
-  assert.equal(conImagen.length, 10, 'deben existir 10 presets con imagen');
+  // La colección aporta 19 fondos con imagen (5 rosas + 5 neón + 3 papel + 3 gala + 3 disco)
+  assert.equal(conImagen.length, 19, 'deben existir 19 presets con imagen');
   for (const bg of conImagen) {
     const rel = (bg.image as string).replace('/Miluaistudio/', '');
     const abs = resolve(RAIZ_PUBLIC, rel);
@@ -62,14 +74,20 @@ test('catálogo: todo diseño referencia un backgroundPreset existente', () => {
   }
 });
 
-test('catálogo: ids únicos y 10 diseños nuevos de la colección', () => {
+test('catálogo: ids únicos y 19 diseños nuevos de la colección', () => {
   const ids = INVITATION_DESIGNS.map((d) => d.id);
   assert.equal(new Set(ids).size, ids.length, 'ids de diseño duplicados');
-  assert.equal(FONDOS_AUTOR.length, 10, 'la colección 020 aporta 10 diseños');
-  const florales = FONDOS_AUTOR.filter((d) => d.themeMode === 'light');
-  const neon = FONDOS_AUTOR.filter((d) => d.themeMode === 'dark');
-  assert.equal(florales.length, 5, '5 diseños florales (rosas)');
-  assert.equal(neon.length, 5, '5 diseños neón 3D');
+  assert.equal(FONDOS_AUTOR.length, 19, 'la colección aporta 19 diseños');
+  const idsAutor = new Set(FONDOS_AUTOR.map((d) => d.id));
+  for (const [familia, lista] of Object.entries(FAMILIAS)) {
+    for (const id of lista) {
+      assert.ok(idsAutor.has(id), `falta el diseño ${id} de la familia ${familia}`);
+    }
+  }
+  const claros = FONDOS_AUTOR.filter((d) => d.themeMode === 'light');
+  const oscuros = FONDOS_AUTOR.filter((d) => d.themeMode === 'dark');
+  assert.equal(claros.length, 8, '8 diseños claros (5 florales + 3 papel)');
+  assert.equal(oscuros.length, 11, '11 diseños oscuros (5 neón + 3 gala + 3 disco)');
 });
 
 test('catálogo: cada diseño tiene perfil demo cargado (createDemoConfig)', () => {
