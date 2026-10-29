@@ -425,3 +425,15 @@ Stage Summary:
 - Tests: fondos-premium.test.ts extendido a 19 presets con imagen, verificación por familias (florales/neón/papel/gala/disco), 8 claros + 11 oscuros.
 
 **Pruebas:** 146/146 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: catálogo «29 diseños únicos», demos papel-rosado/gala-estrellas/disco-pista con fondo fotográfico y texto legible, editor Ajustes → Fondo con los 9 swatches nuevos y aplicación en vivo («Pista Disco» → CAMBIOS SIN GUARDAR + data-fondo-imagen=true). HTTP 200 en las 9 demos, fondos y galerías. 1280×800: tarjetas 21–29 correctas. Pendiente: revisión del propietario en teléfono físico.
+---
+## Iteración 023 — Nombres de mujeres en los modelos de muestra de 15 años (fix/nombres-muestra-mujeres)
+
+**Pedido:** «a los modelos de muestra que sean para 15 años pon nombres de mujeres no de varones». Los 19 diseños de la colección «fondos de autor» (021/022) incluían 8 maquetas masculinas (Thiago, Mateo, Santiago, Emiliano, Benicio, Lorenzo, Facundo, Ignacio).
+
+**Cambios:**
+- invitation-designs.ts: 8 mockupName femeninos (Morena, Jazmín, Celeste, Ariana, Luna, Regina, Malena, Violeta); los 6 de fiesta «Mis 18» pasan a «Mis XV años» (producto real = quinceañeras); los 2 «Gran Cumpleaños» (30/50) conservan tipo con nombre de mujer. Categorías y fechas sin tocar; nombres ≤7 caracteres no activan la escala de nombres largos de la maqueta.
+- demo-config.ts: 8 DEMO_PROFILES alineados (nombre, apodo, tipo, hashtag #NombreXV2027, horario 21:00); lugar «Club Neon» corregido a «Club Neón».
+- tests/nombres-muestra.test.ts (nuevo, 4 tests): lista cerrada de 22 nombres femeninos aprobados para XV, unicidad de mockupName en el catálogo, hashtag XV con patrón #NombreXVAño, perfiles demo de fiesta alineados con la maqueta.
+- Docs: IDEAS/ITERACION-2026-10-29-023-NOMBRES-MUESTRA-MUJERES.md + índice.
+
+**Pruebas:** 150/150 tests (4 nuevos), lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: personalizador con los 8 nombres nuevos y cero «Mis 18»; demos neon-violeta (Morena · Mis XV años · #MorenaXV2027) y disco-pista (Malena, sin rastro de Facundo). 1280×800: grilla del paso 1 sin los 8 nombres viejos (búsqueda insensible a mayúsculas). Pendiente: revisión del propietario en teléfono físico.
