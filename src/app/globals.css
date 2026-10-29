@@ -483,6 +483,18 @@
 .invitation-experience[data-theme-mode="light"] .scroll-container {
   background: var(--theme-background);
 }
+/* Colección «fondos de autor»: el fondo fijo con imagen vive detrás del
+   scroll-container, así que este debe ser transparente para no taparla. */
+.invitation-experience[data-fondo-imagen="true"] .scroll-container {
+  background: transparent;
+}
+/* Realce del titular sobre la fotografía (halo tipo papel) */
+.invitation-experience[data-fondo-imagen="true"] h1 {
+  text-shadow:
+    0 1px 0 rgba(253, 249, 244, 0.55),
+    0 0 16px rgba(253, 249, 244, 0.8),
+    0 0 32px rgba(253, 249, 244, 0.5);
+}
 .invitation-experience[data-theme-mode="light"] .glass-card {
   background: rgba(255, 255, 255, 0.94) !important;
   box-shadow: 0 8px 30px color-mix(in srgb, var(--theme-accent) 12%, rgba(0, 0, 0, 0.06));

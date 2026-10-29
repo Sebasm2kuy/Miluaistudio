@@ -16,11 +16,16 @@ export default function CatalogScene({ design, className }: { design: Invitation
   const preset = BACKGROUND_PRESETS.find((bg) => bg.id === design.backgroundPreset);
   const light = design.themeMode === 'light';
 
-  // Fondo real de la demo: gradiente del preset (mismo que BackgroundSlideshow)
+  // Fondo real de la demo: gradiente del preset (mismo que BackgroundSlideshow).
+  // Colección «fondos de autor»: imagen fotográfica sobre el css de respaldo.
   const demoBackground = preset?.css || design.background;
+  const demoImage = preset?.image;
+  const demoImagePosition = preset?.position || 'center';
   // Overlays de profundidad idénticos a los que aplica BackgroundSlideshow en la demo
   const demoOverlay = light
-    ? 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
+    ? demoImage
+      ? 'linear-gradient(to bottom, rgba(252,247,241,0.55) 0%, rgba(252,247,241,0.34) 32%, rgba(252,247,241,0.38) 68%, rgba(252,247,241,0.58) 100%)'
+      : 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
     : 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.5) 100%), radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)';
 
   const cardShadow: CSSProperties['boxShadow'] = light
@@ -35,19 +40,35 @@ export default function CatalogScene({ design, className }: { design: Invitation
     >
       {/* Fondo = el mismo gradiente que ve el invitado al abrir la demo */}
       <div aria-hidden="true" className="absolute inset-0" style={{ background: demoBackground }} />
+      {demoImage && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${demoImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: demoImagePosition,
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+      )}
 
       {/* Adornos temáticos tenues (eco de las partículas/adornos de la demo) */}
-      <DesignAdornoGlyph
-        adorno={design.adorno}
-        className="absolute -left-[7%] -top-[5%] h-[40%] w-[40%]"
-        style={{ color: design.accent, opacity: light ? 0.16 : 0.2 }}
-      />
-      <DesignAdornoGlyph
-        adorno={design.adorno}
-        flip
-        className="absolute -bottom-[6%] -right-[7%] h-[44%] w-[44%]"
-        style={{ color: design.accent, opacity: light ? 0.14 : 0.18 }}
-      />
+      {!demoImage && (
+        <DesignAdornoGlyph
+          adorno={design.adorno}
+          className="absolute -left-[7%] -top-[5%] h-[40%] w-[40%]"
+          style={{ color: design.accent, opacity: light ? 0.16 : 0.2 }}
+        />
+      )}
+      {!demoImage && (
+        <DesignAdornoGlyph
+          adorno={design.adorno}
+          flip
+          className="absolute -bottom-[6%] -right-[7%] h-[44%] w-[44%]"
+          style={{ color: design.accent, opacity: light ? 0.14 : 0.18 }}
+        />
+      )}
 
       {/* Overlay de profundidad (idéntico al de la demo) */}
       <div aria-hidden="true" className="absolute inset-0" style={{ background: demoOverlay }} />

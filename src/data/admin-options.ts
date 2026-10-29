@@ -319,6 +319,12 @@ export interface BackgroundPreset {
   css: string
   /** true = fondo claro (los overlays y textos se adaptan) */
   light?: boolean
+  /** Imagen de fondo premium (colección «fondos de autor»). Si está presente
+   * se muestra la imagen con background-size: cover y `css` queda como
+   * respaldo mientras carga (y como fallback si la imagen fallara). */
+  image?: string
+  /** Posición del recorte de la imagen (background-position). Default: center. */
+  position?: string
 }
 export const BACKGROUND_PRESETS: BackgroundPreset[] = [
   {
@@ -461,6 +467,104 @@ export const BACKGROUND_PRESETS: BackgroundPreset[] = [
     description: 'Marfil romántico con corales suaves',
     light: true,
     css: 'linear-gradient(160deg, #fbf6ee 0%, #f6eadf 50%, #f1e1d4 100%)',
+  },
+  // --- Colección «Fondos de autor» (020): cascada de rosas + neón 3D ---
+  // Imágenes fotográficas generadas para el estudio. `css` es el respaldo
+  // del mismo tono mientras carga la imagen.
+  {
+    id: 'img-rosas-cascada',
+    name: 'Rosas en Cascada',
+    emoji: '🌹',
+    description: 'Cascada de rosas rojas y rosadas sobre papel marfil',
+    light: true,
+    image: '/Miluaistudio/catalogo/fondos/rosas-cascada.jpg',
+    position: 'center right',
+    css: 'linear-gradient(160deg, #f8f1ec 0%, #f3e7e0 55%, #efdfd8 100%)',
+  },
+  {
+    id: 'img-arco-rosado',
+    name: 'Arco Rosado',
+    emoji: '💗',
+    description: 'Arco de rosas empolvadas y ranúnculos crema',
+    light: true,
+    image: '/Miluaistudio/catalogo/fondos/arco-rosado.jpg',
+    position: 'center top',
+    css: 'linear-gradient(160deg, #faf4ec 0%, #f4e8dc 55%, #efe0d2 100%)',
+  },
+  {
+    id: 'img-jardin-durazno',
+    name: 'Jardín Durazno',
+    emoji: '🍑',
+    description: 'Rosas durazno y crema con capullos sobre lino cálido',
+    light: true,
+    image: '/Miluaistudio/catalogo/fondos/jardin-durazno.jpg',
+    position: 'center',
+    css: 'linear-gradient(160deg, #faf1e3 0%, #f3e4d0 55%, #ecdcc6 100%)',
+  },
+  {
+    id: 'img-rosas-rubi',
+    name: 'Rosas Rubí',
+    emoji: '❤️',
+    description: 'Peonías y rosas rojas profundas sobre blanco puro',
+    light: true,
+    image: '/Miluaistudio/catalogo/fondos/rosas-rubi.jpg',
+    position: 'center left',
+    css: 'linear-gradient(160deg, #f9f4f3 0%, #f4e9e8 55%, #efe2e1 100%)',
+  },
+  {
+    id: 'img-blancas-eucalipto',
+    name: 'Blanco Eucalipto',
+    emoji: '🤍',
+    description: 'Rosas blancas y eucalipto sobre rosa empolvado',
+    light: true,
+    image: '/Miluaistudio/catalogo/fondos/blancas-eucalipto.jpg',
+    position: 'center',
+    css: 'linear-gradient(160deg, #f8ece8 0%, #f3e2dc 55%, #eed9d2 100%)',
+  },
+  {
+    id: 'img-neon-violeta',
+    name: 'Neón Violeta',
+    emoji: '💜',
+    description: 'Muro 3D de cubos violetas con costuras magenta',
+    image: '/Miluaistudio/catalogo/fondos/neon-violeta.jpg',
+    position: 'center',
+    css: 'radial-gradient(ellipse at 50% 30%, #3a0f56 0%, #22083a 52%, #12041f 100%)',
+  },
+  {
+    id: 'img-neon-azul',
+    name: 'Neón Azul',
+    emoji: '💙',
+    description: 'Cubos azul eléctrico con luz cian entre los bloques',
+    image: '/Miluaistudio/catalogo/fondos/neon-azul.jpg',
+    position: 'center',
+    css: 'radial-gradient(ellipse at 50% 30%, #0a3a8a 0%, #061f52 52%, #030e2c 100%)',
+  },
+  {
+    id: 'img-neon-fucsia',
+    name: 'Neón Fucsia',
+    emoji: '🩷',
+    description: 'Cubos grafito con líneas de neón fucsia',
+    image: '/Miluaistudio/catalogo/fondos/neon-fucsia.jpg',
+    position: 'center',
+    css: 'radial-gradient(ellipse at 50% 30%, #2a2028 0%, #1a141a 52%, #0d0b0e 100%)',
+  },
+  {
+    id: 'img-neon-turquesa',
+    name: 'Neón Turquesa',
+    emoji: '🩵',
+    description: 'Bloques azul noche con luces turquesa y violeta',
+    image: '/Miluaistudio/catalogo/fondos/neon-turquesa.jpg',
+    position: 'center',
+    css: 'radial-gradient(ellipse at 50% 30%, #10294f 0%, #0a1a3a 52%, #050e22 100%)',
+  },
+  {
+    id: 'img-neon-dorado',
+    name: 'Neón Dorado',
+    emoji: '🧡',
+    description: 'Cubos negros con rayos de neón ámbar, lujo futurista',
+    image: '/Miluaistudio/catalogo/fondos/neon-dorado.jpg',
+    position: 'center',
+    css: 'radial-gradient(ellipse at 50% 30%, #2a1c08 0%, #1a1206 52%, #0d0903 100%)',
   },
 ]
 

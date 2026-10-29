@@ -218,7 +218,7 @@ function ContenidoAjustes({
                   (activo ? 'border-[#8a6534] shadow-[0_0_0_2px_rgba(181,140,90,0.45)]' : 'border-[#e8e0d7]')
                 }
               >
-                <span className="flex h-16 items-center justify-center text-2xl" style={{ background: bg.css || '#f0ebe4' }}>
+                <span className="flex h-16 items-center justify-center text-2xl" style={{ background: bg.image ? `url(${bg.image}) center/cover` : (bg.css || '#f0ebe4') }}>
                   {bg.emoji}
                 </span>
                 <span className="block bg-white px-3 py-2">

@@ -54,23 +54,38 @@ export default function BackgroundSlideshow({ visible = true }: { visible?: bool
     return () => clearInterval(interval)
   }, [visible, fading, isGradient])
 
-  // Gradient mode: no slideshow, just solid gradient background
-  if (isGradient && gradientCss) {
+  // Gradient / image preset mode: no slideshow, fixed background
+  if (isGradient && (gradientCss || gradientPreset?.image)) {
     return (
       <div
         className="fixed inset-0 z-[-10]"
         style={{
-          background: gradientCss,
+          background: gradientCss ?? '#0a0a0a',
           opacity: fading && visible ? 1 : 0,
           transition: 'opacity 800ms ease',
         }}
       >
-        {/* Subtle overlay for gradients to add depth */}
+        {/* Colección «fondos de autor»: imagen fotográfica sobre el css de respaldo */}
+        {gradientPreset?.image && (
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${gradientPreset.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: gradientPreset.position || 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        )}
+        {/* Velo del fondo: en temas claros con imagen agrega legibilidad tipo
+            papel satinado sin apagar la fotografía; en oscuros profundiza bordes. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: isLightGradient
-              ? 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
+              ? gradientPreset?.image
+                ? 'linear-gradient(to bottom, rgba(252,247,241,0.55) 0%, rgba(252,247,241,0.34) 32%, rgba(252,247,241,0.38) 68%, rgba(252,247,241,0.58) 100%)'
+                : 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 25%, transparent 80%, rgba(255,255,255,0.06) 100%)'
               : `linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 70%, rgba(0,0,0,0.5) 100%), radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)`,
           }}
         />

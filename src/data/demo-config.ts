@@ -46,6 +46,17 @@ const DEMO_PROFILES: Record<string, DemoProfile> = {
   'rojo-glamour': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Julieta', apodo: 'Juli', fecha: '18 de noviembre', fechaEvento: '2027-11-18 21:00', lugar: 'Palacio Rubí', hashtag: '#JulietaXV2027' },
   'geometria-moderna': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Valentina & Diego', apellido: '', apodo: 'Vale & Diego', fecha: '8 de agosto', fechaEvento: '2027-08-08 20:30', lugar: 'Casa del Lago', hashtag: '#ValentinaYDiego2027' },
   'azul-romantico': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Emilia', apodo: 'Emi', fecha: '22 de septiembre', fechaEvento: '2027-09-22 21:00', lugar: 'Jardín del Sur', hashtag: '#EmiliaXV2027' },
+  // --- Colección «Fondos de autor» (020): rosas + neón ---
+  'rosas-cascada': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Micaela', apodo: 'Mica', fecha: '12 de diciembre', fechaEvento: '2027-12-12 21:00', lugar: 'Salón Rosaleda', hashtag: '#MicaelaXV2027' },
+  'arco-rosado': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Olivia', apellido: '', apodo: 'Oli', fecha: '9 de octubre', fechaEvento: '2027-10-09 20:30', lugar: 'Estancia El Rosal', hashtag: '#Olivia2027' },
+  'jardin-durazno': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Antonella', apellido: '', apodo: 'Anto', fecha: '5 de marzo', fechaEvento: '2027-03-05 20:30', lugar: 'Huerta San José', hashtag: '#Anto2027' },
+  'rosas-rubi': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Abril', apodo: 'Abi', fecha: '18 de septiembre', fechaEvento: '2027-09-18 21:00', lugar: 'Salón Rubí', hashtag: '#AbrilXV2027' },
+  'blancas-eucalipto': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Isadora', apellido: '', apodo: 'Isa', fecha: '2 de octubre', fechaEvento: '2027-10-02 20:30', lugar: 'Jardín Blanco', hashtag: '#Isadora2027' },
+  'neon-violeta': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Thiago', apodo: 'Thiago', fecha: '21 de agosto', fechaEvento: '2027-08-21 22:00', lugar: 'Club Neon', hashtag: '#Thiago18' },
+  'neon-azul': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Mateo', apodo: 'Mate', fecha: '14 de noviembre', fechaEvento: '2027-11-14 22:00', lugar: 'Terraza Azul', hashtag: '#Mateo18' },
+  'neon-fucsia': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Zoe', apodo: 'Zoé', fecha: '30 de julio', fechaEvento: '2027-07-30 21:00', lugar: 'Salón Fucsia', hashtag: '#ZoeXV2027' },
+  'neon-turquesa': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Santiago', apodo: 'Santi', fecha: '9 de diciembre', fechaEvento: '2027-12-09 22:00', lugar: 'Pista Turquesa', hashtag: '#Santi18' },
+  'neon-dorado': { ...DEFAULT_DEMO_PROFILE, tipo: 'Gran Cumpleaños', nombre: 'Emiliano', apodo: 'Emi', fecha: '25 de mayo', fechaEvento: '2027-05-25 21:00', lugar: 'Ático Dorado', hashtag: '#Emiliano30' },
 };
 
 const DEMO_GALLERY_BASE = '/Miluaistudio/catalogo/galeria';

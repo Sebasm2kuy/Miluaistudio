@@ -903,7 +903,7 @@ export default function PersonalizadorApp() {
           </p>
           <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
             <a href={CATALOGO_URL} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#e8e0d7] px-5 py-2.5 text-sm font-medium text-[#54483e] transition hover:bg-[#f3ead9]">
-              Explorar los 10 diseños <ArrowRight size={15} />
+              Explorar los {INVITATION_DESIGNS.length} diseños <ArrowRight size={15} />
             </a>
             <a
               href={whatsappLink('Hola! Quiero que me ayuden a personalizar mi invitación digital.')}

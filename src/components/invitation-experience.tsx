@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, Fragment, type ReactNode } from 'react'
 import { useConfig } from '@/hooks/useConfig'
+import { BACKGROUND_PRESETS } from '@/data/admin-options'
 import type { CSSProperties } from 'react'
 import Apertura from '@/components/aperturas'
 import LoadingScreen from '@/components/loading-screen'
@@ -85,6 +86,13 @@ export default function InvitationExperience({ modoEdicion = false }: Invitation
     '--theme-background': cfg.colores.fondo,
     '--theme-highlight': cfg.colores.principal === '#3d0202' ? '#fcf6ba' : cfg.colores.doradoClaro,
   } as CSSProperties
+  // Colección «fondos de autor»: si el preset del fondo trae imagen, el
+  // contenedor de scroll debe dejarla ver (el fondo fijo vive detrás).
+  const primerFondo = cfg.fondo.fotos[0] || ''
+  const presetFondo = primerFondo.startsWith('gradient:')
+    ? BACKGROUND_PRESETS.find((bg) => bg.id === primerFondo.slice('gradient:'.length))
+    : undefined
+  const fondoConImagen = Boolean(presetFondo?.image)
   // Secciones prendibles: una config sin `secciones` las muestra todas
   // (invitaciones publicadas y demos siguen igual que siempre).
   const s = cfg.secciones ?? {}
@@ -118,7 +126,7 @@ export default function InvitationExperience({ modoEdicion = false }: Invitation
   if (on(s.confirmacion)) bloques.push({ key: 'confirmar', el: <Rsvp /> })
 
   return (
-    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} data-modo-edicion={modoEdicion ? "true" : "false"} style={rootStyle}>
+    <div className="invitation-experience selection:bg-goldLight/30" data-invitation-layout={cfg.estilos.modeloComposicion || "classic"} data-card-style={cfg.estilos.estiloTarjetas || "gold-border"} data-button-style={cfg.estilos.estiloBotones || "gold-gradient"} data-title-font={cfg.estilos.fuenteTitulo || "playfair"} data-script-font={cfg.estilos.fuenteCursiva || "alex-brush"} data-theme-mode={cfg.estilos.modoClaro ? "light" : "dark"} data-demo={cfg.modoDemo ? "true" : "false"} data-modo-edicion={modoEdicion ? "true" : "false"} data-fondo-imagen={fondoConImagen ? "true" : "false"} style={rootStyle}>
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
