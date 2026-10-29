@@ -412,3 +412,16 @@ Stage Summary:
 - Tests: tests/fondos-premium.test.ts (8): archivos y peso de fondos, rutas canónicas, presets existentes, ids únicos, 5+5, perfil demo por diseño, galería demo completa, contraste AA de botones y etiquetas de categoría.
 
 **Pruebas:** 146/146 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: catálogo con 20 tarjetas fotográficas, demos rosas-cascada/neon-violeta/neon-azul con imagen de fondo, velo, halo, galería y tarjetas glass legibles; personalizador y Ajustes → Fondo con los nuevos swatches. 1280×800 sin regresiones. Pendiente: revisión del propietario en teléfono físico y elección de favoritos.
+
+---
+## Iteración 022 — Colección «Fondos de autor» II: flores de papel + gala dorada + disco (feat/fondos-autor-coleccion)
+
+**Pedido:** el propietario aprobó la primera tanda («exelente») y aportó 3 pines nuevos con «haz 3 de cada uno»: marco de flores de papel craft (rosa empolvado, scrapbook), «Prom Background» (alfombra negra con estrellas doradas, cortinas, focos) y «Disco Aesthetic» (pista ajedrezada violeta/azul con bolas de espejo). Esta vez se descargaron las imágenes originales de los pines (i.pinimg.com/originals) y se usaron como referencia directa.
+
+**Cambios:**
+- Arte: 9 fondos 768×1344 generados con IA y revisados contra cada pin; 2 regenerados por calidad (disco-espejos tenía personas reconocibles; gala-espejos tenía mesas y pared brillante al centro). ~1,4 MB en public/catalogo/fondos/. 36 galerías demo (recortes con anclas por diseño, ~2,4 MB).
+- Sistema: 9 presets img-papel-*/img-gala-*/img-disco-* con image + css de respaldo; cero código de render nuevo (velo marfil, overlay, data-fondo-imagen y halo de 021 cubren los 9). storeAccent en gala-estrellas/gala-cortinas/gala-espejos/disco-espejos (accentSoft no llega a 4.5:1 sobre blanco).
+- Catálogo: 9 diseños nuevos (29 en total) con layouts variados — framed en los de papel para que el texto caiga dentro del marco — y 9 perfiles demo sintéticos (Florencia, Catalina, Guadalupe, Benicio, Delfina, Lorenzo, Facundo, Alma, Ignacio). Contadores dinámicos de 021 se actualizaron solos.
+- Tests: fondos-premium.test.ts extendido a 19 presets con imagen, verificación por familias (florales/neón/papel/gala/disco), 8 claros + 11 oscuros.
+
+**Pruebas:** 146/146 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: catálogo «29 diseños únicos», demos papel-rosado/gala-estrellas/disco-pista con fondo fotográfico y texto legible, editor Ajustes → Fondo con los 9 swatches nuevos y aplicación en vivo («Pista Disco» → CAMBIOS SIN GUARDAR + data-fondo-imagen=true). HTTP 200 en las 9 demos, fondos y galerías. 1280×800: tarjetas 21–29 correctas. Pendiente: revisión del propietario en teléfono físico.

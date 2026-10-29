@@ -57,6 +57,16 @@ const DEMO_PROFILES: Record<string, DemoProfile> = {
   'neon-fucsia': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Zoe', apodo: 'Zoé', fecha: '30 de julio', fechaEvento: '2027-07-30 21:00', lugar: 'Salón Fucsia', hashtag: '#ZoeXV2027' },
   'neon-turquesa': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Santiago', apodo: 'Santi', fecha: '9 de diciembre', fechaEvento: '2027-12-09 22:00', lugar: 'Pista Turquesa', hashtag: '#Santi18' },
   'neon-dorado': { ...DEFAULT_DEMO_PROFILE, tipo: 'Gran Cumpleaños', nombre: 'Emiliano', apodo: 'Emi', fecha: '25 de mayo', fechaEvento: '2027-05-25 21:00', lugar: 'Ático Dorado', hashtag: '#Emiliano30' },
+  // --- Colección «Fondos de autor» (022): papel + gala + disco ---
+  'papel-rosado': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Florencia', apodo: 'Flor', fecha: '16 de octubre', fechaEvento: '2027-10-16 21:00', lugar: 'Salón Pétalos', hashtag: '#FlorenciaXV2027' },
+  'papel-crema': { ...DEFAULT_DEMO_PROFILE, tipo: 'Nuestra boda', nombre: 'Catalina', apellido: '', apodo: 'Cata', fecha: '22 de mayo', fechaEvento: '2027-05-22 20:30', lugar: 'Hacienda Marfil', hashtag: '#Catalina2027' },
+  'papel-malva': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Guadalupe', apodo: 'Lupe', fecha: '3 de julio', fechaEvento: '2027-07-03 21:00', lugar: 'Jardín Lavanda', hashtag: '#GuadalupeXV2027' },
+  'gala-estrellas': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Benicio', apodo: 'Beni', fecha: '11 de septiembre', fechaEvento: '2027-09-11 22:00', lugar: 'Teatro Estelar', hashtag: '#Benicio18' },
+  'gala-cortinas': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Delfina', apodo: 'Delfi', fecha: '20 de noviembre', fechaEvento: '2027-11-20 21:00', lugar: 'Teatro Dorado', hashtag: '#DelfinaXV2027' },
+  'gala-espejos': { ...DEFAULT_DEMO_PROFILE, tipo: 'Gran Cumpleaños', nombre: 'Lorenzo', apodo: 'Leno', fecha: '8 de mayo', fechaEvento: '2027-05-08 21:00', lugar: 'Palacio Espejos', hashtag: '#Lorenzo50' },
+  'disco-pista': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Facundo', apodo: 'Facu', fecha: '17 de diciembre', fechaEvento: '2027-12-17 22:00', lugar: 'Discoteca Nébula', hashtag: '#Facu18' },
+  'disco-fucsia': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Alma', apodo: 'Almita', fecha: '29 de enero', fechaEvento: '2028-01-29 21:00', lugar: 'Club Magenta', hashtag: '#AlmaXV2028' },
+  'disco-espejos': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis 18', nombre: 'Ignacio', apodo: 'Nacho', fecha: '5 de febrero', fechaEvento: '2028-02-05 22:00', lugar: 'Sala Prisma', hashtag: '#Nacho18' },
 };
 
 const DEMO_GALLERY_BASE = '/Miluaistudio/catalogo/galeria';
