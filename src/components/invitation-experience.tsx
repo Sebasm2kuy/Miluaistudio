@@ -6,7 +6,6 @@ import { BACKGROUND_PRESETS } from '@/data/admin-options'
 import type { CSSProperties } from 'react'
 import Apertura from '@/components/aperturas'
 import LoadingScreen from '@/components/loading-screen'
-import MusicaFondo from '@/components/musica-fondo'
 import Navigation from '@/components/navigation'
 import BackgroundSlideshow from '@/components/background-slideshow'
 import Particles from '@/components/particles'
@@ -130,7 +129,6 @@ export default function InvitationExperience({ modoEdicion = false }: Invitation
       {/* These stay OUTSIDE the scroll container — truly fixed on iOS */}
       <Particles />
       <BackgroundSlideshow />
-      {!modoEdicion && <MusicaFondo visible={phase === 'done'} />}
 
       {/* This is the scroll container — prevents iOS fixed-element shift */}
       <div ref={scrollRef} className="scroll-container">

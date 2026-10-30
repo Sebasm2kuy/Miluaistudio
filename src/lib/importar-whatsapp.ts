@@ -28,7 +28,6 @@ import {
   type Secciones,
 } from './personalizador';
 import { APERTURAS_META, APERTURA_DEFAULT } from './aperturas';
-import { TONOS_FONDO } from './musica';
 
 export interface ResultadoImportacion {
   ok: boolean;
@@ -57,7 +56,6 @@ const VACIO: DatosPersonales = {
   frase: '',
   musica: '',
   apertura: '',
-  musicaFondo: '',
   portada: '',
   tipografia: '',
   acento: '',
@@ -204,7 +202,6 @@ export function mensajeAConfigPersonal(mensaje: string): ResultadoImportacion {
     musica: dato('playlist de spotify'),
     portada: /^https?:\/\//i.test(dato('foto de portada')) ? dato('foto de portada') : '',
     apertura: '',
-    musicaFondo: '',
     tipografia: '',
     acento: '',
   };
@@ -248,20 +245,6 @@ export function mensajeAConfigPersonal(mensaje: string): ResultadoImportacion {
     datos.apertura = apertura?.id ?? APERTURA_DEFAULT;
     leidos.push(`Apertura: ${apertura?.nombre ?? aperturaTexto}`);
     if (!apertura) base.avisos.push(`No reconozco la apertura «${aperturaTexto}»: quedó la clásica (sobre).`);
-  }
-
-  // Música de fondo: «sin música» → '' (valor legítimo, sin aviso); si no, por nombre.
-  const musicaTexto = dato('música de fondo') || dato('musica de fondo');
-  if (musicaTexto) {
-    if (/sin música|sin musica/i.test(musicaTexto)) {
-      datos.musicaFondo = '';
-      leidos.push('Música de fondo: sin música');
-    } else {
-      const tono = buscarPorNombre(TONOS_FONDO, musicaTexto);
-      datos.musicaFondo = tono?.id ?? '';
-      leidos.push(`Música de fondo: ${tono?.nombre ?? musicaTexto}`);
-      if (!tono) base.avisos.push(`No reconozco el tono «${musicaTexto}»: quedó sin música de fondo (la podés elegir en Ajustes).`);
-    }
   }
 
   // Tipografía y acento: por nombre; vacío = los del diseño.

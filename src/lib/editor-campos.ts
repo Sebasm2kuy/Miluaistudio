@@ -14,7 +14,6 @@
 // grafo de pruebas de node:test (tsconfig.tests.json no define paths).
 import { FONT_OPTIONS, CLOCK_STYLES, CARD_STYLES, BUTTON_STYLES } from '../data/admin-options';
 import { APERTURAS_META } from './aperturas';
-import { TONOS_FONDO } from './musica';
 
 export type TipoCampo =
   | 'texto'
@@ -64,7 +63,6 @@ const OPCIONES_RELOJ = CLOCK_STYLES.map((o) => ({ id: o.id, nombre: o.name }));
 const OPCIONES_TARJETAS = CARD_STYLES.map((o) => ({ id: o.id, nombre: o.name }));
 const OPCIONES_BOTONES = BUTTON_STYLES.map((o) => ({ id: o.id, nombre: o.name }));
 const OPCIONES_APERTURA = APERTURAS_META.map((a) => ({ id: a.id, nombre: a.nombre }));
-const OPCIONES_TONO = TONOS_FONDO.map((t) => ({ id: t.id, nombre: t.nombre }));
 
 const ADORNOS: { id: string; nombre: string }[] = [
   { id: 'rosas', nombre: 'Rosas' },
@@ -417,12 +415,11 @@ export const PANELES_AJUSTES: PanelAjuste[] = [
   { id: 'ajustes-fondo', titulo: 'Fondo', icono: '🖼️', custom: 'fondo' },
   {
     id: 'ajustes-apertura',
-    titulo: 'Sobre y música de fondo',
+    titulo: 'Sobre y apertura',
     icono: '📨',
     desc: 'Lo que ven los invitados antes de entrar al contenido.',
     campos: [
       { path: ['apertura', 'tipo'], label: 'Apertura animada', tipo: 'opciones', opciones: OPCIONES_APERTURA },
-      { path: ['musicaFondo', 'tono'], label: 'Música de fondo', tipo: 'opciones', opciones: OPCIONES_TONO },
       { path: ['invitacion', 'textoAbrir'], label: 'Texto del sobre', tipo: 'texto' },
       { path: ['invitacion', 'imagen'], label: 'Imagen del sobre', tipo: 'imagen' },
       { path: ['invitacion', 'imagenFallback'], label: 'Imagen alternativa', tipo: 'imagen' },

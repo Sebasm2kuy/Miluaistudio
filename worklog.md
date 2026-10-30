@@ -437,3 +437,20 @@ Stage Summary:
 - Docs: IDEAS/ITERACION-2026-10-29-023-NOMBRES-MUESTRA-MUJERES.md + índice.
 
 **Pruebas:** 150/150 tests (4 nuevos), lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: personalizador con los 8 nombres nuevos y cero «Mis 18»; demos neon-violeta (Morena · Mis XV años · #MorenaXV2027) y disco-pista (Malena, sin rastro de Facundo). 1280×800: grilla del paso 1 sin los 8 nombres viejos (búsqueda insensible a mayúsculas). Pendiente: revisión del propietario en teléfono físico.
+---
+## Iteración 024 — Música directa desde Spotify + servicios extra «próximamente» (feat/spotify-directo-servicios)
+
+**Pedido:** (1) «la musica quita los tonos que creaste para que sea una eleccion directa desde spotify»; (2) analizar invitio.events#planning y «sin copiar todo textual» hacer que el sitio se vea más funcional presentando álbum digital, edición de video, video de recopilación para historia de vida y tráilers — sección a desarrollar en un futuro próximo.
+
+**Cambios música:**
+- Fuera el sistema de tonos completo: src/lib/musica.ts, musica-fondo.tsx (botón flotante), config.musicaFondo (schema + editor-campos + importador WhatsApp), 10 MP3 de public/audio (−5,4 MB), línea «Música de fondo» del mensaje de WhatsApp. Ajustes del editor: «Sobre y música de fondo» → «Sobre y apertura».
+- Personalizador: nuevo panel «Tu música, directo desde Spotify» con feedback en vivo (✓ Reconocido / aviso rojo con instrucción) y reproductor embebido de previsualización idéntico al del invitado; nota honesta: Spotify reproduce con toque (sin autoplay).
+- invitacion: la sección de música (SpotifyPlayer) queda como única música; `spotifyEmbedUrl` con tests propios.
+
+**Cambios servicios:**
+- src/data/servicios.ts (nuevo): álbum digital, edición de video, video de tu historia, tráiler del evento — textos 100% propios, 3 puntos por servicio.
+- page.tsx: sección #servicios (2×2, badge «Próximamente», CTA WhatsApp con MENSAJE_SERVICIOS_EXTRA, nota «nada de esto se cobra todavía»), FAQ nueva («¿También hacen álbum de fotos o videos…?») y enlace «Próximamente» en el pie.
+
+**Tests:** tests/servicios-spotify.test.ts (5 nuevos: embed de playlist/álbum/tema/show/episodio ± ?si/protocolo, ajenos→null, integridad de servicios, CTA, demo sin restos de tonos); importar-whatsapp.test.ts sin musicaFondo + mensaje antiguo con «Música de fondo» importa en silencio; editor-campos.test.ts fixture limpio.
+
+**Pruebas:** 156/156 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: personalizador sin tonos, enlace Spotify válido → preview montada, YouTube → aviso honesto; demo rosa-romantica sin botón flotante y #musica con iframe Spotify. 1280×800: #servicios con 4 tarjetas + badge + CTA. Pendiente: revisión del propietario en teléfono físico.

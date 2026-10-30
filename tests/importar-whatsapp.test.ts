@@ -5,14 +5,15 @@
  * Qué garantiza:
  *  - Round-trip completo: mensajeWhatsAppPersonal → mensajeAConfigPersonal
  *    devuelve los mismos datos (diseño, campos, cronograma, secciones,
- *    tipografía, acento, apertura, tono).
+ *    tipografía, acento, apertura).
  *  - Errores honestos: texto vacío, texto ajeno, diseño desconocido,
  *    mensaje sin diseño.
  *  - Avisos honestos: historia recortada por el mensaje (~90 caracteres),
  *    sin fecha legible, cronograma pendiente.
  *  - Tolerancia de formato: viñetas •, negritas de WhatsApp (*texto*),
  *    guiones - como viñeta, valores «—», @ de Instagram, comillas.
- *  - «Música de fondo: sin música» es un valor legítimo (sin aviso).
+ *  - Mensajes antiguos: las líneas «Música de fondo» (sistema de tonos
+ *    retirado) se ignoran sin avisos.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -41,7 +42,6 @@ const DATOS_COMPLETOS: DatosPersonales = {
   frase: 'Que empiece la celebración',
   musica: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
   apertura: 'corazon',
-  musicaFondo: 'vals-dorado',
   portada: 'https://example.com/foto.jpg',
   tipografia: 'romantica',
   acento: 'rosa',
@@ -84,7 +84,6 @@ test('round-trip completo: mensaje generado → importador → mismos datos', ()
   assert.equal(d.historia, DATOS_COMPLETOS.historia);
   assert.equal(d.musica, DATOS_COMPLETOS.musica);
   assert.equal(d.apertura, 'corazon');
-  assert.equal(d.musicaFondo, 'vals-dorado');
   assert.equal(d.portada, DATOS_COMPLETOS.portada);
   assert.equal(d.tipografia, 'romantica');
   assert.equal(d.acento, 'rosa');
@@ -113,7 +112,6 @@ test('round-trip con mínimos: campos opcionales vacíos → vacíos (sinBasura)
     frase: '',
     musica: '',
     apertura: 'sobre',
-    musicaFondo: '',
     portada: '',
     tipografia: '',
     acento: '',
@@ -133,11 +131,10 @@ test('round-trip con mínimos: campos opcionales vacíos → vacíos (sinBasura)
   assert.equal(r.datos.portada, '');
   assert.equal(r.datos.tipografia, '');
   assert.equal(r.datos.acento, '');
-  assert.equal(r.datos.musicaFondo, '', '«sin música» → tono vacío');
   assert.equal(r.datos.hora, '21:00', 'el mensaje pone «a las 21:00 h» por defecto');
   assert.deepEqual(r.datos.cronograma, [], 'sin momentos → cronograma vacío');
   assert.equal(r.avisos.some((a) => /cronograma/i.test(a)), true, 'aviso: cronograma a definir');
-  assert.equal(r.avisos.some((a) => /tono/i.test(a)), false, '«sin música» NO es un error de reconocimiento');
+  assert.deepEqual(r.avisos.filter((a) => /tono|música de fondo|musica de fondo/i.test(a)), [], 'el sistema de tonos ya no genera avisos');
   assert.deepEqual(r.secciones, { sobre: true, cuentaRegresiva: true, cronograma: true, galeria: true, musica: true, confirmacion: true, regalos: true });
 });
 
@@ -225,8 +222,23 @@ test('tolerante a negritas de WhatsApp, viñetas con guión y valores «—»', 
   assert.equal(r.datos.fecha, '2027-05-15', 'fecha sin ceros a la izquierda');
   assert.equal(r.datos.hora, '20:30');
   assert.equal(r.datos.apertura, 'sobre');
-  assert.equal(r.datos.musicaFondo, '');
+  assert.equal(r.datos.musica, '', 'el mensaje antiguo no trae Spotify → vacío');
   assert.deepEqual(r.secciones, { sobre: true, cuentaRegresiva: true, cronograma: true, galeria: true, musica: true, confirmacion: true, regalos: true }, 'lista «—» no rompe las secciones');
+});
+
+test('mensaje antiguo con «Música de fondo» (tonos retirados) importa sin avisos', () => {
+  const mensaje = [
+    'Hola! Personalicé mi invitación en la web de Miluaistudio:',
+    '',
+    `• Diseño: ${DESIGN.name}`,
+    '• Nombre: Martina',
+    '• Música de fondo: Vals Dorado',
+    '',
+  ].join('\n');
+  const r = mensajeAConfigPersonal(mensaje);
+  assert.equal(r.ok, true, r.error ?? '');
+  assert.equal(r.avisos.some((a) => /música de fondo|tono/i.test(a)), false, 'la línea retirada se ignora en silencio');
+  assert.equal(r.datos.nombre, 'Martina');
 });
 
 test('cronograma de una sola línea con guión simple también se lee', () => {

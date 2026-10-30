@@ -58,7 +58,6 @@ const BASE: SiteConfig = {
   },
   secciones: { sobre: true, cuentaRegresiva: true, cronograma: true, galeria: true, musica: true, confirmacion: true, regalos: true },
   apertura: { tipo: 'sobre' },
-  musicaFondo: { tono: 'vals-dorado', url: '' },
   instagram: { usuario: '', url: '' },
 } as SiteConfig;
 

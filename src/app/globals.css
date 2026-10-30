@@ -626,11 +626,6 @@ html:has([data-page="storefront"]) body {
   50% { transform: rotate(180deg) scale(1.12); }
   100% { transform: rotate(360deg) scale(1); }
 }
-/* Disco de música de fondo girando mientras suena */
-@keyframes miluaSpin {
-  to { transform: rotate(360deg); }
-}
-
 /* ============================================================
    EDITOR MÓVIL (/editar) — capa de edición directa
    ------------------------------------------------------------
