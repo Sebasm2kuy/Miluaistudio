@@ -18,6 +18,9 @@
  *     export, o hay rutas i/ sin JSON declarado.
  *  7. Las páginas publicadas dejan de enlazar al editor móvil (/editar/),
  *     que lo dejaría inalcanzable desde el sitio (causa raíz de la 018).
+ *  8. La marca vuelve a ser la vieja: el <title> de la portada debe decir
+ *     «Lumen Gala» y declarar el favicon LGS (favicon.ico) — transición
+ *     definitiva de marca de la iteración 027.
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
@@ -60,7 +63,8 @@ const required = [
   'editar/index.html',
   ...DESIGNS.map((d) => `catalogo/${d}/index.html`),
   'og-image.jpg',
-  'logo.svg',
+  'favicon.ico',
+  'apple-touch-icon.png',
 ];
 for (const rel of required) {
   if (existsSync(join(OUT, rel))) ok('ruta/asset presente: ' + rel);
@@ -213,6 +217,28 @@ for (const rel of PAGINAS_CON_ENLACE_EDITOR) {
   const html = readFileSync(file, 'utf8');
   if (html.includes(EDITOR_HREF)) ok('enlace al editor móvil presente: ' + rel);
   else fail('SIN ENLACE AL EDITOR: ' + rel + ' no contiene ' + EDITOR_HREF + ' — el editor móvil volvería a quedar inalcanzable desde el sitio publicado.');
+}
+
+// ---- 8. Marca Lumen Gala: título y favicon del sitio publicado ----
+// Transición definitiva de marca (iteración 027): la portada no puede
+// volver a llamarse «Miluaistudio» ni perder el favicon LGS.
+const INDEX_MARCA = join(OUT, 'index.html');
+if (existsSync(INDEX_MARCA)) {
+  const html = readFileSync(INDEX_MARCA, 'utf8');
+  const titulo = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '';
+  if (/miluaistudio/i.test(titulo)) {
+    fail('MARCA VIEJA: el <title> de la portada todavía dice Miluaistudio (' + titulo + ')');
+  } else if (/lumen gala/i.test(titulo)) {
+    ok('título de portada con la marca nueva: ' + titulo);
+  } else {
+    fail('MARCA AUSENTE: el <title> de la portada no menciona Lumen Gala (' + titulo + ')');
+  }
+  const linksIcon = html.match(/<link [^>]*rel="(?:shortcut )?icon"[^>]*>/g) ?? [];
+  if (linksIcon.some((l) => l.includes('/favicon.ico'))) {
+    ok('favicon.ico LGS declarado en el <head> de la portada');
+  } else {
+    fail('SIN FAVICON LGS: la portada no declara <link rel="icon" href="/favicon.ico">');
+  }
 }
 
 console.log('\n=== verify-export ===');

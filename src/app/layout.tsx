@@ -40,8 +40,8 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lumengala.site/"),
   title: {
-    default: "Miluaistudio | Invitaciones digitales personalizadas",
-    template: "%s | Miluaistudio",
+    default: "Lumen Gala | Invitaciones digitales personalizadas",
+    template: "%s | Lumen Gala",
   },
   description: "Invitaciones digitales interactivas y personalizadas para fiestas de 15, bodas y celebraciones. Explorá los diseños, probá las demostraciones y consultá la personalización.",
   keywords: [
@@ -51,7 +51,9 @@ export const metadata: Metadata = {
     "invitaciones interactivas",
     "invitaciones de boda",
     "quinceañera",
-    "Miluaistudio",
+    "Lumen Gala",
+    "Lumen Gala Studio",
+    "LGS",
   ],
   robots: {
     index: true,
@@ -60,34 +62,35 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://lumengala.site/",
   },
+  /* Identidad LGS: favicon.ico (monograma dorado, 16/32/48) en la raíz del
+     dominio + apple-touch-icon.png generado desde el logo oficial. */
   icons: {
     icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
-      { url: "/sello-sm.png", type: "image/png", sizes: "256x256" },
+      { url: "/favicon.ico", type: "image/x-icon" },
     ],
-    shortcut: ["/sello-sm.png"],
-    apple: [{ url: "/sello-sm.png", sizes: "256x256" }],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "Miluaistudio | Invitaciones digitales personalizadas",
+    title: "Lumen Gala | Invitaciones digitales personalizadas",
     description: "Explorá diseños de invitación web para fiestas de 15, bodas y celebraciones. Cada invitación reúne el estilo y los detalles de tu evento en un solo enlace.",
     type: "website",
     locale: "es_UY",
     url: "https://lumengala.site/",
-    siteName: "Miluaistudio · Invitaciones digitales",
+    siteName: "Lumen Gala · Invitaciones digitales",
     images: [
       {
         url: "https://lumengala.site/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Miluaistudio — invitaciones digitales personalizadas",
+        alt: "Lumen Gala — invitaciones digitales personalizadas",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Miluaistudio | Invitaciones digitales personalizadas",
+    title: "Lumen Gala | Invitaciones digitales personalizadas",
     description: "Diseños web personalizados para fiestas de 15, bodas y celebraciones.",
     images: ["https://lumengala.site/og-image.jpg"],
   },

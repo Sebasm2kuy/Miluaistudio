@@ -20,25 +20,25 @@ export async function generateMetadata({
   const { designId } = await params;
   const design = INVITATION_DESIGNS.find((item) => item.id === designId);
 
-  if (!design) return { title: 'Diseño no encontrado | Miluaistudio' };
+  if (!design) return { title: 'Diseño no encontrado | Lumen Gala' };
 
   return {
-    title: `${design.name} | Invitación de demostración · Miluaistudio`,
+    title: `${design.name} | Invitación de demostración · Lumen Gala`,
     description: `${design.description} Explorá una invitación digital de muestra y consultá opciones de personalización.`,
-    keywords: ['invitación digital', 'invitaciones interactivas', 'Miluaistudio', 'fiestas de 15', 'bodas'],
+    keywords: ['invitación digital', 'invitaciones interactivas', 'Lumen Gala', 'fiestas de 15', 'bodas'],
     robots: { index: false, follow: true },
     openGraph: {
-      title: `${design.name} · Miluaistudio`,
+      title: `${design.name} · Lumen Gala`,
       description: design.description,
       type: 'website',
       locale: 'es_UY',
-      siteName: 'Miluaistudio · Invitaciones digitales',
+      siteName: 'Lumen Gala · Invitaciones digitales',
       url: `https://lumengala.site/catalogo/${design.id}/`,
-      images: [{ url: 'https://lumengala.site/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Miluaistudio' }],
+      images: [{ url: 'https://lumengala.site/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Lumen Gala' }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${design.name} · Miluaistudio`,
+      title: `${design.name} · Lumen Gala`,
       description: design.description,
       images: ['https://lumengala.site/og-image.jpg'],
     },

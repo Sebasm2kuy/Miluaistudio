@@ -348,7 +348,7 @@ export function mensajeWhatsAppPersonal(
   const tipografiaElegida = TIPOGRAFIAS_META.find((t) => t.id === datos.tipografia);
   const acentoElegido = ACENTOS_META.find((a) => a.id === datos.acento);
   const lineas = [
-    'Hola! Personalicé mi invitación en la web de Miluaistudio:',
+    'Hola! Personalicé mi invitación en la web de Lumen Gala:',
     '',
     '• Diseño: ' + design.name,
     '• Evento: ' + (datos.tipo.trim() || '—'),

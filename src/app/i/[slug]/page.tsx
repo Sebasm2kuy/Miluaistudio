@@ -56,7 +56,7 @@ export async function generateMetadata({
       description: descripcion,
       type: 'website',
       locale: 'es_UY',
-      siteName: 'Miluaistudio · Invitaciones digitales',
+      siteName: 'Lumen Gala · Invitaciones digitales',
       url: urlPublicaInvitacion(slug),
     },
     twitter: {

@@ -8,24 +8,24 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://lumengala.site/catalogo/' },
   openGraph: {
-    title: 'Invitaciones digitales personalizadas | Miluaistudio',
+    title: 'Invitaciones digitales personalizadas | Lumen Gala',
     description: 'Diseños web personalizados para compartir los detalles de tu celebración en un solo enlace.',
     type: 'website',
     locale: 'es_UY',
-    siteName: 'Miluaistudio · Invitaciones digitales',
+    siteName: 'Lumen Gala · Invitaciones digitales',
     url: 'https://lumengala.site/catalogo/',
     images: [
       {
         url: 'https://lumengala.site/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Invitación digital de demostración de Miluaistudio',
+        alt: 'Invitación digital de demostración de Lumen Gala',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Invitaciones digitales personalizadas | Miluaistudio',
+    title: 'Invitaciones digitales personalizadas | Lumen Gala',
     description: 'Explorá diseños web personalizados para tus celebraciones.',
     images: ['https://lumengala.site/og-image.jpg'],
   },

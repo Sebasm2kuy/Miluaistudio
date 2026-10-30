@@ -101,10 +101,10 @@ export default function CatalogoPage() {
     <div data-page="storefront" className="min-h-screen bg-[#faf8f4] text-[#292522]">
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 text-[#292522] backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-          <a href="/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
+          <a href="/" className="flex items-center gap-3" aria-label="Volver al inicio de Lumen Gala">
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443]"><Heart size={19} /></span>
             <span>
-              <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">MILUAISTUDIO</span>
+              <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">LUMEN GALA</span>
               <span className="block text-[9px] uppercase tracking-[0.2em] text-[#787168]">Tu historia, en formato digital</span>
             </span>
           </a>
@@ -246,9 +246,9 @@ export default function CatalogoPage() {
 
       <footer className="bg-[#292522] text-white">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
-          <span className="font-serif tracking-[0.12em] text-white/85">MILUAISTUDIO</span>
+          <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span className="text-white/50">Tu historia, en formato digital.</span>
-          <span className="text-white/50">© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
+          <span className="text-white/50">© {new Date().getFullYear()} Lumen Gala · Uruguay</span>
         </div>
       </footer>
 
