@@ -454,3 +454,19 @@ Stage Summary:
 **Tests:** tests/servicios-spotify.test.ts (5 nuevos: embed de playlist/álbum/tema/show/episodio ± ?si/protocolo, ajenos→null, integridad de servicios, CTA, demo sin restos de tonos); importar-whatsapp.test.ts sin musicaFondo + mensaje antiguo con «Música de fondo» importa en silencio; editor-campos.test.ts fixture limpio.
 
 **Pruebas:** 156/156 tests, lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: personalizador sin tonos, enlace Spotify válido → preview montada, YouTube → aviso honesto; demo rosa-romantica sin botón flotante y #musica con iframe Spotify. 1280×800: #servicios con 4 tarjetas + badge + CTA. Pendiente: revisión del propietario en teléfono físico.
+
+---
+## Iteración 025 — Portada nueva: menús «próximamente», carrusel en celular y servicios desplegables (feat/home-carrusel-menus)
+
+**Pedido:** «las secciones proximamente tienen que estar visibles arriba como menus y al abrir despliegue el proximamente»; capturas de invitio.events como guía visual (sin copiar textos); «sobre todo el carrusel de pasando los modelos de invitacion como vista desde un movil».
+
+**Cambios:**
+- src/data/navegacion.ts (nuevo): ITEMS_NAV fuente única (Invitaciones, Álbum digital, Videos, Historia de vida, Tráiler, Preguntas) + SECCIONES_PORTADA; los 4 servicios con ancla #servicio-<id>.
+- src/components/store-nav.tsx (nuevo, cliente): encabezado con nav completa en escritorio (chip «pronto» en servicios) y menú hamburguesa móvil con los mismos ítems + CTAs; cierra al navegar y con Escape.
+- src/components/carrusel-modelos.tsx + src/lib/carrusel.ts (nuevos): reemplaza la tira de 10 miniaturas por un mazo de 29 diseños dentro de maqueta de celular (notch + reflejo), swipe táctil, vecinos tocables, flechas, puntos solo en pantallas anchas + contador N/29 en móvil, teclado ←/→, autoplay 5 s pausable (interacción/pestaña oculta/reduced-motion), CTAs «Ver demostración» y «Personalizar el mío» del diseño actual.
+- src/components/servicios-extras.tsx (nuevo, cliente): tarjetas «próximamente» en acordeón; hash #servicio-<id> (menú/enlaces/recarga) expande + pulso dorado 2,8 s + re-encuadre; CTA por servicio «Avisame cuando esté listo».
+- page.tsx: header → StoreNav; badge del héroe ahora verde «Se comparte por WhatsApp, sin instalar nada»; píldoras de servicios bajo el héroe; sección #coleccion con el carrusel; #servicios usa el acordeón; FAQ con id #faq.
+- globals.css: servicioAbre (despliegue), pulsoDorado (destacado), guardas prefers-reduced-motion.
+- tests/portada-carrusel-nav.test.ts (nuevo, 4 tests): menú↔servicios 1:1, anclas existentes, carrusel circular y posiciones, colección con ids/nombres únicos.
+
+**Pruebas:** 160/160 tests (4 nuevos), lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: menú móvil con servicios «pronto», tap «Álbum digital» despliega, hash #servicio-trailer-evento expande con pulso, swipe 18→19. 1280×800: nav con chips, «Historia de vida» despliega con pulso, carrusel con flechas + 29 puntos en una fila, flecha 9→10. Fix del E2E: maqueta del carrusel colapsaba a 0 px (ancho explícito). Pendiente: revisión del propietario en teléfono físico.

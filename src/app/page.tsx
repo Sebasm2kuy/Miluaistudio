@@ -7,31 +7,32 @@ import {
   Clock3,
   ExternalLink,
   Film,
-  Heart,
   Image as ImageIcon,
   Images,
   MapPin,
   MessageSquareText,
   Music,
-  PenLine,
   Search,
   Share2,
   ShieldCheck,
   Sparkles,
   Star,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { INVITATION_DESIGNS } from '@/data/invitation-designs';
 import CatalogScene from '@/components/catalog-scene';
-import MiniInvitation, { miniFromDesign } from '@/components/mini-invitation';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
 import Reveal from '@/components/reveal';
 import { SectionHeading, OrnamentDivider, HeroBadge } from '@/components/store-ui';
 import { DesignAdornoGlyph } from '@/components/design-ornaments';
+import StoreNav from '@/components/store-nav';
+import CarruselModelos from '@/components/carrusel-modelos';
+import ServiciosExtras from '@/components/servicios-extras';
 import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
 import { PRECIO } from '@/data/precio';
-import { MENSAJE_SERVICIOS_EXTRA, SERVICIOS_EXTRA } from '@/data/servicios';
+import { MENSAJE_SERVICIOS_EXTRA } from '@/data/servicios';
 
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 /* Champagne de texto: se oscurece el dorado decorativo para cumplir 3:1+
@@ -49,13 +50,15 @@ const WHATSAPP_BTN =
 const OUTLINE_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full border border-[#ded4c8] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c9bbaa] hover:bg-white';
 
-/* Icono de cada servicio extra (claves = ids de src/data/servicios.ts) */
-const ICONO_SERVICIO: Record<string, typeof Images> = {
-  'album-digital': Images,
-  'edicion-video': Clapperboard,
-  'video-historia': BookOpen,
-  'trailer-evento': Film,
-};
+/* Píldoras bajo el héroe (al estilo de la referencia del rubro): las de
+   servicios apuntan a su tarjeta «próximamente» con ancla #servicio-<id>. */
+const PILLS_SERVICIOS: Array<{ label: string; href: string; icon: LucideIcon; pronto?: boolean }> = [
+  { label: 'Álbum digital', href: '#servicio-album-digital', icon: Images, pronto: true },
+  { label: 'Videos', href: '#servicio-edicion-video', icon: Clapperboard, pronto: true },
+  { label: 'Historia de vida', href: '#servicio-video-historia', icon: BookOpen, pronto: true },
+  { label: 'Tráiler', href: '#servicio-trailer-evento', icon: Film, pronto: true },
+  { label: 'Música de Spotify', href: '#incluye', icon: Music },
+];
 
 export default function Home() {
   const heroDesign = INVITATION_DESIGNS[0];
@@ -67,34 +70,8 @@ export default function Home() {
       {/* Lavados de color cálidos + adornos de fondo */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0" style={{ background: 'radial-gradient(ellipse 60% 40% at 8% 0%, rgba(184,138,148,0.10), transparent 60%), radial-gradient(ellipse 55% 45% at 96% 8%, rgba(168,129,79,0.10), transparent 62%)' }} />
 
-      {/* ===== Encabezado ===== */}
-      <header className="relative z-30 border-b border-[#e8e0d7] bg-[#faf8f4]/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
-          <a href="/Miluaistudio/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Miluaistudio, inicio">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443] shadow-sm sm:h-10 sm:w-10">
-              <Heart size={17} />
-            </span>
-            <span className="min-w-0">
-              <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
-              <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#787168] sm:block">Invitaciones digitales</span>
-            </span>
-          </a>
-          <nav aria-label="Navegación principal" className="hidden items-center gap-6 md:flex">
-            <a href="#incluye" className="text-sm text-[#716a63] transition hover:text-[#292522]">Qué incluyen</a>
-            <a href="#disenos" className="text-sm text-[#716a63] transition hover:text-[#292522]">Diseños</a>
-            <a href="#proceso" className="text-sm text-[#716a63] transition hover:text-[#292522]">Cómo funciona</a>
-            <a href="#resenas" className="text-sm text-[#716a63] transition hover:text-[#292522]">Reseñas</a>
-          </nav>
-          <div className="flex shrink-0 items-center gap-2">
-            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-[#0b3d1e] shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
-              <WhatsAppIcon size={17} />
-            </a>
-            <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-1.5 rounded-full bg-[#26221d] px-3.5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830] sm:gap-2 sm:px-5 sm:text-sm">
-              Personalizar <PenLine size={14} />
-            </a>
-          </div>
-        </div>
-      </header>
+      {/* ===== Encabezado con menús (incluye servicios «próximamente») ===== */}
+      <StoreNav />
 
       {/* ===== Hero editorial — el producto primero en móvil ===== */}
       <section className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-6 sm:pt-10 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-16 lg:pt-20">
@@ -136,9 +113,9 @@ export default function Home() {
           <DesignAdornoGlyph adorno="rosas" className="absolute -left-14 top-6 hidden h-44 w-44 text-[#b98a94]/25 lg:block" />
           <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#9c7443]/20 lg:block" />
 
-          <div className="store-hero-in inline-flex items-center gap-2 rounded-full border border-[#eadfca] bg-white px-3.5 py-1.5 text-xs text-[#7a6f61] shadow-sm">
-            <Sparkles size={14} className="text-[#9c7443]" />
-            Diseñadas para celebrar a tu manera
+          <div className="store-hero-in inline-flex items-center gap-2 rounded-full border border-[#bfe8cd] bg-[#eafaf0] px-3.5 py-1.5 text-xs font-medium text-[#0b3d1e] shadow-sm">
+            <WhatsAppIcon size={14} />
+            Se comparte por WhatsApp, sin instalar nada
           </div>
           <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.6rem] font-medium leading-[1.06] tracking-tight sm:text-6xl">
             Una invitación que se siente <em className="italic" style={{ color: GOLD }}>tuya</em>, en un solo enlace.
@@ -176,40 +153,47 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== Franja de la colección (10 escenas) ===== */}
-      <section aria-label="Los diez diseños de la colección" className="relative z-10">
-        <Reveal>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* ===== Píldoras de servicios (acceso rápido, estilo referencia) ===== */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pb-1 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+          {PILLS_SERVICIOS.map((p) => (
+            <a
+              key={p.href}
+              href={p.href}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-3.5 py-2 text-xs font-medium text-[#5d564e] shadow-sm transition hover:border-[#dfc9a4] hover:text-[#292522]"
+            >
+              <p.icon size={13} className="text-[#8a6534]" />
+              {p.label}
+              {p.pronto && (
+                <span className="rounded-full bg-[#f3ead9] px-1.5 py-px text-[8px] font-bold uppercase tracking-wider text-[#8a6534]">pronto</span>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* ===== Carrusel de diseños «como se ve desde un celular» ===== */}
+      <section id="coleccion" aria-label="Carrusel de diseños de invitación" className="relative z-10 mt-10 scroll-mt-20 sm:mt-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal>
             <OrnamentDivider className="mb-7" />
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-5 sm:gap-4 sm:overflow-visible">
-              {INVITATION_DESIGNS.map((design) => (
-                <a
-                  key={design.id}
-                  href={'/Miluaistudio/catalogo/' + design.id + '/'}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group relative block aspect-[4/5] w-[7.25rem] shrink-0 overflow-hidden rounded-xl border border-[#e8e0d7] shadow-[0_6px_18px_rgba(88,63,32,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(88,63,32,0.20)] sm:w-auto"
-                  aria-label={'Probar el diseño ' + design.name}
-                >
-                {/* Miniatura ligera: en una tira de 10 solo-previews, la maqueta
-                    completa (celular + tarjeta × 2 mini-invitaciones + adornos)
-                    multiplicaba el HTML sin aportar detalle visible a este
-                    tamaño. La miniatura muestra el mismo diseño (nombre, fecha,
-                    paleta y adorno) con una fracción del marcado; la maqueta
-                    completa se conserva en el héroe, los destacados y el
-                    catálogo, y la versión interactiva vive en cada demo. */}
-                <div className="h-full w-full transition duration-500 group-hover:scale-[1.06]">
-                  <MiniInvitation data={miniFromDesign(design)} />
-                </div>
-                  <span className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-[#292522]/55 px-2 py-1 text-center text-[9px] font-medium text-white backdrop-blur-sm sm:text-[10px]">
-                    {design.name}
-                  </span>
-                </a>
-              ))}
+            <SectionHeading
+              eyebrow="La colección completa"
+              title={<>Pasá los diseños <em className="italic" style={{ color: GOLD }}>como en tu celu</em>.</>}
+              sub="Deslizá el carrusel o tocá los bordes para recorrer los modelos, y abrí la demostración del que más te guste."
+            />
+          </Reveal>
+          <Reveal delay={80}>
+            <CarruselModelos designs={INVITATION_DESIGNS} />
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="mt-8 flex justify-center">
+              <a href={CATALOG_URL} className={OUTLINE_BTN}>
+                Explorar el catálogo completo <ArrowRight size={16} />
+              </a>
             </div>
-            <p className="mt-4 text-center text-[11px] text-[#787168]">Tocá cualquier diseño para abrir su demostración completa.</p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* ===== Qué incluyen ===== */}
@@ -334,41 +318,11 @@ export default function Home() {
           </Reveal>
           <Reveal delay={60}>
             <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-[#716a63]">
-              Estamos desarrollando estos servicios para acompañar tu celebración de punta a punta.
-              Mirá lo que se viene y consultanos: te avisamos apenas estén listos.
+              Tocá cada servicio —o el menú de arriba— para desplegar de qué se trata.
+              Consultanos y te avisamos apenas estén listos.
             </p>
           </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {SERVICIOS_EXTRA.map((s, index) => {
-              const Icono = ICONO_SERVICIO[s.id] ?? Sparkles;
-              return (
-                <Reveal key={s.id} delay={index * 60}>
-                  <article className="relative flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-6 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-7">
-                    <span
-                      className="absolute right-4 top-4 rounded-full border border-[#dfc9a4] bg-[#faf6ef] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]"
-                      style={{ color: GOLD }}
-                    >
-                      Próximamente
-                    </span>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#dfc9a4] bg-[#f3ead9]" style={{ color: GOLD }}>
-                      <Icono size={20} strokeWidth={1.7} />
-                    </div>
-                    <h3 className="mt-4 font-serif text-lg font-semibold leading-snug text-[#292522]">{s.nombre}</h3>
-                    <p className="mt-0.5 text-sm italic" style={{ color: GOLD }}>{s.tagline}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-[#716a63]">{s.desc}</p>
-                    <ul className="mt-4 space-y-1.5 border-t border-[#f0e9df] pt-4">
-                      {s.puntos.map((p) => (
-                        <li key={p} className="flex items-start gap-2 text-sm text-[#5d564e]">
-                          <Check size={14} strokeWidth={2.4} className="mt-0.5 shrink-0 text-[#8a6534]" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                </Reveal>
-              );
-            })}
-          </div>
+          <ServiciosExtras />
           <Reveal delay={120}>
             <div className="mt-8 flex flex-col items-center gap-3 text-center">
               <a href={whatsappLink(MENSAJE_SERVICIOS_EXTRA)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
@@ -448,7 +402,7 @@ export default function Home() {
       </section>
 
       {/* ===== Preguntas frecuentes ===== */}
-      <section className="relative z-10 border-t border-[#e8e0d7] bg-white/60">
+      <section id="faq" className="relative z-10 scroll-mt-20 border-t border-[#e8e0d7] bg-white/60">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
           <Reveal>
             <SectionHeading
