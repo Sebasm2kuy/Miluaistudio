@@ -1,5 +1,5 @@
 /**
- * Servicios extra que Miluaistudio va a desarrollar a futuro (colección
+ * Servicios extra que Lumen Gala va a desarrollar a futuro (colección
  * «próximamente»). Se muestran en la portada para que el sitio comunique
  * todo lo que viene; NINGUNO está disponible todavía, por eso cada uno
  * lleva el badge «Próximamente» y la CTA consulta/aviso por WhatsApp.
@@ -71,4 +71,4 @@ export const SERVICIOS_EXTRA: ServicioExtra[] = [
 
 /** Mensaje de WhatsApp para la CTA de la sección de servicios */
 export const MENSAJE_SERVICIOS_EXTRA =
-  'Hola! Vi los servicios extra de Miluaistudio (álbum digital, edición de video, video de historia y tráiler) y quiero saber más / reservar para mi evento.';
+  'Hola! Vi los servicios extra de Lumen Gala (álbum digital, edición de video, video de historia y tráiler) y quiero saber más / reservar para mi evento.';

@@ -112,7 +112,7 @@ export default function ServiciosExtras() {
                   ))}
                 </ul>
                 <a
-                  href={whatsappLink('Hola! Vi que el servicio «' + s.nombre + '» de Miluaistudio está próximamente. Quiero consultar más detalles y que me avisen cuando esté listo.')}
+                  href={whatsappLink('Hola! Vi que el servicio «' + s.nombre + '» de Lumen Gala está próximamente. Quiero consultar más detalles y que me avisen cuando esté listo.')}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#25d366] px-4 py-2.5 text-xs font-semibold text-[#0b3d1e] transition hover:bg-[#1db957]"

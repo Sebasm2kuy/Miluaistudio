@@ -443,7 +443,7 @@ export default function Home() {
       <footer className="relative z-10 bg-[#292522] text-[#d8d0c5]">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pb-28 pt-10 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-10 lg:px-8">
           <div>
-            <p className="font-serif text-base tracking-[0.08em] text-[#f0e8da]">MILUAISTUDIO</p>
+            <p className="font-serif text-base tracking-[0.08em] text-[#f0e8da]">LUMEN GALA</p>
             <p className="mt-1.5 text-[#a1988a]">Invitaciones digitales personalizadas · Uruguay</p>
           </div>
           <div className="flex flex-wrap gap-4">
@@ -457,7 +457,7 @@ export default function Home() {
                 propietario — ver IDEAS iteración 017). */}
             <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
           </div>
-          <p className="text-[#a1988a]">© {new Date().getFullYear()} Miluaistudio</p>
+          <p className="text-[#a1988a]">© {new Date().getFullYear()} Lumen Gala</p>
         </div>
       </footer>
 

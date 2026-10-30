@@ -21,7 +21,7 @@ export const WHATSAPP_NUMERO = '59895239386';
 
 /** Mensaje pre-cargado cuando la consulta no es por un diseño puntual */
 export const WHATSAPP_MENSAJE_GENERAL =
-  'Hola! Me interesan las invitaciones digitales de Miluaistudio. ¿Me pasás más info?';
+  'Hola! Me interesan las invitaciones digitales de Lumen Gala. ¿Me pasás más info?';
 
 /** Construye el enlace wa.me con el mensaje pre-cargado y codificado */
 export function whatsappLink(mensaje: string): string {

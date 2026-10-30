@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 027 — Transición definitiva de marca: Lumen Gala (LGS) — logo, favicon, títulos y meta (30-10-2026)](./ITERACION-2026-10-30-027-MARCA-LUMEN-GALA.md)
 - [Iteración 026 — Migración al dominio raíz lumengala.site: fin de las rutas /Miluaistudio/ (30-10-2026)](./ITERACION-2026-10-30-026-DOMINIO-RAIZ-LUMENGALA.md)
 - [Iteración 025 — Portada nueva: menús «próximamente» arriba, carrusel de diseños en celular y servicios desplegables (30-10-2026)](./ITERACION-2026-10-30-025-PORTADA-CARRUSEL-MENUS-PROXIMAMENTE.md)
 - [Iteración 024 — Música directa desde Spotify + sección de servicios extra «próximamente» (30-10-2026)](./ITERACION-2026-10-30-024-SPOTIFY-DIRECTO-SERVICIOS-EXTRA.md)

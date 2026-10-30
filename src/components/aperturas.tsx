@@ -426,7 +426,7 @@ function ContenidoTicket({ cfg, abriendo, accent, accentLight, texto }: { cfg: S
             className="relative flex items-center justify-center"
             style={{ width: 74, borderLeft: '2px dashed rgba(47,35,18,0.5)' }}
           >
-            <span style={{ writingMode: 'vertical-rl', fontSize: 10, letterSpacing: '0.34em', fontWeight: 700, opacity: 0.8 }}>MILUAISTUDIO</span>
+            <span style={{ writingMode: 'vertical-rl', fontSize: 10, letterSpacing: '0.34em', fontWeight: 700, opacity: 0.8 }}>LUMEN GALA</span>
             {/* muescas */}
             <span className="absolute left-1/2" style={{ top: -11, width: 22, height: 22, borderRadius: '50%', background: '#0a0a0a', translate: '-50% 0' }} />
             <span className="absolute left-1/2" style={{ bottom: -11, width: 22, height: 22, borderRadius: '50%', background: '#0a0a0a', translate: '-50% 0' }} />

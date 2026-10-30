@@ -38,7 +38,7 @@ export default function PanelImportarWhatsApp({ onLeer, onAplicar }: Props) {
       <textarea
         value={mensaje}
         onChange={(e) => setMensaje(e.target.value)}
-        placeholder={'Hola! Personalicé mi invitación en la web de Miluaistudio:\n\n• Diseño: Rosa Romántica\n• Evento: Mis XV años\n• Nombre: Martina\n…'}
+        placeholder={'Hola! Personalicé mi invitación en la web de Lumen Gala:\n\n• Diseño: Rosa Romántica\n• Evento: Mis XV años\n• Nombre: Martina\n…'}
         rows={7}
         aria-label="Mensaje de WhatsApp con la configuración del cliente"
         className="w-full rounded-xl border border-[#e8e0d7] bg-white p-3 text-sm leading-relaxed text-[#292522] outline-none transition focus:border-[#8a6534]"

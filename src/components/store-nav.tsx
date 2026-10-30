@@ -28,12 +28,12 @@ export default function StoreNav() {
   return (
     <header className="relative z-40 border-b border-[#e8e0d7] bg-[#faf8f4]/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
-        <a href="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Miluaistudio, inicio">
+        <a href="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Lumen Gala, inicio">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443] shadow-sm sm:h-10 sm:w-10">
             <Heart size={17} />
           </span>
           <span className="min-w-0">
-            <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">MILUAISTUDIO</span>
+            <span className="block font-serif text-base leading-tight tracking-[0.06em] sm:text-xl">LUMEN GALA</span>
             <span className="hidden text-[9px] uppercase tracking-[0.24em] text-[#787168] sm:block">Invitaciones digitales</span>
           </span>
         </a>

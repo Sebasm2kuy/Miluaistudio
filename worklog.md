@@ -489,3 +489,20 @@ Stage Summary:
 - Tests actualizados (invitacion-publicada, activos-editor, publicacion-panel, publicacion-github, fondos-premium, rsvp-contrato) a las URLs raíz; docs vivos (ADMINISTRACION, PRUEBA-MANUAL-EDITOR-MOVIL) con las URLs nuevas.
 
 **Pruebas:** 160/160 tests, lint 0, typecheck 0, build + prune + verify-export + verify-privacy OK. Artefacto sin ninguna referencia /Miluaistudio/ en HTML clave (solo marca textual). Servidor local en raíz: /, /editar/, /catalogo/, /i/ejemplo-quince/, chunk _next, imagen y sitemap → 200. Emulador 390×844 y 1280×800: 0 errores de consola, 0 imágenes rotas, menús «pronto» y carrusel operativos; los 6 enlaces restantes con «Miluaistudio» son textos de marca en wa.me (correctos). Pendiente: revisión del propietario en lumengala.site desde el teléfono físico.
+
+---
+## Iteración 027 — Transición definitiva de marca: Lumen Gala (feat/lumen-gala-marca)
+
+**Pedido:** identidad de marca nueva en el código fuente: (1) texto del logotipo del header «MILUAISTUDIO» → «LUMEN GALA» con tipografía elegante; (2) favicon del <head> apuntando al icono en la raíz (favicon.ico); (3) títulos y meta tags con Lumen Gala; (4) menú superior y botones principales sin errores de ruta en lumengala.site. Se adjuntaron favicon.ico (monograma LGS dorado) y Logo.jpg de referencia.
+
+**Cambios:**
+- public/favicon.ico (nuevo, monograma LGS 16/32/48) + public/apple-touch-icon.png (180×180, generado del Logo.jpg); public/logo.svg eliminado (era un logo «Z» de plantilla, ajeno a la marca). El sello de lacre deja de usarse como icono.
+- layout.tsx: title «Lumen Gala | Invitaciones digitales personalizadas», template «%s | Lumen Gala», keywords +Lumen Gala/LGS, icons → favicon.ico + apple-touch-icon.png, OG/Twitter/siteName/alt con la marca nueva.
+- «LUMEN GALA» y «© Lumen Gala» en headers/pies: store-nav, page.tsx, catalogo/page.tsx, personalizador-app.tsx (+aria-labels) y el texto vertical del ticket «ADMITE UNO» de aperturas.tsx.
+- Metadatos por página: personalizar, catalogo/layout, catalogo/[designId], i/[slug] (títulos, keywords, siteName, alts).
+- Textos de WhatsApp con «Lumen Gala»: contacto.ts, servicios.ts, servicios-extras.tsx, firma del pedido (personalizador.ts) y placeholder del importador.
+- verify-export: §2 exige favicon.ico + apple-touch-icon.png; §8 NUEVA guarda de marca — el build falla si el <title> de la portada dice «Miluaistudio», no menciona «Lumen Gala» o falta el <link rel="icon" href="/favicon.ico">.
+- Compatibilidad: el importador sigue aceptando pedidos históricos firmados «web de Miluaistudio» (fixtures conservados a propósito); la marca no es parte del formato de datos.
+- Se conservan las referencias al nombre del REPO (GITHUB_REPO, api.github.com, ayuda de tokens): son rutas de API reales, no de web.
+
+**Pruebas:** 163/163 tests (3 nuevos en tests/marca-lumen-gala.test.ts), lint 0, typecheck 0, build + prune + verify-export (§2+§8) + verify-privacy OK. E2E móvil 390×844: header «LUMEN GALA», pie «© 2026 Lumen Gala», menú con chips «pronto», tap «Álbum digital» despliega, /catalogo/ y /personalizar/ con títulos «| Lumen Gala». E2E 1280×800: nav completa, logo en Playfair Display tracking 1.2 px, demo «Rosa Romántica · Lumen Gala», chunk del ticket con «LUMEN GALA», /editar/ carga sin errores de consola. favicon.ico servido 200 con type image/vnd.microsoft.icon. Pendiente: revisión del propietario en teléfono físico (favicon en pestaña + preview de WhatsApp puede demorar por caché).

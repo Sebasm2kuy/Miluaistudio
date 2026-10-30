@@ -372,12 +372,12 @@ export default function PersonalizadorApp() {
       {/* ===== Encabezado ===== */}
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <a href="/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Miluaistudio">
+          <a href="/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Lumen Gala">
             <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#8a6534]">
               <Heart size={17} />
             </span>
             <span>
-              <span className="block font-serif text-base tracking-[0.08em] sm:text-lg">MILUAISTUDIO</span>
+              <span className="block font-serif text-base tracking-[0.08em] sm:text-lg">LUMEN GALA</span>
               <span className="hidden text-[9px] uppercase tracking-[0.2em] text-[#787168] sm:block">Personalizá tu invitación</span>
             </span>
           </a>
@@ -847,14 +847,14 @@ export default function PersonalizadorApp() {
       {/* ===== Pie ===== */}
       <footer className="border-t border-[#e8e0d7] bg-[#211c17]">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span className="font-serif tracking-[0.12em] text-white/85">MILUAISTUDIO</span>
+          <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span>
             Personalización auto-servicio · tu vista previa no se guarda ni se comparte. ·{' '}
             <a href={EDITOR_URL} className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
               Editor de invitaciones
             </a>
           </span>
-          <span>© {new Date().getFullYear()} Miluaistudio · Uruguay</span>
+          <span>© {new Date().getFullYear()} Lumen Gala · Uruguay</span>
         </div>
       </footer>
 
