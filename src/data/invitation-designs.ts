@@ -85,7 +85,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fdf3f1",
     cardText: "#4a343b",
-    scene: "/Miluaistudio/catalogo/scenes/rosa-romantica.jpg",
+    scene: "/catalogo/scenes/rosa-romantica.jpg",
   },
   {
     id: "noche-dorada",
@@ -113,7 +113,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#0d0d0b",
     cardText: "#f6edd8",
-    scene: "/Miluaistudio/catalogo/scenes/noche-dorada.jpg",
+    scene: "/catalogo/scenes/noche-dorada.jpg",
   },
   {
     id: "terracota",
@@ -142,7 +142,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#61735a",
     cardBg: "#fbfaf3",
     cardText: "#41463c",
-    scene: "/Miluaistudio/catalogo/scenes/terracota.jpg",
+    scene: "/catalogo/scenes/terracota.jpg",
   },
   {
     id: "azul-celestial",
@@ -170,7 +170,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#12233d",
     cardText: "#eef5fd",
-    scene: "/Miluaistudio/catalogo/scenes/azul-celestial.jpg",
+    scene: "/catalogo/scenes/azul-celestial.jpg",
   },
   {
     id: "blanco-perla",
@@ -198,7 +198,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#f8f5ee",
     cardText: "#322c25",
-    scene: "/Miluaistudio/catalogo/scenes/blanco-perla.jpg",
+    scene: "/catalogo/scenes/blanco-perla.jpg",
   },
   {
     id: "lavanda",
@@ -226,7 +226,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#faf5fd",
     cardText: "#443a52",
-    scene: "/Miluaistudio/catalogo/scenes/lavanda.jpg",
+    scene: "/catalogo/scenes/lavanda.jpg",
   },
   {
     id: "rojo-glamour",
@@ -254,7 +254,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#300a14",
     cardText: "#fbeee6",
-    scene: "/Miluaistudio/catalogo/scenes/rojo-glamour.jpg",
+    scene: "/catalogo/scenes/rojo-glamour.jpg",
   },
   {
     id: "jardin-botanico",
@@ -282,7 +282,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#f0ead9",
     cardText: "#333b33",
-    scene: "/Miluaistudio/catalogo/scenes/jardin-botanico.jpg",
+    scene: "/catalogo/scenes/jardin-botanico.jpg",
   },
   {
     id: "geometria-moderna",
@@ -310,7 +310,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#f8f1e7",
     cardText: "#3f332b",
-    scene: "/Miluaistudio/catalogo/scenes/geometria-moderna.jpg",
+    scene: "/catalogo/scenes/geometria-moderna.jpg",
   },
   {
     id: "azul-romantico",
@@ -338,7 +338,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fdf6ee",
     cardText: "#463437",
-    scene: "/Miluaistudio/catalogo/scenes/azul-romantico.jpg",
+    scene: "/catalogo/scenes/azul-romantico.jpg",
   },
   // --- Colección «Fondos de autor» (020) ---
   // 5 diseños con fondos fotográficos de rosas (referencia Pinterest: cascada
@@ -371,7 +371,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fbf5f0",
     cardText: "#43302f",
-    scene: "/Miluaistudio/catalogo/fondos/rosas-cascada.jpg",
+    scene: "/catalogo/fondos/rosas-cascada.jpg",
   },
   {
     id: "arco-rosado",
@@ -399,7 +399,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fcf7f0",
     cardText: "#4a3538",
-    scene: "/Miluaistudio/catalogo/fondos/arco-rosado.jpg",
+    scene: "/catalogo/fondos/arco-rosado.jpg",
   },
   {
     id: "jardin-durazno",
@@ -427,7 +427,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fcf6ea",
     cardText: "#47342a",
-    scene: "/Miluaistudio/catalogo/fondos/jardin-durazno.jpg",
+    scene: "/catalogo/fondos/jardin-durazno.jpg",
   },
   {
     id: "rosas-rubi",
@@ -455,7 +455,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fdf8f7",
     cardText: "#3f282b",
-    scene: "/Miluaistudio/catalogo/fondos/rosas-rubi.jpg",
+    scene: "/catalogo/fondos/rosas-rubi.jpg",
   },
   {
     id: "blancas-eucalipto",
@@ -483,7 +483,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#faf3f0",
     cardText: "#3c4038",
-    scene: "/Miluaistudio/catalogo/fondos/blancas-eucalipto.jpg",
+    scene: "/catalogo/fondos/blancas-eucalipto.jpg",
   },
   {
     id: "neon-violeta",
@@ -511,7 +511,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#1d0a2b",
     cardText: "#f8eaff",
-    scene: "/Miluaistudio/catalogo/fondos/neon-violeta.jpg",
+    scene: "/catalogo/fondos/neon-violeta.jpg",
   },
   {
     id: "neon-azul",
@@ -539,7 +539,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#081838",
     cardText: "#eaf7ff",
-    scene: "/Miluaistudio/catalogo/fondos/neon-azul.jpg",
+    scene: "/catalogo/fondos/neon-azul.jpg",
   },
   {
     id: "neon-fucsia",
@@ -567,7 +567,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#1c1a20",
     cardText: "#ffeef8",
-    scene: "/Miluaistudio/catalogo/fondos/neon-fucsia.jpg",
+    scene: "/catalogo/fondos/neon-fucsia.jpg",
   },
   {
     id: "neon-turquesa",
@@ -595,7 +595,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#0c1a34",
     cardText: "#e8fbff",
-    scene: "/Miluaistudio/catalogo/fondos/neon-turquesa.jpg",
+    scene: "/catalogo/fondos/neon-turquesa.jpg",
   },
   {
     id: "neon-dorado",
@@ -624,7 +624,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#8a5f1e",
     cardBg: "#171208",
     cardText: "#fff6e8",
-    scene: "/Miluaistudio/catalogo/fondos/neon-dorado.jpg",
+    scene: "/catalogo/fondos/neon-dorado.jpg",
   },
   // --- Colección «Fondos de autor» (022) ---
   // 3 diseños con marcos de flores de papel craft (referencia: pin «paper
@@ -657,7 +657,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fbf3f0",
     cardText: "#4a3336",
-    scene: "/Miluaistudio/catalogo/fondos/papel-rosado.jpg",
+    scene: "/catalogo/fondos/papel-rosado.jpg",
   },
   {
     id: "papel-crema",
@@ -685,7 +685,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#fbf6ea",
     cardText: "#463a2c",
-    scene: "/Miluaistudio/catalogo/fondos/papel-crema.jpg",
+    scene: "/catalogo/fondos/papel-crema.jpg",
   },
   {
     id: "papel-malva",
@@ -713,7 +713,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#faf5f8",
     cardText: "#43364a",
-    scene: "/Miluaistudio/catalogo/fondos/papel-malva.jpg",
+    scene: "/catalogo/fondos/papel-malva.jpg",
   },
   {
     id: "gala-estrellas",
@@ -742,7 +742,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#8a5f1e",
     cardBg: "#171208",
     cardText: "#fff4dc",
-    scene: "/Miluaistudio/catalogo/fondos/gala-estrellas.jpg",
+    scene: "/catalogo/fondos/gala-estrellas.jpg",
   },
   {
     id: "gala-cortinas",
@@ -771,7 +771,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#8a5f1e",
     cardBg: "#191207",
     cardText: "#fff3d8",
-    scene: "/Miluaistudio/catalogo/fondos/gala-cortinas.jpg",
+    scene: "/catalogo/fondos/gala-cortinas.jpg",
   },
   {
     id: "gala-espejos",
@@ -800,7 +800,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#7d6032",
     cardBg: "#161006",
     cardText: "#f9ecd0",
-    scene: "/Miluaistudio/catalogo/fondos/gala-espejos.jpg",
+    scene: "/catalogo/fondos/gala-espejos.jpg",
   },
   {
     id: "disco-pista",
@@ -828,7 +828,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#120a38",
     cardText: "#f0eaff",
-    scene: "/Miluaistudio/catalogo/fondos/disco-pista.jpg",
+    scene: "/catalogo/fondos/disco-pista.jpg",
   },
   {
     id: "disco-fucsia",
@@ -856,7 +856,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     buttonText: "#ffffff",
     cardBg: "#1e0929",
     cardText: "#ffeaf6",
-    scene: "/Miluaistudio/catalogo/fondos/disco-fucsia.jpg",
+    scene: "/catalogo/fondos/disco-fucsia.jpg",
   },
   {
     id: "disco-espejos",
@@ -885,7 +885,7 @@ export const INVITATION_DESIGNS: InvitationDesign[] = [
     storeAccent: "#1f6cb5",
     cardBg: "#0a1630",
     cardText: "#eaf7ff",
-    scene: "/Miluaistudio/catalogo/fondos/disco-espejos.jpg",
+    scene: "/catalogo/fondos/disco-espejos.jpg",
   },
 ];
 

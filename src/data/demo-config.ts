@@ -69,7 +69,7 @@ const DEMO_PROFILES: Record<string, DemoProfile> = {
   'disco-espejos': { ...DEFAULT_DEMO_PROFILE, tipo: 'Mis XV años', nombre: 'Violeta', apodo: 'Viole', fecha: '5 de febrero', fechaEvento: '2028-02-05 21:00', lugar: 'Sala Prisma', hashtag: '#VioletaXV2028' },
 };
 
-const DEMO_GALLERY_BASE = '/Miluaistudio/catalogo/galeria';
+const DEMO_GALLERY_BASE = '/catalogo/galeria';
 
 /** Fotos de galería de demostración por diseño (recursos temáticos generados) */
 function demoGallery(designId: string) {
@@ -157,8 +157,8 @@ export const CONFIG_DEMO_BASE: SiteConfig = {
     frase: 'Una invitación hecha a tu estilo',
   },
   invitacion: {
-    imagen: '/Miluaistudio/catalogo/demo-cover.svg',
-    imagenFallback: '/Miluaistudio/catalogo/demo-cover.svg',
+    imagen: '/catalogo/demo-cover.svg',
+    imagenFallback: '/catalogo/demo-cover.svg',
     textoAbrir: 'Tocá para explorar',
   },
   countdown: {

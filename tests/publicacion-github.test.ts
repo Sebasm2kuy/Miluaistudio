@@ -6,7 +6,7 @@
  *  - publicarInvitacionEnGitHub: creación, actualización del mismo slug
  *    (sin duplicados, conservando publicadoEn), error de lectura, error
  *    del PUT, error de red y falta de token
- *  - URLs construidas con basePath /Miluaistudio/
+ *  - URLs ancladas a la raíz del dominio propio (lumengala.site)
  *  - uploadToGitHub: URL del asset en la carpeta de invitaciones,
  *    validación previa (tipo/tamaño) sin llamar a la API, respuesta HTTP
  *    fallida y error de red — siempre simulados
@@ -117,7 +117,7 @@ test('publicar: crea el archivo del slug y reporta creado=true con URLs correcta
   assert.equal(resultado.creado, true);
   assert.equal(resultado.slug, 'muestra-xv');
   assert.equal(resultado.url, urlInvitacion('muestra-xv'));
-  assert.equal(resultado.url, '/Miluaistudio/i/muestra-xv/');
+  assert.equal(resultado.url, '/i/muestra-xv/');
   assert.equal(resultado.urlAbsoluta, urlPublicaInvitacion('muestra-xv'));
   assert.match(resultado.message, /queda activo cuando termine el deploy/i);
 
@@ -232,7 +232,7 @@ test('upload: archivo válido → URL en la carpeta de assets de invitaciones', 
   const resultado = await uploadToGitHub(archivoJpeg(), 'token-de-prueba', undefined, impl);
 
   assert.equal(resultado.success, true);
-  assert.match(resultado.url, /^\/Miluaistudio\/assets-invitaciones\/mi-foto-de-xv_[0-9a-z]+\.jpg$/);
+  assert.match(resultado.url, /^\/assets-invitaciones\/mi-foto-de-xv_[0-9a-z]+\.jpg$/);
   const ruta = llamadas[0].input;
   assert.ok(ruta.includes('/contents/public/assets-invitaciones/'), 'ruta del repo correcta: ' + ruta);
   assert.ok(!ruta.includes('/uploads/'), 'ya no usa la carpeta bloqueada uploads/');
@@ -265,7 +265,7 @@ test('upload: respuesta HTTP fallida → success=false y la URL anterior se cons
     get: () => new Response('{"message":"Not Found"}', { status: 404 }),
     put: () => new Response('{"message":"422 too large"}', { status: 422 }),
   });
-  const urlAnterior = '/Miluaistudio/assets-invitaciones/vieja.jpg';
+  const urlAnterior = '/assets-invitaciones/vieja.jpg';
   const resultado = await uploadToGitHub(archivoJpeg(), 'token-de-prueba', undefined, impl);
   assert.equal(resultado.success, false);
   assert.equal(resultado.url, '', 'no devuelve URL nueva');

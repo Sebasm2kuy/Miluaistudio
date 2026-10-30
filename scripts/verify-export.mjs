@@ -8,7 +8,8 @@
  *  2. Falta alguna ruta comercial obligatoria (inicio, catálogo,
  *     personalizador, las 10 demos, 404, robots, sitemap) o el editor
  *     móvil (/editar/, publicado desde la iteración 017).
- *  3. Un asset clave no usa la ruta base /Miluaistudio.
+ *  3. Queda una referencia al subdirectorio viejo /Miluaistudio/ (el sitio
+ *     vive en la raíz del dominio propio, lumengala.site).
  *  4. Hay indicios de secretos embebidos en el artefacto público.
  *  5. Reaparecen imágenes personales retiradas de public/ por privacidad
  *     (o aparecen imágenes en out/uploads/, la ruta de fotos de invitados).
@@ -26,7 +27,6 @@ import { existsSync, readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const OUT = join(process.cwd(), 'out');
-const BASE = '/Miluaistudio';
 const errors = [];
 const notes = [];
 
@@ -67,16 +67,27 @@ for (const rel of required) {
   else fail('FALTA en la exportación: ' + rel);
 }
 
-// ---- 3. Base path en páginas clave ----
-for (const rel of ['index.html', 'catalogo/index.html', 'personalizar/index.html']) {
+// ---- 3. Sin rutas del subdirectorio viejo (raíz del dominio propio) ----
+// Desde la iteración 026 el sitio se sirve en la RAÍZ del dominio propio
+// (lumengala.site). Cualquier referencia al subdirectorio /Miluaistudio/
+// del GitHub Pages viejo rompería assets y enlaces: el build falla si
+// reaparece en las páginas clave, como src/href o como URL absoluta.
+const FILTRO_RUTA_VIEJA =
+  /(?:src|href|content)="\/Miluaistudio\b|"https?:\/\/[^" ]*\/Miluaistudio\//;
+for (const rel of ['index.html', 'catalogo/index.html', 'personalizar/index.html', 'editar/index.html']) {
   const file = join(OUT, rel);
   if (!existsSync(file)) continue;
   const html = readFileSync(file, 'utf8');
-  const hasBase = html.includes(BASE + '/');
-  if (!hasBase) fail('SIN basePath: ' + rel + ' no referencia ' + BASE + '/');
-  else ok('basePath presente en ' + rel);
-  const stray = html.match(/(?:src|href)="\/(?!Miluaistudio\/|_next\/)/);
-  if (stray) notes.push('AVISO  ' + rel + ': referencia absoluta fuera de basePath (revisar): ' + stray[0]);
+  if (FILTRO_RUTA_VIEJA.test(html)) {
+    fail('RUTA VIEJA: ' + rel + ' todavía referencia el subdirectorio /Miluaistudio/ (el sitio vive en la raíz del dominio propio)');
+  } else {
+    ok('sin rutas del subdirectorio viejo en ' + rel);
+  }
+  // Los src/href internos deben quedar anclados a la raíz (/, ./, #) o ser
+  // externos: una ruta relativa desnuda (src="catalogo/x.jpg") se rompe en
+  // páginas anidadas con trailingSlash.
+  const stray = html.match(/(?:src|href)="(?!\/|\.\/|#|https?:|mailto:|tel:|data:)/);
+  if (stray) notes.push('AVISO  ' + rel + ': referencia no anclada a la raíz (revisar): ' + stray[0]);
 }
 
 // ---- 4. Secretos embebidos en assets públicos ----
@@ -160,7 +171,7 @@ if (existsSync(DIR_INVITACIONES)) {
 
     // Assets que la invitación referencia dentro del sitio (ignora gradientes y URLs externas)
     const anotar = (u) => {
-      if (typeof u === 'string' && u.startsWith(BASE + '/')) activosReferenciados.add(u);
+      if (typeof u === 'string' && u.startsWith('/') && !u.startsWith('//')) activosReferenciados.add(u);
     };
     const cfg = data.config;
     for (const foto of cfg.galeria?.fotos ?? []) { anotar(foto.webp); anotar(foto.fallback); }
@@ -169,7 +180,7 @@ if (existsSync(DIR_INVITACIONES)) {
     anotar(cfg.invitacion?.imagenFallback);
   }
   for (const ref of activosReferenciados) {
-    const rel = ref.slice((BASE + '/').length);
+    const rel = ref.slice(1);
     if (existsSync(join(OUT, rel))) ok('asset enlazado por invitación presente: ' + rel);
     else fail('ASSET ENLAZADO POR UNA INVITACIÓN NO EXISTE en el export: ' + ref);
   }
@@ -191,7 +202,7 @@ if (existsSync(DIR_INVITACIONES)) {
 // enlace desde el sitio (el único vivía en /admin, que no se publica). El
 // editor quedó como una isla y el propietario no veía ningún cambio. Si
 // estas páginas dejan de enlazar al editor, el build falla a propósito.
-const EDITOR_HREF = 'href="' + BASE + '/editar/"';
+const EDITOR_HREF = 'href="/editar/"';
 const PAGINAS_CON_ENLACE_EDITOR = [
   'index.html',
   'personalizar/index.html',

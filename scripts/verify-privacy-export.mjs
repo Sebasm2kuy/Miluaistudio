@@ -62,7 +62,7 @@ const ALLOWLIST_EXACTA = new Set([
   'https://open.spotify.com/embed/',
 ]);
 const ALLOWLIST_PATRONES = [
-  /^\/Miluaistudio\//, // assets del propio sitio (rutas públicas por diseño)
+  /^\/(catalogo|assets-invitaciones|invitacion|logo|sello|og-image)/, // assets del propio sitio (raíz del dominio propio)
 ];
 
 if (!existsSync(OUT)) {

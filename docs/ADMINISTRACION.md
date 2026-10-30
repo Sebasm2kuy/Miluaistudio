@@ -13,7 +13,7 @@ de GitHub del propietario.
 
 ## Opción A — Editor móvil publicado (recomendada para editar desde el teléfono)
 
-1. Abrir `https://sebasm2kuy.github.io/Miluaistudio/editar/` en el navegador del
+1. Abrir `https://lumengala.site/editar/` en el navegador del
    teléfono y guardarlo en marcadores. Tip: `…/editar/?slug=mi-invitacion` preselecciona
    el slug (un marcador por invitación).
 2. En Ajustes → **Conexión con GitHub** pegar el token (igual que en el panel) y
@@ -38,7 +38,7 @@ leer ni modificar datos reales.
    ```
 2. Abrir `http://localhost:3000/admin` (solo existe en tu máquina).
    - **Desde el teléfono (dev):** el botón **📱 Editor móvil** del encabezado lleva a
-     `/Miluaistudio/editar/` en el servidor local. Para el uso normal del teléfono no
+     `/editar/` en el servidor local. Para el uso normal del teléfono no
      hace falta esto: usá la Opción A.
 3. Pegar el token de GitHub **solo si** vas a publicar o subir imágenes (sección
    **“Conexión con GitHub”**):
@@ -137,7 +137,7 @@ publicación.
 
 - Imágenes que el **propietario** sube desde el editor para mostrarse en la
   invitación: carpeta `public/assets-invitaciones/`, servida en
-  `/Miluaistudio/assets-invitaciones/<archivo>`. El uploader valida tamaño
+  `/assets-invitaciones/<archivo>`. El uploader valida tamaño
   (máx. 5 MB), extensión (JPG/PNG/WebP), MIME y la firma real del archivo
   (magic bytes), con nombres saneados y únicos.
 - Fotos que suben los **invitados** (“Dejale un recuerdo”): siguen por el
@@ -161,10 +161,10 @@ PAT fine-grained con `Contents: Read and write` solo para este repo.
 | # | Paso | Cómo verificar | Resultado |
 |---|------|----------------|-----------|
 | 1 | Abrir el panel local y previsualizar un evento ficticio | `http://localhost:3000/admin` → editar un evento de prueba → **Ver vista previa** → `/previsualizar/` muestra la MISMA configuración (título, fecha, colores, galería) | PENDIENTE |
-| 2 | Publicar una invitación con un slug de prueba y abrir la URL devuelta | Slug `prueba-aceptacion` → **Publicar en GitHub** → el panel muestra “Invitación creada” con la URL → esperar el deploy de Pages (~2-3 min) → abrir `https://sebasm2kuy.github.io/Miluaistudio/i/prueba-aceptacion/` | PENDIENTE |
+| 2 | Publicar una invitación con un slug de prueba y abrir la URL devuelta | Slug `prueba-aceptacion` → **Publicar en GitHub** → el panel muestra “Invitación creada” con la URL → esperar el deploy de Pages (~2-3 min) → abrir `https://lumengala.site/i/prueba-aceptacion/` | PENDIENTE |
 | 3 | Actualizar el MISMO slug y confirmar que la URL se conserva | Cambiar un dato (p. ej. el título) → publicar de nuevo con el mismo slug → el panel muestra “Invitación actualizada” (no “creada”) y la MISMA URL; la página publicada refleja el cambio | PENDIENTE |
 | 4 | Publicar un segundo slug y comprobar que el primero sigue disponible | Slug `prueba-aceptacion-2` → publicar → abrir ambas URLs: las dos invitaciones existen y ninguna sobrescribió a la otra | PENDIENTE |
-| 5 | Subir una imagen de prueba y verificar que su URL funciona en la invitación publicada | En Galeria/Invitación, subir una imagen sintética (< 5 MB) → la tarjeta muestra la URL `/Miluaistudio/assets-invitaciones/…` → publicar → la imagen se ve en la página publicada y la URL responde 200 | PENDIENTE |
+| 5 | Subir una imagen de prueba y verificar que su URL funciona en la invitación publicada | En Galeria/Invitación, subir una imagen sintética (< 5 MB) → la tarjeta muestra la URL `/assets-invitaciones/…` → publicar → la imagen se ve en la página publicada y la URL responde 200 | PENDIENTE |
 | 6 | Enviar un RSVP ficticio válido y verificarlo en la hoja/pestaña esperada | Seguir `docs/PRUEBA-MANUAL-RSVP.md` (pasos 2, 3 y 5) con “Invitado Prueba” → fila nueva en la pestaña RSVP de la hoja | PENDIENTE |
 | 7 | Comprobar que un RSVP inválido muestra error y la UI no afirma que se guardó | Seguir `docs/PRUEBA-MANUAL-RSVP.md` (pasos 4 y 5) → el formulario muestra estado de error (o pendiente con fallback visible), NUNCA “confirmado” falso | PENDIENTE |
 

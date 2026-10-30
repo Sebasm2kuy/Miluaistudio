@@ -658,7 +658,7 @@ export default function AdminPage() {
     const cfgSincronizada = sincronizarFondoConGaleria(cfg)
     setCfg(cfgSincronizada)
     saveConfig(cfgSincronizada)
-    window.open('/Miluaistudio/previsualizar/', '_blank', 'noopener')
+    window.open('/previsualizar/', '_blank', 'noopener')
   }, [cfg])
 
   // Alternativa sin token: descarga el JSON publicable para commitearlo a mano
@@ -731,7 +731,7 @@ export default function AdminPage() {
             {/* Acceso directo al editor móvil visual (/editar): la edición
                 directa sobre la invitación es más cómoda en el teléfono. */}
             <a
-              href="/Miluaistudio/editar/"
+              href="/editar/"
               className="px-4 min-h-[40px] inline-flex items-center rounded-lg text-xs font-bold transition-colors"
               style={{ background: '#8a6534', color: '#fff', border: 'none' }}
             >

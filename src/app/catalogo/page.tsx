@@ -14,7 +14,7 @@ import { TESTIMONIOS } from '@/data/testimonios';
 import { PRECIO } from '@/data/precio';
 
 function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; index: number; onQuickView: () => void }) {
-  const demoUrl = '/Miluaistudio/catalogo/' + design.id + '/';
+  const demoUrl = '/catalogo/' + design.id + '/';
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e8e0d7] bg-white shadow-[0_4px_16px_rgba(34,26,19,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(34,26,19,0.10)]">
@@ -101,7 +101,7 @@ export default function CatalogoPage() {
     <div data-page="storefront" className="min-h-screen bg-[#faf8f4] text-[#292522]">
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 text-[#292522] backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-          <a href="/Miluaistudio/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
+          <a href="/" className="flex items-center gap-3" aria-label="Volver al inicio de Miluaistudio">
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443]"><Heart size={19} /></span>
             <span>
               <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">MILUAISTUDIO</span>
@@ -134,7 +134,7 @@ export default function CatalogoPage() {
             Elegí el estilo que más te guste y hacé de tu fiesta un evento inolvidable. Cada diseño incluye una invitación web completa con cuenta regresiva, galería, música y confirmación de asistencia.
           </p>
           <a
-            href="/Miluaistudio/personalizar/"
+            href="/personalizar/"
             className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#292522] px-5 py-2.5 text-sm font-semibold text-[#fdfbf7] shadow-[0_10px_26px_rgba(38,34,29,0.22)] transition hover:-translate-y-0.5 hover:bg-[#3d3830]"
           >
             <PenLine size={15} /> Personalizar con mis datos
@@ -289,10 +289,10 @@ export default function CatalogoPage() {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <a href={'/Miluaistudio/personalizar/?diseno=' + selected.id} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-5 py-3 text-sm font-semibold text-[#fdfbf7] transition hover:bg-[#3d3830]">
+                  <a href={'/personalizar/?diseno=' + selected.id} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-5 py-3 text-sm font-semibold text-[#fdfbf7] transition hover:bg-[#3d3830]">
                     <PenLine size={15} /> Personalizar este diseño
                   </a>
-                  <a href={'/Miluaistudio/catalogo/' + selected.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:brightness-110" style={{ background: selected.buttonBg, color: selected.buttonText }}>
+                  <a href={'/catalogo/' + selected.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:brightness-110" style={{ background: selected.buttonBg, color: selected.buttonText }}>
                     Abrir demostración <ArrowRight size={15} />
                   </a>
                   <a href={whatsappLinkDiseno(selected.name)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-[#0b3d1e] transition hover:bg-[#1db957]">

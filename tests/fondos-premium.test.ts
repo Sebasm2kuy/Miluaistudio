@@ -50,7 +50,7 @@ test('fondos: cada preset con imagen existe en public/ y pesa menos de 400 KB', 
   // La colección aporta 19 fondos con imagen (5 rosas + 5 neón + 3 papel + 3 gala + 3 disco)
   assert.equal(conImagen.length, 19, 'deben existir 19 presets con imagen');
   for (const bg of conImagen) {
-    const rel = (bg.image as string).replace('/Miluaistudio/', '');
+    const rel = (bg.image as string).replace('/catalogo/', 'catalogo/');
     const abs = resolve(RAIZ_PUBLIC, rel);
     assert.ok(existsSync(abs), `falta el archivo del fondo ${bg.id}: ${bg.image}`);
     const peso = statSync(abs).size;
@@ -62,7 +62,7 @@ test('fondos: cada preset con imagen existe en public/ y pesa menos de 400 KB', 
 test('fondos: los ids de imagen siguen la ruta canónica de la colección', () => {
   for (const bg of BACKGROUND_PRESETS) {
     if (!bg.image) continue;
-    assert.ok(bg.image.startsWith('/Miluaistudio/catalogo/fondos/'), `ruta inesperada: ${bg.image}`);
+    assert.ok(bg.image.startsWith('/catalogo/fondos/'), `ruta inesperada: ${bg.image}`);
     assert.match(bg.image, /\.jpg$/, 'los fondos de autor se distribuyen en JPG');
   }
 });

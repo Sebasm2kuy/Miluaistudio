@@ -38,7 +38,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sebasm2kuy.github.io/Miluaistudio/"),
+  metadataBase: new URL("https://lumengala.site/"),
   title: {
     default: "Miluaistudio | Invitaciones digitales personalizadas",
     template: "%s | Miluaistudio",
@@ -58,26 +58,26 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://sebasm2kuy.github.io/Miluaistudio/",
+    canonical: "https://lumengala.site/",
   },
   icons: {
     icon: [
-      { url: "/Miluaistudio/logo.svg", type: "image/svg+xml" },
-      { url: "/Miluaistudio/sello-sm.png", type: "image/png", sizes: "256x256" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/sello-sm.png", type: "image/png", sizes: "256x256" },
     ],
-    shortcut: ["/Miluaistudio/sello-sm.png"],
-    apple: [{ url: "/Miluaistudio/sello-sm.png", sizes: "256x256" }],
+    shortcut: ["/sello-sm.png"],
+    apple: [{ url: "/sello-sm.png", sizes: "256x256" }],
   },
   openGraph: {
     title: "Miluaistudio | Invitaciones digitales personalizadas",
     description: "Explorá diseños de invitación web para fiestas de 15, bodas y celebraciones. Cada invitación reúne el estilo y los detalles de tu evento en un solo enlace.",
     type: "website",
     locale: "es_UY",
-    url: "https://sebasm2kuy.github.io/Miluaistudio/",
+    url: "https://lumengala.site/",
     siteName: "Miluaistudio · Invitaciones digitales",
     images: [
       {
-        url: "https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg",
+        url: "https://lumengala.site/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Miluaistudio — invitaciones digitales personalizadas",
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Miluaistudio | Invitaciones digitales personalizadas",
     description: "Diseños web personalizados para fiestas de 15, bodas y celebraciones.",
-    images: ["https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg"],
+    images: ["https://lumengala.site/og-image.jpg"],
   },
 };
 

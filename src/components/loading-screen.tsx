@@ -8,7 +8,7 @@ interface LoadingScreenProps { onDone: () => void }
 // Background photos are pulled dynamically from cfg.fondo.fotos below,
 // so the loader only waits for assets that will actually be displayed.
 const STATIC_ASSETS = [
-  '/Miluaistudio/invitacion-vertical.webp',
+  '/invitacion-vertical.webp',
 ]
 
 function preloadImages(urls: string[]): Promise<void> {

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Personalizá tu invitación',
   description:
     'Elegí un diseño, cargá tus datos y mirá tu invitación digital en vivo: cuenta regresiva, música, galería y confirmación de asistencia con tu nombre y tu fecha. XV años, bodas y más, en Uruguay.',
-  alternates: { canonical: 'https://sebasm2kuy.github.io/Miluaistudio/personalizar/' },
+  alternates: { canonical: 'https://lumengala.site/personalizar/' },
   keywords: ['personalizar invitación digital', 'invitación interactiva', 'Miluaistudio', 'fiestas de 15', 'bodas Uruguay'],
   openGraph: {
     title: 'Personalizá tu invitación digital · Miluaistudio',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_UY',
     siteName: 'Miluaistudio · Invitaciones digitales',
-    url: 'https://sebasm2kuy.github.io/Miluaistudio/personalizar/',
+    url: 'https://lumengala.site/personalizar/',
   },
 };
 

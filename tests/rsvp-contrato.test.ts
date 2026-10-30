@@ -65,6 +65,6 @@ test('interpretarRespuestaFoto: la moderación pendiente nunca cuenta como publi
   assert.equal(interpretarRespuestaFoto({ success: false, error: 'x' }), 'error');
   assert.equal(interpretarRespuestaFoto({ success: true, estado: 'pendiente' }), 'pendiente');
   assert.equal(interpretarRespuestaFoto({ success: true, estado: 'aprobada' }), 'publicada');
-  assert.equal(interpretarRespuestaFoto({ success: true, url: '/Miluaistudio/a.jpg' }), 'publicada');
+  assert.equal(interpretarRespuestaFoto({ success: true, url: '/a.jpg' }), 'publicada');
   assert.equal(interpretarRespuestaFoto({ success: true }), 'error', 'éxito sin estado ni url → error');
 });

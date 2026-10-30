@@ -7,7 +7,7 @@
  *  - serialización: solo datos (sin funciones ni objetos del editor),
  *    modo real (no demo) y sin etiqueta de demostración
  *  - validación de la representación leída de un JSON
- *  - construcción de URLs con basePath /Miluaistudio/
+ *  - construcción de URLs ancladas a la raíz del dominio propio (lumengala.site)
  *  - coexistencia: dos invitaciones → dos representaciones independientes;
  *    actualizar conserva el slug
  *  - la invitación publicada lleva los campos de RSVP del contrato y las
@@ -217,11 +217,11 @@ test('validarInvitacionPublicada: rechaza null, arrays, esquema viejo y config s
 // URLs y rutas de archivo
 // ---------------------------------------------------------------------------
 
-test('urlInvitacion / urlPublicaInvitacion: incluyen /Miluaistudio/ y trailing slash', () => {
-  assert.equal(urlInvitacion('ejemplo-xv'), '/Miluaistudio/i/ejemplo-xv/');
+test('urlInvitacion / urlPublicaInvitacion: ancladas a la raíz del dominio propio y trailing slash', () => {
+  assert.equal(urlInvitacion('ejemplo-xv'), '/i/ejemplo-xv/');
   assert.equal(
     urlPublicaInvitacion('ejemplo-xv'),
-    'https://sebasm2kuy.github.io/Miluaistudio/i/ejemplo-xv/',
+    'https://lumengala.site/i/ejemplo-xv/',
   );
   assert.equal(rutaArchivoInvitacion('ejemplo-xv'), 'content/invitaciones/ejemplo-xv.json');
 });

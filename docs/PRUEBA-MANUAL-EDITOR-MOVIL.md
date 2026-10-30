@@ -1,24 +1,24 @@
 # Prueba manual del editor móvil en un teléfono físico
 
-**Ruta:** `/Miluaistudio/editar/` — **publicada** desde la iteración 017:
-`https://sebasm2kuy.github.io/Miluaistudio/editar/` (con token de GitHub en
+**Ruta:** `/editar/` — **publicada** desde la iteración 017:
+`https://lumengala.site/editar/` (con token de GitHub en
 Ajustes → «Conexión con GitHub» para cargar y publicar la invitación real).
 También funciona en desarrollo local: con `npm run dev` en la compu, abrir desde el
-celular `http://<IP-de-la-compu>:3000/Miluaistudio/editar/` (misma red Wi-Fi), o el
+celular `http://<IP-de-la-compu>:3000/editar/` (misma red Wi-Fi), o el
 botón «📱 Editor móvil» del panel `/admin` local.
 
 > Regla de honestidad: marcar cada paso solo si se hizo REALMENTE en el teléfono. Lo probado solo con emulador o navegador de escritorio no cuenta para esta lista.
 
 ## Llegar al editor desde el sitio publicado (iteración 018)
 
-- [ ] 0a. Abrir `https://sebasm2kuy.github.io/Miluaistudio/` en el teléfono: en el pie debe verse el enlace «Editor de invitaciones» y llevar a `/editar/`.
+- [ ] 0a. Abrir `https://lumengala.site/` en el teléfono: en el pie debe verse el enlace «Editor de invitaciones» y llevar a `/editar/`.
 - [ ] 0b. Ir a «Personalizar» desde el sitio, elegir un diseño y completar el nombre: en el teléfono, debajo del paso 1 (tarjeta «Elegiste…») debe verse el botón dorado «Editar tocando la invitación». Tocarlo: debe abrir el editor con LOS DATOS que cargaste (nombre, fecha, lugar), no la demo de ejemplo. En PC el mismo botón sigue estando en la tarjeta «Vista previa en vivo» de la derecha.
 - [ ] 0c. En `/editar/` con el navegador «limpio» (sin borrador): debajo del aviso de «Tocá cualquier elemento…» debe verse la franja «Esta es una invitación de ejemplo…». Tocarla abre Ajustes directamente, con la sección «Invitación publicada».
 - [ ] 0d. (Iteración 020) En `/editar/` → Ajustes → «Importar pedido por WhatsApp»: pegar un mensaje REAL que te haya mandado un cliente con «Enviar mi configuración», tocar «Leer el mensaje» y revisar la vista previa (✓ por campo, ⚠ por avisos). Tocar «Cargar en la invitación»: el editor debe mostrar la invitación con LOS DATOS DEL CLIENTE (nombre, fecha, lugar, cronograma). Si la historia venía recortada, completarla tocando la dedicatoria. Luego publicar con tu token y verificar en /i/slug/.
 
 ## Preparación
 
-- [ ] 1. Abrir `/Miluaistudio/editar/` en el teléfono. Debe verse la invitación completa con la barra superior (Editar/Previa, Guardar) y la barra inferior con «Ajustes». En el sitio publicado no debe haber flecha «volver al panel» (solo existe en dev).
+- [ ] 1. Abrir `/editar/` en el teléfono. Debe verse la invitación completa con la barra superior (Editar/Previa, Guardar) y la barra inferior con «Ajustes». En el sitio publicado no debe haber flecha «volver al panel» (solo existe en dev).
 
 ## Edición directa
 
@@ -54,8 +54,8 @@ botón «📱 Editor móvil» del panel `/admin` local.
 
 ## Guardado y persistencia
 
-- [ ] 22. Tocar «Guardar» (debe decir «Guardado ✓») y cerrar el navegador del teléfono por completo. Reabrir `/Miluaistudio/editar/`: los cambios deben seguir.
-- [ ] 23. Abrir `/Miluaistudio/previsualizar/`: la invitación debe reflejar los cambios guardados.
+- [ ] 22. Tocar «Guardar» (debe decir «Guardado ✓») y cerrar el navegador del teléfono por completo. Reabrir `/editar/`: los cambios deben seguir.
+- [ ] 23. Abrir `/previsualizar/`: la invitación debe reflejar los cambios guardados.
 - [ ] 24. Con cambios sin guardar, en escritorio intentar cerrar la pestaña: debe avisar (en el teléfono este aviso puede no aparecer: es mejor esfuerzo del navegador).
 
 ## Escritorio (regresión)

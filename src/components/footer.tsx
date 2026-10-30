@@ -18,7 +18,7 @@ export default function Footer() {
 
     if (clickCount.current >= 5) {
       clickCount.current = 0
-      router.push('/Miluaistudio/admin/')
+      router.push('/admin/')
     }
   }, [cfg.modoDemo])
 
