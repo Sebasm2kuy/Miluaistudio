@@ -703,3 +703,22 @@ html:has([data-page="storefront"]) body {
 .modo-edicion .hero-scroll {
   display: none;
 }
+
+/* ===== Servicios «próximamente» + menú móvil (iteración 025) ===== */
+/* Despliegue suave de paneles (tarjetas de servicio y menú móvil) */
+@keyframes servicioAbre {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.servicio-abre { animation: servicioAbre 0.32s ease-out both; }
+
+/* Pulso dorado cuando un servicio se abre desde el menú superior */
+@keyframes pulsoDorado {
+  0% { box-shadow: 0 0 0 0 rgba(203, 178, 137, 0.6); }
+  100% { box-shadow: 0 0 0 16px rgba(203, 178, 137, 0); }
+}
+.pulso-dorado { animation: pulsoDorado 1.4s ease-out 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .servicio-abre, .pulso-dorado { animation: none; }
+}
