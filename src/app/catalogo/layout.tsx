@@ -8,24 +8,24 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://lumengala.site/catalogo/' },
   openGraph: {
-    title: 'Invitaciones digitales personalizadas | Lumen Gala',
+    title: 'Invitaciones digitales personalizadas | Lumen Gala Studio',
     description: 'Diseños web personalizados para compartir los detalles de tu celebración en un solo enlace.',
     type: 'website',
     locale: 'es_UY',
-    siteName: 'Lumen Gala · Invitaciones digitales',
+    siteName: 'Lumen Gala Studio',
     url: 'https://lumengala.site/catalogo/',
     images: [
       {
         url: 'https://lumengala.site/lgs-preview.jpg',
         width: 1200,
         height: 630,
-        alt: 'Invitación digital de demostración de Lumen Gala',
+        alt: 'Isotipo dorado de Lumen Gala Studio sobre una invitación digital de demostración',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Invitaciones digitales personalizadas | Lumen Gala',
+    title: 'Invitaciones digitales personalizadas | Lumen Gala Studio',
     description: 'Explorá diseños web personalizados para tus celebraciones.',
     images: ['https://lumengala.site/lgs-preview.jpg'],
   },
