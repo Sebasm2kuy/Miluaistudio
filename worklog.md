@@ -506,3 +506,12 @@ Stage Summary:
 - Se conservan las referencias al nombre del REPO (GITHUB_REPO, api.github.com, ayuda de tokens): son rutas de API reales, no de web.
 
 **Pruebas:** 163/163 tests (3 nuevos en tests/marca-lumen-gala.test.ts), lint 0, typecheck 0, build + prune + verify-export (§2+§8) + verify-privacy OK. E2E móvil 390×844: header «LUMEN GALA», pie «© 2026 Lumen Gala», menú con chips «pronto», tap «Álbum digital» despliega, /catalogo/ y /personalizar/ con títulos «| Lumen Gala». E2E 1280×800: nav completa, logo en Playfair Display tracking 1.2 px, demo «Rosa Romántica · Lumen Gala», chunk del ticket con «LUMEN GALA», /editar/ carga sin errores de consola. favicon.ico servido 200 con type image/vnd.microsoft.icon. Pendiente: revisión del propietario en teléfono físico (favicon en pestaña + preview de WhatsApp puede demorar por caché).
+
+---
+## Iteración 028 — Isotipo oficial LGS en el encabezado (feat/isotipo-lgs-header)
+
+**Pedido:** quitar por completo el corazón del header y poner en su lugar el isotipo oficial (rombo dorado LGS) antes del texto «LUMEN GALA», limpio, alineado y a 32-40 px.
+
+**Cambios:** public/logo-lgs.png (nuevo, recorte centrado 240×240 del Logo.jpg para nitidez retina); los 3 headers de la tienda (store-nav, catalogo/page, personalizador-app) cambian el círculo con corazón de lucide por la imagen del isotipo con rounded-lg + anillo dorado fino + sombra suave, mismos tamaños (36→40 px, sin cambios de layout); alt vacío decorativo (el aria-label vive en el enlace); imports de Heart limpiados donde ya no se usa (se conserva en el label «Mi historia»). Favicon y ticket de aperturas sin cambios.
+
+**Pruebas:** 163/163 tests, lint 0, typecheck 0, build + verify-export OK. E2E raíz: /logo-lgs.png 200 image/png; logo render 36-40 px alineado con el texto; capturas móvil (390×844) y PC catálogo (1280×800) verificadas visualmente — rombo dorado nítido y legible en miniatura, sin corazón.

@@ -373,9 +373,8 @@ export default function PersonalizadorApp() {
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <a href="/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Lumen Gala">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#8a6534]">
-              <Heart size={17} />
-            </span>
+            {/* Isotipo oficial LGS en miniatura; sustituye al corazón de placeholder. */}
+            <img src="/logo-lgs.png" alt="" width={240} height={240} className="h-9 w-9 shrink-0 rounded-lg object-cover shadow-sm ring-1 ring-[#dfc9a4]" />
             <span>
               <span className="block font-serif text-base tracking-[0.08em] sm:text-lg">LUMEN GALA</span>
               <span className="hidden text-[9px] uppercase tracking-[0.2em] text-[#787168] sm:block">Personalizá tu invitación</span>
