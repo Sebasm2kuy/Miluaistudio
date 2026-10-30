@@ -515,3 +515,12 @@ Stage Summary:
 **Cambios:** public/logo-lgs.png (nuevo, recorte centrado 240×240 del Logo.jpg para nitidez retina); los 3 headers de la tienda (store-nav, catalogo/page, personalizador-app) cambian el círculo con corazón de lucide por la imagen del isotipo con rounded-lg + anillo dorado fino + sombra suave, mismos tamaños (36→40 px, sin cambios de layout); alt vacío decorativo (el aria-label vive en el enlace); imports de Heart limpiados donde ya no se usa (se conserva en el label «Mi historia»). Favicon y ticket de aperturas sin cambios.
 
 **Pruebas:** 163/163 tests, lint 0, typecheck 0, build + verify-export OK. E2E raíz: /logo-lgs.png 200 image/png; logo render 36-40 px alineado con el texto; capturas móvil (390×844) y PC catálogo (1280×800) verificadas visualmente — rombo dorado nítido y legible en miniatura, sin corazón.
+
+---
+## Iteración 029 — Tarjeta de WhatsApp con la marca LGS (feat/og-marca-lgs)
+
+**Pedido:** og:title «Lumen Gala Studio | Invitaciones web de alta gama»; og:description «Experiencias digitales personalizadas para 15s, bodas y eventos únicos. Música, RSVP y cuenta regresiva en un solo enlace.»; og:image con la imagen oficial LGS (rombo dorado sobre fondo oscuro) en una URL completamente NUEVA para forzar a WhatsApp a refrescar su caché; <title> «Lumen Gala | Invitaciones digitales».
+
+**Cambios:** public/lgs-preview.jpg (nueva, 1200×630: rombo LGS extraído con alfa R−B flotando sobre el fondo oscuro del logo + LUMEN GALA en serif dorada + «INVITACIONES WEB DE ALTA GAMA»; la vieja og-image.jpg con la tarjeta «Milagros XV» se elimina); layout.tsx (title.default, openGraph y twitter completos); catalogo/layout.tsx y catalogo/[designId]/page.tsx → lgs-preview.jpg; verify-export §2 exige lgs-preview.jpg y §8 valida og:title LGS + og:image exacta nueva; verify-privacy allowlist actualizada.
+
+**Pruebas:** 163/163 tests, lint 0, typecheck 0, build + verify-export (§2+§8) + verify-privacy OK. Local sobre out/: título/og:title/og:description exactos, og:image = https://lumengala.site/lgs-preview.jpg, asset 200 image/jpeg 58 686 bytes, og-image.jpg 404. Tarjeta visual verificada (sin tile cuadrado, textos centrados). Pendiente: reenviar el enlace por WhatsApp para ver la tarjeta nueva (URL nueva obliga re-rastreo).

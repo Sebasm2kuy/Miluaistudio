@@ -40,7 +40,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lumengala.site/"),
   title: {
-    default: "Lumen Gala | Invitaciones digitales personalizadas",
+    default: "Lumen Gala | Invitaciones digitales",
     template: "%s | Lumen Gala",
   },
   description: "Invitaciones digitales interactivas y personalizadas para fiestas de 15, bodas y celebraciones. Explorá los diseños, probá las demostraciones y consultá la personalización.",
@@ -72,27 +72,29 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "Lumen Gala | Invitaciones digitales personalizadas",
-    description: "Explorá diseños de invitación web para fiestas de 15, bodas y celebraciones. Cada invitación reúne el estilo y los detalles de tu evento en un solo enlace.",
+    title: "Lumen Gala Studio | Invitaciones web de alta gama",
+    description:
+      "Experiencias digitales personalizadas para 15s, bodas y eventos únicos. Música, RSVP y cuenta regresiva en un solo enlace.",
     type: "website",
     locale: "es_UY",
     url: "https://lumengala.site/",
     siteName: "Lumen Gala · Invitaciones digitales",
     images: [
       {
-        url: "https://lumengala.site/og-image.jpg",
+        url: "https://lumengala.site/lgs-preview.jpg",
         width: 1200,
         height: 630,
-        alt: "Lumen Gala — invitaciones digitales personalizadas",
+        alt: "Isotipo LGS de Lumen Gala: rombo dorado con las letras entrelazadas sobre fondo oscuro",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lumen Gala | Invitaciones digitales personalizadas",
-    description: "Diseños web personalizados para fiestas de 15, bodas y celebraciones.",
-    images: ["https://lumengala.site/og-image.jpg"],
+    title: "Lumen Gala Studio | Invitaciones web de alta gama",
+    description:
+      "Experiencias digitales personalizadas para 15s, bodas y eventos únicos. Música, RSVP y cuenta regresiva en un solo enlace.",
+    images: ["https://lumengala.site/lgs-preview.jpg"],
   },
 };
 
