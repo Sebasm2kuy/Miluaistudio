@@ -62,7 +62,7 @@ const ALLOWLIST_EXACTA = new Set([
   'https://open.spotify.com/embed/',
 ]);
 const ALLOWLIST_PATRONES = [
-  /^\/(catalogo|assets-invitaciones|invitacion|logo|sello|og-image)/, // assets del propio sitio (raíz del dominio propio)
+  /^\/(catalogo|assets-invitaciones|invitacion|logo|sello|lgs-preview)/, // assets del propio sitio (raíz del dominio propio)
 ];
 
 if (!existsSync(OUT)) {

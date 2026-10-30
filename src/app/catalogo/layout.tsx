@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: 'https://lumengala.site/catalogo/',
     images: [
       {
-        url: 'https://lumengala.site/og-image.jpg',
+        url: 'https://lumengala.site/lgs-preview.jpg',
         width: 1200,
         height: 630,
         alt: 'Invitación digital de demostración de Lumen Gala',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Invitaciones digitales personalizadas | Lumen Gala',
     description: 'Explorá diseños web personalizados para tus celebraciones.',
-    images: ['https://lumengala.site/og-image.jpg'],
+    images: ['https://lumengala.site/lgs-preview.jpg'],
   },
 };
 

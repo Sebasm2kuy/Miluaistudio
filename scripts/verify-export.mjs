@@ -20,7 +20,10 @@
  *     que lo dejaría inalcanzable desde el sitio (causa raíz de la 018).
  *  8. La marca vuelve a ser la vieja: el <title> de la portada debe decir
  *     «Lumen Gala» y declarar el favicon LGS (favicon.ico) — transición
- *     definitiva de marca de la iteración 027.
+ *     definitiva de marca de la iteración 027. Desde la 029, además, la
+ *     tarjeta compartida (WhatsApp/redes) debe llevar la identidad LGS
+ *     (og:title «Lumen Gala Studio…») y la imagen NUEVA lgs-preview.jpg
+ *     (URL distinta de la vieja og-image.jpg para romper la caché de WhatsApp).
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
@@ -62,7 +65,7 @@ const required = [
   // Editor móvil publicado (iteración 017): debe existir en el artefacto.
   'editar/index.html',
   ...DESIGNS.map((d) => `catalogo/${d}/index.html`),
-  'og-image.jpg',
+  'lgs-preview.jpg',
   'favicon.ico',
   'apple-touch-icon.png',
 ];
@@ -219,9 +222,12 @@ for (const rel of PAGINAS_CON_ENLACE_EDITOR) {
   else fail('SIN ENLACE AL EDITOR: ' + rel + ' no contiene ' + EDITOR_HREF + ' — el editor móvil volvería a quedar inalcanzable desde el sitio publicado.');
 }
 
-// ---- 8. Marca Lumen Gala: título y favicon del sitio publicado ----
+// ---- 8. Marca Lumen Gala: título, favicon y tarjeta OG del sitio publicado ----
 // Transición definitiva de marca (iteración 027): la portada no puede
 // volver a llamarse «Miluaistudio» ni perder el favicon LGS.
+// Iteración 029: la tarjeta OG (WhatsApp/redes) debe llevar la identidad
+// LGS y la imagen NUEVA lgs-preview.jpg — la URL cambió de nombre a
+// propósito para que WhatsApp refresque la vista previa cacheada.
 const INDEX_MARCA = join(OUT, 'index.html');
 if (existsSync(INDEX_MARCA)) {
   const html = readFileSync(INDEX_MARCA, 'utf8');
@@ -238,6 +244,22 @@ if (existsSync(INDEX_MARCA)) {
     ok('favicon.ico LGS declarado en el <head> de la portada');
   } else {
     fail('SIN FAVICON LGS: la portada no declara <link rel="icon" href="/favicon.ico">');
+  }
+  const metaContenido = (propiedad) =>
+    html
+      .match(new RegExp('<meta [^>]*property="' + propiedad + '"[^>]*>'))?.[0]
+      ?.match(/content="([^"]*)"/)?.[1] ?? '';
+  const ogTitle = metaContenido('og:title');
+  if (/lumen gala studio/i.test(ogTitle) && /alta gama/i.test(ogTitle)) {
+    ok('og:title de portada con la identidad LGS: ' + ogTitle);
+  } else {
+    fail('OG DESACTUALIZADO: el og:title de la portada debe decir «Lumen Gala Studio | Invitaciones web de alta gama» (' + ogTitle + ')');
+  }
+  const ogImage = metaContenido('og:image');
+  if (ogImage === 'https://lumengala.site/lgs-preview.jpg') {
+    ok('og:image apunta a la imagen de marca NUEVA: ' + ogImage);
+  } else {
+    fail('OG IMAGE VIEJA: og:image debe ser exactamente https://lumengala.site/lgs-preview.jpg (URL nueva para romper la caché de WhatsApp) (' + ogImage + ')');
   }
 }
 

@@ -34,13 +34,13 @@ export async function generateMetadata({
       locale: 'es_UY',
       siteName: 'Lumen Gala · Invitaciones digitales',
       url: `https://lumengala.site/catalogo/${design.id}/`,
-      images: [{ url: 'https://lumengala.site/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Lumen Gala' }],
+      images: [{ url: 'https://lumengala.site/lgs-preview.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Lumen Gala' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${design.name} · Lumen Gala`,
       description: design.description,
-      images: ['https://lumengala.site/og-image.jpg'],
+      images: ['https://lumengala.site/lgs-preview.jpg'],
     },
   };
 }
