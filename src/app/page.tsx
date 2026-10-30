@@ -242,7 +242,7 @@ export default function Home() {
                 title={<>Encontrá el estilo que <em className="italic" style={{ color: GOLD }}>te representa</em>.</>}
               />
               <a href={CATALOG_URL} className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#8a6a44] transition hover:text-[#7a5e3d]">
-                Ver los diez diseños <ArrowRight size={16} />
+                Ver diseños <ArrowRight size={16} />
               </a>
             </div>
           </Reveal>
