@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://sebasm2kuy.github.io/Miluaistudio/sitemap.xml
+Sitemap: https://lumengala.site/sitemap.xml
