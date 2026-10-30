@@ -5,7 +5,6 @@ import {
   Check,
   Clapperboard,
   Clock3,
-  ExternalLink,
   Film,
   Image as ImageIcon,
   Images,
@@ -29,9 +28,8 @@ import { DesignAdornoGlyph } from '@/components/design-ornaments';
 import StoreNav from '@/components/store-nav';
 import CarruselModelos from '@/components/carrusel-modelos';
 import ServiciosExtras from '@/components/servicios-extras';
-import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
+import { WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
-import { PRECIO } from '@/data/precio';
 import { MENSAJE_SERVICIOS_EXTRA } from '@/data/servicios';
 
 const CATALOG_URL = '/catalogo/';
@@ -61,8 +59,11 @@ const PILLS_SERVICIOS: Array<{ label: string; href: string; icon: LucideIcon; pr
 ];
 
 export default function Home() {
-  const heroDesign = INVITATION_DESIGNS[0];
-  const heroSecondary = INVITATION_DESIGNS[1];
+  /* Héroe: los dos modelos de mayor impacto de la colección. Gala Estrellada
+     (negro + oro, haz de luz) es puro Lumen Gala; Pista Disco suma el
+     contraste vibrante de la fiesta. Antes: rosa-romantica + noche-dorada. */
+  const heroDesign = INVITATION_DESIGNS.find((d) => d.id === 'gala-estrellas') ?? INVITATION_DESIGNS[0];
+  const heroSecondary = INVITATION_DESIGNS.find((d) => d.id === 'disco-pista') ?? INVITATION_DESIGNS[1];
   const featured = INVITATION_DESIGNS.slice(0, 4);
 
   return (
@@ -133,18 +134,7 @@ export default function Home() {
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
               <WhatsAppIcon size={16} /> Consultar por WhatsApp
             </a>
-            <div className="hidden sm:block">
-              <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className={OUTLINE_BTN}>
-                Comprar por Mercado Libre
-              </a>
-            </div>
           </div>
-          <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="store-hero-in-3 mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6d5326] underline decoration-[#d9c9ad] underline-offset-4 transition hover:decoration-[#a8814f] sm:hidden">
-            Compralo en Mercado Libre <ExternalLink size={14} />
-          </a>
-          <p className="store-hero-in-3 mt-5 text-xs text-[#787168]">
-            <strong className="font-semibold text-[#5c5347]">{PRECIO.texto}</strong> · {PRECIO.condicion} · Personalización a medida
-          </p>
           <div className="store-hero-in-3 mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs text-[#716a63]">
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Personalizada</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Lista para compartir</span>
@@ -392,9 +382,6 @@ export default function Home() {
                 <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
                   <WhatsAppIcon size={16} /> Consultar por WhatsApp
                 </a>
-                <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className={OUTLINE_BTN}>
-                  Ver publicación
-                </a>
               </div>
             </div>
           </div>
@@ -421,7 +408,7 @@ export default function Home() {
               { q: '¿Puedo elegir los colores y el estilo?', a: 'Sí. El diseño se personaliza según tus preferencias y las opciones disponibles para el modelo elegido.' },
               { q: '¿Cómo se confirma la asistencia?', a: 'La invitación puede incluir RSVP. El método de registro y las funciones asociadas se confirman al definir la configuración del evento.' },
               { q: '¿También hacen álbum de fotos o videos del evento?', a: 'Estamos desarrollando los servicios extra: álbum digital para que tus invitados suban sus fotos y videos, edición de video, video de tu historia y tráiler del evento. Consultanos por WhatsApp y te avisamos apenas estén disponibles.' },
-              { q: '¿Cuánto cuesta?', a: 'El precio vigente es ' + PRECIO.texto + ', ' + PRECIO.condicion.toLowerCase() + '. Revisá la publicación enlazada para confirmar el precio y las condiciones antes de comprar.' },
+              { q: '¿Cuánto cuesta?', a: 'Depende del diseño y de las funciones que quieras incluir. Escribinos por WhatsApp con tu idea y te pasamos el presupuesto en el día, sin compromiso.' },
             ].map((item, index) => (
               <Reveal key={item.q} delay={index * 40}>
                 <details className="group rounded-2xl border border-[#e8e0d7] bg-white px-5 py-4 shadow-[0_3px_12px_rgba(88,63,32,0.04)]">
@@ -450,7 +437,6 @@ export default function Home() {
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-white"><WhatsAppIcon size={13} /> WhatsApp</a>
             <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
             <a href="#servicios" className="transition hover:text-white">Próximamente</a>
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">Comprar</a>
             <a href="/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
             {/* Editor móvil visual: edición directa tocando la invitación
                 (público por diseño; los datos reales exigen el token del
