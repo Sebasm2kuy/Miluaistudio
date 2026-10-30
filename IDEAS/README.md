@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 024 — Música directa desde Spotify + sección de servicios extra «próximamente» (30-10-2026)](./ITERACION-2026-10-30-024-SPOTIFY-DIRECTO-SERVICIOS-EXTRA.md)
 - [Iteración 023 — Nombres de mujeres en los modelos de muestra de 15 años (29-10-2026)](./ITERACION-2026-10-29-023-NOMBRES-MUESTRA-MUJERES.md)
 - [Iteración 022 — Colección «Fondos de autor» II: flores de papel + gala dorada + disco, 9 diseños nuevos (29-10-2026)](./ITERACION-2026-10-29-022-FONDOS-AUTOR-PAPEL-GALA-DISCO.md)
 - [Iteración 021 — Colección «Fondos de autor»: cascada de rosas + neón 3D, 10 diseños nuevos (29-10-2026)](./ITERACION-2026-10-29-021-FONDOS-AUTOR-ROSAS-NEON.md)

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import {
   ArrowRight,
   CalendarClock,
@@ -15,11 +15,9 @@ import {
   Music2,
   Palette,
   PenLine,
-  Play,
   Plus,
   Shirt,
   Sparkles,
-  Square,
   Trash2,
   Type,
   X,
@@ -41,13 +39,13 @@ import {
   partesFecha,
   SECCIONES_DEFAULT,
   SECCIONES_META,
+  spotifyEmbedUrl,
   TIPOGRAFIAS_META,
   TIPOS_EVENTO,
   type DatosPersonales,
   type Secciones,
 } from '@/lib/personalizador';
 import { APERTURAS_META, type AperturaMeta } from '@/lib/aperturas';
-import { TONOS_FONDO, type TonoFondo } from '@/lib/musica';
 
 const CATALOGO_URL = '/Miluaistudio/catalogo/';
 const PERSONALIZAR_URL = '/Miluaistudio/personalizar/';
@@ -67,7 +65,6 @@ const DATOS_INICIALES: DatosPersonales = {
   frase: '',
   musica: '',
   apertura: 'sobre',
-  musicaFondo: 'vals-dorado',
   portada: '',
   tipografia: '',
   acento: '',
@@ -202,48 +199,6 @@ function OpcionApertura({ meta, selected, onSelect }: { meta: AperturaMeta; sele
   );
 }
 
-/** Fila de tono de música de fondo con previsualización */
-function FilaTono({
-  tono,
-  elegido,
-  sonando,
-  onElegir,
-  onPrevisualizar,
-}: {
-  tono: TonoFondo;
-  elegido: boolean;
-  sonando: boolean;
-  onElegir: () => void;
-  onPrevisualizar: () => void;
-}) {
-  return (
-    <div
-      className={
-        'flex items-center gap-3 rounded-xl border px-3 py-2.5 transition ' +
-        (elegido ? 'border-[#8a6534] bg-[#faf6ef]' : 'border-[#e8e0d7] bg-white hover:border-[#c9bbaa]')
-      }
-    >
-      <button
-        type="button"
-        onClick={onPrevisualizar}
-        aria-label={sonando ? 'Detener la previsualización de ' + tono.nombre : 'Escuchar ' + tono.nombre}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#8a6534] text-[#8a6534] transition hover:bg-[#8a6534]/10"
-      >
-        {sonando ? <Square size={13} strokeWidth={2.4} /> : <Play size={13} strokeWidth={2.4} className="ml-0.5" />}
-      </button>
-      <button type="button" role="radio" aria-checked={elegido} onClick={onElegir} className="min-w-0 flex-1 text-left">
-        <span className={'block text-sm font-medium ' + (elegido ? 'text-[#292522]' : 'text-[#716a63]')}>{tono.nombre}</span>
-        <span className="block truncate text-[11px] text-[#787168]">{tono.desc}</span>
-      </button>
-      {elegido && (
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#8a6534] text-white">
-          <Check size={12} strokeWidth={3} />
-        </span>
-      )}
-    </div>
-  );
-}
-
 const FUENTE_SAMPLE: Record<string, string> = {
   clasica: 'var(--font-serif), Georgia, serif',
   romantica: 'var(--font-cormorant), Georgia, serif',
@@ -344,29 +299,8 @@ export default function PersonalizadorApp() {
     return new Date(datos.fecha + 'T23:59:59-03:00').getTime() < Date.now();
   }, [datos.fecha]);
 
-  // Previsualización de los tonos de música de fondo (un audio a la vez)
-  const audioPreview = useRef<HTMLAudioElement | null>(null);
-  const [tonoSonando, setTonoSonando] = useState<string | null>(null);
-  useEffect(() => {
-    const audio = audioPreview.current;
-    return () => {
-      if (audio) audio.pause();
-    };
-  }, []);
-  const previsualizarTono = (tono: TonoFondo) => {
-    if (tonoSonando === tono.id) {
-      audioPreview.current?.pause();
-      setTonoSonando(null);
-      return;
-    }
-    if (!audioPreview.current) audioPreview.current = new Audio();
-    const audio = audioPreview.current;
-    audio.pause();
-    audio.src = tono.src;
-    audio.volume = 0.7;
-    audio.play().catch(() => {});
-    setTonoSonando(tono.id);
-  };
+  // Previsualización del reproductor de Spotify elegido (se recalcula al escribir)
+  const embedSpotify = useMemo(() => spotifyEmbedUrl(datos.musica.trim()), [datos.musica]);
 
   const previewData = useMemo<MiniInvitationData | null>(() => {
     if (!design) return null;
@@ -399,10 +333,6 @@ export default function PersonalizadorApp() {
   const elegirApertura = (id: string) => {
     setDatos((prev) => ({ ...prev, apertura: id }));
     setSecciones((prev) => (prev.sobre ? prev : { ...prev, sobre: true }));
-  };
-
-  const elegirTono = (id: string) => {
-    setDatos((prev) => ({ ...prev, musicaFondo: id }));
   };
 
   const setCrono = (i: number, campo: 'hora' | 'titulo', valor: string) =>
@@ -637,17 +567,6 @@ export default function PersonalizadorApp() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label htmlFor="p-musica" className={LABEL_CLS}><Music2 size={13} className="text-[#8a6534]" /> Canción de Spotify (opcional)</label>
-                    <input
-                      id="p-musica"
-                      value={datos.musica}
-                      onChange={set('musica')}
-                      placeholder="https://open.spotify.com/playlist/…"
-                      className={INPUT_CLS}
-                    />
-                    <p className={HELP_CLS}>Pegá el enlace de una playlist, álbum o tema y quedará como sección de música en tu invitación.</p>
-                  </div>
-                  <div className="sm:col-span-2">
                     <label htmlFor="p-portada" className={LABEL_CLS}><ImageIcon size={13} className="text-[#8a6534]" /> Foto de portada (opcional)</label>
                     <input
                       id="p-portada"
@@ -708,40 +627,48 @@ export default function PersonalizadorApp() {
                 )}
               </div>
 
-              {/* Panel de música de fondo: 10 tonos + sin música */}
+              {/* Panel de música: elección directa desde Spotify */}
               <div className="mt-5 rounded-2xl border border-[#e8e0d7] bg-white p-5 sm:p-7 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
                 <p className="flex items-center gap-2 font-serif text-lg text-[#292522]">
-                  <Music2 size={17} className="text-[#8a6534]" /> Música de fondo
+                  <Music2 size={17} className="text-[#8a6534]" /> Tu música, directo desde Spotify
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-[#787168]">
-                  Un tono suave que suena mientras tus invitados recorren la invitación. Tocá ▶ para escucharlo antes de elegir.
+                  Pegá el enlace de la playlist, álbum o tema de Spotify que querés que suene en tu invitación y escuchalo acá antes de enviar el pedido.
                 </p>
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {TONOS_FONDO.map((tono) => (
-                    <FilaTono
-                      key={tono.id}
-                      tono={tono}
-                      elegido={datos.musicaFondo === tono.id}
-                      sonando={tonoSonando === tono.id}
-                      onElegir={() => elegirTono(tono.id)}
-                      onPrevisualizar={() => previsualizarTono(tono)}
-                    />
-                  ))}
+                <div className="mt-4">
+                  <label htmlFor="p-musica" className={LABEL_CLS}><Music2 size={13} className="text-[#8a6534]" /> Enlace de Spotify</label>
+                  <input
+                    id="p-musica"
+                    value={datos.musica}
+                    onChange={set('musica')}
+                    placeholder="https://open.spotify.com/playlist/…"
+                    className={INPUT_CLS}
+                  />
+                  {datos.musica.trim() && embedSpotify ? (
+                    <p className={HELP_CLS + ' text-[#5f8a72]'}>✓ Reconocido — mirá el reproductor de abajo: es el que verán tus invitados.</p>
+                  ) : datos.musica.trim() ? (
+                    <p className={HELP_CLS + ' text-[#a04f5f]'}>Ese enlace no parece de Spotify. Copialo desde la app: Compartir → Copiar enlace (open.spotify.com).</p>
+                  ) : (
+                    <p className={HELP_CLS}>Opcional: si lo dejás vacío, la invitación no lleva sección de música.</p>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={datos.musicaFondo === ''}
-                  onClick={() => elegirTono('')}
-                  className={
-                    'mt-2.5 w-full rounded-xl border px-3.5 py-3 text-left text-sm transition ' +
-                    (datos.musicaFondo === ''
-                      ? 'border-[#8a6534] bg-[#faf6ef] font-medium text-[#292522]'
-                      : 'border-[#e8e0d7] bg-white text-[#716a63] hover:border-[#c9bbaa]')
-                  }
-                >
-                  Sin música de fondo — solo la playlist de Spotify
-                </button>
+                {embedSpotify && (
+                  <div className="mt-3 overflow-hidden rounded-xl border border-[#e8e0d7] shadow-[0_8px_30px_rgba(88,63,32,0.08)]">
+                    <iframe
+                      src={embedSpotify}
+                      title="Previsualización de la música elegida"
+                      width="100%"
+                      height="152"
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      style={{ border: 0, display: 'block' }}
+                    />
+                  </div>
+                )}
+                <p className="mt-3 text-[11px] leading-relaxed text-[#787168]">
+                  Spotify reproduce con un toque del invitado (así lo exige su reproductor): la invitación lo muestra como una sección con su portada y el botón de abrir.
+                </p>
               </div>
 
               {/* Panel de cronograma editable */}

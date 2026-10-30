@@ -2,7 +2,6 @@ import type { SiteConfig, SeccionesConfig } from '../data/config-schema';
 import type { InvitationDesign } from '../data/invitation-designs';
 import { createDemoConfig } from '../data/demo-config';
 import { APERTURA_DEFAULT, nombreApertura } from './aperturas';
-import { tonoPorId } from './musica';
 
 /**
  * Motor del personalizador auto-servicio: combina un diseño de la colección
@@ -33,8 +32,6 @@ export interface DatosPersonales {
   musica: string;
   /** Apertura animada elegida (id de APERTURAS_META) */
   apertura: string;
-  /** Tono de música de fondo (id de TONOS_FONDO; vacío = sin música) */
-  musicaFondo: string;
   /** URL de la foto de portada propia (opcional) */
   portada: string;
   /** Combo tipográfico elegido (id de TIPOGRAFIAS_META; vacío = el del diseño) */
@@ -275,12 +272,6 @@ export function createPersonalConfig(
   // Apertura animada elegida por el cliente
   config.apertura = { tipo: datos.apertura?.trim() || APERTURA_DEFAULT };
 
-  // Música de fondo (tono propio del catálogo; vacío = sin música de fondo)
-  const tono = tonoPorId(datos.musicaFondo);
-  if (tono) {
-    config.musicaFondo = { tono: tono.id, url: tono.src };
-  }
-
   // Foto de portada propia: la muestra el sobre y el fondo de la invitación
   const portada = datos.portada.trim();
   if (/^https?:\/\//i.test(portada)) {
@@ -354,7 +345,6 @@ export function mensajeWhatsAppPersonal(
   const historia = datos.historia.trim();
   const momentos = datos.cronograma.filter((it) => it.hora.trim() && it.titulo.trim());
   const portada = datos.portada.trim();
-  const tonoElegido = tonoPorId(datos.musicaFondo);
   const tipografiaElegida = TIPOGRAFIAS_META.find((t) => t.id === datos.tipografia);
   const acentoElegido = ACENTOS_META.find((a) => a.id === datos.acento);
   const lineas = [
@@ -372,7 +362,6 @@ export function mensajeWhatsAppPersonal(
     historia ? '• Historia: "' + (historia.length > 90 ? historia.slice(0, 90) + '…' : historia) + '"' : null,
     datos.musica.trim() ? '• Playlist de Spotify: ' + datos.musica.trim() : null,
     '• Apertura: ' + nombreApertura(datos.apertura),
-    tonoElegido ? '• Música de fondo: ' + tonoElegido.nombre : '• Música de fondo: sin música',
     /^https?:\/\//i.test(portada) ? '• Foto de portada: ' + portada : null,
     momentos.length
       ? '• Cronograma:\n' + momentos.slice(0, 10).map((it) => '    ' + it.hora.trim() + ' — ' + it.titulo.trim()).join('\n')

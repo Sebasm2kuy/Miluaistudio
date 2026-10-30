@@ -1,11 +1,15 @@
 import {
   ArrowRight,
+  BookOpen,
   Calendar,
   Check,
+  Clapperboard,
   Clock3,
   ExternalLink,
+  Film,
   Heart,
   Image as ImageIcon,
+  Images,
   MapPin,
   MessageSquareText,
   Music,
@@ -27,6 +31,7 @@ import { DesignAdornoGlyph } from '@/components/design-ornaments';
 import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
 import { PRECIO } from '@/data/precio';
+import { MENSAJE_SERVICIOS_EXTRA, SERVICIOS_EXTRA } from '@/data/servicios';
 
 const CATALOG_URL = '/Miluaistudio/catalogo/';
 /* Champagne de texto: se oscurece el dorado decorativo para cumplir 3:1+
@@ -43,6 +48,14 @@ const WHATSAPP_BTN =
   `inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold ${WA_TEXT} shadow-[0_12px_28px_rgba(37,211,102,0.28)] transition hover:-translate-y-0.5 hover:bg-[#1db957]`;
 const OUTLINE_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full border border-[#ded4c8] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c9bbaa] hover:bg-white';
+
+/* Icono de cada servicio extra (claves = ids de src/data/servicios.ts) */
+const ICONO_SERVICIO: Record<string, typeof Images> = {
+  'album-digital': Images,
+  'edicion-video': Clapperboard,
+  'video-historia': BookOpen,
+  'trailer-evento': Film,
+};
 
 export default function Home() {
   const heroDesign = INVITATION_DESIGNS[0];
@@ -310,6 +323,65 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== Servicios extra (próximamente) ===== */}
+      <section id="servicios" className="relative z-10 mt-16 scroll-mt-20 sm:mt-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Estamos preparando esto para vos"
+              title={<>Más que invitaciones: <em className="italic" style={{ color: GOLD }}>recuerdos completos</em>.</>}
+            />
+          </Reveal>
+          <Reveal delay={60}>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-[#716a63]">
+              Estamos desarrollando estos servicios para acompañar tu celebración de punta a punta.
+              Mirá lo que se viene y consultanos: te avisamos apenas estén listos.
+            </p>
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {SERVICIOS_EXTRA.map((s, index) => {
+              const Icono = ICONO_SERVICIO[s.id] ?? Sparkles;
+              return (
+                <Reveal key={s.id} delay={index * 60}>
+                  <article className="relative flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-6 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-7">
+                    <span
+                      className="absolute right-4 top-4 rounded-full border border-[#dfc9a4] bg-[#faf6ef] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]"
+                      style={{ color: GOLD }}
+                    >
+                      Próximamente
+                    </span>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#dfc9a4] bg-[#f3ead9]" style={{ color: GOLD }}>
+                      <Icono size={20} strokeWidth={1.7} />
+                    </div>
+                    <h3 className="mt-4 font-serif text-lg font-semibold leading-snug text-[#292522]">{s.nombre}</h3>
+                    <p className="mt-0.5 text-sm italic" style={{ color: GOLD }}>{s.tagline}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-[#716a63]">{s.desc}</p>
+                    <ul className="mt-4 space-y-1.5 border-t border-[#f0e9df] pt-4">
+                      {s.puntos.map((p) => (
+                        <li key={p} className="flex items-start gap-2 text-sm text-[#5d564e]">
+                          <Check size={14} strokeWidth={2.4} className="mt-0.5 shrink-0 text-[#8a6534]" />
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </Reveal>
+              );
+            })}
+          </div>
+          <Reveal delay={120}>
+            <div className="mt-8 flex flex-col items-center gap-3 text-center">
+              <a href={whatsappLink(MENSAJE_SERVICIOS_EXTRA)} target="_blank" rel="noreferrer" className={WHATSAPP_BTN}>
+                <WhatsAppIcon size={16} /> Consultar por los extras
+              </a>
+              <p className="text-xs text-[#787168]">
+                Nada de esto se cobra todavía: es lo que estamos construyendo para los próximos eventos.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ===== Reseñas ===== */}
       <section id="resenas" className="relative z-10 mt-16 scroll-mt-20 sm:mt-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -394,6 +466,7 @@ export default function Home() {
               { q: '¿Mis invitados necesitan instalar una aplicación?', a: 'No. La invitación se abre desde un navegador compatible en el celular o la computadora.' },
               { q: '¿Puedo elegir los colores y el estilo?', a: 'Sí. El diseño se personaliza según tus preferencias y las opciones disponibles para el modelo elegido.' },
               { q: '¿Cómo se confirma la asistencia?', a: 'La invitación puede incluir RSVP. El método de registro y las funciones asociadas se confirman al definir la configuración del evento.' },
+              { q: '¿También hacen álbum de fotos o videos del evento?', a: 'Estamos desarrollando los servicios extra: álbum digital para que tus invitados suban sus fotos y videos, edición de video, video de tu historia y tráiler del evento. Consultanos por WhatsApp y te avisamos apenas estén disponibles.' },
               { q: '¿Cuánto cuesta?', a: 'El precio vigente es ' + PRECIO.texto + ', ' + PRECIO.condicion.toLowerCase() + '. Revisá la publicación enlazada para confirmar el precio y las condiciones antes de comprar.' },
             ].map((item, index) => (
               <Reveal key={item.q} delay={index * 40}>
@@ -422,6 +495,7 @@ export default function Home() {
           <div className="flex flex-wrap gap-4">
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-white"><WhatsAppIcon size={13} /> WhatsApp</a>
             <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
+            <a href="#servicios" className="transition hover:text-white">Próximamente</a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">Comprar</a>
             <a href="/Miluaistudio/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
             {/* Editor móvil visual: edición directa tocando la invitación
