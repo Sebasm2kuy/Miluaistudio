@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Heart, Images, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Images, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 import CatalogScene from '@/components/catalog-scene';
 import WhatsAppIcon from '@/components/whatsapp-icon';
@@ -102,7 +102,8 @@ export default function CatalogoPage() {
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 text-[#292522] backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
           <a href="/" className="flex items-center gap-3" aria-label="Volver al inicio de Lumen Gala">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#9c7443]"><Heart size={19} /></span>
+            {/* Isotipo oficial LGS en miniatura (36-40 px), alineado con el texto. */}
+            <img src="/logo-lgs.png" alt="" width={240} height={240} className="h-10 w-10 shrink-0 rounded-lg object-cover shadow-sm ring-1 ring-[#dfc9a4]" />
             <span>
               <span className="block font-serif text-lg tracking-[0.08em] sm:text-xl">LUMEN GALA</span>
               <span className="block text-[9px] uppercase tracking-[0.2em] text-[#787168]">Tu historia, en formato digital</span>
