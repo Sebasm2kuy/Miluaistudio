@@ -1,16 +1,22 @@
-User-agent: Googlebot
+User-Agent: *
 Allow: /
 
-User-agent: Bingbot
+User-Agent: Googlebot
+User-Agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+User-Agent: GPTBot
+User-Agent: OAI-SearchBot
+User-Agent: ChatGPT-User
+User-Agent: ClaudeBot
+User-Agent: PerplexityBot
+User-Agent: Google-Extended
+User-Agent: CCBot
+User-Agent: Applebot
 Allow: /
 
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
+User-Agent: Twitterbot
+User-Agent: facebookexternalhit
 Allow: /
 
 Sitemap: https://lumengala.site/sitemap.xml
