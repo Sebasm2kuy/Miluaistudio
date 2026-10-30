@@ -119,10 +119,10 @@ export default function Home() {
             Se comparte por WhatsApp, sin instalar nada
           </div>
           <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.6rem] font-medium leading-[1.06] tracking-tight sm:text-6xl">
-            Una invitación que se siente <em className="italic" style={{ color: GOLD }}>tuya</em>, en un solo enlace.
+            Invitaciones web de <em className="italic" style={{ color: GOLD }}>alta gama</em> para 15s y bodas, en un solo enlace.
           </h1>
           <p className="store-hero-in-2 mt-6 max-w-lg text-base leading-relaxed text-[#716a63] sm:text-lg">
-            Invitaciones web personalizadas para fiestas de 15, bodas y celebraciones. Cuenta regresiva, galería, música y confirmación de asistencia, con el estilo de tu evento.
+            Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Cuenta regresiva, galería, música, ubicación y confirmación de asistencia (RSVP), con el estilo de tu evento. Basados en Montevideo.
           </p>
           <div className="store-hero-in-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href="/personalizar/" className={PRIMARY_BTN}>
@@ -192,8 +192,8 @@ export default function Home() {
           <Reveal>
             <SectionHeading
               eyebrow="Mucho más que una tarjeta"
-              title={<>Todo lo importante, <em className="italic" style={{ color: GOLD }}>en un solo enlace</em>.</>}
-              sub="Cada invitación reúne las funciones esenciales del evento, configuradas según lo acordado al contratar."
+              title={<>Música, RSVP y cuenta regresiva, <em className="italic" style={{ color: GOLD }}>en un solo enlace</em>.</>}
+              sub="Cada invitación reúne las funciones esenciales del evento —cuenta regresiva, galería de fotos, música, ubicación y calendario— configuradas según lo acordado al contratar."
             />
           </Reveal>
           <Reveal delay={80}>
@@ -428,22 +428,30 @@ export default function Home() {
 
       {/* ===== Pie ===== */}
       <footer className="relative z-10 bg-[#292522] text-[#d8d0c5]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 pb-28 pt-10 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-10 lg:px-8">
-          <div>
-            <p className="font-serif text-base tracking-[0.08em] text-[#f0e8da]">LUMEN GALA</p>
-            <p className="mt-1.5 text-[#a1988a]">Invitaciones digitales personalizadas · Uruguay</p>
+        <div className="mx-auto max-w-7xl px-4 pb-28 pt-10 sm:px-6 sm:pb-10 lg:px-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="font-serif text-lg tracking-[0.08em] text-[#f0e8da]">Lumen Gala Studio</h2>
+              <p className="mt-2 text-[#a1988a]">Invitaciones web de alta gama para 15s y bodas · Montevideo, Uruguay</p>
+              <a
+                href="mailto:lumengala.studio@gmail.com"
+                className="mt-1.5 inline-block text-[#a1988a] underline decoration-[#4a4239] underline-offset-4 transition hover:text-white"
+              >
+                lumengala.studio@gmail.com
+              </a>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-white"><WhatsAppIcon size={13} /> WhatsApp</a>
+              <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
+              <a href="#servicios" className="transition hover:text-white">Próximamente</a>
+              <a href="/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
+              {/* Editor móvil visual: edición directa tocando la invitación
+                  (público por diseño; los datos reales exigen el token del
+                  propietario — ver IDEAS iteración 017). */}
+              <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-4">
-            <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 transition hover:text-white"><WhatsAppIcon size={13} /> WhatsApp</a>
-            <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
-            <a href="#servicios" className="transition hover:text-white">Próximamente</a>
-            <a href="/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
-            {/* Editor móvil visual: edición directa tocando la invitación
-                (público por diseño; los datos reales exigen el token del
-                propietario — ver IDEAS iteración 017). */}
-            <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
-          </div>
-          <p className="text-[#a1988a]">© {new Date().getFullYear()} Lumen Gala</p>
+          <p className="mt-8 text-[#a1988a]">© {new Date().getFullYear()} Lumen Gala Studio</p>
         </div>
       </footer>
 
