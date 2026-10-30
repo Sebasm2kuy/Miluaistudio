@@ -117,8 +117,8 @@ test('panel: slug válido → publica vía publicarInvitacionEnGitHub (flujo /i/
   assert.equal(resultado.success, true);
   assert.equal(resultado.creado, true);
   assert.equal(resultado.slug, 'muestra-panel');
-  assert.equal(resultado.url, '/Miluaistudio/i/muestra-panel/');
-  assert.equal(resultado.urlAbsoluta, 'https://sebasm2kuy.github.io/Miluaistudio/i/muestra-panel/');
+  assert.equal(resultado.url, '/i/muestra-panel/');
+  assert.equal(resultado.urlAbsoluta, 'https://lumengala.site/i/muestra-panel/');
 
   // Exactamente una lectura y una escritura, a la ruta del slug
   assert.equal(llamadas.length, 2);
@@ -236,11 +236,11 @@ test('panel: error de red → fallo honesto (nunca éxito no verificado)', async
 test('panel: en modo fotos, la representación publicada sincroniza fondo con galería', async () => {
   const cfg = configMuestra();
   cfg.galeria.fotos = [
-    { webp: '/Miluaistudio/assets-invitaciones/nueva-1.jpg', fallback: '' },
-    { webp: '/Miluaistudio/assets-invitaciones/nueva-2.jpg', fallback: '' },
+    { webp: '/assets-invitaciones/nueva-1.jpg', fallback: '' },
+    { webp: '/assets-invitaciones/nueva-2.jpg', fallback: '' },
   ];
   // Fondo desactualizado (foto vieja que ya no está en la galería)
-  cfg.fondo = { fotos: ['/Miluaistudio/assets-invitaciones/vieja.jpg'] };
+  cfg.fondo = { fotos: ['/assets-invitaciones/vieja.jpg'] };
 
   const { impl, llamadas } = fetchFalso({
     get: () => new Response('{"message":"Not Found"}', { status: 404 }),
@@ -253,8 +253,8 @@ test('panel: en modo fotos, la representación publicada sincroniza fondo con ga
   const cuerpo = JSON.parse(String(llamadas[1].init?.body));
   const subido = JSON.parse(decodeURIComponent(escape(atob(cuerpo.content))));
   assert.deepEqual(subido.config.fondo.fotos, [
-    '/Miluaistudio/assets-invitaciones/nueva-1.jpg',
-    '/Miluaistudio/assets-invitaciones/nueva-2.jpg',
+    '/assets-invitaciones/nueva-1.jpg',
+    '/assets-invitaciones/nueva-2.jpg',
   ], 'el fondo publicado usa la galería vigente, no la foto vieja');
 });
 

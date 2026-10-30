@@ -19,7 +19,6 @@ import {
 /** Repositorio donde viven los datos de las invitaciones (compartido por lectura y publicación). */
 export const GITHUB_REPO = 'Sebasm2kuy/Miluaistudio'
 const CONFIG_PATH = 'src/data/config.ts'
-const BASE_PATH = '/Miluaistudio'
 
 // Type definitions are embedded here so we can build the full config.ts file
 const CONFIG_TYPES = `// ============================================================
@@ -223,8 +222,8 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
  *
  * Assets del EDITOR (recursos que el propietario carga para su invitación):
  * por defecto se guardan en `public/assets-invitaciones/` y se sirven en
- * `/Miluaistudio/assets-invitaciones/<archivo>` — la URL devuelta coincide
- * exactamente con la ruta publicada en el export.
+ * `/assets-invitaciones/<archivo>` (raíz del dominio propio) — la URL
+ * devuelta coincide exactamente con la ruta publicada en el export.
  *
  * NO es la ruta de las fotos de invitados: esas suben por el backend de
  * moderación (photo-server.gs) y nunca tocan el repositorio; la regla que
@@ -340,7 +339,7 @@ export interface ResultadoPublicacion {
   success: boolean
   /** Slug confirmado de la invitación. */
   slug: string
-  /** URL relativa dentro del sitio (con basePath). */
+  /** URL relativa dentro del sitio (anclada a la raíz del dominio). */
   url: string
   /** URL absoluta pública (la que comparte el anfitrión). */
   urlAbsoluta: string

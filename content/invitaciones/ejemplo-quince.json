@@ -53,10 +53,10 @@
       "botonSubir": "Galería de demostración",
       "photoUploadUrl": "",
       "fotos": [
-        { "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg", "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg" },
-        { "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg", "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg" },
-        { "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg", "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg" },
-        { "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg", "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg" }
+        { "webp": "/catalogo/galeria/rosa-romantica-1.jpg", "fallback": "/catalogo/galeria/rosa-romantica-1.jpg" },
+        { "webp": "/catalogo/galeria/rosa-romantica-2.jpg", "fallback": "/catalogo/galeria/rosa-romantica-2.jpg" },
+        { "webp": "/catalogo/galeria/rosa-romantica-3.jpg", "fallback": "/catalogo/galeria/rosa-romantica-3.jpg" },
+        { "webp": "/catalogo/galeria/rosa-romantica-4.jpg", "fallback": "/catalogo/galeria/rosa-romantica-4.jpg" }
       ]
     },
     "musica": {
@@ -87,8 +87,8 @@
       "frase": "Una invitación hecha a tu estilo"
     },
     "invitacion": {
-      "imagen": "/Miluaistudio/catalogo/scenes/rosa-romantica.jpg",
-      "imagenFallback": "/Miluaistudio/catalogo/scenes/rosa-romantica.jpg",
+      "imagen": "/catalogo/scenes/rosa-romantica.jpg",
+      "imagenFallback": "/catalogo/scenes/rosa-romantica.jpg",
       "textoAbrir": "Tocá para abrir"
     },
     "countdown": {

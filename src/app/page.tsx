@@ -34,7 +34,7 @@ import { TESTIMONIOS } from '@/data/testimonios';
 import { PRECIO } from '@/data/precio';
 import { MENSAJE_SERVICIOS_EXTRA } from '@/data/servicios';
 
-const CATALOG_URL = '/Miluaistudio/catalogo/';
+const CATALOG_URL = '/catalogo/';
 /* Champagne de texto: se oscurece el dorado decorativo para cumplir 3:1+
    (texto grande) sobre marfil y los gradientes cálidos. Medido: 4.0:1. */
 const GOLD = '#8a6534'; /* auditado WCAG AA: ≥4.84:1 sobre superficies claras (ver store-tokens.ts) */
@@ -124,7 +124,7 @@ export default function Home() {
             Invitaciones web personalizadas para fiestas de 15, bodas y celebraciones. Cuenta regresiva, galería, música y confirmación de asistencia, con el estilo de tu evento.
           </p>
           <div className="store-hero-in-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href="/Miluaistudio/personalizar/" className={PRIMARY_BTN}>
+            <a href="/personalizar/" className={PRIMARY_BTN}>
               Personalizar mi invitación <ArrowRight size={16} />
             </a>
             <a href={CATALOG_URL} className={OUTLINE_BTN}>
@@ -250,7 +250,7 @@ export default function Home() {
             {featured.map((design, index) => (
               <Reveal key={design.id} delay={index * 70}>
                 <article className="group h-full overflow-hidden rounded-2xl border border-[#e8e0d7] bg-white shadow-[0_4px_16px_rgba(88,63,32,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(88,63,32,0.14)]">
-                  <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="block aspect-[4/5] overflow-hidden" aria-label={'Probar ' + design.name + ' en una pestaña nueva'}>
+                  <a href={'/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="block aspect-[4/5] overflow-hidden" aria-label={'Probar ' + design.name + ' en una pestaña nueva'}>
                     <div className="h-full w-full transition duration-500 group-hover:scale-[1.03]">
                       <CatalogScene design={design} />
                     </div>
@@ -258,7 +258,7 @@ export default function Home() {
                   <div className="px-4 pb-4 pt-3.5">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: design.storeAccent ?? design.accentSoft }}>{design.category}</p>
                     <h3 className="mt-1 font-serif text-lg font-semibold">{design.name}</h3>
-                    <a href={'/Miluaistudio/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6a44] transition hover:text-[#7a5e3d]">
+                    <a href={'/catalogo/' + design.id + '/'} target="_blank" rel="noreferrer" className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a6a44] transition hover:text-[#7a5e3d]">
                       Ver demostración <ArrowRight size={13} />
                     </a>
                   </div>
@@ -451,11 +451,11 @@ export default function Home() {
             <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
             <a href="#servicios" className="transition hover:text-white">Próximamente</a>
             <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="transition hover:text-white">Comprar</a>
-            <a href="/Miluaistudio/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
+            <a href="/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
             {/* Editor móvil visual: edición directa tocando la invitación
                 (público por diseño; los datos reales exigen el token del
                 propietario — ver IDEAS iteración 017). */}
-            <a href="/Miluaistudio/editar/" className="transition hover:text-white">Editor de invitaciones</a>
+            <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
           </div>
           <p className="text-[#a1988a]">© {new Date().getFullYear()} Miluaistudio</p>
         </div>

@@ -47,10 +47,10 @@ import {
 } from '@/lib/personalizador';
 import { APERTURAS_META, type AperturaMeta } from '@/lib/aperturas';
 
-const CATALOGO_URL = '/Miluaistudio/catalogo/';
-const PERSONALIZAR_URL = '/Miluaistudio/personalizar/';
+const CATALOGO_URL = '/catalogo/';
+const PERSONALIZAR_URL = '/personalizar/';
 /** Editor móvil visual: edición directa tocando la invitación. */
-const EDITOR_URL = '/Miluaistudio/editar/';
+const EDITOR_URL = '/editar/';
 
 const DATOS_INICIALES: DatosPersonales = {
   tipo: 'Mis XV años',
@@ -372,7 +372,7 @@ export default function PersonalizadorApp() {
       {/* ===== Encabezado ===== */}
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <a href="/Miluaistudio/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Miluaistudio">
+          <a href="/" className="flex items-center gap-2.5" aria-label="Volver al inicio de Miluaistudio">
             <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#dfc9a4] bg-white text-[#8a6534]">
               <Heart size={17} />
             </span>

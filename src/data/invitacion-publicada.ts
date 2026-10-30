@@ -19,10 +19,10 @@
 
 import type { SiteConfig } from '../data/config-schema';
 
-/** Base path del sitio en GitHub Pages (next.config.ts → basePath). */
-export const BASE_PATH = '/Miluaistudio';
-/** Origen público donde GitHub Pages publica el artefacto. */
-export const ORIGEN_PUBLICO = 'https://sebasm2kuy.github.io';
+/** Prefijo de rutas del sitio: vacío porque vive en la RAÍZ del dominio propio (lumengala.site). */
+export const BASE_PATH = '';
+/** Origen público donde se publica el artefacto (dominio propio). */
+export const ORIGEN_PUBLICO = 'https://lumengala.site';
 /** Versión del esquema de la representación publicada. */
 export const ESQUEMA_INVITACION = 1;
 /** Carpeta del repositorio con la colección de invitaciones publicadas. */
@@ -170,7 +170,7 @@ export function validarInvitacionPublicada(data: unknown): InvitacionPublicada |
   return data as InvitacionPublicada;
 }
 
-/** URL relativa de la invitación dentro del sitio (incluye basePath). */
+/** URL relativa de la invitación dentro del sitio (anclada a la raíz del dominio). */
 export function urlInvitacion(slug: string): string {
   return `${BASE_PATH}/i/${slug}/`;
 }

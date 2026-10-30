@@ -33,14 +33,14 @@ export async function generateMetadata({
       type: 'website',
       locale: 'es_UY',
       siteName: 'Miluaistudio · Invitaciones digitales',
-      url: `https://sebasm2kuy.github.io/Miluaistudio/catalogo/${design.id}/`,
-      images: [{ url: 'https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Miluaistudio' }],
+      url: `https://lumengala.site/catalogo/${design.id}/`,
+      images: [{ url: 'https://lumengala.site/og-image.jpg', width: 1200, height: 630, alt: 'Invitación de demostración de Miluaistudio' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${design.name} · Miluaistudio`,
       description: design.description,
-      images: ['https://sebasm2kuy.github.io/Miluaistudio/og-image.jpg'],
+      images: ['https://lumengala.site/og-image.jpg'],
     },
   };
 }
@@ -62,7 +62,7 @@ export default async function InvitationDemoPage({
       <>
         <InvitationExperience />
         <a
-          href="/Miluaistudio/catalogo/"
+          href="/catalogo/"
           className="fixed left-3 top-3 z-[9999] inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/75 px-3 py-2 text-xs font-medium text-white/90 shadow-lg backdrop-blur-md transition hover:border-white/40 hover:bg-black/90 sm:left-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
           aria-label="Volver al catálogo de diseños"
         >
@@ -70,7 +70,7 @@ export default async function InvitationDemoPage({
           Volver al catálogo
         </a>
         <a
-          href={'/Miluaistudio/personalizar/?diseno=' + designId}
+          href={'/personalizar/?diseno=' + designId}
           className="fixed right-3 top-3 z-[9999] inline-flex items-center gap-2 rounded-full border border-[#f1a46a]/50 bg-[#17191d]/85 px-3 py-2 text-xs font-semibold text-[#f6c78f] shadow-lg backdrop-blur-md transition hover:border-[#f1a46a] hover:bg-[#17191d] sm:right-5 sm:top-5 sm:px-4 sm:py-2.5 sm:text-sm"
         >
           <PenLine size={14} />

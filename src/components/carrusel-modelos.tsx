@@ -151,10 +151,10 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a6534]">{actualDesign.category}</p>
         <p className="mt-1 font-serif text-2xl font-semibold text-[#292522]">{actualDesign.name}</p>
         <div className="mt-4 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
-          <a href={'/Miluaistudio/catalogo/' + actualDesign.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#26221d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830]">
+          <a href={'/catalogo/' + actualDesign.id + '/'} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#26221d] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830]">
             Ver demostración <ArrowRight size={14} />
           </a>
-          <a href="/Miluaistudio/personalizar/" className="inline-flex items-center gap-2 rounded-full border border-[#e0d2b8] bg-white px-5 py-2.5 text-xs font-semibold text-[#3d3830] transition hover:border-[#dfc9a4]">
+          <a href="/personalizar/" className="inline-flex items-center gap-2 rounded-full border border-[#e0d2b8] bg-white px-5 py-2.5 text-xs font-semibold text-[#3d3830] transition hover:border-[#dfc9a4]">
             Personalizar el mío <PenLine size={14} />
           </a>
         </div>

@@ -96,32 +96,32 @@ const config: SiteConfig = {
     "photoUploadUrl": "",
     "fotos": [
       {
-        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
-        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
+        "webp": "/catalogo/galeria/rosa-romantica-1.jpg",
+        "fallback": "/catalogo/galeria/rosa-romantica-1.jpg",
         "objectPosition": {
           "desktop": "12% 50%",
           "mobile": "12% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
-        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
+        "webp": "/catalogo/galeria/rosa-romantica-2.jpg",
+        "fallback": "/catalogo/galeria/rosa-romantica-2.jpg",
         "objectPosition": {
           "desktop": "23% 50%",
           "mobile": "23% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
-        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
+        "webp": "/catalogo/galeria/rosa-romantica-3.jpg",
+        "fallback": "/catalogo/galeria/rosa-romantica-3.jpg",
         "objectPosition": {
           "desktop": "90% 50%",
           "mobile": "90% 50%"
         }
       },
       {
-        "webp": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg",
-        "fallback": "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg",
+        "webp": "/catalogo/galeria/rosa-romantica-4.jpg",
+        "fallback": "/catalogo/galeria/rosa-romantica-4.jpg",
         "objectPosition": {
           "desktop": "50% 0%",
           "mobile": "50% 0%"
@@ -165,8 +165,8 @@ const config: SiteConfig = {
     "frase": "Con amor, para un día inolvidable"
   },
   "invitacion": {
-    "imagen": "/Miluaistudio/invitacion-vertical.webp",
-    "imagenFallback": "/Miluaistudio/invitacion-vertical.png",
+    "imagen": "/invitacion-vertical.webp",
+    "imagenFallback": "/invitacion-vertical.png",
     "textoAbrir": "Toca para abrir"
   },
   "countdown": {
@@ -184,10 +184,10 @@ const config: SiteConfig = {
   },
   "fondo": {
     "fotos": [
-      "/Miluaistudio/catalogo/galeria/rosa-romantica-1.jpg",
-      "/Miluaistudio/catalogo/galeria/rosa-romantica-2.jpg",
-      "/Miluaistudio/catalogo/galeria/rosa-romantica-3.jpg",
-      "/Miluaistudio/catalogo/galeria/rosa-romantica-4.jpg"
+      "/catalogo/galeria/rosa-romantica-1.jpg",
+      "/catalogo/galeria/rosa-romantica-2.jpg",
+      "/catalogo/galeria/rosa-romantica-3.jpg",
+      "/catalogo/galeria/rosa-romantica-4.jpg"
     ]
   },
   "colores": {

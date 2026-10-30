@@ -470,3 +470,22 @@ Stage Summary:
 - tests/portada-carrusel-nav.test.ts (nuevo, 4 tests): menú↔servicios 1:1, anclas existentes, carrusel circular y posiciones, colección con ids/nombres únicos.
 
 **Pruebas:** 160/160 tests (4 nuevos), lint 0, typecheck 0, build + prune + verify-export §7 + verify-privacy OK. Emulador 390×844: menú móvil con servicios «pronto», tap «Álbum digital» despliega, hash #servicio-trailer-evento expande con pulso, swipe 18→19. 1280×800: nav con chips, «Historia de vida» despliega con pulso, carrusel con flechas + 29 puntos en una fila, flecha 9→10. Fix del E2E: maqueta del carrusel colapsaba a 0 px (ancho explícito). Pendiente: revisión del propietario en teléfono físico.
+
+---
+## Iteración 026 — Migración al dominio raíz lumengala.site (feat/dominio-raiz-lumengala)
+
+**Pedido:** «actualices todas las rutas absolutas y referencias para que funcionen en mi nuevo dominio raíz (lumengala.site), antes montado en el subdirectorio /Miluaistudio/ de GitHub Pages» — CSS, scripts, imágenes/logos, enlaces internos, fetch/API.
+
+**Hallazgo clave:** lumengala.site ya respondía 200 vía GitHub Pages (DNS y dominio personalizado ya configurados); el sitio se veía roto porque el build servido todavía tenía el prefijo /Miluaistudio/.
+
+**Cambios:**
+- next.config.ts: fuera basePath (sitio en la raíz del dominio propio); trailingSlash se conserva.
+- ~90 rutas re-ancladas a la raíz en src/ (enlaces, router.push, window.open, escenas/fondos/galerías, loading-screen, store-nav, carrusel, personalizador, footer, admin/editar/catalogo).
+- Metadatos SEO: metadataBase, canonicals, OG y Twitter → https://lumengala.site/…; icons en raíz; robots.txt y sitemap.xml migrados.
+- Publicación: BASE_PATH='' en invitacion-publicada.ts y activos-editor.ts → /i/<slug>/ y /assets-invitaciones/<archivo>; ORIGEN_PUBLICO=lumengala.site; BASE_PATH muerta eliminada de github-deploy.ts. Las URLs de la API de GitHub (rutas de repo) no se tocan.
+- content/invitaciones/ejemplo-boda.json y ejemplo-quince.json: URLs embebidas migradas (si no, galerías 404 en el dominio nuevo).
+- public/CNAME (nuevo) con lumengala.site; scripts/verify-privacy-export.mjs con allowlist de rutas raíz.
+- verify-export §3 reescrito como prueba de regresión: el build FALLA si reaparece src|href|content="/Miluaistudio… o una URL absoluta con /Miluaistudio/ en index/catalogo/personalizar/editar; §6 valida assets con rutas raíz; §7 exige href="/editar/".
+- Tests actualizados (invitacion-publicada, activos-editor, publicacion-panel, publicacion-github, fondos-premium, rsvp-contrato) a las URLs raíz; docs vivos (ADMINISTRACION, PRUEBA-MANUAL-EDITOR-MOVIL) con las URLs nuevas.
+
+**Pruebas:** 160/160 tests, lint 0, typecheck 0, build + prune + verify-export + verify-privacy OK. Artefacto sin ninguna referencia /Miluaistudio/ en HTML clave (solo marca textual). Servidor local en raíz: /, /editar/, /catalogo/, /i/ejemplo-quince/, chunk _next, imagen y sitemap → 200. Emulador 390×844 y 1280×800: 0 errores de consola, 0 imágenes rotas, menús «pronto» y carrusel operativos; los 6 enlaces restantes con «Miluaistudio» son textos de marca en wa.me (correctos). Pendiente: revisión del propietario en lumengala.site desde el teléfono físico.

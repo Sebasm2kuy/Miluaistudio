@@ -5,7 +5,7 @@
  *  - validación de tipo real (magic bytes), extensión y MIME
  *  - límite de tamaño
  *  - nombre de archivo saneado y único
- *  - URL pública exacta con basePath /Miluaistudio/
+ *  - URL pública exacta (anclada a la raíz del dominio propio, lumengala.site)
  *  - sincronización galería ↔ fondo como la espera el editor
  *
  * Datos y archivos 100% sintéticos (no se sube nada real en CI).
@@ -120,13 +120,13 @@ test('sufijoUnico: dos llamadas no colisionan (tiempo + aleatorio)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// URL pública exacta (basePath incluido)
+// URL pública exacta (anclada a la raíz del dominio propio)
 // ---------------------------------------------------------------------------
 
 test('urlPublicaActivo: coincide exactamente con la ruta publicada', () => {
   assert.equal(
     urlPublicaActivo('mi-foto_abc123.jpg'),
-    '/Miluaistudio/assets-invitaciones/mi-foto_abc123.jpg',
+    '/assets-invitaciones/mi-foto_abc123.jpg',
   );
   assert.equal(rutaRepoActivo('mi-foto_abc123.jpg'), 'public/assets-invitaciones/mi-foto_abc123.jpg');
   assert.equal(CARPETA_ACTIVOS_INVITACION, 'assets-invitaciones');
@@ -147,17 +147,17 @@ function cfgDePrueba(fondo: string[], galeria: { webp: string; fallback: string 
 
 test('sincronizarFondoConGaleria: en modo fotos, el fondo copia la galería vigente', () => {
   const cfg = cfgDePrueba(
-    ['/Miluaistudio/assets-invitaciones/vieja.jpg'],
+    ['/assets-invitaciones/vieja.jpg'],
     [
-      { webp: '/Miluaistudio/assets-invitaciones/nueva-1.jpg', fallback: '' },
+      { webp: '/assets-invitaciones/nueva-1.jpg', fallback: '' },
       { webp: '', fallback: '' }, // entrada sin URL: se filtra
-      { webp: '/Miluaistudio/assets-invitaciones/nueva-2.jpg', fallback: '' },
+      { webp: '/assets-invitaciones/nueva-2.jpg', fallback: '' },
     ],
   );
   const sincronizada = sincronizarFondoConGaleria(cfg);
   assert.deepEqual(sincronizada.fondo.fotos, [
-    '/Miluaistudio/assets-invitaciones/nueva-1.jpg',
-    '/Miluaistudio/assets-invitaciones/nueva-2.jpg',
+    '/assets-invitaciones/nueva-1.jpg',
+    '/assets-invitaciones/nueva-2.jpg',
   ]);
   // La galería queda intacta
   assert.equal(sincronizada.galeria.fotos.length, 3);
@@ -165,7 +165,7 @@ test('sincronizarFondoConGaleria: en modo fotos, el fondo copia la galería vige
 
 test('sincronizarFondoConGaleria: en modo gradiente el fondo no se toca', () => {
   const cfg = cfgDePrueba(['gradient:rosa-suave'], [
-    { webp: '/Miluaistudio/a.jpg', fallback: '' },
+    { webp: '/a.jpg', fallback: '' },
   ]);
   const resultado = sincronizarFondoConGaleria(cfg);
   assert.equal(resultado, cfg, 'devuelve la misma configuración sin alteraciones');

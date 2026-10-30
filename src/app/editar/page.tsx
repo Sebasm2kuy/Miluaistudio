@@ -386,7 +386,7 @@ export default function PaginaEditar() {
           <div className="mx-auto flex max-w-3xl items-center gap-1.5 px-2 py-2">
             {ES_DEV && (
               <a
-                href="/Miluaistudio/admin/"
+                href="/admin/"
                 aria-label="Volver al panel de configuración (solo existe en desarrollo)"
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#fcf6ba] transition active:scale-95"
               >

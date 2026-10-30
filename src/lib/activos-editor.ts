@@ -14,8 +14,8 @@
 
 import type { SiteConfig } from '../data/config-schema';
 
-/** Base path del sitio (next.config.ts → basePath). */
-export const BASE_PATH = '/Miluaistudio';
+/** Prefijo de rutas del sitio: vacío, el sitio vive en la RAÍZ del dominio propio (lumengala.site). */
+export const BASE_PATH = '';
 /** Carpeta de assets de invitaciones dentro de public/. */
 export const CARPETA_ACTIVOS_INVITACION = 'assets-invitaciones';
 /** Extensiones aceptadas para activos del editor. */
@@ -165,9 +165,9 @@ export function rutaRepoActivo(nombreArchivo: string, carpeta = CARPETA_ACTIVOS_
 }
 
 /**
- * URL pública EXACTA del activo, con basePath incluido. La URL que
- * devuelve el uploader debe coincidir 1:1 con la ruta publicada en el
- * export (/Miluaistudio/assets-invitaciones/<archivo>).
+ * URL pública EXACTA del activo, anclada a la raíz del dominio propio.
+ * La URL que devuelve el uploader debe coincidir 1:1 con la ruta
+ * publicada en el export (/assets-invitaciones/<archivo>).
  */
 export function urlPublicaActivo(nombreArchivo: string, carpeta = CARPETA_ACTIVOS_INVITACION): string {
   return `${BASE_PATH}/${carpeta}/${nombreArchivo}`;

@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: "/Miluaistudio",
+  /* El sitio se sirve en la RAÍZ del dominio propio (lumengala.site), ya
+     no en el subdirectorio /Miluaistudio/ de GitHub Pages. Sin basePath,
+     todas las rutas internas quedan ancladas a "/" del dominio. */
   trailingSlash: true,
   images: {
     unoptimized: true,
