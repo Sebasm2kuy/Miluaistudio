@@ -524,3 +524,12 @@ Stage Summary:
 **Cambios:** public/lgs-preview.jpg (nueva, 1200×630: rombo LGS extraído con alfa R−B flotando sobre el fondo oscuro del logo + LUMEN GALA en serif dorada + «INVITACIONES WEB DE ALTA GAMA»; la vieja og-image.jpg con la tarjeta «Milagros XV» se elimina); layout.tsx (title.default, openGraph y twitter completos); catalogo/layout.tsx y catalogo/[designId]/page.tsx → lgs-preview.jpg; verify-export §2 exige lgs-preview.jpg y §8 valida og:title LGS + og:image exacta nueva; verify-privacy allowlist actualizada.
 
 **Pruebas:** 163/163 tests, lint 0, typecheck 0, build + verify-export (§2+§8) + verify-privacy OK. Local sobre out/: título/og:title/og:description exactos, og:image = https://lumengala.site/lgs-preview.jpg, asset 200 image/jpeg 58 686 bytes, og-image.jpg 404. Tarjeta visual verificada (sin tile cuadrado, textos centrados). Pendiente: reenviar el enlace por WhatsApp para ver la tarjeta nueva (URL nueva obliga re-rastreo).
+
+---
+## Iteración 030 — Héroe de portada con modelos de impacto, sin precios ni ML (feat/heroe-impacto-sin-ml)
+
+**Pedido:** en la imagen estática del héroe usar un modelo más llamativo y de más impacto; quitar los precios y la opción de comprar por Mercado Libre.
+
+**Cambios:** page.tsx — héroe ahora con Gala Estrellada (principal, móvil y PC) y Pista Disco (secundaria del collage desktop); fuera la línea de precio del héroe, el botón «Comprar por Mercado Libre» (desktop), «Compralo en Mercado Libre» (móvil), «Ver publicación» (CTA) y «Comprar» (pie); FAQ «¿Cuánto cuesta?» ahora deriva a WhatsApp sin cifras; imports sin uso limpiados. El catálogo conserva precio/ML (no se pidió).
+
+**Pruebas:** 163/163 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. E2E PC 1280×800 y móvil 390×844: collage con Gala Estrellada + Pista Disco, sin rastros de ML/precio, consola limpia. out/index.html sin «Mercado Libre» ni «1.200».

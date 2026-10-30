@@ -15,6 +15,8 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 030 — Héroe de portada: modelos de impacto, sin precios ni Mercado Libre (30-10-2026)](./ITERACION-2026-10-30-030-HEROE-MODELOS-SIN-PRECIO.md)
+
 - [Iteración 029 — Tarjeta de WhatsApp con la marca LGS: og:title, og:description y og:image nuevos (30-10-2026)](./ITERACION-2026-10-30-029-OG-MARCA-LGS.md)
 
 - [Iteración 028 — Isotipo oficial LGS en el encabezado: fuera el corazón (30-10-2026)](./ITERACION-2026-10-30-028-ISOTIPO-HEADER.md)
