@@ -11,7 +11,7 @@ import GuardiaDashboard from './guardia';
  * de GitHub de la conexión del panel. Ver IDEAS/ITERACION-2026-10-31-030.
  */
 export const metadata: Metadata = {
-  title: 'Panel de cliente | Lumen Gala',
+  title: { absolute: 'Panel de cliente | Lumen Gala' },
   description: 'Gestión de tu invitación web: estado, datos del evento y confirmaciones.',
   robots: { index: false, follow: false },
   /* Zona privada: sin canonical (no heredar el «/» del layout raíz, 032). */
