@@ -32,11 +32,13 @@
  * - Una hoja de cálculo "MilagrosXV_Galeria_DB" con la pestaña "RSVP"
  *
  * CONTRATO CON EL FRONTEND (src/components/rsvp.tsx → src/lib/rsvp-client.ts):
- *  - POST JSON { tipo: "rsvp_grupo", codigo, cantidad, invitados, telefono, fecha }
+ *  - POST JSON { tipo: "rsvp_grupo", codigo, cantidad, invitados, telefono, fecha, slug? }
  *    ← contrato ACTIVO: el frontend envía los datos solo en el cuerpo, nunca
  *      en la query string (privacidad: los datos personales no deben quedar
  *      en URLs, historiales ni logs intermedios). Se envía con Content-Type
  *      text/plain (solicitud "simple", sin preflight CORS).
+ *    El campo OPCIONAL `slug` llega en las invitaciones publicadas
+ *    (rsvp.slugInvitacion) y habilita el ESPEJO a GitHub (abajo).
  *  - GET  ?action=rsvp&...  ← LEGADO: se conserva por compatibilidad con
  *    versiones anteriores del frontend, pero el frontend actual NO lo usa.
  *  - Respuesta SIEMPRE JSON: { success: true, ... } o { success: false, error }
@@ -49,6 +51,18 @@
  * implementación (o gestionar "Nueva implementación → Probar
  * implementaciones") y verificar con una prueba controlada que la URL
  * productiva responde al contrato POST.
+ *
+ * ESPEJO OPCIONAL A GITHUB (content/rsvps/<slug>.json):
+ *  - Si definís la propiedad de script GITHUB_TOKEN (Configuración del
+ *    proyecto → Propiedades del script), cada RSVP confirmado se agrega
+ *    TAMBIÉN a content/rsvps/<slug>.json del repositorio con un commit
+ *    automático [skip ci] (no reconstruye el sitio). Es lo que alimenta
+ *    el panel de cliente (/dashboard/confirmaciones).
+ *  - Sin GITHUB_TOKEN el script funciona EXACTAMENTE igual que siempre
+ *    (solo hoja de cálculo): el espejo está desactivado por defecto.
+ *  - El archivo del repo NUNCA guarda teléfonos (privacidad: quedan solo
+ *    en la hoja). El token recomendado es fine-grained, Contents R/W, solo
+ *    este repo; se puede revocar cuando quieras sin afectar la hoja.
  *
  * ============================================
  */
@@ -236,6 +250,16 @@ function handleRsvp(data) {
 
     cache.put(rlKey, String(usados + 1), 3600);
 
+    // Espejo opcional a GitHub (content/rsvps/<slug>.json): nunca rompe el RSVP.
+    // Sin teléfono (privacidad) — los nombres viajan solo dentro del JSON del repo.
+    mirarRsvpAGitHub({
+      slug: String(data.slug || '').trim(),
+      codigo: codigoGrupo,
+      fecha: fechaRegistro,
+      cantidad: Math.min(cantidad, RSVP_MAX_INVITADOS),
+      invitados: nombres,
+    });
+
     return jsonResponse({
       success: true,
       codigo: codigoGrupo,
@@ -286,4 +310,104 @@ function getOrCreateRsvpSheet() {
   }
 
   return sheet;
+}
+
+/**
+ * ============================================
+ * ESPEJO A GITHUB — content/rsvps/<slug>.json (OPCIONAL)
+ * ============================================
+ *
+ * Agrega la confirmación al archivo del repositorio vía Contents API con
+ * un commit automático cuyo mensaje lleva [skip ci] (el deploy de Pages
+ * solo escucha push a main y salta este commit: confirmar asistencia NO
+ * reconstruye el sitio).
+ *
+ * Garantías:
+ *  - Solo actúa si existe la propiedad de script GITHUB_TOKEN y el payload
+ *    trae `slug` (invitaciones publicadas desde 2026-10-31).
+ *  - Reintenta ante conflicto de SHA (dos confirmaciones simultáneas):
+ *    re-lee el archivo y re-aplica el append (máx. 3 intentos).
+ *  - Es fail-safe: cualquier error se registra en el log y el RSVP queda
+ *    igualmente guardado en la hoja (respuesta al invitado intacta).
+ *  - Sin teléfonos; dedup por código de grupo.
+ */
+var GITHUB_REPO = 'Sebasm2kuy/Miluaistudio';
+var RSVP_MAX_EN_REPO = 2000;
+
+function mirarRsvpAGitHub(entrada) {
+  try {
+    var token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+    if (!token || !entrada.slug) return;
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(entrada.slug)) return; // slug normalizado o nada
+
+    var ruta = 'content/rsvps/' + entrada.slug + '.json';
+    var api = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + ruta;
+    var cabeceras = {
+      Authorization: 'Bearer ' + token,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    for (var intento = 0; intento < 3; intento++) {
+      if (intento > 0) Utilities.sleep(450 * intento);
+
+      // 1. Leer colección existente (404 = primera confirmación de esta invitación)
+      var coleccion = { esquema: 1, actualizadoEn: '', rsvps: [] };
+      var sha = null;
+      var get = UrlFetchApp.fetch(api, {
+        headers: { Authorization: cabeceras.Authorization, Accept: cabeceras.Accept },
+        muteHttpExceptions: true
+      });
+      if (get.getResponseCode() === 200) {
+        var datos = JSON.parse(get.getContentText());
+        sha = datos.sha;
+        try {
+          var previa = JSON.parse(Utilities.newBlob(Utilities.base64Decode(datos.content)).getDataAsString());
+          if (previa && Array.isArray(previa.rsvps)) coleccion = previa;
+        } catch (e) { coleccion = { esquema: 1, actualizadoEn: '', rsvps: [] }; }
+      } else if (get.getResponseCode() !== 404) {
+        console.warn('rsvp-espejo: lectura ' + get.getResponseCode());
+        return;
+      }
+
+      // 2. Dedup por código + tope de seguridad
+      for (var i = 0; i < coleccion.rsvps.length; i++) {
+        if (coleccion.rsvps[i].codigo === entrada.codigo) return; // ya está
+      }
+      if (coleccion.rsvps.length >= RSVP_MAX_EN_REPO) return;
+      coleccion.rsvps.push({
+        codigo: entrada.codigo,
+        fecha: entrada.fecha,
+        cantidad: entrada.cantidad,
+        invitados: entrada.invitados,
+        asistencia: 'si',
+        origen: 'formulario'
+      });
+      coleccion.esquema = 1;
+      coleccion.actualizadoEn = new Date().toISOString();
+
+      // 3. Commit automático ([skip ci]: no dispara rebuild)
+      var cuerpo = {
+        message: 'rsvp(' + entrada.slug + '): +1 confirmación (' + entrada.cantidad + ' personas) [skip ci]',
+        content: Utilities.base64Encode(JSON.stringify(coleccion, null, 2) + '\n'),
+        branch: 'main'
+      };
+      if (sha) cuerpo.sha = sha;
+      var put = UrlFetchApp.fetch(api, {
+        method: 'put',
+        headers: cabeceras,
+        payload: JSON.stringify(cuerpo),
+        muteHttpExceptions: true
+      });
+      if (put.getResponseCode() < 300) return; // listo
+      if (put.getResponseCode() !== 409 && put.getResponseCode() !== 422) {
+        console.warn('rsvp-espejo: escritura ' + put.getResponseCode());
+        return;
+      }
+      // 409/422 = SHA desactualizado: reintenta re-leyendo (loop)
+    }
+    console.warn('rsvp-espejo: conflicto persistente tras reintentos');
+  } catch (e) {
+    console.warn('rsvp-espejo: ' + e.message); // fail-safe: el RSVP ya está en la hoja
+  }
 }

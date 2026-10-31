@@ -1,0 +1,14 @@
+{
+  "esquema": 1,
+  "actualizadoEn": "2026-10-31T09:02:30.397Z",
+  "cuentas": [
+    {
+      "email": "demo@lumengala.site",
+      "nombre": "Cliente Demostración",
+      "hash": "pbkdf2-sha256$310000$jbZKEEKld7/3u9uUjF8rFA==$3L+yE1OhxwsixfsA/497tD4Mp9wAYnDToO9sszyoOEI=",
+      "rol": "cliente",
+      "slug": "ejemplo-quince",
+      "creadoEn": "2026-10-31T08:05:18.293Z"
+    }
+  ]
+}

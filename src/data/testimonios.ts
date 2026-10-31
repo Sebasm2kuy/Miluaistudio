@@ -41,7 +41,7 @@ export const TESTIMONIOS: Testimonio[] = [
     nombre: 'Diego F.',
     evento: 'Boda',
     comentario:
-      'Muy buena onda y rapidez para todo. La cuenta regresiva y el mapa al salón fueron lo más útil. Excelente precio.',
+      'Muy buena onda y rapidez para todo. La cuenta regresiva y el mapa al salón fueron lo más útil. Excelente atención.',
     estado: 'muestra',
   },
   {

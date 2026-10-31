@@ -30,7 +30,7 @@ import { ConfigProvider, saveConfig } from '@/hooks/useConfig';
 import { OrnamentDivider } from '@/components/store-ui';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
-import { MERCADO_LIBRE_URL, whatsappLink } from '@/data/contacto';
+import { whatsappLink } from '@/data/contacto';
 import {
   createPersonalConfig,
   ACENTOS_META,
@@ -586,7 +586,7 @@ export default function PersonalizadorApp() {
                   <LayoutTemplate size={17} className="text-[#8a6534]" /> Secciones de tu invitación
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-[#787168]">
-                  Prendé lo que querés mostrar — todo va incluido en el precio. La vista previa se actualiza al instante y nos llega tu elección junto con el pedido.
+                  Prendé lo que querés mostrar — todo va incluido en tu invitación. La vista previa se actualiza al instante y nos llega tu elección junto con el pedido.
                 </p>
                 <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
                   {SECCIONES_META.map((m) => (
@@ -803,14 +803,6 @@ export default function PersonalizadorApp() {
                   >
                     <WhatsAppIcon size={16} /> Enviar mi configuración
                   </a>
-                  <a
-                    href={MERCADO_LIBRE_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#e8e0d7] px-4 py-2.5 text-xs font-medium text-[#54483e] transition hover:bg-[#f3ead9]"
-                  >
-                    Comprar por Mercado Libre <ExternalLink size={13} />
-                  </a>
                   <p className="mt-3 text-[11px] leading-relaxed text-[#787168]">
                     Te llega con tu diseño, nombre, fecha, lugar, frase y música. Con el pago lo dejamos publicado con tu enlace final.
                   </p>
@@ -851,6 +843,10 @@ export default function PersonalizadorApp() {
             Personalización auto-servicio · tu vista previa no se guarda ni se comparte. ·{' '}
             <a href={EDITOR_URL} className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
               Editor de invitaciones
+            </a>
+            {' · '}
+            <a href="/acceso/" className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
+              Acceso clientes
             </a>
           </span>
           <span>© {new Date().getFullYear()} Lumen Gala · Uruguay</span>

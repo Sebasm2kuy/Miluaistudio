@@ -17,6 +17,9 @@
     "src/lib/rsvp-client.ts",
     "src/lib/activos-editor.ts",
     "src/lib/github-deploy.ts",
+    "src/lib/github-db.ts",
+    "src/lib/auth-cliente.ts",
+    "src/lib/dashboard-validacion.ts",
     "src/lib/invitaciones-publicadas.ts",
     "src/lib/editor-config.ts",
     "src/lib/editor-campos.ts",
@@ -26,6 +29,8 @@
     "src/lib/musica.ts",
     "src/data/invitacion-publicada.ts",
     "src/data/config-schema.ts",
+    "src/data/clientes-esquema.ts",
+    "src/data/rsvps-esquema.ts",
     "src/data/store-tokens.ts",
     "src/data/invitation-designs.ts",
     "src/data/demo-config.ts"
