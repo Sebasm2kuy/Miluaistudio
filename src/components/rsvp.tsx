@@ -96,6 +96,9 @@ export default function Rsvp() {
         invitados: invitados.map((n) => n.trim()).filter(Boolean),
         telefono: telefono.trim(),
         fecha: new Date().toISOString(),
+        // Solo invitaciones publicadas: permite el espejo por commit en
+        // content/rsvps/<slug>.json (ver google-apps-script/gallery-server.gs).
+        ...(cfg.rsvp.slugInvitacion ? { slug: cfg.rsvp.slugInvitacion } : {}),
       },
     })
   }

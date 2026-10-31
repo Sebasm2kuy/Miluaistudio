@@ -38,6 +38,9 @@ export interface RsvpPayload {
   telefono: string;
   /** Fecha ISO de la confirmación */
   fecha: string;
+  /** Slug de la invitación publicada (opcional; permite el espejo a
+   *  content/rsvps/<slug>.json en el backend cuando está configurado) */
+  slug?: string;
 }
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;

@@ -24,6 +24,9 @@
  *     tarjeta compartida (WhatsApp/redes) debe llevar la identidad LGS
  *     (og:title «Lumen Gala Studio…») y la imagen NUEVA lgs-preview.jpg
  *     (URL distinta de la vieja og-image.jpg para romper la caché de WhatsApp).
+ *  9. El panel de cliente (/acceso/ y /dashboard/*, iteración 030) deja de
+ *     exportarse, o los datos del repositorio (content/) se cuelan en el
+ *     artefacto: las cuentas y RSVPs viven en el repo, nunca en el sitio.
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
@@ -64,6 +67,12 @@ const required = [
   'personalizar/index.html',
   // Editor móvil publicado (iteración 017): debe existir en el artefacto.
   'editar/index.html',
+  // Panel de cliente (iteración 030): login + dashboard exportados y
+  // protegidos client-side (la escritura real exige token en sesión).
+  'acceso/index.html',
+  'dashboard/index.html',
+  'dashboard/editar/index.html',
+  'dashboard/confirmaciones/index.html',
   ...DESIGNS.map((d) => `catalogo/${d}/index.html`),
   'lgs-preview.jpg',
   'favicon.ico',
@@ -129,6 +138,14 @@ for (const file of walk(OUT)) {
 ok('escaneo de secretos en ' + scanned + ' archivos de texto del artefacto');
 
 // ---- 5. Imágenes personales retiradas (privacidad) ----
+// + Datos del repositorio: content/ (clientes.json, rsvps/, invitaciones/)
+//   vive SOLO en el repo (la web lo lee por API de GitHub); jamás copiado
+//   al artefacto público.
+if (existsSync(join(OUT, 'content'))) {
+  fail('DATOS EN EL ARTEFACTO: out/content/ existe. Los JSON de clientes/RSVPs viven solo en el repo (se leen por API de GitHub), nunca en el sitio publicado.');
+} else {
+  ok('out/content/ ausente (los datos quedan en el repo, no en el sitio)');
+}
 const FORBIDDEN_ASSETS = [
   'Screenshot_20261017-131752.png',
   'uploads/01e904c1-9acb-4d2b-af36-c0c0ca106f2c_mqqvi62r.jpg',

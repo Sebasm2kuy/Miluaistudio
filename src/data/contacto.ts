@@ -5,10 +5,6 @@
 // de contacto de toda la web (portada, catálogo y tarjetas).
 // ============================================================
 
-/** Publicación de Mercado Libre (botón "Consultar / contratar") */
-export const MERCADO_LIBRE_URL =
-  'https://www.mercadolibre.com.uy/invitacion-15-anos-bodas-y-mas/up/MLUU5535524605?pdp_filters=item_id:MLU702768047';
-
 /**
  * Número de WhatsApp del negocio.
  * Formato internacional SIN "+", SIN espacios ni guiones:

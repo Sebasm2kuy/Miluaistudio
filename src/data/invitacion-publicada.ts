@@ -34,16 +34,21 @@ export const CARPETA_PUBLICACION = 'content/invitaciones';
  * queda reservado para evitar /i/i/.
  */
 export const SLUGS_RESERVADOS: ReadonlySet<string> = new Set([
+  'acceso',
   'admin',
   'api',
   'assets-invitaciones',
   'audio',
   'catalogo',
+  'clientes',
+  'dashboard',
   'favicon.ico',
   'i',
+  'login',
   'personalizar',
   'previsualizar',
   'robots',
+  'rsvps',
   'sitemap',
   'uploads',
   '_next',
@@ -137,6 +142,12 @@ export function crearInvitacionPublicada({
   // Una invitación publicada es real: la confirmación NO se simula.
   configSerializable.modoDemo = false;
   delete configSerializable.demoNombreDiseno;
+  // El slug viaja DENTRO de la config (rsvp.slugInvitacion) para que el backend
+  // de RSVP pueda espejar cada confirmación en content/rsvps/<slug>.json.
+  configSerializable.rsvp = {
+    ...configSerializable.rsvp,
+    slugInvitacion: slug,
+  };
 
   const marcaTiempo = ahora.toISOString();
   return {

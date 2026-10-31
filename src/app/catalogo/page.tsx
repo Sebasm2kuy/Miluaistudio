@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Images, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Images, Lock, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
 import CatalogScene from '@/components/catalog-scene';
 import WhatsAppIcon from '@/components/whatsapp-icon';
@@ -9,9 +9,8 @@ import WhatsAppFloat from '@/components/whatsapp-float';
 import Reveal from '@/components/reveal';
 import { OrnamentDivider } from '@/components/store-ui';
 import { DesignAdornoGlyph } from '@/components/design-ornaments';
-import { MERCADO_LIBRE_URL, WHATSAPP_MENSAJE_GENERAL, whatsappLink, whatsappLinkDiseno } from '@/data/contacto';
+import { WHATSAPP_MENSAJE_GENERAL, whatsappLink, whatsappLinkDiseno } from '@/data/contacto';
 import { TESTIMONIOS } from '@/data/testimonios';
-import { PRECIO } from '@/data/precio';
 
 function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; index: number; onQuickView: () => void }) {
   const demoUrl = '/catalogo/' + design.id + '/';
@@ -53,9 +52,9 @@ function DesignCard({ design, index, onQuickView }: { design: InvitationDesign; 
 
         <div className="mt-auto pt-4">
           <div className="flex items-baseline justify-between gap-2">
-            <strong className="text-base font-bold tracking-tight text-[#292522]">{PRECIO.texto}</strong>
+            <strong className="text-base font-bold tracking-tight text-[#292522]">Diseño personalizado</strong>
             <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5c7355]">
-              <Check size={12} strokeWidth={3} /> {PRECIO.condicion}
+              <Check size={12} strokeWidth={3} /> Todo incluido
             </span>
           </div>
           <a
@@ -114,10 +113,10 @@ export default function CatalogoPage() {
               <WhatsAppIcon size={16} />
               <span className="hidden sm:inline">Consultar por WhatsApp</span>
             </a>
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#e8e0d7] bg-white px-4 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm">
-              <span className="hidden sm:inline">Consultar / contratar</span>
-              <span className="sm:hidden">Mercado Libre</span>
-              <ExternalLink size={14} />
+            <a href="/acceso/" className="inline-flex items-center gap-2 rounded-full border border-[#e8e0d7] bg-white px-4 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm">
+              <span className="hidden sm:inline">Acceso clientes</span>
+              <span className="sm:hidden">Clientes</span>
+              <Lock size={14} />
             </a>
           </div>
         </div>
@@ -223,8 +222,8 @@ export default function CatalogoPage() {
             <p className="mt-3 text-sm leading-relaxed text-[#716a63]">Cuenta regresiva, galería, música, ubicación, calendario y confirmación de asistencia, según la configuración acordada para tu evento.</p>
           </div>
           <div className="relative mt-5 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0">
-            <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3d3830]">
-              Consultar la publicación <ExternalLink size={15} />
+            <a href="/#proceso" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#292522] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#3d3830]">
+              Conocé cómo trabajamos <ArrowRight size={15} />
             </a>
             <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#25d366] px-5 py-3 text-sm font-semibold text-[#0f6a2d] transition hover:bg-[#25d366]/10">
               <WhatsAppIcon size={16} /> WhatsApp
@@ -249,6 +248,7 @@ export default function CatalogoPage() {
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
           <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span className="text-white/50">Tu historia, en formato digital.</span>
+          <a href="/acceso/" className="text-white/50 underline decoration-white/20 underline-offset-4 transition hover:text-white">Acceso clientes</a>
           <span className="text-white/50">© {new Date().getFullYear()} Lumen Gala · Uruguay</span>
         </div>
       </footer>
@@ -284,9 +284,9 @@ export default function CatalogoPage() {
                   <div className="flex items-center gap-2"><Music2 size={16} /> Música y funciones interactivas</div>
                 </div>
                 <div className="mt-6 flex items-center justify-between border-y border-[#e8e0d7] py-4">
-                  <strong className="text-lg text-[#292522]">{PRECIO.texto}</strong>
+                  <strong className="text-lg text-[#292522]">Diseño personalizado</strong>
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#5c7355]">
-                    <Check size={15} strokeWidth={3} /> {PRECIO.condicion}
+                    <Check size={15} strokeWidth={3} /> Todo incluido
                   </span>
                 </div>
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -298,9 +298,6 @@ export default function CatalogoPage() {
                   </a>
                   <a href={whatsappLinkDiseno(selected.name)} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-5 py-3 text-sm font-semibold text-[#0b3d1e] transition hover:bg-[#1db957]">
                     <WhatsAppIcon size={16} /> Consultar por WhatsApp
-                  </a>
-                  <a href={MERCADO_LIBRE_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9cec2] px-5 py-3 text-sm font-semibold text-[#54483e] hover:bg-white">
-                    Mercado Libre <ExternalLink size={15} />
                   </a>
                 </div>
               </div>

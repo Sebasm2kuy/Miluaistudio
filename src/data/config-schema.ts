@@ -108,6 +108,9 @@ export interface SiteConfig {
     fechaLimiteFull: string
     googleSheetUrl: string
     hostPhone: string
+    /** Slug de la invitación publicada (inyectado al publicar): permite que el backend
+     *  de RSVP espeje la confirmación en content/rsvps/<slug>.json por commit. */
+    slugInvitacion?: string
     regalos: {
       titulo: string
       subtitulo: string

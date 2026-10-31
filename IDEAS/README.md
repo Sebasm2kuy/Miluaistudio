@@ -15,6 +15,8 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 031 — Panel de cliente (/dashboard) con GitHub como base de datos: login PBKDF2, editor del evento, confirmaciones en vivo; fuera todos los precios y Mercado Libre (31-10-2026)](./ITERACION-2026-10-31-031-DASHBOARD-CLIENTES-GITHUB-DB.md)
+
 - [Iteración 030 — Héroe de portada: modelos de impacto, sin precios ni Mercado Libre (30-10-2026)](./ITERACION-2026-10-30-030-HEROE-MODELOS-SIN-PRECIO.md)
 
 - [Iteración 029 — Tarjeta de WhatsApp con la marca LGS: og:title, og:description y og:image nuevos (30-10-2026)](./ITERACION-2026-10-30-029-OG-MARCA-LGS.md)

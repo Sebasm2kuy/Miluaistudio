@@ -449,6 +449,9 @@ export default function Home() {
                   (público por diseño; los datos reales exigen el token del
                   propietario — ver IDEAS iteración 017). */}
               <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
+              {/* Panel privado de clientes: gestionan su invitación publicada
+                  (estado, datos del evento y confirmaciones) tras iniciar sesión. */}
+              <a href="/acceso/" className="transition hover:text-white">Acceso clientes</a>
             </div>
           </div>
           <p className="mt-8 text-[#a1988a]">© {new Date().getFullYear()} Lumen Gala Studio</p>
