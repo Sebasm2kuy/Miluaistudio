@@ -12,6 +12,7 @@ import {
   Search,
   Share2,
   ShieldCheck,
+  Smartphone,
   Sparkles,
   Star,
 } from 'lucide-react';
@@ -79,15 +80,18 @@ export default function Home() {
           <DesignAdornoGlyph adorno="rosas" className="absolute -left-14 top-6 hidden h-44 w-44 text-[#b98a94]/25 lg:block" />
           <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#9c7443]/20 lg:block" />
 
+          {/* Insignia: complementa (no repite) el párrafo de apoyo. El párrafo
+              ya dice «listo para compartir por WhatsApp»; acá se aporta la
+              ventaja de compatibilidad sin instalar aplicaciones. */}
           <div className="store-hero-in inline-flex items-center gap-2 rounded-full border border-[#bfe8cd] bg-[#eafaf0] px-3.5 py-1.5 text-xs font-medium text-[#0b3d1e] shadow-sm">
-            <WhatsAppIcon size={14} />
-            Se comparte por WhatsApp, sin instalar nada
+            <Smartphone size={14} />
+            Se abre en cualquier celular, sin instalar aplicaciones
           </div>
-          <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.6rem] font-medium leading-[1.06] tracking-tight sm:text-6xl">
-            Invitaciones web de <em className="italic" style={{ color: GOLD }}>alta gama</em> para 15s y bodas, en un solo enlace.
+          <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.3rem] font-medium leading-[1.1] tracking-tight sm:text-6xl sm:leading-[1.06]">
+            Invitaciones web <em className="italic" style={{ color: GOLD }}>elegantes</em> y personalizadas para fiestas de 15 y bodas.
           </h1>
           <p className="store-hero-in-2 mt-6 max-w-lg text-base leading-relaxed text-[#716a63] sm:text-lg">
-            Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Cuenta regresiva, galería, música, ubicación y confirmación de asistencia (RSVP), con el estilo de tu evento. Basados en Montevideo.
+            Cada detalle de tu celebración, en un solo enlace: música, galería de fotos, cuenta regresiva, ubicación y confirmación de asistencia. Todo listo para compartir por WhatsApp.
           </p>
           <div className="store-hero-in-3 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href="/personalizar/" className={PRIMARY_BTN}>
@@ -437,7 +441,7 @@ export default function Home() {
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-serif text-lg tracking-[0.08em] text-[#f0e8da]">Lumen Gala Studio</h2>
-              <p className="mt-2 text-[#a1988a]">Invitaciones web de alta gama para 15s y bodas · Montevideo, Uruguay</p>
+              <p className="mt-2 text-[#a1988a]">Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas · Montevideo, Uruguay</p>
               <a
                 href="mailto:lumengala.studio@gmail.com"
                 className="mt-1.5 inline-block text-[#a1988a] underline decoration-[#4a4239] underline-offset-4 transition hover:text-white"

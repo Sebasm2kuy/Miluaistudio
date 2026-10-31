@@ -12,7 +12,7 @@ import type { Metadata } from 'next';
  */
 
 export const metadata: Metadata = {
-  title: 'Editor móvil',
+  title: { absolute: 'Editor móvil' },
   description: 'Editor visual de la invitación desde el teléfono (requiere token para publicar).',
   robots: { index: false, follow: false },
   /* Ruta operativa, no equivalente a la portada: SIN canonical. Sin esto
