@@ -31,7 +31,7 @@ Los principales pendientes no requieren rehacer el sitio: son correcciones de ci
 
 ### P1 — El favicon publicado parece ser el anterior, no el nuevo icono LGS
 
-**Evidencia:** en `main` existen ambos archivos `src/app/favicon.ico` y `public/favicon.ico`. El publicado como `gh-pages/favicon.ico` tiene el mismo SHA de blob que `src/app/favicon.ico` (`664744f999564940ff66115b51e0e408a1b75cf4`) y pesa aproximadamente 184,5 KB. El archivo nuevo de `public/favicon.ico` tiene otro SHA (`b4e98b66f0d8e427d5a9a27d5707cf7162826500`? no: revisar el SHA exacto actual en el repositorio) y es mucho más pequeño (~15 KB). El contenido del favicon publicado se ve como el sello rojo anterior, no como el monograma LGS dorado previsto.
+**Evidencia:** en `main` existen ambos archivos `src/app/favicon.ico` y `public/favicon.ico`. El publicado como `gh-pages/favicon.ico` tiene el mismo SHA de blob que `src/app/favicon.ico` (`664744f999564940ff66115b51e0e408a1b75cf4`) y pesa aproximadamente 184,5 KB. El archivo nuevo de `public/favicon.ico` tiene otro SHA (`b4e98b66f0d8e427d5a9a27fef71295e2171c558`) y es mucho más pequeño (~15 KB). El contenido del favicon publicado se ve como el sello rojo anterior, no como el monograma LGS dorado previsto.
 
 **Impacto:** el nombre de marca ya cambió en portada y metadatos, pero la pestaña del navegador puede seguir mostrando una identidad antigua y un recurso excesivamente grande.
 
