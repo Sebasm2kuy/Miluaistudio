@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   title: 'Vista previa local',
   description: 'Vista previa local de la invitación en edición. No es una invitación publicada.',
   robots: { index: false, follow: false },
+  /* Ruta interna: sin canonical (no heredar el «/» del layout raíz, 032). */
+  alternates: { canonical: null },
 };
 
 export default function PaginaPrevisualizar() {

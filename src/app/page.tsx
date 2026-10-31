@@ -1,11 +1,9 @@
 import {
   ArrowRight,
-  BookOpen,
   Calendar,
   Check,
   Clapperboard,
   Clock3,
-  Film,
   Image as ImageIcon,
   Images,
   MapPin,
@@ -48,14 +46,14 @@ const WHATSAPP_BTN =
 const OUTLINE_BTN =
   'inline-flex items-center justify-center gap-2 rounded-full border border-[#ded4c8] bg-transparent px-6 py-3.5 text-sm font-medium text-[#54483e] transition hover:-translate-y-0.5 hover:border-[#c9bbaa] hover:bg-white';
 
-/* Píldoras bajo el héroe (al estilo de la referencia del rubro): las de
-   servicios apuntan a su tarjeta «próximamente» con ancla #servicio-<id>. */
+/* Píldoras bajo el héroe (al estilo de la referencia del rubro): el PRODUCTO
+   y lo que ya funciona van primero (iteración 032); los extras «próximamente»
+   se agrupan en una sola píldora hacia su sección, sin dominar el primer
+   pantallazo. Las tarjetas individuales siguen en #servicios. */
 const PILLS_SERVICIOS: Array<{ label: string; href: string; icon: LucideIcon; pronto?: boolean }> = [
-  { label: 'Álbum digital', href: '#servicio-album-digital', icon: Images, pronto: true },
-  { label: 'Videos', href: '#servicio-edicion-video', icon: Clapperboard, pronto: true },
-  { label: 'Historia de vida', href: '#servicio-video-historia', icon: BookOpen, pronto: true },
-  { label: 'Tráiler', href: '#servicio-trailer-evento', icon: Film, pronto: true },
+  { label: 'Los ' + INVITATION_DESIGNS.length + ' diseños', href: '#disenos', icon: Images },
   { label: 'Música de Spotify', href: '#incluye', icon: Music },
+  { label: 'Extras: álbum, video y más', href: '#servicios', icon: Clapperboard, pronto: true },
 ];
 
 export default function Home() {
@@ -74,42 +72,9 @@ export default function Home() {
       {/* ===== Encabezado con menús (incluye servicios «próximamente») ===== */}
       <StoreNav />
 
-      {/* ===== Hero editorial — el producto primero en móvil ===== */}
+      {/* ===== Hero editorial — la propuesta primero en móvil (iteración 032) ===== */}
       <section className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-7 sm:px-6 sm:pt-10 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:px-8 lg:pb-16 lg:pt-20">
-        {/* Visual — va primero en móvil: la invitación antes que el texto */}
-        <div className="relative order-1 lg:order-2">
-          <div aria-hidden="true" className="absolute -inset-5 rounded-[2.75rem] bg-gradient-to-br from-[#f6e2df]/75 via-[#f3e6d3]/60 to-[#ecdcc0]/70 blur-xl lg:hidden" />
-          {/* Móvil y tablet: maqueta del diseño destacado */}
-          <div className="store-hero-in relative mx-auto aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.24)] sm:max-w-[430px] lg:hidden">
-            <CatalogScene design={heroDesign} />
-            <div className="absolute -left-1.5 top-5">
-              <HeroBadge>
-                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
-              </HeroBadge>
-            </div>
-          </div>
-          {/* Escritorio: collage editorial con las maquetas reales (mismo fondo que la demo) */}
-          <div className="store-hero-in-2 relative mx-auto hidden w-full max-w-[440px] pb-12 pr-6 sm:pb-14 sm:pr-10 lg:block">
-            <div aria-hidden="true" className="absolute -inset-6 rounded-[3rem] bg-[#ecdcc0]/45 blur-2xl" />
-            <div className="relative rotate-[-2deg] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.22)]">
-              <div className="aspect-[4/5] w-full">
-                <CatalogScene design={heroDesign} />
-              </div>
-            </div>
-            <div className="absolute -bottom-0 right-0 w-[46%] rotate-[4deg] overflow-hidden rounded-2xl border-4 border-[#f7f4ef] shadow-[0_22px_50px_rgba(88,63,32,0.28)] sm:-bottom-2">
-              <div className="aspect-[4/5] w-full">
-                <CatalogScene design={heroSecondary} />
-              </div>
-            </div>
-            <div className="absolute -left-2 top-6 sm:-left-6">
-              <HeroBadge>
-                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
-              </HeroBadge>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative order-2 mt-9 lg:order-1 lg:mt-0">
+        <div className="relative order-1">
           {/* Adornos de fondo */}
           <DesignAdornoGlyph adorno="rosas" className="absolute -left-14 top-6 hidden h-44 w-44 text-[#b98a94]/25 lg:block" />
           <DesignAdornoGlyph adorno="eucalipto" className="absolute -right-12 bottom-0 hidden h-40 w-40 -scale-x-100 text-[#9c7443]/20 lg:block" />
@@ -139,6 +104,40 @@ export default function Home() {
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Personalizada</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Lista para compartir</span>
             <span className="inline-flex items-center gap-2"><Check size={14} className="text-[#9c7443]" /> Adaptada al celular</span>
+          </div>
+        </div>
+
+        {/* Visual — después del mensaje en móvil (compacto, 360px) y a la derecha
+            en escritorio: el arte sigue presente sin tapar la propuesta comercial. */}
+        <div className="relative order-2 mt-10 lg:order-2 lg:mt-0">
+          <div aria-hidden="true" className="absolute -inset-5 rounded-[2.75rem] bg-gradient-to-br from-[#f6e2df]/75 via-[#f3e6d3]/60 to-[#ecdcc0]/70 blur-xl lg:hidden" />
+          {/* Móvil y tablet: maqueta del diseño destacado */}
+          <div className="store-hero-in relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.24)] sm:max-w-[430px] lg:hidden">
+            <CatalogScene design={heroDesign} />
+            <div className="absolute -left-1.5 top-5">
+              <HeroBadge>
+                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
+              </HeroBadge>
+            </div>
+          </div>
+          {/* Escritorio: collage editorial con las maquetas reales (mismo fondo que la demo) */}
+          <div className="store-hero-in-2 relative mx-auto hidden w-full max-w-[440px] pb-12 pr-6 sm:pb-14 sm:pr-10 lg:block">
+            <div aria-hidden="true" className="absolute -inset-6 rounded-[3rem] bg-[#ecdcc0]/45 blur-2xl" />
+            <div className="relative rotate-[-2deg] overflow-hidden rounded-[2rem] border border-[#eadfca] shadow-[0_30px_70px_rgba(88,63,32,0.22)]">
+              <div className="aspect-[4/5] w-full">
+                <CatalogScene design={heroDesign} />
+              </div>
+            </div>
+            <div className="absolute -bottom-0 right-0 w-[46%] rotate-[4deg] overflow-hidden rounded-2xl border-4 border-[#f7f4ef] shadow-[0_22px_50px_rgba(88,63,32,0.28)] sm:-bottom-2">
+              <div className="aspect-[4/5] w-full">
+                <CatalogScene design={heroSecondary} />
+              </div>
+            </div>
+            <div className="absolute -left-2 top-6 sm:-left-6">
+              <HeroBadge>
+                <Sparkles size={14} className="text-[#9c7443]" /> Demo interactiva · Música y RSVP
+              </HeroBadge>
+            </div>
           </div>
         </div>
       </section>
@@ -339,20 +338,26 @@ export default function Home() {
             {TESTIMONIOS.map((t, index) => (
               <Reveal key={t.nombre} delay={index * 50}>
                 <figure className="flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-6">
-                  <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
-                    ))}
-                  </div>
+                  {/* Estrellas SOLO en reseñas reales verificadas: mientras el
+                      testimonio es un ejemplo, la puntuación parecería una
+                      valoración auténtica (iteración 032). */}
+                  {t.estado === 'verificado' ? (
+                    <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="inline-flex w-fit rounded-full border border-[#e8e0d7] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
+                      Ejemplo de referencia
+                    </span>
+                  )}
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
                   <figcaption className="mt-4 border-t border-[#f0e9df] pt-3">
                     <span className="block text-sm font-semibold text-[#292522]">{t.nombre}</span>
                     <span className="block text-xs text-[#787168]">{t.evento}</span>
-                    {t.estado !== 'verificado' && (
-                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
-                        Ejemplo de referencia
-                      </span>
-                    )}
+                    {/* La etiqueta «Ejemplo de referencia» vive arriba de la
+                        tarjeta (sustituye a las estrellas); acá no se repite. */}
                   </figcaption>
                 </figure>
               </Reveal>
@@ -445,10 +450,8 @@ export default function Home() {
               <a href={CATALOG_URL} className="transition hover:text-white">Catálogo</a>
               <a href="#servicios" className="transition hover:text-white">Próximamente</a>
               <a href="/catalogo/rosa-romantica/" target="_blank" rel="noreferrer" className="transition hover:text-white">Ver demostración</a>
-              {/* Editor móvil visual: edición directa tocando la invitación
-                  (público por diseño; los datos reales exigen el token del
-                  propietario — ver IDEAS iteración 017). */}
-              <a href="/editar/" className="transition hover:text-white">Editor de invitaciones</a>
+              {/* El editor /editar/ es una herramienta operativa del propietario:
+                  sin enlace público desde la iteración 032 (ruta directa vigente). */}
               {/* Panel privado de clientes: gestionan su invitación publicada
                   (estado, datos del evento y confirmaciones) tras iniciar sesión. */}
               <a href="/acceso/" className="transition hover:text-white">Acceso clientes</a>

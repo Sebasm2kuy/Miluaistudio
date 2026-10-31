@@ -27,6 +27,10 @@ export async function generateMetadata({
     description: `${design.description} Explorá una invitación digital de muestra y consultá opciones de personalización.`,
     keywords: ['invitación digital', 'invitaciones interactivas', 'Lumen Gala', 'fiestas de 15', 'bodas'],
     robots: { index: false, follow: true },
+    /* Demo noindex, no equivalente al índice del catálogo: SIN canonical.
+       Sin esto hereda «/catalogo/» del layout y las 29 demos declaraban
+       como versión oficial una página que no es su equivalente (032). */
+    alternates: { canonical: null },
     openGraph: {
       title: `${design.name} · Lumen Gala`,
       description: design.description,

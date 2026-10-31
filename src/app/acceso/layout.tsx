@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Acceso clientes | Lumen Gala',
   description: 'Panel privado para gestionar tu invitación web de Lumen Gala Studio.',
   robots: { index: false, follow: false },
+  /* Zona privada: sin canonical (no heredar el «/» del layout raíz, 032). */
+  alternates: { canonical: null },
 };
 
 export default function AccesoLayout({ children }: { children: React.ReactNode }) {

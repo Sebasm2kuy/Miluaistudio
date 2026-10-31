@@ -15,6 +15,8 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 032B — Correcciones definitivas LGS: favicon LGS real (fuera el sello rojo), primer pantallazo móvil con H1+CTA primero, carrusel con render liviano (3/29 montan), editor fuera de la navegación comercial, testimonios de muestra sin estrellas, «próximamente» sin protagonismo y canonical/robots/sitemap coherentes (31-10-2026)](./ITERACION-2026-10-31-032B-CORRECCIONES-DEFINITIVAS-LGS.md)
+
 - [Iteración 031 — Panel de cliente (/dashboard) con GitHub como base de datos: login PBKDF2, editor del evento, confirmaciones en vivo; fuera todos los precios y Mercado Libre (31-10-2026)](./ITERACION-2026-10-31-031-DASHBOARD-CLIENTES-GITHUB-DB.md)
 
 - [Iteración 030 — Héroe de portada: modelos de impacto, sin precios ni Mercado Libre (30-10-2026)](./ITERACION-2026-10-30-030-HEROE-MODELOS-SIN-PRECIO.md)

@@ -16,8 +16,10 @@
  *  6. Una invitación publicada (content/invitaciones/*.json) no genera su
  *     ruta out/i/<slug>/index.html, un asset que enlaza no existe en el
  *     export, o hay rutas i/ sin JSON declarado.
- *  7. Las páginas publicadas dejan de enlazar al editor móvil (/editar/),
- *     que lo dejaría inalcanzable desde el sitio (causa raíz de la 018).
+ *  7. El editor móvil (/editar/, publicado desde la iteración 017) cambia de
+ *     política en la 032: sigue publicado y alcanzable por URL directa y desde
+ *     el flujo del personalizador, pero ya no puede aparecer enlazado en la
+ *     navegación comercial (portada, catálogo).
  *  8. La marca vuelve a ser la vieja: el <title> de la portada debe decir
  *     «Lumen Gala» y declarar el favicon LGS (favicon.ico) — transición
  *     definitiva de marca de la iteración 027. Desde la 029, además, la
@@ -27,12 +29,20 @@
  *  9. El panel de cliente (/acceso/ y /dashboard/*, iteración 030) deja de
  *     exportarse, o los datos del repositorio (content/) se cuelan en el
  *     artefacto: las cuentas y RSVPs viven en el repo, nunca en el sitio.
+ * 10. El favicon publicado vuelve a ser el sello rojo antiguo (iteración
+ *     032): los convencionales src/app/favicon.ico e icon.png viejos se
+ *     eliminaron y /favicon.ico debe salir de public/ con el monograma LGS.
+ * 11. SEO incoherente (iteración 032): canonical heredado en rutas internas
+ *     noindex (/editar/, /previsualizar/, /acceso/, /dashboard/*) o en demos
+ *     (apuntando a /catalogo/), robots.txt sin sitemap, o un sitemap que
+ *     incluya rutas que no son las 3 páginas comerciales indexables.
  *
  * Se ejecuta como parte de `npm run build` y de forma manual con
  * `npm run verify:export`.
  */
 
 import { existsSync, readdirSync, statSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, relative } from 'node:path';
 
 const OUT = join(process.cwd(), 'out');
@@ -221,22 +231,41 @@ if (existsSync(DIR_INVITACIONES)) {
   if (existsSync(OUT_I)) fail('out/i/ existe pero content/invitaciones/ no está en el repo');
 }
 
-// ---- 7. El editor móvil debe ser alcanzable desde el sitio publicado ----
-// Causa raíz de la iteración 018: /editar/ estaba publicado pero SIN ningún
-// enlace desde el sitio (el único vivía en /admin, que no se publica). El
-// editor quedó como una isla y el propietario no veía ningún cambio. Si
-// estas páginas dejan de enlazar al editor, el build falla a propósito.
+// ---- 7. Editor móvil: publicado, sin navegación comercial ----
+// Iteración 032 (decisión del propietario): el editor /editar/ es una
+// herramienta operativa, no una página comercial. La ruta directa se conserva
+// publicada (la exige la sección 2) y el flujo del personalizador mantiene su
+// botón «Editar tocando la invitación» (camino de trabajo). Lo que NO puede
+// volver a pasar es que la portada o el catálogo lo enlacen como navegación.
+// (Invierte la garantía de la 018 a pedido explícito del propietario.)
 const EDITOR_HREF = 'href="/editar/"';
-const PAGINAS_CON_ENLACE_EDITOR = [
-  'index.html',
-  'personalizar/index.html',
-];
-for (const rel of PAGINAS_CON_ENLACE_EDITOR) {
+for (const rel of ['index.html', 'catalogo/index.html']) {
   const file = join(OUT, rel);
   if (!existsSync(file)) continue; // la existencia ya la exigió la sección 2
   const html = readFileSync(file, 'utf8');
-  if (html.includes(EDITOR_HREF)) ok('enlace al editor móvil presente: ' + rel);
-  else fail('SIN ENLACE AL EDITOR: ' + rel + ' no contiene ' + EDITOR_HREF + ' — el editor móvil volvería a quedar inalcanzable desde el sitio publicado.');
+  if (html.includes(EDITOR_HREF)) fail('ENLACE COMERCIAL AL EDITOR: ' + rel + ' contiene ' + EDITOR_HREF + ' — el editor es operativa y no va en la navegación pública (iteración 032).');
+  else ok('sin enlace comercial al editor: ' + rel);
+}
+{
+  // El camino personalizador → editor («Editar tocando la invitación») se
+  // monta al ELEGIR un diseño, así que NO está en el HTML estático inicial:
+  // la garantía de build es que la URL del editor sigue empaquetada en el
+  // JS cliente. El flujo completo (elegir diseño → botón presente) se
+  // verifica en E2E (iteración 032).
+  const dirChunks = join(OUT, '_next', 'static', 'chunks');
+  let urlEditorEnBundle = false;
+  if (existsSync(dirChunks)) {
+    for (const rel of readdirSync(dirChunks, { recursive: true })) {
+      if (!String(rel).endsWith('.js')) continue;
+      const f = join(dirChunks, String(rel));
+      if (readFileSync(f, 'utf8').includes('/editar/')) {
+        urlEditorEnBundle = true;
+        break;
+      }
+    }
+  }
+  if (urlEditorEnBundle) ok('URL del editor empaquetada en el JS cliente (camino personalizador→editor; flujo verificado en E2E)');
+  else fail('SIN CAMINO AL EDITOR: la URL /editar/ desapareció del JS cliente — el flujo personalización→editor se perdió (iteración 032 lo conserva).');
 }
 
 // ---- 8. Marca Lumen Gala: título, favicon y tarjeta OG del sitio publicado ----
@@ -262,6 +291,11 @@ if (existsSync(INDEX_MARCA)) {
   } else {
     fail('SIN FAVICON LGS: la portada no declara <link rel="icon" href="/favicon.ico">');
   }
+  if (linksIcon.some((l) => l.includes('/icon.png'))) {
+    fail('ICONO VIEJO: la portada declara <link> hacia /icon.png — el convencional src/app/icon.png (sello rojo) fue eliminado en la iteración 032');
+  } else {
+    ok('sin <link> residual hacia /icon.png (convencional del sello viejo)');
+  }
   const metaContenido = (propiedad) =>
     html
       .match(new RegExp('<meta [^>]*property="' + propiedad + '"[^>]*>'))?.[0]
@@ -277,6 +311,95 @@ if (existsSync(INDEX_MARCA)) {
     ok('og:image apunta a la imagen de marca NUEVA: ' + ogImage);
   } else {
     fail('OG IMAGE VIEJA: og:image debe ser exactamente https://lumengala.site/lgs-preview.jpg (URL nueva para romper la caché de WhatsApp) (' + ogImage + ')');
+  }
+}
+
+// ---- 8b. Favicon binario: el archivo publicado debe ser el monograma LGS ----
+// Iteración 032: src/app/favicon.ico y src/app/icon.png conservaban el sello
+// rojo «Milagros XV Años» y prevalecían sobre public/favicon.ico (el especial
+// de Next.js se sirve en /favicon.ico por encima de public/). El canario
+// compara el md5 del artefacto contra el md5 del sello viejo y limita el
+// tamaño (el sello pesaba 189 KB; el monograma LGS, 15 KB).
+const MD5_SELLO_VIEJO = '946df6b38a97aac5a02ebec248dfbdbe';
+const FAVICON_OUT = join(OUT, 'favicon.ico');
+if (!existsSync(FAVICON_OUT)) {
+  fail('SIN FAVICON: out/favicon.ico no existe — la raíz del dominio quedaría sin icono.');
+} else {
+  const md5 = createHash('md5').update(readFileSync(FAVICON_OUT)).digest('hex');
+  const peso = statSync(FAVICON_OUT).size;
+  if (md5 === MD5_SELLO_VIEJO) {
+    fail('FAVICON VIEJO: out/favicon.ico es el sello rojo antiguo (md5 ' + md5 + '). Restaurá el monograma LGS de public/favicon.ico.');
+  } else if (peso > 100 * 1024) {
+    fail('FAVICON ENORME: out/favicon.ico pesa ' + Math.round(peso / 1024) + ' KB — sospechoso de ser el sello viejo o un recurso sin optimizar.');
+  } else {
+    ok('out/favicon.ico es el monograma LGS (' + Math.round(peso / 1024) + ' KB, md5 ' + md5.slice(0, 8) + '…, no es el sello viejo)');
+  }
+}
+if (existsSync(join(OUT, 'icon.png'))) {
+  fail('ICONO VIEJO: out/icon.png existe — el convencional src/app/icon.png (sello rojo) debe permanecer eliminado.');
+} else {
+  ok('out/icon.png no está en el artefacto (sin duplicado contradictorio)');
+}
+
+// ---- 11. SEO: canonical, noindex y sitemap coherentes (iteración 032) ----
+// Las rutas deliberadamente noindex no son equivalentes a la portada ni al
+// índice del catálogo: NO deben arrastrar el canonical heredado del layout
+// raíz. El sitemap queda exactamente con las 3 páginas comerciales.
+const RUTAS_INTERNAS_SIN_CANONICAL = [
+  'editar/index.html',
+  'previsualizar/index.html',
+  'acceso/index.html',
+  'dashboard/index.html',
+  'dashboard/editar/index.html',
+  'dashboard/confirmaciones/index.html',
+];
+for (const rel of RUTAS_INTERNAS_SIN_CANONICAL) {
+  const file = join(OUT, rel);
+  if (!existsSync(file)) continue; // la existencia ya la exigió la sección 2
+  if (readFileSync(file, 'utf8').includes('rel="canonical"')) {
+    fail('CANONICAL EN ZONA INTERNA: ' + rel + ' declara canonical (heredado del layout raíz). Una ruta noindex no es equivalente a la portada: debe ir SIN canonical (iteración 032).');
+  } else {
+    ok('sin canonical en ruta interna noindex: ' + rel);
+  }
+}
+{
+  let demosConCanonical = 0;
+  const dirDemos = join(OUT, 'catalogo');
+  if (existsSync(dirDemos)) {
+    for (const entrada of readdirSync(dirDemos, { withFileTypes: true })) {
+      if (!entrada.isDirectory()) continue;
+      const f = join(dirDemos, entrada.name, 'index.html');
+      if (existsSync(f) && readFileSync(f, 'utf8').includes('rel="canonical"')) demosConCanonical++;
+    }
+  }
+  if (demosConCanonical > 0) {
+    fail('CANONICAL EN DEMOS: ' + demosConCanonical + ' demo(s) /catalogo/<id>/ declaran canonical (heredaban /catalogo/). Las demos son noindex y no son equivalentes al índice: sin canonical (iteración 032).');
+  } else {
+    ok('demos del catálogo sin canonical heredado');
+  }
+}
+{
+  const robotsFile = join(OUT, 'robots.txt');
+  if (existsSync(robotsFile)) {
+    if (readFileSync(robotsFile, 'utf8').includes('Sitemap: https://lumengala.site/sitemap.xml')) {
+      ok('robots.txt declara el sitemap del dominio propio');
+    } else {
+      fail('ROBOTS SIN SITEMAP: robots.txt no declara Sitemap: https://lumengala.site/sitemap.xml');
+    }
+  }
+  const sitemapFile = join(OUT, 'sitemap.xml');
+  if (existsSync(sitemapFile)) {
+    const urls = (readFileSync(sitemapFile, 'utf8').match(/<loc>([^<]+)<\/loc>/g) ?? []).map((s) => s.replace(/<\/?loc>/g, ''));
+    const esperadas = ['https://lumengala.site/', 'https://lumengala.site/catalogo/', 'https://lumengala.site/personalizar/'];
+    const extra = urls.filter((u) => !esperadas.includes(u));
+    const faltan = esperadas.filter((u) => !urls.includes(u));
+    if (extra.length > 0) {
+      fail('SITEMAP CON RUTAS NO COMERCIALES: ' + extra.join(', '));
+    } else if (faltan.length > 0) {
+      fail('SITEMAP INCOMPLETO: faltan ' + faltan.join(', '));
+    } else {
+      ok('sitemap con exactamente las ' + urls.length + ' páginas comerciales indexables (demos e invitaciones fuera)');
+    }
   }
 }
 
