@@ -841,10 +841,9 @@ export default function PersonalizadorApp() {
           <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span>
             Personalización auto-servicio · tu vista previa no se guarda ni se comparte. ·{' '}
-            <a href={EDITOR_URL} className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
-              Editor de invitaciones
-            </a>
-            {' · '}
+            {/* El editor /editar/ es operativa del estudio: sin enlace público
+                desde la iteración 032; el camino personalización → editor se
+                conserva en los botones «Editar tocando la invitación». */}
             <a href="/acceso/" className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
               Acceso clientes
             </a>

@@ -192,20 +192,24 @@ export default function CatalogoPage() {
             {TESTIMONIOS.map((t, tIndex) => (
               <Reveal key={t.nombre} delay={tIndex * 50}>
                 <figure className="flex h-full flex-col rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(88,63,32,0.05)]">
-                  <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
-                    ))}
-                  </div>
+                  {/* Estrellas SOLO en reseñas reales verificadas (iteración 032) */}
+                  {t.estado === 'verificado' ? (
+                    <div className="flex items-center gap-0.5 text-[#b8860b]" aria-label="Calificación: 5 de 5 estrellas">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Star key={starIndex} size={14} fill="currentColor" strokeWidth={0} />
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="inline-flex w-fit rounded-full border border-[#e8e0d7] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
+                      Ejemplo de referencia
+                    </span>
+                  )}
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-[#5d564e]">“{t.comentario}”</blockquote>
                   <figcaption className="mt-4 border-t border-[#f0e9df] pt-3">
                     <span className="block text-sm font-semibold text-[#292522]">{t.nombre}</span>
                     <span className="block text-xs text-[#787168]">{t.evento}</span>
-                    {t.estado !== 'verificado' && (
-                      <span className="mt-1 inline-block rounded-full border border-[#e8e0d7] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[#787168]">
-                        Ejemplo de referencia
-                      </span>
-                    )}
+                    {/* La etiqueta «Ejemplo de referencia» vive arriba de la
+                        tarjeta (sustituye a las estrellas); acá no se repite. */}
                   </figcaption>
                 </figure>
               </Reveal>

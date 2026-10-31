@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   title: 'Editor móvil',
   description: 'Editor visual de la invitación desde el teléfono (requiere token para publicar).',
   robots: { index: false, follow: false },
+  /* Ruta operativa, no equivalente a la portada: SIN canonical. Sin esto
+     hereda el canonical «/» del layout raíz y declara a la portada como
+     versión oficial de una página que ni siquiera debe indexarse (032). */
+  alternates: { canonical: null },
 };
 
 /**

@@ -10,6 +10,7 @@ import {
   PAUSA_TRAS_INTERACCION_MS,
   indiceVecino,
   posicionSlide,
+  renderCompleto,
   UMBRAL_DESLIZAR_PX,
 } from '@/lib/carrusel';
 
@@ -19,6 +20,13 @@ import {
  * deslizar con el dedo (móvil), con flechas y puntos (escritorio) y avanza
  * solo salvo que el visitante esté interactuando. Tocar un borde trae ese
  * diseño al frente; los botones de acción abren la demo del diseño actual.
+ *
+ * Rendimiento (iteración 032): solo el diseño activo y sus dos vecinos
+ * montan la invitación completa (MiniInvitation); los slides fuera de vista
+ * usan una representación liviana con el marco del teléfono. Toda interacción
+ * (flechas, teclado, puntos, gestos) pasa por registrarInteraccion(), que
+ * pausa el autoplay; el intervalo es único y se limpia al desmontar, y no
+ * avanza con la pestaña oculta ni con prefers-reduced-motion.
  */
 
 const ESTILO_POSICION: Record<string, React.CSSProperties> = {
@@ -33,24 +41,50 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
   const [actual, setActual] = useState(INDICE_INICIAL);
   const ultimaInteraccion = useRef(0);
   const inicioTactil = useRef<{ x: number; y: number } | null>(null);
+  const movimientoReducido = useRef(false);
+
+  /** Registro central de interacción: flechas, teclado, indicadores y gestos
+      táctiles pasan por acá, y el autoplay espera PAUSA_TRAS_INTERACCION_MS. */
+  const registrarInteraccion = useCallback(() => {
+    ultimaInteraccion.current = Date.now();
+  }, []);
 
   /** Va a un índice concreto (pausa el autoplay un rato) */
   const ir = useCallback(
     (i: number) => {
-      ultimaInteraccion.current = Date.now();
+      registrarInteraccion();
       setActual(indiceVecino(i, 0, total));
     },
-    [total],
+    [registrarInteraccion, total],
   );
 
-  const avanzar = useCallback(() => setActual((a) => indiceVecino(a, 1, total)), [total]);
-  const retroceder = useCallback(() => setActual((a) => indiceVecino(a, -1, total)), [total]);
+  const avanzar = useCallback(() => {
+    registrarInteraccion();
+    setActual((a) => indiceVecino(a, 1, total));
+  }, [registrarInteraccion, total]);
 
-  // Autoplay: se pausa mientras la pestaña está oculta o tras una interacción
+  const retroceder = useCallback(() => {
+    registrarInteraccion();
+    setActual((a) => indiceVecino(a, -1, total));
+  }, [registrarInteraccion, total]);
+
+  // prefers-reduced-motion en vivo: si el visitante lo activa a mitad de
+  // sesión, el autoplay deja de avanzar sin necesidad de recargar.
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    movimientoReducido.current = mq.matches;
+    const sincronizar = (e: MediaQueryListEvent) => {
+      movimientoReducido.current = e.matches;
+    };
+    mq.addEventListener('change', sincronizar);
+    return () => mq.removeEventListener('change', sincronizar);
+  }, []);
+
+  // Autoplay ÚNICO: un solo intervalo con limpieza al desmontar. No avanza
+  // con la pestaña oculta, con movimiento reducido ni tras una interacción.
+  useEffect(() => {
     const t = setInterval(() => {
-      if (document.hidden) return;
+      if (movimientoReducido.current || document.hidden) return;
       if (Date.now() - ultimaInteraccion.current < PAUSA_TRAS_INTERACCION_MS) return;
       setActual((a) => indiceVecino(a, 1, total));
     }, INTERVALO_AUTOPLAY_MS);
@@ -79,16 +113,16 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
         onTouchStart={(e) => {
           const t = e.touches[0];
           inicioTactil.current = { x: t.clientX, y: t.clientY };
-          ultimaInteraccion.current = Date.now();
+          registrarInteraccion();
         }}
         onTouchEnd={(e) => {
           const s = inicioTactil.current;
           inicioTactil.current = null;
+          registrarInteraccion();
           if (!s) return;
           const t = e.changedTouches[0];
           const dx = t.clientX - s.x;
           const dy = t.clientY - s.y;
-          ultimaInteraccion.current = Date.now();
           if (Math.abs(dx) > UMBRAL_DESLIZAR_PX && Math.abs(dx) > Math.abs(dy)) {
             // Deslizar a la izquierda pasa al siguiente; a la derecha, al anterior
             setActual((a) => indiceVecino(a, dx < 0 ? 1 : -1, total));
@@ -98,7 +132,8 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
         {designs.map((design, i) => {
           const pos = posicionSlide(i, actual, total);
           const esActual = pos === 'actual';
-          const cuerpo = (
+          const completo = renderCompleto(pos);
+          const cuerpo = completo ? (
             /* Ancho explícito: dentro del slide (flex centrado) un hijo sin
                ancho colapsa a 0 y el aspect-ratio no puede calcular altura */
             <div className="w-[236px] rounded-[2.6rem] bg-[#101012] p-2 shadow-[0_28px_60px_rgba(88,63,32,0.30)] sm:w-[272px]">
@@ -110,19 +145,24 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
                 <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(115deg, rgba(255,255,255,0.14) 0%, transparent 26%, transparent 72%, rgba(255,255,255,0.05) 100%)' }} />
               </div>
             </div>
+          ) : (
+            /* Representación liviana (slide fuera de vista): solo el marco del
+               teléfono; la invitación completa se monta al asomar el slide. */
+            <div aria-hidden="true" className="w-[236px] rounded-[2.6rem] bg-[#101012] p-2 sm:w-[272px]">
+              <div className="relative aspect-[9/18.6] w-full rounded-[2.1rem] bg-[#19191d]" />
+            </div>
           );
           return (
             <div
               key={design.id}
               data-slide={design.id}
               data-posicion={pos}
+              data-render={completo ? 'completo' : 'liviano'}
               className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out"
-              style={{ ...ESTILO_POSICION[pos], pointerEvents: esActual ? 'auto' : pos === 'oculta' ? 'none' : 'auto' }}
+              style={{ ...ESTILO_POSICION[pos], pointerEvents: completo ? 'auto' : 'none' }}
               aria-hidden={!esActual}
             >
-              {esActual ? (
-                cuerpo
-              ) : (
+              {completo && !esActual ? (
                 <button
                   type="button"
                   tabIndex={-1}
@@ -132,6 +172,8 @@ export default function CarruselModelos({ designs }: { designs: InvitationDesign
                 >
                   {cuerpo}
                 </button>
+              ) : (
+                cuerpo
               )}
             </div>
           );

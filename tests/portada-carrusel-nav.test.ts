@@ -16,7 +16,7 @@ import assert from 'node:assert/strict';
 import { ITEMS_NAV, PREFIJO_ANCLA_SERVICIO, SECCIONES_PORTADA } from '../src/data/navegacion.js';
 import { SERVICIOS_EXTRA } from '../src/data/servicios.js';
 import { INVITATION_DESIGNS } from '../src/data/invitation-designs.js';
-import { INDICE_INICIAL, indiceVecino, posicionSlide } from '../src/lib/carrusel.js';
+import { INDICE_INICIAL, indiceVecino, posicionSlide, renderCompleto } from '../src/lib/carrusel.js';
 
 test('nav: cada servicio «próximamente» tiene su menú con ancla válida', () => {
   const ids = SERVICIOS_EXTRA.map((s) => s.id);
@@ -78,6 +78,28 @@ test('carrusel: es circular y las posiciones de los slides son correctas', () =>
   assert.equal(indiceVecino(0, 5, 1), 0);
   assert.equal(indiceVecino(0, 1, 0), 0); // sin diseños, no explota
   assert.equal(INDICE_INICIAL, 0);
+});
+
+test('carrusel: solo activo + vecinos inmediatos montan invitación completa (iteración 032)', () => {
+  // En la colección real (29 diseños), recorriendo todos los slides con
+  // cualquier índice activo, exactamente 3 montan la invitación completa;
+  // los 26 restantes usan la representación liviana fuera de vista.
+  const total = INVITATION_DESIGNS.length;
+  assert.ok(total >= 10, 'la colección debe ser grande para que el ahorro importe');
+  for (const activo of [0, 5, total - 1]) {
+    let completos = 0;
+    for (let i = 0; i < total; i++) {
+      if (renderCompleto(posicionSlide(i, activo, total))) completos++;
+    }
+    assert.equal(completos, 3, 'activo=' + activo + ': solo activo + 2 vecinos montan completo');
+  }
+  // Contrato por posición
+  assert.equal(renderCompleto('actual'), true);
+  assert.equal(renderCompleto('izquierda'), true);
+  assert.equal(renderCompleto('derecha'), true);
+  assert.equal(renderCompleto('oculta'), false);
+  // Colección mínima: el único slide es el activo
+  assert.equal(renderCompleto(posicionSlide(0, 0, 1)), true);
 });
 
 test('carrusel: la colección alimenta el carrusel con diseños únicos', () => {

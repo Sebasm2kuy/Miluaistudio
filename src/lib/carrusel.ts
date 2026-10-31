@@ -39,3 +39,14 @@ export function posicionSlide(i: number, actual: number, total: number): Posicio
   if (i === indiceVecino(actual, 1, total)) return 'derecha';
   return 'oculta';
 }
+
+/**
+ * ¿El slide necesita su invitación COMPLETA montada? (iteración 032)
+ * Solo el diseño activo y sus dos vecinos asoman en pantalla: montar las
+ * 29 invitaciones completas —incluidas las invisibles— procesaba miniaturas
+ * que nadie veía. Los slides 'oculta' usan una representación liviana (solo
+ * el marco del teléfono) y montan su invitación al entrar al conjunto visible.
+ */
+export function renderCompleto(pos: PosicionSlide): boolean {
+  return pos !== 'oculta';
+}

@@ -19,12 +19,15 @@ export interface ItemNav {
 }
 
 export const ITEMS_NAV: ItemNav[] = [
+  /* Primero lo disponible (producto real), al final la expansión futura:
+     los 4 servicios «próximamente» siguen con su ítem y su ancla —contrato
+     testado— pero ya no lideran el encabezado (iteración 032). */
   { label: 'Invitaciones', href: '#disenos' },
+  { label: 'Preguntas', href: '#faq' },
   { label: 'Álbum digital', href: '#servicio-album-digital', servicio: true },
   { label: 'Videos', href: '#servicio-edicion-video', servicio: true },
   { label: 'Historia de vida', href: '#servicio-video-historia', servicio: true },
   { label: 'Tráiler', href: '#servicio-trailer-evento', servicio: true },
-  { label: 'Preguntas', href: '#faq' },
 ];
 
 /**

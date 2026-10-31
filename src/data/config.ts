@@ -166,7 +166,7 @@ const config: SiteConfig = {
   },
   "invitacion": {
     "imagen": "/invitacion-vertical.webp",
-    "imagenFallback": "/invitacion-vertical.png",
+    "imagenFallback": "/invitacion-vertical.jpg",
     "textoAbrir": "Toca para abrir"
   },
   "countdown": {
