@@ -339,3 +339,98 @@ export async function iniciarSesion(
   guardarSesion(sesion, almacen);
   return { ok: true, sesion };
 }
+
+// ---------------------------------------------------------------------------
+// Acceso con Google (iteración 034)
+// ---------------------------------------------------------------------------
+// La identidad llega del widget oficial de Google Identity Services
+// (id_token emitido por Google, recibido en el callback del botón).
+// La AUTORIZACIÓN sigue siendo el listado del estudio: solo entra el
+// email que ya existe como cuenta en content/clientes.json (política
+// aprobada por el propietario: mismas cuentas, mismo email, sin
+// contraseña). No hay bloqueo de intentos acá: no se verifica nada
+// secreto contra el repositorio.
+// ---------------------------------------------------------------------------
+
+export type ResultadoLoginGoogle =
+  | { ok: true; sesion: SesionCliente }
+  | { ok: false; motivo: 'email-invalido' | 'email-sin-verificar' | 'sin-cuenta' };
+
+export interface OpcionesLoginGoogle {
+  almacen?: AlmacenLike;
+  ahora?: Date;
+}
+
+/**
+ * Abre sesión a partir de la identidad de Google (email verificado).
+ * Requiere que el email coincida con una cuenta existente del estudio.
+ * Nunca revela información del panel: ante email ajeno devuelve
+ * 'sin-cuenta' y la UI ofrece el contacto por WhatsApp.
+ */
+export function iniciarSesionGoogle(
+  email: string,
+  nombreGoogle: string,
+  emailVerificado: boolean,
+  cuentas: ClienteCuenta[],
+  opciones: OpcionesLoginGoogle = {},
+): ResultadoLoginGoogle {
+  const almacen = opciones.almacen ?? almacenPorDefecto();
+  const ahora = opciones.ahora ?? new Date();
+
+  if (!esEmailValido(email)) return { ok: false, motivo: 'email-invalido' };
+  if (!emailVerificado) return { ok: false, motivo: 'email-sin-verificar' };
+
+  const normalizado = normalizarEmail(email);
+  const cuenta = buscarCuenta(cuentas, normalizado);
+  if (!cuenta) return { ok: false, motivo: 'sin-cuenta' };
+
+  // Si había intentos de contraseña acumulados, se limpian: ingresó.
+  limpiarIntentos(normalizado, almacen);
+
+  const sesion: SesionCliente = {
+    email: cuenta.email,
+    // El nombre de Google es solo cosmético: manda el del estudio.
+    nombre: cuenta.nombre,
+    slug: cuenta.slug,
+    rol: cuenta.rol,
+    expiracion: ahora.getTime() + SESION_HORAS * 60 * 60 * 1000,
+  };
+  guardarSesion(sesion, almacen);
+  void nombreGoogle;
+  return { ok: true, sesion };
+}
+
+/**
+ * Decodifica el payload de un JWT (id_token de Google) sin validar la
+ * firma: la firma ya fue verificada por Google en su propio widget, y
+ * acá solo se leen email/nombre/email_verified. Devuelve null si el
+ * token no tiene la forma esperada (nunca lanza).
+ */
+export function decodificarPayloadJwt(
+  token: string,
+): { email: string; nombre: string; emailVerificado: boolean } | null {
+  try {
+    const partes = String(token || '').split('.');
+    if (partes.length !== 3) return null;
+    const base64url = partes[1].replace(/-/g, '+').replace(/_/g, '/');
+    const relleno = '='.repeat((4 - (base64url.length % 4)) % 4);
+    // atob devuelve Latin-1: los bytes UTF-8 del payload (nombres con
+    // acentos, ñ…) hay que decodificarlos explícitamente.
+    const binario = atob(base64url + relleno);
+    const bytes = Uint8Array.from(binario, (caracter) => caracter.charCodeAt(0));
+    const json = new TextDecoder('utf-8').decode(bytes);
+    const datos = JSON.parse(json) as {
+      email?: unknown;
+      name?: unknown;
+      email_verified?: unknown;
+    };
+    if (typeof datos.email !== 'string') return null;
+    return {
+      email: datos.email,
+      nombre: typeof datos.name === 'string' ? datos.name : '',
+      emailVerificado: datos.email_verified === true || datos.email_verified === 'true',
+    };
+  } catch {
+    return null;
+  }
+}
