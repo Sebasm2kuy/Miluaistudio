@@ -401,6 +401,50 @@ export function iniciarSesionGoogle(
 }
 
 /**
+ * Abre sesión para una cuenta recién creada por el registro automático
+ * (iteración 036). Los datos llegan del backend de Apps Script, que ya
+ * verificó el id_token con Google; acá se revalida la forma antes de
+ * guardar la sesión. Nunca lanza.
+ */
+export type ResultadoAperturaSesion =
+  | { ok: true; sesion: SesionCliente }
+  | { ok: false; motivo: 'datos-invalidos' };
+
+export function abrirSesionCliente(
+  email: string,
+  nombre: string,
+  slug: string,
+  opciones: OpcionesLoginGoogle = {},
+): ResultadoAperturaSesion {
+  const almacen = opciones.almacen ?? almacenPorDefecto();
+  const ahora = opciones.ahora ?? new Date();
+
+  const emailNormalizado = normalizarEmail(email);
+  if (!esEmailValido(emailNormalizado)) return { ok: false, motivo: 'datos-invalidos' };
+
+  const slugLimpio = String(slug || '').trim().toLowerCase();
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slugLimpio) || slugLimpio.length > 64) {
+    return { ok: false, motivo: 'datos-invalidos' };
+  }
+
+  let nombreLimpio = String(nombre || '').trim().slice(0, 60);
+  if (nombreLimpio.length < 2) nombreLimpio = emailNormalizado.split('@')[0];
+
+  // Si había intentos de contraseña acumulados, se limpian: entró.
+  limpiarIntentos(emailNormalizado, almacen);
+
+  const sesion: SesionCliente = {
+    email: emailNormalizado,
+    nombre: nombreLimpio,
+    slug: slugLimpio,
+    rol: 'cliente',
+    expiracion: ahora.getTime() + SESION_HORAS * 60 * 60 * 1000,
+  };
+  guardarSesion(sesion, almacen);
+  return { ok: true, sesion };
+}
+
+/**
  * Decodifica el payload de un JWT (id_token de Google) sin validar la
  * firma: la firma ya fue verificada por Google en su propio widget, y
  * acá solo se leen email/nombre/email_verified. Devuelve null si el

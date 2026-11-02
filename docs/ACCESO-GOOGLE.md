@@ -85,9 +85,15 @@ Después: `git add content/clientes.json && git commit -m "alta cliente <email>"
 
 ## 4. Qué pasa si el email de Google no tiene cuenta
 
-La página muestra un aviso con el email que intentó entrar y un botón de
-WhatsApp con el mensaje prellenado («quiero activar mi panel»). El estudio lo
-agrega con el paso 3 y listo: la próxima vez entra con un clic.
+Por defecto (registro automático desactivado): la página muestra un aviso con
+el email que intentó entrar y un botón de WhatsApp con el mensaje prellenado
+(«quiero activar mi panel»). El estudio lo agrega con el paso 3 y listo: la
+próxima vez entra con un clic.
+
+**Con el registro automático activado** (iteración 036, ver
+`docs/REGISTRO-AUTOMATICO.md`): el backend verifica la credencial con Google
+y crea la cuenta sola, con slug propio, y el usuario entra al panel sin
+aprobación manual. Mientras `ENDPOINT_REGISTRO` esté vacío, NO está activo.
 
 ## 5. Seguridad, con honestidad
 
@@ -101,11 +107,17 @@ agrega con el paso 3 y listo: la próxima vez entra con un clic.
   hay secreto que fuerza bruta contra el repositorio.
 - Si Google está caído o bloqueado (red, extensiones), el botón se oculta y
   el formulario de contraseña sigue funcionando.
+- **El token de escritura de GitHub jamás va en el bundle público.** Toda
+  escritura de cuentas (altas del estudio y, si se activa, el registro
+  automático) ocurre en servidores: `scripts/alta-cliente.mjs` local o el
+  backend de Apps Script con el token en Propiedades del script
+  (`docs/REGISTRO-AUTOMATICO.md`).
 
 ## 6. Pruebas recomendadas al activar
 
 1. Entrar con una cuenta del estudio que exista en `content/clientes.json` →
    debe abrir `/dashboard/`.
-2. Entrar con un email de Google ajeno → aviso de «sin panel asignado» + WhatsApp.
+2. Entrar con un email de Google ajeno → aviso de «sin panel asignado» + WhatsApp
+   (o alta automática si `docs/REGISTRO-AUTOMATICO.md` está activado).
 3. Probar la vía contraseña con la cuenta demo → sigue funcionando.
 4. Cerrar sesión → reingresar → sin errores en consola.
