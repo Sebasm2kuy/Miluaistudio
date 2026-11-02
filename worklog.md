@@ -590,3 +590,12 @@ Stage Summary:
 **Motivo de seguridad:** el token fine-grained vivía en el sessionStorage de la pestaña del cliente cada vez que alguien publicaba desde el panel; ahora solo se usa en herramientas del estudio.
 
 **Pruebas:** 229/229 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. Bundle: los 3 HTML de /dashboard/ con CERO apariciones de «Conexión con GitHub», campo de token o «Registrar a mano»; los CTAs nuevos presentes (Guardar borrador / Exportar CSV / Avisar por WhatsApp). La cadena sobrevive solo en chunks compartidos por el editor del estudio (legítimo, no se renderiza en el panel). Ciclo git: push de feat/panel-cliente-sin-token → PR → merge → deploy Pages → verificación de producción.
+
+---
+## Iteración 039 — «Panel de clientes» + «Volver a la web» (feat/nav-panel-039)
+
+**Pedido:** (1) el botón «Acceso clientes» de la navegación pública debe decir algo más comercial/profesional («Panel de clientes»); (2) la barra superior de /dashboard/ necesita un enlace «Volver a la web» a la portada que NO cierre la sesión.
+
+**Cambios:** renombre completo de la etiqueta en la UI pública (nav compartido store-nav.tsx —pill escritorio + botón móvil con aria-label + ítem del menú móvil—, header y pie del catálogo, pie de portada, pie del personalizador, <title> de /acceso/); los href siguen siendo /acceso/ (cero rutas nuevas). guardia.tsx: enlace «Volver a la web» (icono Globe) a la izquierda de «Salir», <Link> común que no toca sessionStorage. acceso/page.tsx: si hay sesión vigente al montar, redirige a /dashboard/ (cierra el circuito del ida y vuelta; para cambiar de cuenta queda «Salir»).
+
+**Pruebas:** 229/229 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. out/ con CERO «Acceso clientes»; «Panel de clientes» presente en portada (header+pie), catálogo (header+pie), personalizador (pie) y <title> de /acceso/; «Volver a la web» en el chunk de la guardia del panel. Ciclo git: push → PR → merge → deploy Pages → verificación en producción.

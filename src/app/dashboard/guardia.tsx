@@ -14,7 +14,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, PenLine, ShieldCheck, Users, LayoutGrid } from 'lucide-react';
+import { Globe, LogOut, PenLine, ShieldCheck, Users, LayoutGrid } from 'lucide-react';
 import { cerrarSesion, leerSesion, type SesionCliente } from '@/lib/auth-cliente';
 import { Esqueleto } from '@/components/dashboard/ui';
 
@@ -97,8 +97,17 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 </span>
               </span>
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <span className="hidden text-xs text-[#b3a68f] sm:block">{sesion.nombre}</span>
+              {/* Volver a la web (039): enlace común, NO cierra la sesión —
+                  vive en sessionStorage de esta pestaña y sigue activa al
+                  regresar (por «Panel de clientes» o retroceso). */}
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#3a3226] px-2.5 py-1.5 text-xs text-[#d8cbb2] transition hover:border-[#57503f] hover:bg-[#262017]"
+              >
+                <Globe size={13} /> Volver a la web
+              </Link>
               <button
                 type="button"
                 onClick={salir}

@@ -27,7 +27,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation';
 import { Loader2, Lock, Mail, MessageCircle, ShieldCheck } from 'lucide-react';
 import { RUTA_CLIENTES, type ColeccionClientes } from '@/data/clientes-esquema';
-import { iniciarSesion, iniciarSesionGoogle, abrirSesionCliente, decodificarPayloadJwt } from '@/lib/auth-cliente';
+import { iniciarSesion, iniciarSesionGoogle, abrirSesionCliente, decodificarPayloadJwt, leerSesion } from '@/lib/auth-cliente';
 import { registrarClienteGoogle } from '@/lib/registro-cliente';
 import { leerJSON } from '@/lib/github-db';
 import { whatsappLink } from '@/data/contacto';
@@ -79,6 +79,13 @@ export default function PaginaAcceso() {
   const contenedorGoogle = useRef<HTMLDivElement>(null);
 
   const ocupado = estado !== 'idle' || googleOcupado;
+
+  // Sesión ya activa (p. ej. «Volver a la web» desde el panel y regreso por
+  // «Panel de clientes»): directo al panel, sin pedir el login de nuevo (039).
+  // Para cambiar de cuenta, «Salir» en el panel cierra la sesión.
+  useEffect(() => {
+    if (leerSesion()) router.replace('/dashboard/');
+  }, [router]);
 
   const manejarCredencial = useCallback(
     async (credencial: string) => {

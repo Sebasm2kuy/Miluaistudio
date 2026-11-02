@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 039 — «Panel de clientes» + «Volver a la web»: renombre en toda la nav pública y enlace en la barra del panel que conserva la sesión (02-11-2026)](./ITERACION-2026-11-02-039-PANEL-DE-CLIENTES-VOLVER-A-LA-WEB.md)
 - [Iteración 038 — Panel de cliente sin token de GitHub: tarjeta de conexión eliminada de las 3 pestañas, panel de solo lectura (02-11-2026)](./ITERACION-2026-11-02-038-PANEL-CLIENTE-SIN-TOKEN.md)
 - [Iteración 037 — Registro automático ACTIVADO: ENDPOINT_REGISTRO con el Web App verificado en vivo (fail-closed comprobado), guarda de test coherente (02-11-2026)](./ITERACION-2026-11-02-037-ACTIVAR-REGISTRO-AUTO.md)
 

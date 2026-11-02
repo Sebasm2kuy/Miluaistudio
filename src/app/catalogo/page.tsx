@@ -114,7 +114,7 @@ export default function CatalogoPage() {
               <span className="hidden sm:inline">Consultar por WhatsApp</span>
             </a>
             <a href="/acceso/" className="inline-flex items-center gap-2 rounded-full border border-[#e8e0d7] bg-white px-4 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm">
-              <span className="hidden sm:inline">Acceso clientes</span>
+              <span className="hidden sm:inline">Panel de clientes</span>
               <span className="sm:hidden">Clientes</span>
               <Lock size={14} />
             </a>
@@ -252,7 +252,7 @@ export default function CatalogoPage() {
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
           <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span className="text-white/50">Tu historia, en formato digital.</span>
-          <a href="/acceso/" className="text-white/50 underline decoration-white/20 underline-offset-4 transition hover:text-white">Acceso clientes</a>
+          <a href="/acceso/" className="text-white/50 underline decoration-white/20 underline-offset-4 transition hover:text-white">Panel de clientes</a>
           <span className="text-white/50">© {new Date().getFullYear()} Lumen Gala · Uruguay</span>
         </div>
       </footer>
