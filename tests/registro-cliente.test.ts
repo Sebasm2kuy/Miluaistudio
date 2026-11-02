@@ -162,8 +162,18 @@ test('registro: respuesta sin slug ni email → no se abre nada (backend)', asyn
   if (!r.ok) assert.equal(r.motivo, 'backend');
 });
 
-test('registro: la constante del sitio está vacía (feature desactivada por defecto)', () => {
-  assert.equal(ENDPOINT_REGISTRO, '');
+test('registro: la constante del sitio es la URL del Web App del estudio o está vacía (interruptor)', () => {
+  // Activada en la iteración 037 (Web App verificado en vivo, fail-closed).
+  // Desactivar = volver a ''. Cualquier otro valor es un error de edición:
+  // solo se acepta la forma https://script.google.com/macros/s/<id>/exec.
+  // El tipo se ensancha a string para que la comparación con '' compile
+  // esté la constante activa o desactivada (el guardia no depende del valor).
+  const endpoint: string = ENDPOINT_REGISTRO;
+  assert.ok(
+    endpoint === '' ||
+      /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint),
+    'ENDPOINT_REGISTRO debe ser la URL /exec del Web App del estudio o cadena vacía',
+  );
 });
 
 // ---------------------------------------------------------------------------

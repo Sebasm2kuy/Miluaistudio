@@ -5,11 +5,13 @@ con Google a `/acceso/` obtiene su panel sin aprobación manual**: si su email
 todavía no tiene cuenta, el backend la crea sola en `content/clientes.json`
 con un slug de invitación propio y el usuario entra a `/dashboard/`.
 
-> ⚠️ **Estado actual: DESACTIVADO.** El código está desplegado pero la
-> constante `ENDPOINT_REGISTRO` (en `src/data/registro-auto.ts`) está vacía:
-> los emails de Google ajenos siguen viendo el aviso «sin panel asignado» +
-> WhatsApp (comportamiento de 034). La activación requiere los pasos de la
-> sección 2 (uno sola vez, ~10-15 minutos).
+> ✅ **Estado actual: ACTIVADO (2026-11-02, iteración 037).** La constante
+> `ENDPOINT_REGISTRO` (en `src/data/registro-auto.ts`) apunta al Web App
+> vigente del estudio, verificado en vivo antes de activar: doGet →
+> `{"ok":true,"message":"RSVP backend activo"}` y POST `registro_cliente`
+> con credencial inválida → `{"success":false,"error":"Credencial de Google
+> inválida."}` (fail-closed, sin crear nada). Para desactivar: vaciar la
+> constante (volver a `''`) y pushear — sección 3.
 
 ## 1. Cómo funciona
 

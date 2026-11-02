@@ -15,6 +15,16 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 037 — Registro automático ACTIVADO: ENDPOINT_REGISTRO con el Web App verificado en vivo (fail-closed comprobado), guarda de test coherente (02-11-2026)](./ITERACION-2026-11-02-037-ACTIVAR-REGISTRO-AUTO.md)
+
+- [Iteración 036 — Registro automático de clientes con Google (sin aprobación manual): backend registro_cliente + frontend fail-safe (02-11-2026)](./ITERACION-2026-11-02-036-REGISTRO-AUTOMATICO.md)
+
+- [Iteración 035 — Google activado: Client ID integrado + fix de renderizado del widget (02-11-2026)](./ITERACION-2026-11-02-035-GOOGLE-ACTIVADO.md)
+
+- [Iteración 034 — Acceso de clientes con Google (31-10-2026)](./ITERACION-2026-10-31-034-ACCESO-GOOGLE.md)
+
+- [Iteración 033 — Nuevo texto principal + acceso a clientes visible (31-10-2026)](./ITERACION-2026-10-31-033-HERO-MENSAJE-ACCESO-CLIENTES.md)
+
 - [Iteración 032B — Correcciones definitivas LGS: favicon LGS real (fuera el sello rojo), primer pantallazo móvil con H1+CTA primero, carrusel con render liviano (3/29 montan), editor fuera de la navegación comercial, testimonios de muestra sin estrellas, «próximamente» sin protagonismo y canonical/robots/sitemap coherentes (31-10-2026)](./ITERACION-2026-10-31-032B-CORRECCIONES-DEFINITIVAS-LGS.md)
 
 - [Iteración 031 — Panel de cliente (/dashboard) con GitHub como base de datos: login PBKDF2, editor del evento, confirmaciones en vivo; fuera todos los precios y Mercado Libre (31-10-2026)](./ITERACION-2026-10-31-031-DASHBOARD-CLIENTES-GITHUB-DB.md)

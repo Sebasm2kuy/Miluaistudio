@@ -28,6 +28,12 @@
 // Mientras la constante esté vacía, /acceso/ mantiene el comportamiento
 // de siempre: email de Google ajeno → aviso «sin panel asignado» +
 // WhatsApp. Cero peticiones al endpoint.
+//
+// Estado ACTIVO desde 2026-11-02 (iteración 037): Web App verificado en
+// vivo — doGet → {"ok":true,"message":"RSVP backend activo"} y POST
+// registro_cliente con credencial inválida → {"success":false,"error":
+// "Credencial de Google inválida."} (fail-closed, sin crear nada). Para
+// DESACTIVAR: vaciar la constante (volver a '') y pushear.
 // ============================================================
 
-export const ENDPOINT_REGISTRO = '';
+export const ENDPOINT_REGISTRO = 'https://script.google.com/macros/s/AKfycbyplrOmZ3wXj7e_Fk9vkhidzAj3F-MZUgooNJBwnUNsRLDB2V5IxB1Cur-dDdA6uZVh1A/exec';

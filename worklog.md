@@ -568,3 +568,14 @@ Stage Summary:
 **Cambios en el repo:** tabla de resultados de docs/PRUEBA-MANUAL-RSVP.md con el desvío (sin pegar la URL, según la regla del propio documento) y esta entrada. Sin cambios de código.
 
 **Pruebas:** 203/203 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK (sobre el árbol con 035b+036 fusionados). Ciclo git: push de feat/correcciones-032 → PR #41 → merge → deploy Pages.
+
+---
+## Iteración 037 — Registro automático ACTIVADO (iteracion-037-activar-registro)
+
+**Pedido:** el estudio desplegó el Web App (implementación con el `.gs` actual, que atiende `rsvp_grupo` y `registro_cliente`) y pidió: verificación fail-safe → conectar la URL en `ENDPOINT_REGISTRO` → tests → push, PR y merge a producción.
+
+**Verificación en vivo antes de activar (datos 100% ficticios):** (1) GET `/exec` → `{"ok":true,"message":"RSVP backend activo"}` — implementación viva con el `.gs` actual; (2) POST `registro_cliente` con credencial inválida → `{"success":false,"error":"Credencial de Google inválida."}` — fail-closed, sin crear nada; (3) GET limpio sobre el redirect de Google (lo mismo que hace el `fetch` del navegador tras el 302) → HTTP 200 con JSON legible — se descartó un falso 405 que solo afectaba a curl (reenvía `Content-Type` en el redirect; los navegadores no). Las dos URLs anteriores (032C) daban 404 de Google: nada se activó hasta tener una URL que respondiera el contrato.
+
+**Cambios:** `src/data/registro-auto.ts` — `ENDPOINT_REGISTRO` con la URL vigente + comentario de estado y desactivación; `tests/registro-cliente.test.ts` — la guarda pasa de exigir constante vacía a exigir URL `/exec` válida o vacía (interruptor; un valor basura sigue fallando); `docs/REGISTRO-AUTOMATICO.md` — banner DESACTIVADO → ACTIVADO (2026-11-02, 037) con la evidencia; `IDEAS/ITERACION-2026-11-02-037-ACTIVAR-REGISTRO-AUTO.md` + índice README (se completaron los enlaces de 033-036 que habían quedado fuera). El espejo de RSVP (`rsvp.googleSheetUrl`) NO se tocó: decisión separada, lista para un commit de una línea cuando se pida.
+
+**Pruebas:** 229/229 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. Ciclo git: push de iteracion-037-activar-registro → PR → merge → deploy Pages. Producción: leyenda de `/acceso/` cambia a «Con Google entrás siempre…» y el bundle llama al endpoint solo si el email de Google no tiene cuenta. Honestidad: el alta real con una cuenta de Google verdadera (id_token → cuenta creada → commit `[skip ci]` → panel) requiere un navegador del estudio; los topes anti-abuso (10/h global, 2/h por email) dependen de las Propiedades del script.
