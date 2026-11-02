@@ -9,7 +9,14 @@
  *   node scripts/alta-cliente.mjs --email cliente@correo.com --nombre "Familia Pérez" \
  *        --slug ejemplo-quince [--rol cliente] [--password "ContraseñaSegura1"] [--escribir]
  *
+ *   Alta solo-Google (iteración 034): el cliente entra con «Continuar con Google»
+ *   usando ese mismo email; no hay contraseña que comunicar:
+ *   node scripts/alta-cliente.mjs --email cliente@gmail.com --nombre "Familia Pérez" \
+ *        --slug ejemplo-quince --solo-google [--escribir]
+ *
  *   - Sin --password: genera una aleatoria de 12 caracteres y la muestra UNA vez.
+ *   - Con --solo-google: hash de una contraseña aleatoria que se descarta (nadie
+ *     la conoce); el ingreso es por Google con el email de la cuenta.
  *   - Sin --escribir: solo imprime la entrada JSON (para revisarla a mano).
  *   - Con --escribir: actualiza content/clientes.json (falla si el email ya existe,
  *     usar --reemplazar para actualizar la contraseña/slug de una cuenta existente).
@@ -40,6 +47,7 @@ const nombre = (valorDe('--nombre') || '').trim();
 const slug = (valorDe('--slug') || '').trim();
 const rol = valorDe('--rol') === 'estudio' ? 'estudio' : 'cliente';
 const password = valorDe('--password');
+const soloGoogle = flag('--solo-google');
 const escribir = flag('--escribir');
 const reemplazar = flag('--reemplazar');
 
@@ -52,8 +60,11 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fallir('--email es obligatorio (f
 if (nombre.length < 2) fallir('--nombre es obligatorio (2+ caracteres).');
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) fallir('--slug es obligatorio (minúsculas/números/guiones).');
 if (password && password.length < 8) fallir('La contraseña necesita al menos 8 caracteres.');
+if (password && soloGoogle) fallir('--solo-google y --password son excluyentes (la cuenta solo-Google no usa contraseña).');
 
-const contrasenaFinal = password || randomBytes(9).toString('base64url').slice(0, 12) + 'aA1';
+// --solo-google: hash de una contraseña aleatoria larga que se descarta:
+// nadie la conoce y la verificación por contraseña siempre fallará cerrada.
+const contrasenaFinal = password || (soloGoogle ? randomBytes(24).toString('base64url') : randomBytes(9).toString('base64url').slice(0, 12) + 'aA1');
 const salt = randomBytes(16);
 const hash = pbkdf2Sync(contrasenaFinal, salt, ITERACIONES, 32, 'sha256');
 const b64 = (b) => Buffer.from(b).toString('base64');
@@ -91,7 +102,8 @@ coleccion.actualizadoEn = new Date().toISOString();
 // ---------- salida ----------
 console.log('\n=== Cuenta nueva (entrada para content/clientes.json) ===\n');
 console.log(JSON.stringify(entrada, null, 2));
-if (!password) console.log(`\n🔑 Contraseña generada (mostrada UNA vez, compartila por un canal seguro): ${contrasenaFinal}`);
+if (!password && !soloGoogle) console.log(`\n🔑 Contraseña generada (mostrada UNA vez, compartila por un canal seguro): ${contrasenaFinal}`);
+if (soloGoogle) console.log('\n✓ Cuenta solo-Google: el cliente entra con «Continuar con Google» (mismo email). No hay contraseña que comunicar.');
 
 if (escribir) {
   writeFileSync(RUTA, JSON.stringify(coleccion, null, 2) + '\n');

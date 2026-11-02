@@ -64,6 +64,27 @@
  *    en la hoja). El token recomendado es fine-grained, Contents R/W, solo
  *    este repo; se puede revocar cuando quieras sin afectar la hoja.
  *
+ * REGISTRO AUTOMÁTICO DE CLIENTES (iteración 036, /acceso → «Continuar
+ * con Google»):
+ *  - Si definís las propiedades de script GITHUB_TOKEN y GOOGLE_CLIENT_ID
+ *    (el mismo Client ID de src/data/acceso-google.ts), el endpoint acepta
+ *    POST { tipo: "registro_cliente", credential: <id_token de Google> }
+ *    y da de alta la cuenta en content/clientes.json SIN aprobación manual.
+ *  - Verificación server-side: el id_token se valida contra el endpoint
+ *    oficial de Google (oauth2.googleapis.com/tokeninfo): audiencia ==
+ *    GOOGLE_CLIENT_ID, sin expirar, email verificado. Un POST con JSON
+ *    inventado NO crea cuentas.
+ *  - Anti-abuso: tope global por hora (REGISTRO_MAX_POR_HORA) y por email
+ *    (REGISTRO_MAX_POR_EMAIL_HORA), con CacheService (ventana 1 hora).
+ *  - Idempotente: si el email ya tiene cuenta responde success (nuevo:
+ *    false) sin escribir nada. Ante conflicto de SHA reintenta (máx. 3).
+ *  - La cuenta se crea con un hash en formato válido de una contraseña
+ *    aleatoria DESCARTADA: nadie puede entrar a esa cuenta por contraseña,
+ *    solo por Google (mismo criterio que scripts/alta-cliente.mjs
+ *    --solo-google). Commit con [skip ci]: no reconstruye el sitio.
+ *  - Sin GITHUB_TOKEN o sin GOOGLE_CLIENT_ID el registro automático
+ *    responde error y el sitio muestra el fallback de WhatsApp.
+ *
  * ============================================
  */
 
@@ -75,6 +96,12 @@ var RSVP_MAX_INVITADOS = 12;
 var RSVP_MAX_NOMBRE = 60;
 var RSVP_MAX_CODIGO = 20;
 var RSVP_RL_POR_HORA = 5; // confirmaciones por teléfono por hora
+
+// Límites anti-abuso del registro automático de clientes (iteración 036)
+var REGISTRO_MAX_POR_HORA = 10;       // altas globales por hora (tope global)
+var REGISTRO_MAX_POR_EMAIL_HORA = 2;  // intentos por email por hora
+var REGISTRO_MAX_NOMBRE = 60;         // largo máximo del nombre guardado
+var REGISTRO_MAX_CUENTAS = 500;       // tope de seguridad de la colección
 
 /**
  * GET handler — solo action=rsvp
@@ -103,6 +130,10 @@ function doPost(e) {
 
     if (body && body.tipo === 'rsvp_grupo') {
       return handleRsvp(body);
+    }
+
+    if (body && body.tipo === 'registro_cliente') {
+      return handleRegistroCliente(body);
     }
 
     // Fallback al doGet si no es RSVP (permite ?action=rsvp por POST también)
@@ -410,4 +441,234 @@ function mirarRsvpAGitHub(entrada) {
   } catch (e) {
     console.warn('rsvp-espejo: ' + e.message); // fail-safe: el RSVP ya está en la hoja
   }
+}
+
+/**
+ * ============================================
+ * REGISTRO AUTOMÁTICO DE CLIENTES (iteración 036)
+ * ============================================
+ *
+ * Alta sin aprobación manual: el usuario se autentica con el widget oficial
+ * de Google en /acceso/, el frontend reenvía el id_token recibido y este
+ * backend (que es lo único que conoce GITHUB_TOKEN) verifica la identidad
+ * contra Google y commitea la nueva cuenta en content/clientes.json.
+ *
+ * Contrato con el frontend (src/lib/registro-cliente.ts):
+ *  - POST JSON { tipo: "registro_cliente", credential: "<id_token JWT>" }
+ *    (Content-Type text/plain: solicitud simple, sin preflight CORS).
+ *  - Respuesta SIEMPRE JSON:
+ *      { success: true, nuevo: true,  email, nombre, slug }   → alta creada
+ *      { success: true, nuevo: false, email, nombre, slug }   → ya existía
+ *      { success: false, error: "..." }                       → rechazado
+ *
+ * Por qué NO viaja el token en el frontend: el sitio es 100% estático y
+ * público; un token embebido en el bundle podría extraerse por cualquiera.
+ * El único que escribe es este script, después de verificar con Google.
+ */
+function handleRegistroCliente(data) {
+  try {
+    var props = PropertiesService.getScriptProperties();
+    var token = (props.getProperty('GITHUB_TOKEN') || '').trim();
+    var clientId = (props.getProperty('GOOGLE_CLIENT_ID') || '').trim();
+
+    if (!token) {
+      return jsonResponse({ success: false, error: 'El registro automático no está configurado (falta GITHUB_TOKEN en el backend).' });
+    }
+    if (!clientId) {
+      return jsonResponse({ success: false, error: 'El registro automático no está configurado (falta GOOGLE_CLIENT_ID en el backend).' });
+    }
+
+    // ===== 1. La credencial debe tener forma de JWT =====
+    var credencial = String(data && data.credential || '').trim();
+    if (credencial.length < 40 || credencial.length > 5000 || credencial.split('.').length !== 3) {
+      return jsonResponse({ success: false, error: 'Credencial de Google inválida.' });
+    }
+
+    // ===== 2. Verificación con Google (tokeninfo): audiencia, vigencia, email verificado =====
+    var verificacion = UrlFetchApp.fetch(
+      'https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(credencial),
+      { muteHttpExceptions: true }
+    );
+    if (verificacion.getResponseCode() !== 200) {
+      return jsonResponse({ success: false, error: 'Google rechazó la credencial (token inválido o vencido).' });
+    }
+    var claims;
+    try { claims = JSON.parse(verificacion.getContentText()); } catch (e) { claims = null; }
+    if (!claims || typeof claims.email !== 'string' || !claims.email) {
+      return jsonResponse({ success: false, error: 'La credencial de Google no trae email.' });
+    }
+    if (String(claims.aud) !== clientId) {
+      return jsonResponse({ success: false, error: 'La credencial no corresponde a este sitio.' });
+    }
+    var expiracion = parseInt(claims.exp, 10) || 0;
+    if (expiracion * 1000 < Date.now()) {
+      return jsonResponse({ success: false, error: 'La credencial de Google está vencida. Volvé a intentar el ingreso.' });
+    }
+    var verificado = claims.email_verified === true || String(claims.email_verified).toLowerCase() === 'true';
+    if (!verificado) {
+      return jsonResponse({ success: false, error: 'Tu email de Google todavía no está verificado. Verificalo en Google y volvé a intentar.' });
+    }
+
+    // ===== 3. Normalización del email + anti-abuso =====
+    var email = claims.email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 120) {
+      return jsonResponse({ success: false, error: 'El email de Google no tiene un formato válido.' });
+    }
+
+    var cache = CacheService.getScriptCache();
+    var rlGlobal = cache.get('registro_rl_global');
+    var usadosGlobal = rlGlobal ? parseInt(rlGlobal, 10) : 0;
+    if (usadosGlobal >= REGISTRO_MAX_POR_HORA) {
+      return jsonResponse({ success: false, error: 'Ahora mismo hay demasiados registros en curso. Probá de nuevo en un rato.' });
+    }
+    var rlEmail = cache.get('registro_rl_' + email);
+    var usadosEmail = rlEmail ? parseInt(rlEmail, 10) : 0;
+    if (usadosEmail >= REGISTRO_MAX_POR_EMAIL_HORA) {
+      return jsonResponse({ success: false, error: 'Demasiados intentos con este email. Probá de nuevo más tarde.' });
+    }
+
+    // ===== 4. Nombre mostrable (del perfil de Google, saneado) =====
+    var nombre = String(claims.name || '').trim().replace(/[\u0000-\u001f<>]/g, '').slice(0, REGISTRO_MAX_NOMBRE);
+    if (nombre.length < 2) nombre = email.split('@')[0];
+
+    // ===== 5. Leer colección de cuentas (dedupe + SHA para el commit) =====
+    var apiClientes = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/content/clientes.json';
+
+    for (var intento = 0; intento < 3; intento++) {
+      if (intento > 0) Utilities.sleep(450 * intento);
+
+      var sha = null;
+      var coleccion = null;
+      var get = UrlFetchApp.fetch(apiClientes, {
+        headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github.v3+json' },
+        muteHttpExceptions: true
+      });
+      if (get.getResponseCode() === 200) {
+        var datos = JSON.parse(get.getContentText());
+        sha = datos.sha || null;
+        try {
+          coleccion = JSON.parse(Utilities.newBlob(Utilities.base64Decode(datos.content)).getDataAsString());
+        } catch (e) { coleccion = null; }
+        if (!coleccion || coleccion.esquema !== 1 || !Array.isArray(coleccion.cuentas)) {
+          return jsonResponse({ success: false, error: 'El archivo de cuentas del repositorio no es válido; avisá al estudio.' });
+        }
+      } else if (get.getResponseCode() === 404) {
+        coleccion = { esquema: 1, actualizadoEn: '', cuentas: [] };
+      } else {
+        return jsonResponse({ success: false, error: 'No se pudo leer el registro de cuentas (' + get.getResponseCode() + ').' });
+      }
+
+      // Idempotente: el email ya tiene cuenta → éxito sin escribir.
+      for (var i = 0; i < coleccion.cuentas.length; i++) {
+        if (String(coleccion.cuentas[i].email).toLowerCase() === email) {
+          return jsonResponse({
+            success: true,
+            nuevo: false,
+            email: coleccion.cuentas[i].email,
+            nombre: coleccion.cuentas[i].nombre,
+            slug: coleccion.cuentas[i].slug
+          });
+        }
+      }
+      if (coleccion.cuentas.length >= REGISTRO_MAX_CUENTAS) {
+        return jsonResponse({ success: false, error: 'El registro de cuentas alcanzó su tope de seguridad.' });
+      }
+
+      // ===== 6. Slug único (base del email + sufijo aleatorio) =====
+      var slug = generarSlugRegistro(email, coleccion.cuentas);
+      if (!slug) {
+        return jsonResponse({ success: false, error: 'No se pudo generar un identificador único. Probá de nuevo.' });
+      }
+
+      // ===== 7. Nueva cuenta (hash de contraseña descartada: solo-Google) =====
+      coleccion.cuentas.push({
+        email: email,
+        nombre: nombre,
+        hash: hashSoloGoogle(),
+        rol: 'cliente',
+        slug: slug,
+        creadoEn: new Date().toISOString()
+      });
+      coleccion.esquema = 1;
+      coleccion.actualizadoEn = new Date().toISOString();
+
+      // ===== 8. Commit ([skip ci]: el sitio lee cuentas en vivo, no hace falta rebuild) =====
+      var cuerpo = {
+        message: 'acceso: alta automática de cliente (Google) [skip ci]',
+        content: Utilities.base64Encode(JSON.stringify(coleccion, null, 2) + '\n'),
+        branch: 'main'
+      };
+      if (sha) cuerpo.sha = sha;
+      var put = UrlFetchApp.fetch(apiClientes, {
+        method: 'put',
+        headers: {
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        payload: JSON.stringify(cuerpo),
+        muteHttpExceptions: true
+      });
+      var codigo = put.getResponseCode();
+      if (codigo < 300) {
+        cache.put('registro_rl_global', String(usadosGlobal + 1), 3600);
+        cache.put('registro_rl_' + email, String(usadosEmail + 1), 3600);
+        return jsonResponse({ success: true, nuevo: true, email: email, nombre: nombre, slug: slug });
+      }
+      if (codigo !== 409 && codigo !== 422) {
+        return jsonResponse({ success: false, error: 'No se pudo guardar la cuenta en el repositorio (' + codigo + ').' });
+      }
+      // 409/422 = SHA desactualizado (otro alta simultánea): re-leer y reintentar.
+      // El loop re-hace el dedupe: si el otro alta fue el mismo email, sale idempotente.
+    }
+
+    return jsonResponse({ success: false, error: 'El registro quedó en conflicto por otra escritura simultánea. Probá de nuevo en unos segundos.' });
+  } catch (error) {
+    return jsonResponse({ success: false, error: 'Error al registrar la cuenta: ' + error.message });
+  }
+}
+
+/**
+ * Slug para la invitación del cliente nuevo: parte local del email saneada
+ * + sufijo aleatorio de 6 hex (espacio de ~16,7M: colisiones despreciables).
+ * Verifica contra los slugs de las cuentas existentes; null si no logra
+ * único en 5 intentos.
+ */
+function generarSlugRegistro(email, cuentas) {
+  var base = String(email || '').split('@')[0].toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 20)
+    .replace(/-+$/g, '');
+  if (base.length < 3) base = 'cliente';
+
+  var usados = {};
+  for (var i = 0; i < cuentas.length; i++) usados[String(cuentas[i].slug)] = true;
+
+  for (var intento = 0; intento < 5; intento++) {
+    var hex = '';
+    for (var j = 0; j < 6; j++) hex += '0123456789abcdef'.charAt(Math.floor(Math.random() * 16));
+    var candidato = base + '-' + hex;
+    if (!usados[candidato]) return candidato;
+  }
+  return null;
+}
+
+/**
+ * Hash en el formato autodescripto del repo (pbkdf2-sha256$310000$<salt>$<hash>)
+ * con valores ALEATORIOS: representa una contraseña descartada que nadie
+ * conoce. Apps Script no implementa PBKDF2, pero el resultado es equivalente
+ * al de scripts/alta-cliente.mjs --solo-google: verificación de contraseña
+ * imposible (siempre falla), ingreso solo vía Google.
+ * Formato validado por REGEX_HASH en src/data/clientes-esquema.ts:
+ * salt 16 bytes → 22 chars base64 + '==' · hash 32 bytes → 43 chars + '='.
+ */
+function hashSoloGoogle() {
+  var alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  var azar = function(n) {
+    var s = '';
+    for (var i = 0; i < n; i++) s += alfabeto.charAt(Math.floor(Math.random() * alfabeto.length));
+    return s;
+  };
+  return 'pbkdf2-sha256$310000$' + azar(22) + '==$' + azar(43) + '=';
 }

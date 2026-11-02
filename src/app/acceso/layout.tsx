@@ -8,7 +8,9 @@ import type { Metadata } from 'next';
  * metadata y el fondo oscuro de marca.
  */
 export const metadata: Metadata = {
-  title: 'Acceso clientes | Lumen Gala',
+  /* title.absolute: evita que el template raíz duplique la marca
+     («…| Lumen Gala | Lumen Gala Studio»). */
+  title: { absolute: 'Acceso clientes | Lumen Gala' },
   description: 'Panel privado para gestionar tu invitación web de Lumen Gala Studio.',
   robots: { index: false, follow: false },
   /* Zona privada: sin canonical (no heredar el «/» del layout raíz, 032). */

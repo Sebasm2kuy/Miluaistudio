@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Menu, PenLine, X } from 'lucide-react';
+import { Menu, PenLine, UserRound, X } from 'lucide-react';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import { ITEMS_NAV } from '@/data/navegacion';
 import { WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
@@ -11,6 +11,11 @@ import { WHATSAPP_MENSAJE_GENERAL, whatsappLink } from '@/data/contacto';
  * desplegable en móvil. Los servicios «próximamente» son ítems de menú con
  * una etiqueta «pronto»; al abrirlos la tarjeta correspondiente se despliega
  * (ver servicios-extras.tsx).
+ *
+ * «Acceso clientes» (iteración 033): visible en la primera pantalla en
+ * escritorio (pill secundario con texto) y en móvil (botón compacto de solo
+ * icono con aria-label; el texto aparece desde sm). Apunta al login real
+ * /acceso/ — no crea rutas ni formularios alternativos.
  */
 export default function StoreNav() {
   const [abierto, setAbierto] = useState(false);
@@ -60,6 +65,17 @@ export default function StoreNav() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
+          {/* Acceso clientes: secundario, a la izquierda del CTA principal.
+              Móvil (<640px): icono solo, 40×40 táctil, aria-label; el texto
+              visible aparece desde sm cuando el ancho lo permite. */}
+          <a
+            href="/acceso/"
+            aria-label="Acceso clientes"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#e8e0d7] bg-white text-[#3d3830] shadow-sm transition hover:border-[#dfc9a4] sm:w-auto sm:gap-1.5 sm:px-4 sm:text-sm"
+          >
+            <UserRound size={16} />
+            <span className="hidden sm:inline">Acceso clientes</span>
+          </a>
           <a href={whatsappLink(WHATSAPP_MENSAJE_GENERAL)} target="_blank" rel="noreferrer" aria-label="Consultar por WhatsApp" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25d366] text-[#0b3d1e] shadow-[0_6px_16px_rgba(37,211,102,0.3)] transition hover:bg-[#1db957]">
             <WhatsAppIcon size={17} />
           </a>
@@ -106,6 +122,11 @@ export default function StoreNav() {
             </a>
             <a href="/catalogo/" onClick={() => setAbierto(false)} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#e8e0d7] px-5 py-3 text-sm font-semibold text-[#3d3830] transition hover:border-[#dfc9a4]">
               Ver el catálogo
+            </a>
+            {/* Vía adicional: el acceso ya está en el propio encabezado; en el
+                menú se repite para quien abre el panel desde acá. */}
+            <a href="/acceso/" onClick={() => setAbierto(false)} className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-medium text-[#716a63] transition hover:bg-[#f6efe2] hover:text-[#292522]">
+              <UserRound size={15} /> Acceso clientes
             </a>
           </div>
         </nav>

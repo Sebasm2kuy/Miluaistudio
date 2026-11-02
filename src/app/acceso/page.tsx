@@ -4,22 +4,62 @@
 // /acceso — Login del panel de cliente (estética de alta gama:
 // fondo charcoal, acentos dorados).
 // ------------------------------------------------------------
-// Verifica email + contraseña contra content/clientes.json (lectura
-// anónima de repo público) con PBKDF2 en el navegador (WebCrypto).
+// Dos vías de ingreso:
+//  1. «Continuar con Google» (si hay GOOGLE_CLIENT_ID en
+//     src/data/acceso-google.ts): identidad del widget oficial de
+//     Google Identity Services, contra content/clientes.json
+//     (lectura anónima del repo).
+//     - Email con cuenta → entra directo.
+//     - Email ajeno y ENDPOINT_REGISTRO activo (src/data/registro-auto.ts):
+//       REGISTRO AUTOMÁTICO (iteración 036) — el backend de Apps Script
+//       verifica la credencial con Google y commitea la cuenta nueva en
+//       content/clientes.json sin aprobación manual; acá se abre la sesión
+//       y entra al panel. Si el registro falla, queda el fallback de
+//       WhatsApp con el mensaje prellenado.
+//     - Email ajeno sin endpoint → aviso «sin panel asignado» + WhatsApp
+//       (comportamiento de 034).
+//  2. Email + contraseña (PBKDF2 en el navegador, WebCrypto),
+//     contra content/clientes.json (lectura anónima del repo).
 // Al ingresar crea la sesión (sessionStorage, 8 h) y entra a /dashboard.
-// El alta de cuentas NO es auto-servicio: la hace el estudio
-// (scripts/alta-cliente.mjs); acá solo se ofrece WhatsApp.
 // ============================================================
 
-import { useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Lock, Mail, MessageCircle, ShieldCheck } from 'lucide-react';
 import { RUTA_CLIENTES, type ColeccionClientes } from '@/data/clientes-esquema';
-import { iniciarSesion } from '@/lib/auth-cliente';
+import { iniciarSesion, iniciarSesionGoogle, abrirSesionCliente, decodificarPayloadJwt } from '@/lib/auth-cliente';
+import { registrarClienteGoogle } from '@/lib/registro-cliente';
 import { leerJSON } from '@/lib/github-db';
 import { whatsappLink } from '@/data/contacto';
+import { GOOGLE_CLIENT_ID } from '@/data/acceso-google';
+import { ENDPOINT_REGISTRO } from '@/data/registro-auto';
 
 type Estado = 'idle' | 'verificando' | 'ingresando';
+
+/** Mínimo tipado del widget de Google Identity Services que usamos. */
+interface GoogleIdApi {
+  accounts: {
+    id: {
+      initialize(config: {
+        client_id: string;
+        callback: (respuesta: { credential?: string }) => void;
+      }): void;
+      renderButton(parent: HTMLElement, opciones: Record<string, string>): void;
+    };
+  };
+}
+declare global {
+  interface Window {
+    google?: GoogleIdApi;
+  }
+}
+
+const ID_SCRIPT_GOOGLE = 'lgs-gsi-script';
+
+// El widget se inicializa UNA sola vez por carga de página: useRouter() cambia
+// de identidad tras hidratar y re-ejecuta el efecto; sin este guardia, Google
+// avisaría «initialize() is called multiple times» en la consola.
+let widgetGoogleYaIniciado = false;
 
 export default function PaginaAcceso() {
   const router = useRouter();
@@ -29,7 +69,137 @@ export default function PaginaAcceso() {
   const [error, setError] = useState('');
   const [bloqueadaMinutos, setBloqueadaMinutos] = useState(0);
 
-  const ocupado = estado !== 'idle';
+  // Google
+  const [googleListo, setGoogleListo] = useState(false);
+  const [googleFallado, setGoogleFallado] = useState(false);
+  const [googleOcupado, setGoogleOcupado] = useState(false);
+  const [registrando, setRegistrando] = useState(false); // alta automática en curso
+  const [errorGoogle, setErrorGoogle] = useState('');
+  const [sinCuenta, setSinCuenta] = useState<{ email: string; nombre: string } | null>(null);
+  const contenedorGoogle = useRef<HTMLDivElement>(null);
+
+  const ocupado = estado !== 'idle' || googleOcupado;
+
+  const manejarCredencial = useCallback(
+    async (credencial: string) => {
+      setErrorGoogle('');
+      setSinCuenta(null);
+      if (!credencial) {
+        setErrorGoogle('No se pudo completar el ingreso con Google. Probá de nuevo.');
+        return;
+      }
+      const identidad = decodificarPayloadJwt(credencial);
+      if (!identidad) {
+        setErrorGoogle('No se pudo leer tu identidad de Google. Probá de nuevo.');
+        return;
+      }
+
+      setGoogleOcupado(true);
+      const lectura = await leerJSON<ColeccionClientes>(RUTA_CLIENTES);
+      if (!lectura.ok) {
+        setGoogleOcupado(false);
+        setErrorGoogle('No se pudo conectar con el repositorio de cuentas. Probá de nuevo en unos segundos.');
+        return;
+      }
+
+      const resultado = iniciarSesionGoogle(
+        identidad.email,
+        identidad.nombre,
+        identidad.emailVerificado,
+        lectura.data.cuentas,
+      );
+      setGoogleOcupado(false);
+
+      if (resultado.ok) {
+        router.replace('/dashboard/');
+        return;
+      }
+      if (resultado.motivo === 'sin-cuenta') {
+        // Registro automático (iteración 036): el backend verifica la
+        // credencial con Google y crea la cuenta en content/clientes.json.
+        if (ENDPOINT_REGISTRO) {
+          setRegistrando(true);
+          const registro = await registrarClienteGoogle(credencial, { endpoint: ENDPOINT_REGISTRO });
+          setRegistrando(false);
+          if (registro.ok) {
+            // Defensa en profundidad: la cuenta creada debe ser la del email
+            // de la credencial que entregó el widget de Google.
+            const mismoEmail = registro.email.trim().toLowerCase() === identidad.email.trim().toLowerCase();
+            if (mismoEmail) {
+              const apertura = abrirSesionCliente(registro.email, registro.nombre, registro.slug);
+              if (apertura.ok) {
+                router.replace('/dashboard/');
+                return;
+              }
+              setErrorGoogle('Tu cuenta se creó pero no se pudo abrir el panel. Probá de nuevo en unos segundos.');
+              return;
+            }
+            setErrorGoogle('El registro no coincide con tu email de Google. Probá de nuevo.');
+            return;
+          }
+          if (registro.motivo !== 'sin-endpoint') {
+            setErrorGoogle(registro.mensaje);
+            return;
+          }
+          // sin-endpoint: configuración pendiente → fallback de WhatsApp.
+        }
+        setSinCuenta({ email: identidad.email.trim(), nombre: identidad.nombre.trim() });
+        return;
+      }
+      if (resultado.motivo === 'email-sin-verificar') {
+        setErrorGoogle('Tu cuenta de Google todavía no tiene el email verificado. Verificalo en Google y volvé a intentar.');
+        return;
+      }
+      setErrorGoogle('No se pudo usar ese email de Google. Probá con tu contraseña.');
+    },
+    [router],
+  );
+
+  // Carga única del widget de Google (solo si hay Client ID configurado).
+  // El contenedor debe existir en el DOM antes de cargar el script: por eso
+  // se monta siempre que haya Client ID (oculto hasta que el widget renderiza),
+  // y no dentro del condicional de googleListo.
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return;
+    const iniciarWidget = () => {
+      const api = window.google?.accounts?.id;
+      const destino = contenedorGoogle.current;
+      if (!api || !destino || widgetGoogleYaIniciado) return;
+      widgetGoogleYaIniciado = true;
+      try {
+        api.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: (respuesta) => void manejarCredencial(respuesta?.credential ?? ''),
+        });
+        api.renderButton(destino, {
+          theme: 'filled_black',
+          size: 'large',
+          shape: 'pill',
+          text: 'continue_with',
+          locale: 'es-419',
+        });
+        setGoogleListo(true);
+      } catch {
+        // Widget no disponible: el formulario de contraseña sigue funcionando.
+        setGoogleFallado(true);
+      }
+    };
+
+    const yaCargado = document.getElementById(ID_SCRIPT_GOOGLE);
+    if (yaCargado) {
+      iniciarWidget();
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = ID_SCRIPT_GOOGLE;
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = iniciarWidget;
+    script.onerror = () => setGoogleFallado(true); // sin red a Google: solo contraseña
+    document.head.appendChild(script);
+    // Deps estables: manejarCredencial es useCallback([router]) y GOOGLE_CLIENT_ID es constante.
+  }, [manejarCredencial]);
 
   async function alEnviar(e: FormEvent) {
     e.preventDefault();
@@ -79,6 +249,49 @@ export default function PaginaAcceso() {
           <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-[#b3a68f]">Panel de clientes</p>
         </div>
 
+        {/* Vía rápida: Google (solo con Client ID configurado y widget cargado).
+            El contenedor va siempre montado mientras no falle: renderButton
+            necesita el elemento en el DOM en el momento de la carga. */}
+        {GOOGLE_CLIENT_ID && !googleFallado && (
+          <div className={googleListo ? 'mb-5' : 'h-0 overflow-hidden'} aria-hidden={!googleListo}>
+            <div ref={contenedorGoogle} className="flex justify-center" />
+            {googleOcupado && (
+              <p className="mt-3 flex items-center justify-center gap-2 text-xs text-[#b3a68f]" role="status">
+                <Loader2 size={14} className="animate-spin" /> {registrando ? 'Creando tu acceso…' : 'Verificando tu identidad de Google…'}
+              </p>
+            )}
+            {errorGoogle && (
+              <p role="alert" className="mt-3 rounded-xl border border-[#7a4034] bg-[#3a201a] px-3 py-2.5 text-xs leading-relaxed text-[#f2b8ad]">
+                {errorGoogle}
+              </p>
+            )}
+            {sinCuenta && (
+              <div className="mt-3 rounded-xl border border-[#4a4230] bg-[#262017] px-3 py-3 text-xs leading-relaxed text-[#d8cbb2]">
+                <p>
+                  Hola{sinCuenta.nombre ? ` ${sinCuenta.nombre}` : ''}: el email{' '}
+                  <span className="font-semibold text-[#f0e8da]">{sinCuenta.email}</span> todavía no tiene un panel
+                  asignado. Te lo activamos nosotros:
+                </p>
+                <a
+                  href={whatsappLink(
+                    `Hola! Soy ${sinCuenta.nombre || sinCuenta.email} (${sinCuenta.email}) y quiero activar mi panel de cliente de Lumen Gala.`,
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 font-semibold text-[#d4b465] underline decoration-[#d4b465]/30 underline-offset-4 transition hover:text-[#e2c67c]"
+                >
+                  <MessageCircle size={14} /> Pedir mi acceso por WhatsApp
+                </a>
+              </div>
+            )}
+            <div className="my-5 flex items-center gap-3" aria-hidden="true">
+              <span className="h-px flex-1 bg-[#3a3226]" />
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#8a7d67]">o con tu contraseña</span>
+              <span className="h-px flex-1 bg-[#3a3226]" />
+            </div>
+          </div>
+        )}
+
         <form
           onSubmit={alEnviar}
           className="rounded-2xl border border-[#3a3226] bg-[#1d1810] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
@@ -124,6 +337,11 @@ export default function PaginaAcceso() {
               {error}
             </p>
           )}
+          {bloqueadaMinutos > 0 && (
+            <p className="mt-2 text-[11px] text-[#b3a68f]">
+              Bloqueo temporal por intentos fallidos: {bloqueadaMinutos} min. Podés entrar con Google mientras tanto.
+            </p>
+          )}
 
           <button
             type="submit"
@@ -142,7 +360,9 @@ export default function PaginaAcceso() {
           </button>
 
           <p className="mt-4 text-center text-[11px] leading-relaxed text-[#8a7d67]">
-            Acceso exclusivo para clientes con invitación en producción.
+            {ENDPOINT_REGISTRO
+              ? 'Con Google entrás siempre: si es tu primera vez, tu panel se crea automáticamente.'
+              : 'Acceso exclusivo para clientes con invitación en producción.'}
           </p>
         </form>
 

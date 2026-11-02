@@ -47,7 +47,7 @@ const JSON_LD_NEGOCIO = {
   "@id": "https://lumengala.site/#negocio",
   name: "Lumen Gala Studio",
   alternateName: "Lumen Gala",
-  description: "Invitaciones web de alta gama para 15s y bodas.",
+  description: "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas.",
   url: "https://lumengala.site",
   email: "lumengala.studio@gmail.com",
   telephone: "+598 95 239 386",
@@ -73,10 +73,10 @@ const JSON_LD_NEGOCIO = {
     "@type": "Offer",
     itemOffered: {
       "@type": "Service",
-      name: "Invitaciones web de alta gama para 15s y bodas",
+      name: "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas",
       serviceType: "Invitaciones web digitales personalizadas",
       description:
-        "Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Música, RSVP y cuenta regresiva en un solo enlace.",
+        "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas en Uruguay: música, galería de fotos, cuenta regresiva, ubicación y confirmación de asistencia en un solo enlace.",
       areaServed: "Montevideo, Uruguay",
       provider: { "@id": "https://lumengala.site/#negocio" },
     },
@@ -86,16 +86,16 @@ const JSON_LD_NEGOCIO = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://lumengala.site/"),
   title: {
-    default: "Lumen Gala Studio | Invitaciones Web de Alta Gama en Montevideo",
+    default: "Lumen Gala Studio | Invitaciones web elegantes para fiestas de 15 y bodas",
     template: "%s | Lumen Gala Studio",
   },
   description:
-    "Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Música, RSVP y cuenta regresiva en un solo enlace.",
+    "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas en Uruguay: música, galería, cuenta regresiva y RSVP en un solo enlace.",
   keywords: [
     "invitaciones web Montevideo",
     "invitaciones digitales Uruguay",
     "invitación digital 15 años",
-    "invitaciones web de alta gama",
+    "invitaciones web elegantes",
     "invitaciones para bodas Uruguay",
     "invitaciones interactivas",
     "quinceañera",
@@ -121,9 +121,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "Lumen Gala Studio | Invitaciones Web de Alta Gama en Montevideo",
+    title: "Lumen Gala Studio | Invitaciones web elegantes para fiestas de 15 y bodas",
     description:
-      "Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Música, RSVP y cuenta regresiva en un solo enlace.",
+      "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas en Uruguay: música, galería, cuenta regresiva y RSVP en un solo enlace.",
     type: "website",
     locale: "es_UY",
     url: "https://lumengala.site/",
@@ -140,9 +140,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lumen Gala Studio | Invitaciones Web de Alta Gama en Montevideo",
+    title: "Lumen Gala Studio | Invitaciones web elegantes para fiestas de 15 y bodas",
     description:
-      "Creamos invitaciones web digitales personalizadas para fiestas de 15, bodas y eventos únicos en Uruguay. Música, RSVP y cuenta regresiva en un solo enlace.",
+      "Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas en Uruguay: música, galería, cuenta regresiva y RSVP en un solo enlace.",
     images: ["https://lumengala.site/lgs-preview.jpg"],
   },
 };

@@ -301,10 +301,13 @@ if (existsSync(INDEX_MARCA)) {
       .match(new RegExp('<meta [^>]*property="' + propiedad + '"[^>]*>'))?.[0]
       ?.match(/content="([^"]*)"/)?.[1] ?? '';
   const ogTitle = metaContenido('og:title');
-  if (/lumen gala studio/i.test(ogTitle) && /alta gama/i.test(ogTitle)) {
+  /* Iteración 033: el propietario cambió el mensaje de portada de «alta
+     gama» a «elegantes y personalizadas» («fiestas de 15» en vez de «15s»).
+     La verificación se actualiza al copy nuevo — sigue exigiendo marca. */
+  if (/lumen gala studio/i.test(ogTitle) && /elegantes/i.test(ogTitle) && /fiestas de 15/i.test(ogTitle)) {
     ok('og:title de portada con la identidad LGS: ' + ogTitle);
   } else {
-    fail('OG DESACTUALIZADO: el og:title de la portada debe decir «Lumen Gala Studio | Invitaciones web de alta gama» (' + ogTitle + ')');
+    fail('OG DESACTUALIZADO: el og:title de la portada debe decir «Lumen Gala Studio | Invitaciones web elegantes para fiestas de 15 y bodas» (' + ogTitle + ')');
   }
   const ogImage = metaContenido('og:image');
   if (ogImage === 'https://lumengala.site/lgs-preview.jpg') {
