@@ -1,12 +1,16 @@
 # Acceso de clientes con Google — guía del estudio
 
 Desde la iteración 034 el panel de cliente (`/acceso/` → `/dashboard/`) tiene
-dos vías de ingreso:
+dos vías de ingreso, y **desde la iteración 035 el botón de Google está
+ACTIVADO en producción** (Client ID integrado y desplegado):
 
 | Vía | Para quién | Qué necesita |
 |---|---|---|
-| **«Continuar con Google»** | El cliente, en un clic | Un OAuth Client ID de Google Cloud (lo crea el estudio, 10 min, una sola vez) |
+| **«Continuar con Google»** (activa) | El cliente, en un clic | Cuenta de Google cuyo email coincida con una cuenta del estudio |
 | **Email + contraseña** | Alternativa de siempre | Cuenta con hash en `content/clientes.json` (como hasta ahora) |
+
+Client ID activo: `118004981247-ah0r221q93h627lrocr6utiiocphhh2j.apps.googleusercontent.com`
+(vive en `src/data/acceso-google.ts`; es un identificador público).
 
 Ambas vías abren la MISMA sesión (8 h) y llevan al MISMO panel. La autorización
 no cambia: **solo entra quien ya tiene cuenta** — el email de Google debe
@@ -37,17 +41,24 @@ ni siquiera con Google.
 > y no es un secreto. No confundirlo con la «clave secreta de cliente», que
 > este flujo NO usa.
 
-## 2. Activar el botón
+## 2. Activación (HECHA en la iteración 035)
 
-Abrí `src/data/acceso-google.ts` y pegá el ID entre las comillas:
+El Client ID ya está integrado en `src/data/acceso-google.ts` y desplegado.
+Si algún día hay que cambiarlo (rotación, nuevo proyecto), el proceso es:
 
-```ts
-export const GOOGLE_CLIENT_ID = '1234567890-abc123.apps.googleusercontent.com';
-```
+1. Reemplazá el valor de `GOOGLE_CLIENT_ID` en `src/data/acceso-google.ts`.
+2. Commit + push a `main`. En el próximo despliegue el botón aparece solo.
+3. Si la constante vuelve a quedar vacía, `/acceso/` funciona exactamente como
+   antes de 035 (formulario de contraseña, cero peticiones a Google).
 
-Commit + push a `main`. En el próximo despliegue el botón aparece solo.
-Mientras la constante esté vacía, `/acceso/` funciona exactamente como antes
-(formulario de contraseña, cero peticiones a Google).
+> **Requisito en Google Cloud**: en el Client ID deben figurar como
+> «Orígenes autorizados de JavaScript» exactamente `https://lumengala.site`
+> (sin `/` final). Si al hacer clic el botón muestra un error de Google,
+> revisá ese ajuste primero.
+>
+> El «secreto del cliente» que Google Cloud muestra junto al ID **no se usa**
+> en este flujo (Google Identity Services no lo necesita en el navegador) y no
+> se guarda en el repositorio.
 
 ## 3. Dar acceso a un cliente
 

@@ -58,6 +58,7 @@ export default function PaginaAcceso() {
 
   // Google
   const [googleListo, setGoogleListo] = useState(false);
+  const [googleFallado, setGoogleFallado] = useState(false);
   const [googleOcupado, setGoogleOcupado] = useState(false);
   const [errorGoogle, setErrorGoogle] = useState('');
   const [sinCuenta, setSinCuenta] = useState<{ email: string; nombre: string } | null>(null);
@@ -113,6 +114,9 @@ export default function PaginaAcceso() {
   );
 
   // Carga única del widget de Google (solo si hay Client ID configurado).
+  // El contenedor debe existir en el DOM antes de cargar el script: por eso
+  // se monta siempre que haya Client ID (oculto hasta que el widget renderiza),
+  // y no dentro del condicional de googleListo.
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID) return;
     const iniciarWidget = () => {
@@ -134,7 +138,7 @@ export default function PaginaAcceso() {
         setGoogleListo(true);
       } catch {
         // Widget no disponible: el formulario de contraseña sigue funcionando.
-        setGoogleListo(false);
+        setGoogleFallado(true);
       }
     };
 
@@ -149,7 +153,7 @@ export default function PaginaAcceso() {
     script.async = true;
     script.defer = true;
     script.onload = iniciarWidget;
-    script.onerror = () => setGoogleListo(false); // sin red a Google: solo contraseña
+    script.onerror = () => setGoogleFallado(true); // sin red a Google: solo contraseña
     document.head.appendChild(script);
     // Deps estables: manejarCredencial es useCallback([router]) y GOOGLE_CLIENT_ID es constante.
   }, [manejarCredencial]);
@@ -202,9 +206,11 @@ export default function PaginaAcceso() {
           <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-[#b3a68f]">Panel de clientes</p>
         </div>
 
-        {/* Vía rápida: Google (solo con Client ID configurado y widget cargado) */}
-        {GOOGLE_CLIENT_ID && googleListo && (
-          <div className="mb-5">
+        {/* Vía rápida: Google (solo con Client ID configurado y widget cargado).
+            El contenedor va siempre montado mientras no falle: renderButton
+            necesita el elemento en el DOM en el momento de la carga. */}
+        {GOOGLE_CLIENT_ID && !googleFallado && (
+          <div className={googleListo ? 'mb-5' : 'h-0 overflow-hidden'} aria-hidden={!googleListo}>
             <div ref={contenedorGoogle} className="flex justify-center" />
             {googleOcupado && (
               <p className="mt-3 flex items-center justify-center gap-2 text-xs text-[#b3a68f]" role="status">

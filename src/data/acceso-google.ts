@@ -18,8 +18,14 @@
 //     y pegarlo acá abajo. Commit + push: el botón aparece solo.
 //
 // Mientras la constante esté vacía, /acceso/ muestra únicamente el
-// formulario de email + contraseña (estado actual): cero errores de
-// consola, cero peticiones a Google.
+// formulario de email + contraseña: cero errores de consola, cero
+// peticiones a Google.
+//
+// ESTADO: ACTIVADO (iteración 035). El ID de cliente es un
+// identificador público, no un secreto. El «secreto del cliente» que
+// Google Cloud muestra junto a él NO se usa en este flujo (Google
+// Identity Services no lo necesita en el navegador) y por eso no se
+// guarda en este repositorio.
 // ============================================================
 
-export const GOOGLE_CLIENT_ID = '';
+export const GOOGLE_CLIENT_ID = '118004981247-ah0r221q93h627lrocr6utiiocphhh2j.apps.googleusercontent.com';
