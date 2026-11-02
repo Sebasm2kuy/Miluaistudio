@@ -1,14 +1,22 @@
 {
   "esquema": 1,
-  "actualizadoEn": "2026-10-31T09:02:30.397Z",
+  "actualizadoEn": "2026-11-02T15:22:21.373Z",
   "cuentas": [
     {
       "email": "demo@lumengala.site",
-      "nombre": "Cliente Demostración",
+      "nombre": "Cliente Demostraci?n",
       "hash": "pbkdf2-sha256$310000$jbZKEEKld7/3u9uUjF8rFA==$3L+yE1OhxwsixfsA/497tD4Mp9wAYnDToO9sszyoOEI=",
       "rol": "cliente",
       "slug": "ejemplo-quince",
       "creadoEn": "2026-10-31T08:05:18.293Z"
+    },
+    {
+      "email": "sebacabrera1982@gmail.com",
+      "nombre": "Adrian",
+      "hash": "pbkdf2-sha256$310000$tbzsXPeDmgBLG4mBLJ0bzM==$igIW2uuobhSnbkvDCCaQMIQWjxgvPSiRAeUzcq/lxwX=",
+      "rol": "cliente",
+      "slug": "sebacabrera1982-cda678",
+      "creadoEn": "2026-11-02T15:22:21.373Z"
     }
   ]
 }
