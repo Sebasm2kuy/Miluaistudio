@@ -5,10 +5,10 @@
 // ------------------------------------------------------------
 // Lee content/rsvps/<slug>.json del repositorio (lectura anónima) y
 // lo vuelve a consultar cada 25 s (autoactualización "en vivo"; se
-// pausa cuando la pestaña está oculta). Permite filtrar, buscar,
-// exportar CSV y — con la conexión de GitHub activa — registrar,
-// alternar asistencia y eliminar confirmaciones con commits
-// automáticos ([skip ci]: nunca reconstruyen el sitio).
+// pausa cuando la pestaña está oculta). Permite filtrar, buscar y
+// exportar CSV. Solo lectura para el cliente: sin campos de token ni
+// escrituras directas (038) — las altas y correcciones las hace el
+// estudio (WhatsApp) o el formulario de la invitación (backend).
 // ============================================================
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -16,32 +16,23 @@ import {
   Check,
   Download,
   MessageCircle,
-  Plus,
   RefreshCw,
   Search,
-  Trash2,
-  UserPlus,
   X,
 } from 'lucide-react';
 import {
-  MAX_CANTIDAD_GRUPO,
   rutaArchivoRsvps,
   resumenRsvps,
-  serializarRsvps,
   validarColeccionRsvps,
   type ColeccionRsvps,
   type EntradaRsvp,
 } from '@/data/rsvps-esquema';
-import { agregarEntradaRsvp, leerJSON, escribirJSON } from '@/lib/github-db';
-import { validarCantidad, validarListaNombres, validarTextoOpcional } from '@/lib/dashboard-validacion';
-import { WHATSAPP_NUMERO, whatsappLink } from '@/data/contacto';
+import { leerJSON } from '@/lib/github-db';
+import { whatsappLink } from '@/data/contacto';
 import { useSesionCliente } from '../guardia';
-import PanelConexion, { leerTokenGuardado } from '@/components/dashboard/panel-conexion';
 import {
   Aviso,
-  BotonPrincipal,
   BotonSecundario,
-  CampoTexto,
   Esqueleto,
   Tarjeta,
   fechaCorta,
@@ -59,14 +50,6 @@ export default function PanelConfirmaciones() {
   const [aviso, setAviso] = useState<{ tono: 'ok' | 'error' | 'info'; texto: string } | null>(null);
   const [filtro, setFiltro] = useState<Filtro>('todas');
   const [busqueda, setBusqueda] = useState('');
-  const [token, setToken] = useState('');
-  const [formAbierto, setFormAbierto] = useState(false);
-  const [ocupada, setOcupada] = useState(false);
-  const [nombres, setNombres] = useState('');
-  const [cantidad, setCantidad] = useState('1');
-  const [asistencia, setAsistencia] = useState<'si' | 'no'>('si');
-  const [cancion, setCancion] = useState('');
-  const [erroresForm, setErroresForm] = useState<Record<string, string>>({});
 
   const cargar = useCallback(
     async (silencioso = false) => {
@@ -90,10 +73,8 @@ export default function PanelConfirmaciones() {
   );
 
   useEffect(() => {
-    // Token en sessionStorage + carga inicial (sistemas externos, solo cliente).
+    // Carga inicial (lectura anónima del repo: sistema externo, solo cliente).
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setToken(leerTokenGuardado());
-     
     void cargar();
   }, [cargar]);
 
@@ -128,96 +109,6 @@ export default function PanelConfirmaciones() {
       })
       .sort((a, b) => Date.parse(b.fecha) - Date.parse(a.fecha));
   }, [rsvps, filtro, busqueda]);
-
-  // --- Acciones con commit (exigen token) ---
-  async function alternarAsistencia(entrada: EntradaRsvp) {
-    if (!token || ocupada) return;
-    setOcupada(true);
-    setAviso(null);
-    const nueva: EntradaRsvp = { ...entrada, asistencia: entrada.asistencia === 'si' ? 'no' : 'si' };
-    const actualizada = await escribirColeccion(rsvps.map((r) => (r.codigo === entrada.codigo ? nueva : r)));
-    if (actualizada) setAviso({ tono: 'ok', texto: `Asistencia de ${entrada.codigo} actualizada (commit automático).` });
-    setOcupada(false);
-  }
-
-  async function eliminar(entrada: EntradaRsvp) {
-    if (!token || ocupada) return;
-    if (!window.confirm(`¿Eliminar la confirmación de ${entrada.invitados[0]} (${entrada.codigo})? Se hace un commit que la quita del archivo.`)) return;
-    setOcupada(true);
-    setAviso(null);
-    const actualizada = await escribirColeccion(rsvps.filter((r) => r.codigo !== entrada.codigo));
-    if (actualizada) setAviso({ tono: 'ok', texto: `Confirmación ${entrada.codigo} eliminada (commit automático).` });
-    setOcupada(false);
-  }
-
-  /** Re-escribe la colección completa preservando el SHA (con un reintento ante conflicto). */
-  async function escribirColeccion(nuevaLista: EntradaRsvp[]): Promise<boolean> {
-    const lectura = await leerJSON<ColeccionRsvps>(rutaArchivoRsvps(sesion.slug), { token });
-    if (!lectura.ok && lectura.motivo !== 'no-existe') {
-      setAviso({ tono: 'error', texto: lectura.mensaje });
-      return false;
-    }
-    const coleccion = {
-      esquema: 1,
-      actualizadoEn: new Date().toISOString(),
-      rsvps: nuevaLista,
-    };
-    const escritura = await escribirJSON(rutaArchivoRsvps(sesion.slug), serializarRsvps(coleccion), {
-      mensaje: `rsvp(${sesion.slug}): actualización manual del panel [skip ci]`,
-      token,
-      ...(lectura.ok ? { shaPrevio: lectura.sha } : {}),
-    });
-    if (!escritura.ok) {
-      setAviso({ tono: 'error', texto: `${escritura.mensaje} Recargá la lista e intentá de nuevo.` });
-      await cargar(true);
-      return false;
-    }
-    await cargar(true);
-    return true;
-  }
-
-  async function agregarManual() {
-    if (!token) return;
-    const erroresNuevos: Record<string, string> = {};
-    const lista = validarListaNombres(nombres);
-    if (!lista.ok) erroresNuevos.nombres = lista.motivo;
-    const cant = validarCantidad(cantidad);
-    if (!cant.ok) erroresNuevos.cantidad = cant.motivo;
-    const cancionLimpia = validarTextoOpcional(cancion, 'La canción', 120);
-    if (!cancionLimpia.ok) erroresNuevos.cancion = cancionLimpia.motivo;
-    setErroresForm(erroresNuevos);
-    if (Object.keys(erroresNuevos).length > 0) return;
-
-    setOcupada(true);
-    setAviso(null);
-    const resultado = await agregarEntradaRsvp(
-      sesion.slug,
-      {
-        // Código de grupo de alta manual, distinguible del formulario (MIL-…).
-        codigo: 'LGS-' + Math.random().toString(36).slice(2, 6).toUpperCase(),
-        cantidad: cant.ok ? cant.valor : 1,
-        invitados: lista.ok ? lista.valor : [],
-        asistencia,
-        fecha: new Date().toISOString(),
-        origen: 'manual',
-        cancion: cancionLimpia.ok ? cancionLimpia.valor : '',
-      },
-      { token },
-    );
-    setOcupada(false);
-    if (!resultado.ok) {
-      setAviso({ tono: 'error', texto: resultado.mensaje });
-      return;
-    }
-    setAviso({ tono: 'ok', texto: resultado.dedup ? 'Ese grupo ya estaba registrado.' : 'Confirmación registrada (commit automático).' });
-    setFormAbierto(false);
-    setNombres('');
-    setCantidad('1');
-    setAsistencia('si');
-    setCancion('');
-    setErroresForm({});
-    await cargar(true);
-  }
 
   // --- Export CSV (Excel es-UY: BOM + separador ;) ---
   function exportarCsv() {
@@ -319,82 +210,11 @@ export default function PanelConfirmaciones() {
           <BotonSecundario onClick={exportarCsv} icono={Download} disabled={visibles.length === 0}>
             Exportar CSV
           </BotonSecundario>
-          {token ? (
-            <BotonPrincipal onClick={() => setFormAbierto(!formAbierto)} icono={formAbierto ? X : UserPlus}>
-              {formAbierto ? 'Cerrar' : 'Registrar a mano'}
-            </BotonPrincipal>
-          ) : (
-            <a href={whatsappLink(`Hola! Quiero anotar una confirmación para mi invitación (${sesion.slug}).`)} target="_blank" rel="noreferrer">
-              <BotonSecundario icono={MessageCircle}>Avisar por WhatsApp</BotonSecundario>
-            </a>
-          )}
+          <a href={whatsappLink(`Hola! Quiero anotar una confirmación para mi invitación (${sesion.slug}).`)} target="_blank" rel="noreferrer">
+            <BotonSecundario icono={MessageCircle}>Avisar por WhatsApp</BotonSecundario>
+          </a>
         </div>
       </div>
-
-      {/* Alta manual (solo con conexión) */}
-      {formAbierto && token && (
-        <Tarjeta>
-          <TituloSimple>Registrar confirmación a mano</TituloSimple>
-          <p className="mt-1 text-xs text-[#b3a68f]">
-            Para las que te llegan por WhatsApp o de palabra. Se guarda con un commit automático (código LGS-…).
-          </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <CampoTexto
-              id="nombres"
-              etiqueta="Nombres (uno por línea)"
-              valor={nombres}
-              alCambiar={setNombres}
-              error={erroresForm.nombres}
-              multilinea
-              filas={3}
-              placeholder={'Tía Mercedes\nPrimo Juan'}
-            />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <CampoTexto
-                id="cantidad"
-                etiqueta={`Cantidad (1-${MAX_CANTIDAD_GRUPO})`}
-                valor={cantidad}
-                alCambiar={setCantidad}
-                error={erroresForm.cantidad}
-                tipo="number"
-              />
-              <div>
-                <span className="block text-xs font-medium text-[#b3a68f]">Asistencia</span>
-                <div className="mt-1.5 flex gap-2">
-                  {(['si', 'no'] as const).map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => setAsistencia(v)}
-                      className={`flex-1 rounded-xl border px-3 py-2.5 text-sm transition ${
-                        asistencia === v
-                          ? 'border-[#d4b465] bg-[#d4b465]/10 text-[#d4b465]'
-                          : 'border-[#3a3226] text-[#b3a68f] hover:text-[#f0e8da]'
-                      }`}
-                    >
-                      {v === 'si' ? 'Asiste' : 'No asiste'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-2">
-              <CampoTexto
-                id="cancion"
-                etiqueta="Canción sugerida (opcional)"
-                valor={cancion}
-                alCambiar={setCancion}
-                error={erroresForm.cancion}
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <BotonPrincipal onClick={() => void agregarManual()} ocupado={ocupada} icono={Plus}>
-              Registrar
-            </BotonPrincipal>
-          </div>
-        </Tarjeta>
-      )}
 
       {/* Lista */}
       {cargando ? (
@@ -407,7 +227,7 @@ export default function PanelConfirmaciones() {
         <Tarjeta className="text-center">
           <p className="text-sm text-[#b3a68f]">
             {rsvps.length === 0
-              ? 'Todavía no hay confirmaciones registradas. Cuando tus invitados confirmen (o las registres acá), aparecen solas.'
+              ? 'Todavía no hay confirmaciones registradas. Cuando tus invitados confirmen en la invitación, aparecen solas acá.'
               : 'Ninguna confirmación coincide con el filtro o la búsqueda.'}
           </p>
         </Tarjeta>
@@ -440,32 +260,10 @@ export default function PanelConfirmaciones() {
                   {r.origen === 'manual' ? ' · registrada a mano' : r.origen === 'whatsapp' ? ' · vía WhatsApp' : ''}
                 </p>
               </div>
-              {token && (
-                <div className="flex shrink-0 gap-2">
-                  <BotonSecundario onClick={() => void alternarAsistencia(r)} disabled={ocupada} icono={Check}>
-                    {r.asistencia === 'si' ? 'Marcar no va' : 'Marcar que va'}
-                  </BotonSecundario>
-                  <button
-                    type="button"
-                    onClick={() => void eliminar(r)}
-                    disabled={ocupada}
-                    aria-label={`Eliminar confirmación ${r.codigo}`}
-                    className="inline-flex items-center justify-center rounded-xl border border-[#7a4034] px-3 py-2.5 text-[#f2b8ad] transition hover:bg-[#3a201a] disabled:opacity-60"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>
       )}
-
-      <PanelConexion tokenActivo={token} onCambiarToken={setToken} />
     </div>
   );
-}
-
-function TituloSimple({ children }: { children: React.ReactNode }) {
-  return <h2 className="font-serif text-lg text-[#f0e8da]">{children}</h2>;
 }

@@ -7,8 +7,10 @@ import GuardiaDashboard from './guardia';
  * Layout servidor: solo aporta metadata noindex (zona operativa) y
  * monta la guardia cliente. En un export estático no hay middleware de
  * servidor: la protección de rutas es client-side (leerSesion() +
- * redirección a /acceso/) y TODA escritura real exige además el token
- * de GitHub de la conexión del panel. Ver IDEAS/ITERACION-2026-10-31-030.
+ * redirección a /acceso/). El panel es de SOLO LECTURA para el cliente:
+ * sin campos de token ni ajustes de desarrollo en ninguna pestaña (038);
+ * los cambios los publica el estudio y las confirmaciones entran por el
+ * formulario de la invitación (backend del registro automático).
  */
 export const metadata: Metadata = {
   title: { absolute: 'Panel de cliente | Lumen Gala' },
