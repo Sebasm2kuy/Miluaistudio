@@ -20,6 +20,7 @@
     "src/lib/github-deploy.ts",
     "src/lib/github-db.ts",
     "src/lib/auth-cliente.ts",
+    "src/lib/sesion-nav.ts",
     "src/lib/dashboard-validacion.ts",
     "src/lib/invitaciones-publicadas.ts",
     "src/lib/editor-config.ts",

@@ -4,7 +4,7 @@
   "cuentas": [
     {
       "email": "demo@lumengala.site",
-      "nombre": "Cliente Demostraci?n",
+      "nombre": "Cliente Demostración",
       "hash": "pbkdf2-sha256$310000$jbZKEEKld7/3u9uUjF8rFA==$3L+yE1OhxwsixfsA/497tD4Mp9wAYnDToO9sszyoOEI=",
       "rol": "cliente",
       "slug": "ejemplo-quince",

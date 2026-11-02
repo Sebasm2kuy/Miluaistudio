@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Images, Lock, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, Clock3, ExternalLink, Images, MapPin, MessageSquareText, Music2, PenLine, Search, Share2, ShieldCheck, Sparkles, Star, X } from 'lucide-react';
 import { INVITATION_DESIGNS, type InvitationDesign } from '@/data/invitation-designs';
+import EnlaceSesionNavbar from '@/components/enlace-sesion';
 import CatalogScene from '@/components/catalog-scene';
 import WhatsAppIcon from '@/components/whatsapp-icon';
 import WhatsAppFloat from '@/components/whatsapp-float';
@@ -113,11 +114,13 @@ export default function CatalogoPage() {
               <WhatsAppIcon size={16} />
               <span className="hidden sm:inline">Consultar por WhatsApp</span>
             </a>
-            <a href="/acceso/" className="inline-flex items-center gap-2 rounded-full border border-[#e8e0d7] bg-white px-4 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm">
-              <span className="hidden sm:inline">Panel de clientes</span>
-              <span className="sm:hidden">Clientes</span>
-              <Lock size={14} />
-            </a>
+            {/* Botón de sesión (040): «Iniciar sesión» sin sesión; el nombre
+                del cliente con sesión activa (entra al panel sin cerrarla).
+                En móvil queda como pill compacta de solo icono. */}
+            <EnlaceSesionNavbar
+              classNameInvitado="inline-flex items-center justify-center gap-2 rounded-full border border-[#e8e0d7] bg-white px-3 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm"
+              classNameSesion="inline-flex items-center justify-center gap-2 rounded-full border border-[#dfc9a4] bg-white px-3 py-2.5 text-xs font-semibold text-[#54483e] transition hover:bg-[#f3ead9] sm:px-5 sm:text-sm"
+            />
           </div>
         </div>
       </header>
