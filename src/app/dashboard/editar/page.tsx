@@ -8,13 +8,13 @@
 // lugar y ubicación, música (Spotify), frase de bienvenida (dedicatoria)
 // y cronograma de la noche.
 //
-// Guardado (estados honestos, como en el panel del estudio):
-//  - Con conexión (token en sesión): «Publicar cambios» hace un commit
-//    automático (publicarInvitacionEnGitHub) conservando el enlace y la
-//    fecha de primera publicación. El sitio se reconstruye solo (~2-3 min).
-//  - Sin conexión: «Guardar borrador» (localStorage del navegador) +
-//    «Descargar JSON» / «Enviar por WhatsApp» para que el estudio lo
-//    publique. Nada se presenta como publicado si no lo fue.
+// Guardado (estados honestos): el panel de cliente NO tiene conexión
+// directa con GitHub — ni tarjeta de conexión ni campos de token en
+// ninguna pestaña (decisión 038: ajustes de desarrollo fuera del panel).
+//  - «Guardar borrador» guarda en localStorage del navegador.
+//  - «Descargar JSON» / «Enviar por WhatsApp» le pasan los cambios al
+//    estudio, que los publica (≈2-3 min). Nada se presenta como
+//    publicado si no lo fue.
 // ============================================================
 
 import { useCallback, useEffect, useState } from 'react';
@@ -30,7 +30,6 @@ import {
   Save,
   ScrollText,
   Trash2,
-  Upload,
 } from 'lucide-react';
 import {
   crearInvitacionPublicada,
@@ -40,7 +39,6 @@ import {
   type InvitacionPublicada,
 } from '@/data/invitacion-publicada';
 import type { SiteConfig, TimelineEvent } from '@/data/config-schema';
-import { publicarInvitacionEnGitHub } from '@/lib/github-deploy';
 import { leerJSON } from '@/lib/github-db';
 import {
   desglosarFecha,
@@ -52,7 +50,6 @@ import {
 import { spotifyEmbedUrl } from '@/lib/personalizador';
 import { WHATSAPP_NUMERO } from '@/data/contacto';
 import { useSesionCliente } from '../guardia';
-import PanelConexion, { leerTokenGuardado } from '@/components/dashboard/panel-conexion';
 import {
   Aviso,
   BotonPrincipal,
@@ -65,7 +62,7 @@ import {
 } from '@/components/dashboard/ui';
 
 type EstadoCarga = 'cargando' | 'ok' | 'error';
-type Guardado = 'nada' | 'publicando' | 'borrador';
+type Guardado = 'nada' | 'borrador';
 
 interface BorradorLocal {
   config: SiteConfig;
@@ -86,7 +83,6 @@ export default function PanelEditar() {
   const [guardado, setGuardado] = useState<Guardado>('nada');
   const [mensaje, setMensaje] = useState<{ tono: 'ok' | 'error' | 'info'; texto: string } | null>(null);
   const [borrador, setBorrador] = useState<BorradorLocal | null>(null);
-  const [token, setToken] = useState('');
 
   // --- Carga (con preferencia del borrador local si existe) ---
   const cargar = useCallback(async () => {
@@ -125,10 +121,8 @@ export default function PanelEditar() {
   }, [sesion.slug]);
 
   useEffect(() => {
-    // Token en sessionStorage + carga inicial (sistemas externos, solo cliente).
+    // Carga inicial (lectura anónima del repo: sistema externo, solo cliente).
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setToken(leerTokenGuardado());
-     
     void cargar();
   }, [cargar]);
 
@@ -163,7 +157,6 @@ export default function PanelEditar() {
             Reintentar
           </button>
         </Aviso>
-        <PanelConexion tokenActivo={token} onCambiarToken={setToken} />
       </div>
     );
   }
@@ -238,44 +231,7 @@ export default function PanelEditar() {
     return config;
   }
 
-  // --- Publicar (commit automático) ---
-  async function publicar() {
-    const configValida = validarFormulario();
-    if (!configValida) return;
-    if (!token) {
-      setMensaje({ tono: 'info', texto: 'Para publicar conectá primero la Conexión con GitHub (o enviá los cambios al estudio).' });
-      return;
-    }
-    setGuardado('publicando');
-    setMensaje(null);
-    try {
-      const invitacion = crearInvitacionPublicada({
-        slug: sesion.slug,
-        config: configValida,
-        ...(publicadoEn ? { publicadoEn } : {}),
-      });
-      const resultado = await publicarInvitacionEnGitHub(invitacion, token);
-      if (resultado.success) {
-        setPublicadoEn(invitacion.publicadoEn);
-        localStorage.removeItem(claveBorrador(sesion.slug));
-        setBorrador(null);
-        setMensaje({
-          tono: 'ok',
-          texto: resultado.creado
-            ? 'Invitación publicada. El enlace queda activo cuando termine el deploy automático (≈2-3 minutos).'
-            : 'Cambios publicados. El enlace se actualiza solo en ≈2-3 minutos.',
-        });
-      } else {
-        setMensaje({ tono: 'error', texto: resultado.message });
-      }
-    } catch (err) {
-      setMensaje({ tono: 'error', texto: err instanceof Error ? err.message : 'Error desconocido al preparar la publicación.' });
-    } finally {
-      setGuardado('nada');
-    }
-  }
-
-  // --- Borrador local (sin token) ---
+  // --- Borrador local (el estudio publica) ---
   function guardarBorrador() {
     const configValida = validarFormulario();
     if (!configValida) return;
@@ -528,16 +484,11 @@ export default function PanelEditar() {
       </Tarjeta>
 
       {/* Guardado */}
-      <PanelConexion tokenActivo={token} onCambiarToken={setToken} />
-
       <Tarjeta>
         <div className="flex flex-wrap items-center gap-3">
-          <BotonPrincipal onClick={() => void publicar()} ocupado={guardado === 'publicando'} icono={Upload}>
-            Publicar cambios
-          </BotonPrincipal>
-          <BotonSecundario onClick={guardarBorrador} ocupado={guardado === 'borrador'} icono={Save}>
+          <BotonPrincipal onClick={guardarBorrador} ocupado={guardado === 'borrador'} icono={Save}>
             Guardar borrador
-          </BotonSecundario>
+          </BotonPrincipal>
           <BotonSecundario onClick={descargarJson} icono={Download}>
             Descargar JSON
           </BotonSecundario>
@@ -548,12 +499,10 @@ export default function PanelEditar() {
             Restaurar publicada
           </BotonSecundario>
         </div>
-        {!token && (
-          <p className="mt-3 text-[11px] leading-relaxed text-[#8a7d67]">
-            Sin conexión de GitHub podés guardar el borrador y enviarnos los cambios por WhatsApp o descargar el JSON:
-            lo publicamos por vos. Con la conexión activa, «Publicar cambios» hace el commit solo.
-          </p>
-        )}
+        <p className="mt-3 text-[11px] leading-relaxed text-[#8a7d67]">
+          Los cambios se guardan como borrador en este navegador. Para publicarlos, envianoslos por WhatsApp o
+          descargá el JSON y enviaselo al estudio: los publicamos por vos y el enlace se actualiza solo (≈2-3 minutos).
+        </p>
       </Tarjeta>
     </div>
   );

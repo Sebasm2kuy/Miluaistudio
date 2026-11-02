@@ -118,7 +118,7 @@ export default function PanelResumen() {
               <p className="mt-3 text-xs leading-relaxed text-[#b3a68f]">
                 {publicada
                   ? `Última actualización: ${fechaCorta(invitacion?.actualizadoEn || '')}. Cada cambio publicado se refleja en el enlace en ≈2-3 minutos.`
-                  : 'Tu invitación todavía no fue publicada. Cargá los datos desde «Mi invitación» y publicala (necesitás la conexión del estudio), o escribinos y lo hacemos por vos.'}
+                  : 'Tu invitación todavía no fue publicada. Cargá los datos desde «Mi invitación» y envianoslos (WhatsApp o JSON): los publicamos por vos.'}
               </p>
             </Tarjeta>
 

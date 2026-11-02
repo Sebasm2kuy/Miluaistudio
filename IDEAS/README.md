@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 038 — Panel de cliente sin token de GitHub: tarjeta de conexión eliminada de las 3 pestañas, panel de solo lectura (02-11-2026)](./ITERACION-2026-11-02-038-PANEL-CLIENTE-SIN-TOKEN.md)
 - [Iteración 037 — Registro automático ACTIVADO: ENDPOINT_REGISTRO con el Web App verificado en vivo (fail-closed comprobado), guarda de test coherente (02-11-2026)](./ITERACION-2026-11-02-037-ACTIVAR-REGISTRO-AUTO.md)
 
 - [Iteración 036 — Registro automático de clientes con Google (sin aprobación manual): backend registro_cliente + frontend fail-safe (02-11-2026)](./ITERACION-2026-11-02-036-REGISTRO-AUTOMATICO.md)

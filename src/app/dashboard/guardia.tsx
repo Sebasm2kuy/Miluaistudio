@@ -7,8 +7,8 @@
 // servidor: la protección de /dashboard/* es client-side. Esta
 // guardia lee la sesión (sessionStorage, expira en 8 h) y redirige
 // a /acceso/ si no hay sesión válida. La superficie de riesgo es
-// baja por diseño: sin sesión solo se ven esqueletos; toda escritura
-// real exige el token de GitHub de la conexión del panel.
+// baja por diseño: sin sesión solo se ven esqueletos; el panel es de
+// solo lectura para el cliente (sin token ni escrituras directas, 038).
 // ============================================================
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
