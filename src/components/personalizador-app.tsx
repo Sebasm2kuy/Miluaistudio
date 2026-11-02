@@ -845,7 +845,7 @@ export default function PersonalizadorApp() {
                 desde la iteración 032; el camino personalización → editor se
                 conserva en los botones «Editar tocando la invitación». */}
             <a href="/acceso/" className="underline decoration-white/30 underline-offset-2 transition hover:text-white">
-              Acceso clientes
+              Panel de clientes
             </a>
           </span>
           <span>© {new Date().getFullYear()} Lumen Gala · Uruguay</span>

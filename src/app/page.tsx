@@ -458,7 +458,7 @@ export default function Home() {
                   sin enlace público desde la iteración 032 (ruta directa vigente). */}
               {/* Panel privado de clientes: gestionan su invitación publicada
                   (estado, datos del evento y confirmaciones) tras iniciar sesión. */}
-              <a href="/acceso/" className="transition hover:text-white">Acceso clientes</a>
+              <a href="/acceso/" className="transition hover:text-white">Panel de clientes</a>
             </div>
           </div>
           <p className="mt-8 text-[#a1988a]">© {new Date().getFullYear()} Lumen Gala Studio</p>
