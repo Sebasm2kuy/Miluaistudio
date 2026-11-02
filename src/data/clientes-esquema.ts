@@ -2,10 +2,15 @@
 // ESQUEMA DE CUENTAS DE CLIENTE — content/clientes.json
 // ------------------------------------------------------------
 // Fuente de verdad de las cuentas que acceden al panel de cliente
-// (/dashboard). El alta NO es auto-servicio: el estudio crea cada
-// cuenta con scripts/alta-cliente.mjs (que genera el hash PBKDF2
-// con el mismo formato) y commitea el archivo. La web NUNCA
-// escribe este archivo: solo lo lee (login, /acceso).
+// (/dashboard). Dos caminos de alta:
+//  - El estudio crea cada cuenta con scripts/alta-cliente.mjs
+//    (hash PBKDF2 con el mismo formato) y commitea el archivo.
+//  - Registro automático (iteración 036): el backend de Google Apps
+//    Script (google-apps-script/gallery-server.gs, acción
+//    registro_cliente) commitea la cuenta tras verificar el id_token
+//    de Google contra tokeninfo (audiencia, vigencia, email
+//    verificado). El navegador NUNCA escribe este archivo: solo lo
+//    lee (login, /acceso).
 //
 // Seguridad:
 //  - Las contraseñas nunca viajan ni se guardan en claro: el hash

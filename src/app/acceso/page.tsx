@@ -4,27 +4,35 @@
 // /acceso — Login del panel de cliente (estética de alta gama:
 // fondo charcoal, acentos dorados).
 // ------------------------------------------------------------
-// Dos vías de ingreso (iteración 034):
+// Dos vías de ingreso:
 //  1. «Continuar con Google» (si hay GOOGLE_CLIENT_ID en
 //     src/data/acceso-google.ts): identidad del widget oficial de
-//     Google Identity Services; entra el email que ya existe como
-//     cuenta en content/clientes.json. Si el email no tiene panel,
-//     se ofrece WhatsApp (el alta sigue siendo del estudio).
+//     Google Identity Services, contra content/clientes.json
+//     (lectura anónima del repo).
+//     - Email con cuenta → entra directo.
+//     - Email ajeno y ENDPOINT_REGISTRO activo (src/data/registro-auto.ts):
+//       REGISTRO AUTOMÁTICO (iteración 036) — el backend de Apps Script
+//       verifica la credencial con Google y commitea la cuenta nueva en
+//       content/clientes.json sin aprobación manual; acá se abre la sesión
+//       y entra al panel. Si el registro falla, queda el fallback de
+//       WhatsApp con el mensaje prellenado.
+//     - Email ajeno sin endpoint → aviso «sin panel asignado» + WhatsApp
+//       (comportamiento de 034).
 //  2. Email + contraseña (PBKDF2 en el navegador, WebCrypto),
 //     contra content/clientes.json (lectura anónima del repo).
 // Al ingresar crea la sesión (sessionStorage, 8 h) y entra a /dashboard.
-// El alta de cuentas NO es auto-servicio: la hace el estudio
-// (scripts/alta-cliente.mjs); acá solo se ofrece WhatsApp.
 // ============================================================
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Lock, Mail, MessageCircle, ShieldCheck } from 'lucide-react';
 import { RUTA_CLIENTES, type ColeccionClientes } from '@/data/clientes-esquema';
-import { iniciarSesion, iniciarSesionGoogle, decodificarPayloadJwt } from '@/lib/auth-cliente';
+import { iniciarSesion, iniciarSesionGoogle, abrirSesionCliente, decodificarPayloadJwt } from '@/lib/auth-cliente';
+import { registrarClienteGoogle } from '@/lib/registro-cliente';
 import { leerJSON } from '@/lib/github-db';
 import { whatsappLink } from '@/data/contacto';
 import { GOOGLE_CLIENT_ID } from '@/data/acceso-google';
+import { ENDPOINT_REGISTRO } from '@/data/registro-auto';
 
 type Estado = 'idle' | 'verificando' | 'ingresando';
 
@@ -65,6 +73,7 @@ export default function PaginaAcceso() {
   const [googleListo, setGoogleListo] = useState(false);
   const [googleFallado, setGoogleFallado] = useState(false);
   const [googleOcupado, setGoogleOcupado] = useState(false);
+  const [registrando, setRegistrando] = useState(false); // alta automática en curso
   const [errorGoogle, setErrorGoogle] = useState('');
   const [sinCuenta, setSinCuenta] = useState<{ email: string; nombre: string } | null>(null);
   const contenedorGoogle = useRef<HTMLDivElement>(null);
@@ -106,6 +115,34 @@ export default function PaginaAcceso() {
         return;
       }
       if (resultado.motivo === 'sin-cuenta') {
+        // Registro automático (iteración 036): el backend verifica la
+        // credencial con Google y crea la cuenta en content/clientes.json.
+        if (ENDPOINT_REGISTRO) {
+          setRegistrando(true);
+          const registro = await registrarClienteGoogle(credencial, { endpoint: ENDPOINT_REGISTRO });
+          setRegistrando(false);
+          if (registro.ok) {
+            // Defensa en profundidad: la cuenta creada debe ser la del email
+            // de la credencial que entregó el widget de Google.
+            const mismoEmail = registro.email.trim().toLowerCase() === identidad.email.trim().toLowerCase();
+            if (mismoEmail) {
+              const apertura = abrirSesionCliente(registro.email, registro.nombre, registro.slug);
+              if (apertura.ok) {
+                router.replace('/dashboard/');
+                return;
+              }
+              setErrorGoogle('Tu cuenta se creó pero no se pudo abrir el panel. Probá de nuevo en unos segundos.');
+              return;
+            }
+            setErrorGoogle('El registro no coincide con tu email de Google. Probá de nuevo.');
+            return;
+          }
+          if (registro.motivo !== 'sin-endpoint') {
+            setErrorGoogle(registro.mensaje);
+            return;
+          }
+          // sin-endpoint: configuración pendiente → fallback de WhatsApp.
+        }
         setSinCuenta({ email: identidad.email.trim(), nombre: identidad.nombre.trim() });
         return;
       }
@@ -220,7 +257,7 @@ export default function PaginaAcceso() {
             <div ref={contenedorGoogle} className="flex justify-center" />
             {googleOcupado && (
               <p className="mt-3 flex items-center justify-center gap-2 text-xs text-[#b3a68f]" role="status">
-                <Loader2 size={14} className="animate-spin" /> Verificando tu identidad de Google…
+                <Loader2 size={14} className="animate-spin" /> {registrando ? 'Creando tu acceso…' : 'Verificando tu identidad de Google…'}
               </p>
             )}
             {errorGoogle && (
@@ -323,7 +360,9 @@ export default function PaginaAcceso() {
           </button>
 
           <p className="mt-4 text-center text-[11px] leading-relaxed text-[#8a7d67]">
-            Acceso exclusivo para clientes con invitación en producción.
+            {ENDPOINT_REGISTRO
+              ? 'Con Google entrás siempre: si es tu primera vez, tu panel se crea automáticamente.'
+              : 'Acceso exclusivo para clientes con invitación en producción.'}
           </p>
         </form>
 
