@@ -66,6 +66,14 @@ id_token → entrada al panel) exige un navegador con una sesión real de Google
 y el origen `https://lumengala.site` autorizado en Google Cloud; la lógica del
 callback está cubierta por los 9 tests unitarios de `tests/auth-google.test.ts`.
 
+**Nota adicional (consola de Google):** GSI puede registrar en consola
+«initialize() is called multiple times» aunque el sitio lo llame UNA sola vez:
+se reprodujo en una página mínima sin React con una única llamada, por lo que
+es un aviso interno del propio script de Google (sin efecto: solo hay una
+instancia). Aun así, la iteración añade un guardia a nivel de módulo
+(`widgetGoogleYaIniciado`) para que las re-ejecuciones del efecto (useRouter()
+cambia de identidad tras hidratar) nunca dupliquen la inicialización.
+
 ## Para el estudio (única verificación manual restante)
 
 Abrir `https://lumengala.site/acceso/`, hacer clic en «Continuar con Google»:

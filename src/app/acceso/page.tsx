@@ -48,6 +48,11 @@ declare global {
 
 const ID_SCRIPT_GOOGLE = 'lgs-gsi-script';
 
+// El widget se inicializa UNA sola vez por carga de página: useRouter() cambia
+// de identidad tras hidratar y re-ejecuta el efecto; sin este guardia, Google
+// avisaría «initialize() is called multiple times» en la consola.
+let widgetGoogleYaIniciado = false;
+
 export default function PaginaAcceso() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -122,7 +127,8 @@ export default function PaginaAcceso() {
     const iniciarWidget = () => {
       const api = window.google?.accounts?.id;
       const destino = contenedorGoogle.current;
-      if (!api || !destino) return;
+      if (!api || !destino || widgetGoogleYaIniciado) return;
+      widgetGoogleYaIniciado = true;
       try {
         api.initialize({
           client_id: GOOGLE_CLIENT_ID,
