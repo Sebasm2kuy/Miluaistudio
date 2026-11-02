@@ -553,3 +553,14 @@ Stage Summary:
 **Pruebas:** 203/203 tests (+1 render liviano), lint 0, typecheck 0, build + verify-export (§7 nueva + §8b favicon + §11 SEO) + verify-privacy OK. E2E agent-browser: escritorio 1280×800 (texto izq/collage der), móvil 360/390/320 (H1+CTA en pliegue, sin overflow), carrusel (flecha/teclado/punto/borde avanzan; pausa de 6,5 s verificada: contador fijo 6 s y reanuda), catálogo 6 testimonios/0 estrellas/6 etiquetas, demo noindex+sin canonical, personalizador→botón /editar/ presente, /editar/ directo noindex+sin canonical+sin tokens, login demo→dashboard con la Contents API mockeada (rate limit anónimo del sandbox: 60/h por IP agotado; sesión + resumen + confirmaciones con filtros/stats/CSV + editor del evento 23 campos; consola limpia). Honestidad: sin teléfono físico; prefers-reduced-motion por lógica+tests (no emulable acá); lectura real de clientes.json en producción no reproducible desde esta IP.
 
 **Docs:** IDEAS/ITERACION-2026-10-31-032B-CORRECCIONES-DEFINITIVAS-LGS.md + índice README.
+
+---
+## Iteración 032C — Cierre a producción de 032B + verificación del Web App de RSVP (feat/correcciones-032)
+
+**Pedido:** el estudio reportó la URL del Web App de Apps Script como «verificada y activa» y pidió push → PR → merge para activar el registro automático de confirmaciones (RSVP → planilla + espejo al panel).
+
+**Verificación del Web App (pasos 2 y 4 de docs/PRUEBA-MANUAL-RSVP.md, datos 100% ficticios, sin slug):** POST válido y POST inválido devuelven AMBOS HTTP 404 con la página de error de Google Drive («el archivo solicitado no existe»), idéntica a la de un control con ID inventado; GET directo también 404. Conclusión: la implementación no existe o fue eliminada (o la URL copiada no es la de la implementación vigente). **NO se configuró `rsvp.googleSheetUrl` en las invitaciones publicadas**: con esa URL el frontend respondería «pendiente» siempre (garantía anti-falso-éxito: nunca se afirma un guardado sin `success:true` verificable). Activación pendiente de una implementación que responda al contrato; receta lista: Implementar → Nueva implementación → acceso «Cualquier persona» → copiar la URL `/exec` vigente → re-probar pasos 2-4 → configurar `rsvp.googleSheetUrl` + `rsvp.slugInvitacion` en los JSON de `content/invitaciones/` (2 campos por invitación) → PR.
+
+**Cambios en el repo:** tabla de resultados de docs/PRUEBA-MANUAL-RSVP.md con el desvío registrado (sin pegar la URL, según la regla del propio documento) y esta entrada. Sin cambios de código: la activación queda bloqueada hasta tener una URL que responda `{"success":true}`.
+
+**Pruebas:** 203/203 tests, lint 0, typecheck 0, build + verify-export (favicon LGS md5 8c83d462…, canonicals noindex correctos, sitemap 3 comerciales) + verify-privacy OK. Ciclo git: push de feat/correcciones-032 (commits 032B + 032C) → PR → merge a main → deploy Pages; verificación de producción reportada al estudio tras el merge.
