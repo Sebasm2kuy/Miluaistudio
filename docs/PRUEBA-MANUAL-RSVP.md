@@ -72,10 +72,25 @@ correcta.
 
 | Fecha | Paso | Resultado | Ejecutado por |
 |-------|------|-----------|---------------|
-| — | 2. POST válido | PENDIENTE | — |
-| — | 3. Fila en la hoja | PENDIENTE | — |
-| — | 4. POST inválido | PENDIENTE | — |
+| 2026-11-02 | 2. POST válido | DESVÍO: HTTP 404 de Google (página «el archivo solicitado no existe» de Drive), sin JSON de contrato. La URL reportada como activa no corresponde a ninguna implementación vigente. | Z.AI (agente) |
+| 2026-11-02 | 3. Fila en la hoja | No verificable: el POST nunca alcanzó el contrato (404). | Z.AI (agente) |
+| 2026-11-02 | 4. POST inválido | DESVÍO: el mismo 404. Control adicional: un ID inventado devuelve la MISMA página de error → la URL está inactiva; no es un problema del contrato ni del envío. | Z.AI (agente) |
 | — | 5. UI con datos ficticios | PENDIENTE | — |
+
+> **2026-11-02 — decisión:** mientras el Web App no responda JSON del contrato,
+> NO se configura `rsvp.googleSheetUrl` en ninguna invitación publicada ni se
+> activa `ENDPOINT_REGISTRO` (src/data/registro-auto.ts, iteración 036 — el
+> mismo backend de Apps Script sirve ambas acciones): el frontend mostraría
+> «pendiente» siempre y cada registro esperaría el timeout (correctamente:
+> nunca se afirma un guardado sin respuesta verificable). Reactivar el flujo
+> exige crear la implementación (Implementar → **Nueva implementación**,
+> acceso **«Cualquier persona»**, con el `.gs` actual y las Propiedades del
+> script), copiar la URL `/exec` VIGENTE de esa implementación, probarla en el
+> navegador (no debe abrir el 404 de Drive) y re-ejecutar los pasos 2-4 de
+> esta tabla; recién entonces configurar `rsvp.googleSheetUrl` +
+> `rsvp.slugInvitacion` en los JSON de `content/invitaciones/` y/o pegar la
+> URL en `ENDPOINT_REGISTRO`. Verificación segura sin crear datos: POST
+> `registro_cliente` con credencial inválida → `{"success":false,...}`.
 
 Criterio de cierre: los 4 pasos completados con los resultados esperados y
 anotados acá. Cualquier desvío (respuesta HTML sin JSON, `ok:true` en vez de

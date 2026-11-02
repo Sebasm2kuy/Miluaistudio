@@ -553,3 +553,18 @@ Stage Summary:
 **Pruebas:** 203/203 tests (+1 render liviano), lint 0, typecheck 0, build + verify-export (§7 nueva + §8b favicon + §11 SEO) + verify-privacy OK. E2E agent-browser: escritorio 1280×800 (texto izq/collage der), móvil 360/390/320 (H1+CTA en pliegue, sin overflow), carrusel (flecha/teclado/punto/borde avanzan; pausa de 6,5 s verificada: contador fijo 6 s y reanuda), catálogo 6 testimonios/0 estrellas/6 etiquetas, demo noindex+sin canonical, personalizador→botón /editar/ presente, /editar/ directo noindex+sin canonical+sin tokens, login demo→dashboard con la Contents API mockeada (rate limit anónimo del sandbox: 60/h por IP agotado; sesión + resumen + confirmaciones con filtros/stats/CSV + editor del evento 23 campos; consola limpia). Honestidad: sin teléfono físico; prefers-reduced-motion por lógica+tests (no emulable acá); lectura real de clientes.json en producción no reproducible desde esta IP.
 
 **Docs:** IDEAS/ITERACION-2026-10-31-032B-CORRECCIONES-DEFINITIVAS-LGS.md + índice README.
+
+---
+## Iteración 032C — verificación del Web App reportado por el estudio: 404 (feat/correcciones-032)
+
+**Pedido:** el estudio reportó la URL del Web App de Apps Script como «verificada y activa» y pidió push → PR → merge para activar el registro automático (clientes con Google, iteración 036) — y por la misma vía el espejo de RSVP a la planilla.
+
+**Contexto de la sesión:** la iteración 032B ya estaba fusionada a main y desplegada a producción (deploy de las 11:42 UTC de hoy, junto con 035b y 036). Lo pendiente de activación era únicamente `ENDPOINT_REGISTRO` (src/data/registro-auto.ts, vacío por diseño) y, si se quería el espejo de RSVP, `rsvp.googleSheetUrl` en los JSON publicados. Este PR lleva solo el registro honesto de la verificación.
+
+**Verificación de la URL reportada (datos 100% ficticios, sin slug):** tres pruebas, todas **HTTP 404 con la página de error de Google Drive** («el archivo solicitado no existe»), idéntica a la de un control con ID inventado: (1) POST `rsvp_grupo` válido según contrato; (2) POST `rsvp_grupo` inválido; (3) POST `registro_cliente` con credencial inválida (en una implementación viva debe responder `{"success":false,...}` sin crear nada). GET directo también 404. Conclusión: la implementación no existe o fue eliminada, o la URL copiada no es la de la implementación vigente (un ID con caracteres perdidos al copiar/pegar produce exactamente este 404).
+
+**Decisión:** NO se activó `ENDPOINT_REGISTRO` ni `rsvp.googleSheetUrl`: con una URL muerta cada registro/confirmación esperaría el timeout (~15 s) y caería al fallback — peor que el comportamiento actual y contrario a la garantía anti-falso-éxito. **Activación lista para 1 minuto** cuando haya URL viva: (1) en Apps Script, Implementar → Nueva implementación → Aplicación web, «Cualquier persona», con el `.gs` actual de este repo y las Propiedades del script (GITHUB_TOKEN + GOOGLE_CLIENT_ID); (2) copiar la URL `/exec` de ESA implementación; (3) probarla en el navegador (debe abrir algo, no el 404 de Drive); (4) pegarla en `ENDPOINT_REGISTRO` (y opcionalmente en `rsvp.googleSheetUrl` de los JSON publicados) → PR. La verificación segura sin crear datos: POST `registro_cliente` con credencial inválida → `{"success":false,...}`.
+
+**Cambios en el repo:** tabla de resultados de docs/PRUEBA-MANUAL-RSVP.md con el desvío (sin pegar la URL, según la regla del propio documento) y esta entrada. Sin cambios de código.
+
+**Pruebas:** 203/203 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK (sobre el árbol con 035b+036 fusionados). Ciclo git: push de feat/correcciones-032 → PR #41 → merge → deploy Pages.
