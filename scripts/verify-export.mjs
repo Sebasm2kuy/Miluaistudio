@@ -355,6 +355,9 @@ const RUTAS_INTERNAS_SIN_CANONICAL = [
   'dashboard/index.html',
   'dashboard/editar/index.html',
   'dashboard/confirmaciones/index.html',
+  // Panel del estudio (métricas de administración, iteración 042):
+  // publicado pero noindex y SIN canonical heredado, igual que /dashboard/.
+  'estudio/index.html',
 ];
 for (const rel of RUTAS_INTERNAS_SIN_CANONICAL) {
   const file = join(OUT, rel);

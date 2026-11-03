@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Alex_Brush, Cormorant_Garamond, Dancing_Script, Playfair_Display, Montserrat } from "next/font/google";
+import RegistroVisitas from "@/components/registro-visitas";
 import "./globals.css";
 
 const alexBrush = Alex_Brush({
@@ -173,6 +174,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_NEGOCIO) }}
         />
         {children}
+        {/* Métricas anónimas de tráfico (042): invisible, solo páginas públicas. */}
+        <RegistroVisitas />
       </body>
     </html>
   );

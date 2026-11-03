@@ -51,6 +51,7 @@ export const SLUGS_RESERVADOS: ReadonlySet<string> = new Set([
   'rsvps',
   'sitemap',
   'uploads',
+  'estudio',
   '_next',
 ]);
 
