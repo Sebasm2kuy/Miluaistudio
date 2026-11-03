@@ -431,7 +431,7 @@ export default function PaginaEstudio() {
             />
           }
           avisoRango={
-            periodo === 'personalizado' && !rango ? (
+            periodo === 'personalizado' && !rango && (desde || hasta) ? (
               <p className="mt-3 text-xs text-[#8c2f1d]" role="alert">
                 Rango inválido: revisá las fechas (el final no puede ser anterior al inicio ni futuro).
               </p>
