@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 041 — Panel claro de la web + post-login a la portada: paleta auditada en /dashboard/* y «Volver a la web» primario (03-11-2026)](./ITERACION-2026-11-03-041-PANEL-CLARO-POST-LOGIN-PORTADA.md)
 - [Iteración 040 — Botón de sesión dinámico en la nav pública: «Iniciar sesión» sin sesión, el nombre del cliente con sesión (02-11-2026)](./ITERACION-2026-11-02-040-BOTON-SESION-DINAMICO.md)
 - [Iteración 039 — «Panel de clientes» + «Volver a la web»: renombre en toda la nav pública y enlace en la barra del panel que conserva la sesión (02-11-2026)](./ITERACION-2026-11-02-039-PANEL-DE-CLIENTES-VOLVER-A-LA-WEB.md)
 - [Iteración 038 — Panel de cliente sin token de GitHub: tarjeta de conexión eliminada de las 3 pestañas, panel de solo lectura (02-11-2026)](./ITERACION-2026-11-02-038-PANEL-CLIENTE-SIN-TOKEN.md)
