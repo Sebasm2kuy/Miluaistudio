@@ -15,6 +15,7 @@ Este directorio guarda las ideas, decisiones, oportunidades, hipótesis y próxi
 
 ## Registro
 
+- [Iteración 043 — Acceso directo «Panel del estudio» desde el panel de cliente: visible solo para la sesión del estudio (03-11-2026)](./ITERACION-2026-11-03-043-ACCESO-ESTUDIO-PANEL.md)
 - [Iteración 042 — Panel del estudio `/estudio/`: métricas y administración con Google](ITERACION-2026-11-03-042-PANEL-ESTUDIO.md)
 - [Iteración 041 — Panel claro de la web + post-login a la portada: paleta auditada en /dashboard/* y «Volver a la web» primario (03-11-2026)](./ITERACION-2026-11-03-041-PANEL-CLARO-POST-LOGIN-PORTADA.md)
 - [Iteración 040 — Botón de sesión dinámico en la nav pública: «Iniciar sesión» sin sesión, el nombre del cliente con sesión (02-11-2026)](./ITERACION-2026-11-02-040-BOTON-SESION-DINAMICO.md)
