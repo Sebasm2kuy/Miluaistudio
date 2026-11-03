@@ -84,8 +84,8 @@ export default function PanelResumen() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl text-[#f0e8da]">Hola, {sesion.nombre}</h1>
-          <p className="mt-1 text-xs text-[#b3a68f]">Así está tu invitación hoy.</p>
+          <h1 className="font-serif text-2xl text-[#292522]">Hola, {sesion.nombre}</h1>
+          <p className="mt-1 text-xs text-[#716a63]">Así está tu invitación hoy.</p>
         </div>
         <BotonSecundario onClick={() => void cargar()} ocupado={estado === 'cargando'} icono={RefreshCw}>
           Actualizar
@@ -115,7 +115,7 @@ export default function PanelResumen() {
                   <Insignia tono="alerta">Sin publicar</Insignia>
                 )}
               </div>
-              <p className="mt-3 text-xs leading-relaxed text-[#b3a68f]">
+              <p className="mt-3 text-xs leading-relaxed text-[#716a63]">
                 {publicada
                   ? `Última actualización: ${fechaCorta(invitacion?.actualizadoEn || '')}. Cada cambio publicado se refleja en el enlace en ≈2-3 minutos.`
                   : 'Tu invitación todavía no fue publicada. Cargá los datos desde «Mi invitación» y envianoslos (WhatsApp o JSON): los publicamos por vos.'}
@@ -125,7 +125,7 @@ export default function PanelResumen() {
             {/* Enlace para compartir */}
             <Tarjeta>
               <TituloSeccion>Tu enlace</TituloSeccion>
-              <p className="mt-3 break-all rounded-xl border border-[#3a3226] bg-[#262017] px-3 py-2 font-mono text-[11px] text-[#d4b465]">
+              <p className="mt-3 break-all rounded-xl border border-[#e8e0d7] bg-[#faf8f4] px-3 py-2 font-mono text-[11px] text-[#8a6534]">
                 {enlace.replace('https://', '')}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -137,12 +137,12 @@ export default function PanelResumen() {
                     href={enlace}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#3a3226] px-4 py-2.5 text-sm font-medium text-[#d8cbb2] transition hover:border-[#57503f] hover:bg-[#262017]"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#e8e0d7] px-4 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2]"
                   >
                     <Eye size={15} /> Abrir
                   </a>
                 ) : (
-                  <span className="inline-flex items-center gap-2 rounded-xl border border-[#3a3226] px-4 py-2.5 text-sm text-[#6f6552]" title="Disponible al publicar">
+                  <span className="inline-flex items-center gap-2 rounded-xl border border-[#e8e0d7] px-4 py-2.5 text-sm text-[#787168]" title="Disponible al publicar">
                     <ExternalLink size={15} /> Abrir
                   </span>
                 )}
@@ -154,21 +154,21 @@ export default function PanelResumen() {
               <TituloSeccion>Tu evento</TituloSeccion>
               {fechaEvento ? (
                 <>
-                  <p className="mt-3 flex items-center gap-2 text-sm text-[#f0e8da]">
-                    <CalendarDays size={16} className="text-[#d4b465]" />
+                  <p className="mt-3 flex items-center gap-2 text-sm text-[#292522]">
+                    <CalendarDays size={16} className="text-[#8a6534]" />
                     {fechaEvento.toLocaleDateString('es-UY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
-                  <p className="mt-1 text-xs text-[#b3a68f]">
+                  <p className="mt-1 text-xs text-[#716a63]">
                     {fechaEvento.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' })} hs
                     {diasRestantes !== null && diasRestantes >= 0 && ` · faltan ${diasRestantes} día${diasRestantes === 1 ? '' : 's'}`}
                   </p>
-                  <p className="mt-2 text-xs text-[#8a7d67]">
+                  <p className="mt-2 text-xs text-[#787168]">
                     {invitacion?.config.evento.lugar}
                     {invitacion?.config.evento.ubicacion ? `, ${invitacion.config.evento.ubicacion}` : ''}
                   </p>
                 </>
               ) : (
-                <p className="mt-3 text-xs text-[#b3a68f]">La fecha se muestra cuando la invitación esté publicada.</p>
+                <p className="mt-3 text-xs text-[#716a63]">La fecha se muestra cuando la invitación esté publicada.</p>
               )}
             </Tarjeta>
           </div>
@@ -179,7 +179,7 @@ export default function PanelResumen() {
               <TituloSeccion>Confirmaciones de asistencia</TituloSeccion>
               <Link
                 href="/dashboard/confirmaciones/"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-[#d4b465] underline decoration-[#d4b465]/30 underline-offset-4 transition hover:text-[#e2c67c]"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-[#8a6534] underline decoration-[#8a6534]/30 underline-offset-4 transition hover:text-[#6f5428]"
               >
                 <Users size={14} /> Ver la lista completa
               </Link>
@@ -191,9 +191,9 @@ export default function PanelResumen() {
                 { etiqueta: 'Asisten', valor: resumen.asisten },
                 { etiqueta: 'No asisten', valor: resumen.noAsisten },
               ].map(({ etiqueta, valor }) => (
-                <div key={etiqueta} className="rounded-xl border border-[#3a3226] bg-[#262017] px-3 py-3 text-center">
-                  <p className="font-serif text-2xl text-[#d4b465]">{valor}</p>
-                  <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-[#8a7d67]">{etiqueta}</p>
+                <div key={etiqueta} className="rounded-xl border border-[#e8e0d7] bg-[#faf8f4] px-3 py-3 text-center">
+                  <p className="font-serif text-2xl text-[#8a6534]">{valor}</p>
+                  <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-[#787168]">{etiqueta}</p>
                 </div>
               ))}
             </div>

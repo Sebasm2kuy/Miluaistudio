@@ -3,16 +3,17 @@
 // ============================================================
 // UI COMPARTIDA DEL PANEL DE CLIENTE (/dashboard)
 // ------------------------------------------------------------
-// Piezas modulares Tailwind con la línea gráfica de alta gama del
-// panel: superficies charcoal cálidas y acentos dorados. Contrastes
-// elegidos ≥ 4.5:1 (texto #f0e8da sobre #1d1810 ≈ 13:1; dorado de
-// botón #d4b465 con tinta #201a0e ≈ 9:1).
+// Piezas modulares Tailwind con la MISMA línea gráfica de la web
+// pública (041): superficies marfil/blanco cálidas, tinta #292522 y
+// acentos dorados auditados de src/data/store-tokens.ts (#8a6534).
+// Contrastes elegidos ≥ 4.5:1 (texto #292522 sobre blanco ≈ 15:1;
+// dorado #8a6534 sobre blanco = 4.97:1, medido en los tokens).
 // ============================================================
 
 import { Loader2, type LucideIcon } from 'lucide-react';
 import type { ChangeEvent, ReactNode } from 'react';
 
-/** Botón primario dorado con estado de carga integrado. */
+/** Botón primario con estado de carga integrado (tinta oscura, igual que los CTA de la web). */
 export function BotonPrincipal({
   children,
   onClick,
@@ -34,7 +35,7 @@ export function BotonPrincipal({
       type={tipo}
       onClick={onClick}
       disabled={bloqueado}
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#d4b465] px-4 py-2.5 text-sm font-semibold text-[#201a0e] transition hover:bg-[#e2c67c] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#26221d] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3d3830] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {ocupado ? <Loader2 size={15} className="animate-spin" /> : Icono ? <Icono size={15} /> : null}
       {children}
@@ -62,7 +63,7 @@ export function BotonSecundario({
       type="button"
       onClick={onClick}
       disabled={bloqueado}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#3a3226] bg-transparent px-4 py-2.5 text-sm font-medium text-[#d8cbb2] transition hover:border-[#57503f] hover:bg-[#262017] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#e8e0d7] bg-white px-4 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {ocupado ? <Loader2 size={15} className="animate-spin" /> : Icono ? <Icono size={15} /> : null}
       {children}
@@ -73,10 +74,10 @@ export function BotonSecundario({
 type TonoAviso = 'ok' | 'error' | 'info' | 'alerta';
 
 const TONOS_AVISO: Record<TonoAviso, string> = {
-  ok: 'border-[#3f5b3f] bg-[#1c2b1c] text-[#bfe3bf]',
-  error: 'border-[#7a4034] bg-[#3a201a] text-[#f2b8ad]',
-  info: 'border-[#3a3226] bg-[#262017] text-[#d8cbb2]',
-  alerta: 'border-[#7a6434] bg-[#332a16] text-[#ecd9a0]',
+  ok: 'border-[#bcdcc1] bg-[#edf7ef] text-[#1e4620]',
+  error: 'border-[#efc3b7] bg-[#fcefec] text-[#8c2f1d]',
+  info: 'border-[#e8e0d7] bg-[#f6efe2] text-[#54483e]',
+  alerta: 'border-[#e7d3a2] bg-[#faf3e0] text-[#6b4e16]',
 };
 
 /** Banner de mensaje (éxito, error, información, advertencia). */
@@ -90,13 +91,13 @@ export function Aviso({ tono, children }: { tono: TonoAviso; children: ReactNode
 
 /** Bloque esquelético de carga. */
 export function Esqueleto({ className = '' }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-[#262017] ${className}`} aria-hidden="true" />;
+  return <div className={`animate-pulse rounded-xl bg-[#efe8dd] ${className}`} aria-hidden="true" />;
 }
 
 /** Tarjeta base del panel. */
 export function Tarjeta({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-2xl border border-[#3a3226] bg-[#1d1810] p-5 sm:p-6 ${className}`}>
+    <section className={`rounded-2xl border border-[#e8e0d7] bg-white p-5 shadow-[0_4px_16px_rgba(34,26,19,0.04)] sm:p-6 ${className}`}>
       {children}
     </section>
   );
@@ -104,7 +105,7 @@ export function Tarjeta({ children, className = '' }: { children: ReactNode; cla
 
 /** Título de sección dentro del panel. */
 export function TituloSeccion({ children }: { children: ReactNode }) {
-  return <h2 className="font-serif text-lg text-[#f0e8da]">{children}</h2>;
+  return <h2 className="font-serif text-lg text-[#292522]">{children}</h2>;
 }
 
 /** Campo de texto/textarea etiquetado con error de validación. */
@@ -134,13 +135,13 @@ export function CampoTexto({
   ayuda?: string;
 }) {
   const clases =
-    'w-full rounded-xl border bg-[#262017] px-3 py-2.5 text-sm text-[#f0e8da] placeholder-[#6f6552] outline-none transition focus:border-[#d4b465] ' +
-    (error ? 'border-[#7a4034]' : 'border-[#3a3226]');
+    'w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-[#292522] placeholder-[#787168] outline-none transition focus:border-[#8a6534] ' +
+    (error ? 'border-[#b42318]' : 'border-[#e8e0d7]');
   const alCambiarEvento = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => alCambiar(e.target.value);
 
   return (
     <div>
-      <label htmlFor={id} className="block text-xs font-medium text-[#b3a68f]">
+      <label htmlFor={id} className="block text-xs font-medium text-[#716a63]">
         {etiqueta}
       </label>
       {multilinea ? (
@@ -167,9 +168,9 @@ export function CampoTexto({
         />
       )}
       {error ? (
-        <p className="mt-1 text-[11px] text-[#f2b8ad]">{error}</p>
+        <p className="mt-1 text-[11px] text-[#b42318]">{error}</p>
       ) : ayuda ? (
-        <p className="mt-1 text-[11px] text-[#8a7d67]">{ayuda}</p>
+        <p className="mt-1 text-[11px] text-[#787168]">{ayuda}</p>
       ) : null}
     </div>
   );
@@ -179,8 +180,8 @@ export function CampoTexto({
 export function Insignia({ tono, children }: { tono: 'ok' | 'alerta'; children: ReactNode }) {
   const clases =
     tono === 'ok'
-      ? 'border-[#3f5b3f] bg-[#1c2b1c] text-[#bfe3bf]'
-      : 'border-[#7a6434] bg-[#332a16] text-[#ecd9a0]';
+      ? 'border-[#bcdcc1] bg-[#edf7ef] text-[#1e4620]'
+      : 'border-[#e7d3a2] bg-[#faf3e0] text-[#6b4e16]';
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold ${clases}`}>
       {children}

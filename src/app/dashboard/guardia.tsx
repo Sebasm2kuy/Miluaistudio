@@ -9,6 +9,9 @@
 // a /acceso/ si no hay sesión válida. La superficie de riesgo es
 // baja por diseño: sin sesión solo se ven esqueletos; el panel es de
 // solo lectura para el cliente (sin token ni escrituras directas, 038).
+// Cáscara con la MISMA paleta clara de la web pública (041) y el
+// «Volver a la web» como botón primario: el camino de vuelta es lo
+// primero que un cliente nuevo debe encontrar.
 // ============================================================
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
@@ -59,12 +62,12 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
 
   if (verificando) {
     return (
-      <div className="min-h-screen bg-[#131009] px-4 py-10 text-[#f0e8da]">
+      <div className="min-h-screen bg-[#faf8f4] px-4 py-10 text-[#292522]">
         <div className="mx-auto max-w-3xl">
           <Esqueleto className="h-10 w-56" />
           <Esqueleto className="mt-6 h-28" />
           <Esqueleto className="mt-4 h-40" />
-          <p className="mt-6 flex items-center gap-2 text-xs text-[#8a7d67]">
+          <p className="mt-6 flex items-center gap-2 text-xs text-[#787168]">
             <ShieldCheck size={14} /> Verificando tu sesión…
           </p>
         </div>
@@ -78,9 +81,9 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
 
   return (
     <ContextoSesion.Provider value={sesion}>
-      <div className="flex min-h-screen flex-col bg-[#131009] text-[#f0e8da]">
+      <div className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
         {/* Barra superior */}
-        <header className="sticky top-0 z-40 border-b border-[#3a3226] bg-[#131009]/95 backdrop-blur">
+        <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/90 backdrop-blur">
           <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
             <Link href="/dashboard/" className="flex items-center gap-2.5">
               <img
@@ -88,32 +91,36 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 alt=""
                 width={40}
                 height={40}
-                className="h-9 w-9 rounded-lg object-cover ring-1 ring-[#d4b465]/40"
+                className="h-9 w-9 rounded-lg object-cover ring-1 ring-[#dfc9a4]"
               />
               <span>
                 <span className="block font-serif text-sm tracking-[0.14em]">LUMEN GALA</span>
-                <span className="block text-[10px] uppercase tracking-[0.22em] text-[#8a7d67]">
+                <span className="block text-[10px] uppercase tracking-[0.22em] text-[#787168]">
                   Panel de cliente
                 </span>
               </span>
             </Link>
             <div className="flex items-center gap-2">
-              <span className="hidden text-xs text-[#b3a68f] sm:block">{sesion.nombre}</span>
-              {/* Volver a la web (039): enlace común, NO cierra la sesión —
-                  vive en sessionStorage de esta pestaña y sigue activa al
-                  regresar (por «Panel de clientes» o retroceso). */}
+              {/* Volver a la web (041): botón PRIMARIO, grande y primero —
+                  el camino de vuelta a la web es lo más importante para
+                  alguien que entra por primera vez. Enlace común: NO
+                  cierra la sesión (039), vive en sessionStorage de esta
+                  pestaña y sigue activa al regresar por el botón con el
+                  nombre (040). */}
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#3a3226] px-2.5 py-1.5 text-xs text-[#d8cbb2] transition hover:border-[#57503f] hover:bg-[#262017]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#26221d] px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3d3830] sm:px-5"
               >
-                <Globe size={13} /> Volver a la web
+                <Globe size={15} /> Volver a la web
               </Link>
+              <span className="hidden text-xs text-[#716a63] sm:block">{sesion.nombre}</span>
               <button
                 type="button"
                 onClick={salir}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[#3a3226] px-2.5 py-1.5 text-xs text-[#d8cbb2] transition hover:border-[#57503f] hover:bg-[#262017]"
+                aria-label="Salir"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-3 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
               >
-                <LogOut size={13} /> Salir
+                <LogOut size={15} /> <span className="hidden sm:inline">Salir</span>
               </button>
             </div>
           </div>
@@ -127,8 +134,8 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 aria-current={esActiva(href) ? 'page' : undefined}
                 className={`flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-xs font-medium transition ${
                   esActiva(href)
-                    ? 'border-[#d4b465] text-[#d4b465]'
-                    : 'border-transparent text-[#b3a68f] hover:text-[#f0e8da]'
+                    ? 'border-[#8a6534] text-[#8a6534]'
+                    : 'border-transparent text-[#716a63] hover:text-[#292522]'
                 }`}
               >
                 <Icono size={14} /> {etiqueta}
@@ -139,7 +146,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
 
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
 
-        <footer className="border-t border-[#3a3226] px-4 py-4 text-center text-[10px] text-[#8a7d67]">
+        <footer className="border-t border-[#e8e0d7] px-4 py-4 text-center text-[10px] text-[#787168]">
           Lumen Gala Studio · invitación “{sesion.slug}” · sesión con expiración automática
         </footer>
       </div>
