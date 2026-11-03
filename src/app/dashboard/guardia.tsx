@@ -94,7 +94,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 height={40}
                 className="h-9 w-9 rounded-lg object-cover ring-1 ring-[#dfc9a4]"
               />
-              <span>
+              <span className="hidden min-[520px]:block">
                 <span className="block font-serif text-sm tracking-[0.14em]">LUMEN GALA</span>
                 <span className="block text-[10px] uppercase tracking-[0.22em] text-[#787168]">
                   Panel de cliente
@@ -110,7 +110,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                   nombre (040). */}
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#26221d] px-3 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#3d3830] sm:px-5 sm:text-sm"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#26221d] px-2.5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d3830] sm:px-5 sm:text-sm"
               >
                 <Globe size={15} /> Volver a la web
               </Link>
@@ -140,7 +140,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 type="button"
                 onClick={salir}
                 aria-label="Salir"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-3 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-2 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
               >
                 <LogOut size={15} /> <span className="hidden sm:inline">Salir</span>
               </button>
