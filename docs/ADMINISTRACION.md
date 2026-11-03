@@ -6,6 +6,11 @@ el panel completo vive como herramienta local y la exportación de producción s
 verifica automáticamente (`scripts/verify-export.mjs` falla el build si `out/admin/`
 reaparece).
 
+> **Panel del estudio con métricas (`/estudio/`, iteración 042):** el sitio también
+> tiene un panel de administración de métricas y clientes, protegido con la cuenta
+> de Google del estudio y sin secretos ni escrituras. Su guía propia está en
+> **docs/METRICAS-ADMIN.md**. Esta documentación cubre las herramientas con token.
+
 El **editor móvil `/editar` SÍ se publica** (iteración 017): es la forma de editar la
 invitación desde el teléfono. Publica solo la interfaz, sin secretos ni datos: toda
 acción que toca el sitio real (cargar por slug, publicar, subir fotos) exige el token

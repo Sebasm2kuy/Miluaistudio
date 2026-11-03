@@ -85,6 +85,19 @@
  *  - Sin GITHUB_TOKEN o sin GOOGLE_CLIENT_ID el registro automático
  *    responde error y el sitio muestra el fallback de WhatsApp.
  *
+ * MÉTRICAS DEL SITIO (iteración 042 — panel del estudio /estudio/):
+ *  - POST { tipo: "registrar_visita", clase: "visita"|"latido", dia,
+ *    pagina, sesion, nuevaSesionDia, nuevoVisitante } → agrega una fila
+ *    ANÓNIMA a la pestaña "Metricas" de esta misma hoja (sin cookies, sin
+ *    IPs, sin datos personales: la sesión es un azar por pestaña). Sin
+ *    GITHUB_TOKEN también funciona: las métricas solo tocan la hoja.
+ *  - POST { tipo: "metricas_admin", credential } → verifica la credencial
+ *    con Google (tokeninfo: firma, audiencia, vigencia, email verificado)
+ *    y SOLO si el email es METRICAS_ADMIN_EMAIL devuelve las filas
+ *    { success: true, filas: [...] }. Cualquier otra cuenta: rechazo
+ *    fail-closed. La activación y la guía están en docs/METRICAS-ADMIN.md.
+ *  - GET ?action=metricas → ping de capacidades para el panel.
+ *
  * ============================================
  */
 
@@ -114,6 +127,10 @@ function doGet(e) {
       return handleRsvp(normalizarRsvpGet(e.parameter));
     }
 
+    if (action === 'metricas') {
+      return jsonResponse({ ok: true, message: 'Metricas backend activo' });
+    }
+
     return jsonResponse({ ok: true, message: 'RSVP backend activo' });
   } catch (error) {
     return jsonResponse({ success: false, error: error.message });
@@ -134,6 +151,14 @@ function doPost(e) {
 
     if (body && body.tipo === 'registro_cliente') {
       return handleRegistroCliente(body);
+    }
+
+    if (body && body.tipo === 'registrar_visita') {
+      return handleRegistrarVisita(body);
+    }
+
+    if (body && body.tipo === 'metricas_admin') {
+      return handleMetricasAdmin(body);
     }
 
     // Fallback al doGet si no es RSVP (permite ?action=rsvp por POST también)
@@ -672,3 +697,220 @@ function hashSoloGoogle() {
   };
   return 'pbkdf2-sha256$310000$' + azar(22) + '==$' + azar(43) + '=';
 }
+
+/**
+ * ============================================
+ * MÉTRICAS DEL SITIO (iteración 042) — panel del estudio /estudio/
+ * ============================================
+ *
+ * Dos acciones sobre la MISMA hoja de cálculo del backend (pestaña
+ * «Metricas»), sin GitHub y sin datos personales:
+ *
+ *  1. registrar_visita — público (como el RSVP). Cada fila es anónima:
+ *     epoch | clase(visita|latido) | dia(Montevideo) | pagina | sesion |
+ *     nuevaDia | nuevaVisitante. `sesion` es un azar por pestaña;
+ *     NO hay IPs, user agents, cookies ni identificadores persistentes.
+ *     Anti-abuso: validación estricta de forma + tope por sesión vía
+ *     CacheService (excedido → success:true SIN grabar: el navegador no
+ *     reintenta y el atacante no aprende nada).
+ *
+ *  2. metricas_admin — SOLO para la cuenta del estudio. Verifica la
+ *     credencial con Google (tokeninfo: firma, audiencia GOOGLE_CLIENT_ID,
+ *     vigencia, email verificado) y compara el email con
+ *     METRICAS_ADMIN_EMAIL. Solo entonces devuelve las filas recientes.
+ *     Cualquier otro email: rechazo explícito (fail-closed).
+ *
+ * La pestaña se crea sola en el primer registro; filas con más de
+ * METRICAS_DIAS_GUARDADO días se purgan en las consultas del admin
+ * (la hoja no crece sin límite).
+ */
+
+var METRICAS_SHEET_NAME = 'Metricas';
+var METRICAS_ADMIN_EMAIL = 'sebacabrera1982@gmail.com';
+var METRICAS_HEADERS = ['fecha (epoch ms)', 'clase', 'dia', 'pagina', 'sesion', 'nuevaDia', 'nuevaVisitante'];
+var METRICAS_DIAS_GUARDADO = 90;   // purga en consultas del admin
+var METRICAS_DIAS_ENTREGA = 45;    // ventana devuelta al panel
+var METRICAS_MAX_FILAS_RESPUESTA = 20000;
+var METRICAS_RL_VENTANA_MS = 10000; // ventana anti-abuso por sesión
+var METRICAS_RL_MAX = 5;            // registros por sesión en la ventana
+
+/** Día local de Montevideo (GMT-3 todo el año) para un instante en ms. */
+function diaMontevideoGas(ahoraMs) {
+  return new Date(ahoraMs - 3 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+/** Pestaña «Metricas» de la hoja existente (la crea si falta). */
+function getOrCreateMetricasSheet() {
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty('SPREADSHEET_ID');
+  if (!ssId) {
+    // Sin hoja previa (backend recién instalado): la crea como el RSVP.
+    var nueva = SpreadsheetApp.create(SPREADSHEET_NAME);
+    props.setProperty('SPREADSHEET_ID', nueva.getId());
+    ssId = nueva.getId();
+  }
+  var ss = SpreadsheetApp.openById(ssId);
+  var sheet = ss.getSheetByName(METRICAS_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(METRICAS_SHEET_NAME);
+    sheet.appendRow(METRICAS_HEADERS);
+    sheet.getRange(1, 1, 1, METRICAS_HEADERS.length).setFontWeight('bold').setBackground('#f4e4bc');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+/**
+ * Registro de visita o latido. Contrato con src/lib/metricas-visitas.ts:
+ *  - clase 'visita': una carga de página medible.
+ *  - clase 'latido': señal de pestaña visible cada 60 s (personas online).
+ * Siempre responde { success: true } salvo payload malformado
+ * ({ success: false, error }). Nunca lanza hacia el visitante.
+ */
+function handleRegistrarVisita(data) {
+  try {
+    var clase = String(data && data.clase || '');
+    if (clase !== 'visita' && clase !== 'latido') {
+      return jsonResponse({ success: false, error: 'Clase de registro inválida.' });
+    }
+
+    var sesion = String(data && data.sesion || '').trim();
+    if (!/^[A-Za-z0-9_-]{8,64}$/.test(sesion)) {
+      return jsonResponse({ success: false, error: 'Sesión inválida.' });
+    }
+
+    // Día del visitante (Montevideo): se acepta si tiene forma válida y
+    // está a ±2 días del día real (tolerancia de reloj/zona del navegador).
+    var ahoraMs = Date.now();
+    var dia = String(data && data.dia || '').trim();
+    var diaReal = diaMontevideoGas(ahoraMs);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dia) || Math.abs(Date.parse(dia + 'T00:00:00Z') - Date.parse(diaReal + 'T00:00:00Z')) > 2 * 86400000) {
+      dia = diaReal;
+    }
+
+    // Página solo en visitas; se recorta y se guarda el pathname limpio.
+    var pagina = '';
+    if (clase === 'visita') {
+      pagina = String(data && data.pagina || '').split('?')[0].slice(0, 120);
+      if (pagina && pagina.charAt(0) !== '/') pagina = '/' + pagina;
+      if (!pagina) pagina = '/';
+    }
+
+    // Anti-abuso por sesión (latidos legítimos ≈ 2 en la primera ventana,
+    // luego 1/min): excedido → respuesta OK sin grabar nada.
+    var cache = CacheService.getScriptCache();
+    var claveRl = 'metricas_rl_' + sesion;
+    var usados = parseInt(cache.get(claveRl) || '0', 10);
+    if (usados >= METRICAS_RL_MAX) {
+      return jsonResponse({ success: true, registrado: false });
+    }
+    cache.put(claveRl, String(usados + 1), METRICAS_RL_VENTANA_MS / 1000);
+
+    var nuevaDia = clase === 'visita' && (data.nuevaSesionDia === true || data.nuevaSesionDia === 1 || data.nuevaSesionDia === '1') ? 1 : 0;
+    var nuevaVisitante = clase === 'visita' && (data.nuevoVisitante === true || data.nuevoVisitante === 1 || data.nuevoVisitante === '1') ? 1 : 0;
+
+    getOrCreateMetricasSheet().appendRow([ahoraMs, clase, dia, pagina, sesion, nuevaDia, nuevaVisitante]);
+    return jsonResponse({ success: true, registrado: true });
+  } catch (error) {
+    // Fail-safe: un fallo de métricas NO debe romper nada del visitante.
+    console.warn('metricas-visita: ' + error.message);
+    return jsonResponse({ success: false, error: 'No se pudo registrar la visita.' });
+  }
+}
+
+/**
+ * Verifica la credencial con Google (tokeninfo) para las métricas del
+ * estudio: audiencia, vigencia, email verificado y email del estudio.
+ * Devuelve { ok: true, email } o { ok: false, error } (nunca lanza).
+ */
+function verificarCredencialMetricas(credencial) {
+  try {
+    var clientId = (PropertiesService.getScriptProperties().getProperty('GOOGLE_CLIENT_ID') || '').trim();
+    if (!clientId) return { ok: false, error: 'El backend no tiene GOOGLE_CLIENT_ID configurado.' };
+
+    var res = UrlFetchApp.fetch(
+      'https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(credencial),
+      { muteHttpExceptions: true }
+    );
+    if (res.getResponseCode() >= 300) {
+      return { ok: false, error: 'Credencial de Google inválida o vencida.' };
+    }
+    var claims = JSON.parse(res.getContentText());
+    if (String(claims.aud || '') !== clientId) {
+      return { ok: false, error: 'La credencial no corresponde a este sitio.' };
+    }
+    if ((parseInt(claims.exp, 10) || 0) * 1000 <= Date.now()) {
+      return { ok: false, error: 'La credencial de Google está vencida.' };
+    }
+    var verificado = claims.email_verified === true || String(claims.email_verified).toLowerCase() === 'true';
+    if (!verificado) {
+      return { ok: false, error: 'El email de la credencial no está verificado.' };
+    }
+    var email = String(claims.email || '').trim().toLowerCase();
+    if (email !== METRICAS_ADMIN_EMAIL) {
+      return { ok: false, error: 'Esta cuenta no está autorizada para las métricas del estudio.' };
+    }
+    return { ok: true, email: email };
+  } catch (e) {
+    return { ok: false, error: 'No se pudo verificar la credencial con Google.' };
+  }
+}
+
+/**
+ * Devuelve las filas de métricas recientes SOLO a la cuenta del estudio.
+ * Respuesta: { success: true, filas: [...], generadoEn } o { success: false, error }.
+ */
+function handleMetricasAdmin(data) {
+  try {
+    var credencial = String(data && data.credential || '').trim();
+    if (!credencial) {
+      return jsonResponse({ success: false, error: 'Falta la credencial de Google.' });
+    }
+    var verificacion = verificarCredencialMetricas(credencial);
+    if (!verificacion.ok) {
+      return jsonResponse({ success: false, error: verificacion.error });
+    }
+
+    var sheet = getOrCreateMetricasSheet();
+    var ultimaFila = sheet.getLastRow();
+    if (ultimaFila < 2) {
+      return jsonResponse({ success: true, filas: [], generadoEn: new Date().toISOString() });
+    }
+
+    var valores = sheet.getRange(2, 1, ultimaFila - 1, 7).getValues();
+    var limiteEntregaMs = Date.now() - METRICAS_DIAS_ENTREGA * 86400000;
+    var filas = [];
+    for (var i = 0; i < valores.length; i++) {
+      var fila = valores[i];
+      var epoch = Number(fila[0]);
+      if (!isFinite(epoch) || epoch < limiteEntregaMs) continue;
+      if (filas.length >= METRICAS_MAX_FILAS_RESPUESTA) break;
+      filas.push({
+        clase: String(fila[1]) === 'latido' ? 'latido' : 'visita',
+        fecha: new Date(epoch).toISOString(),
+        dia: String(fila[2] || ''),
+        pagina: String(fila[3] || ''),
+        sesion: String(fila[4] || ''),
+        nuevaSesionDia: Number(fila[5]) === 1,
+        nuevoVisitante: Number(fila[6]) === 1
+      });
+    }
+
+    // Purga de filas viejas (solo al consultar el admin, así la hoja no crece sin límite).
+    var limiteGuardadoMs = Date.now() - METRICAS_DIAS_GUARDADO * 86400000;
+    var viejas = 0;
+    for (var j = 0; j < valores.length; j++) {
+      if (Number(valores[j][0]) < limiteGuardadoMs) viejas++;
+      else break; // ordenadas por tiempo: al pasar el límite, el resto es reciente
+    }
+    if (viejas > 0) {
+      try { sheet.deleteRows(2, viejas); } catch (ePurga) { console.warn('metricas-purga: ' + ePurga.message); }
+    }
+
+    return jsonResponse({ success: true, filas: filas, generadoEn: new Date().toISOString() });
+  } catch (error) {
+    console.warn('metricas-admin: ' + error.message);
+    return jsonResponse({ success: false, error: 'Error al consultar las métricas: ' + error.message });
+  }
+}
+
