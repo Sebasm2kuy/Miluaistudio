@@ -1,6 +1,6 @@
 # Iteración 042 — Panel del estudio `/estudio/`: métricas y administración con Google
 
-**Fecha:** 2026-11-03 · **Estado:** implementación completa validada en local; push/deploy pendiente del PAT del propietario.
+**Fecha:** 2026-11-03 · **Estado:** publicado en producción (PR #49, merge `6deb15d3`, deploy Pages OK) y verificado con E2E en producción; el circuito de métricas queda a la espera de la activación manual del Web App por el propietario.
 
 ## Contexto
 
@@ -30,6 +30,10 @@ Restricción estructural del proyecto: el sitio es un export estático en GitHub
 - El aviso «Rango inválido» aparecía al elegir «Personalizado» con inputs vacíos → corregido: solo con al menos una fecha escrita.
 - El backend REAL en producción (versión vieja) respondió sin `success` al `metricas_admin` de prueba y el panel mostró el estado «todavía no tiene la acción de métricas»: la degradación honesta funciona contra infraestructura real.
 - El tracker en la portada disparó visita+latido al endpoint real sin escribir nada (el backend viejo lo ignora por diseño): migración sin riesgo.
+
+## Publicación y E2E en producción (2026-11-03)
+
+Push → PR #49 (escaneo anti-fugas del diff: 0 hallazgos) → merge `6deb15d3` → «Validate» y «Deploy to GitHub Pages» success → `pages build and deployment` success. Verificado en https://lumengala.site/estudio/ con navegador real: HTML 200 con noindex y cero datos del panel en el HTML estático; cero enlaces desde la web; puerta con GIS real; sesión de email NO admin inyectada → eliminada al leerla (fail-closed); con sesión del admin inyectada el panel abre: 2 cuentas reales con estados «Publicada»/«Sin publicar» correctos, buscador y filtros OK, banner honesto del backend viejo contra el Web App REAL, períodos y aviso de rango inválido (fix verificado), «Volver a la web» y «Salir» OK, tracker dispara visita+latido al endpoint real sin errores, `/i/ejemplo-quince/` sin regresiones, 0 errores de consola. Los datos de clientes se leyeron con `window.fetch` parcheado con contenido REAL de origin/main porque la cuota anónima de la Contents API de la IP de prueba estaba agotada (limitación ambiental, no del sitio).
 
 ## Riesgos / puntos por verificar (pendientes del propietario)
 
