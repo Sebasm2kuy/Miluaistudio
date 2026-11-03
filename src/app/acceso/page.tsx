@@ -1,8 +1,8 @@
 'use client';
 
 // ============================================================
-// /acceso — Login del panel de cliente (estética de alta gama:
-// fondo charcoal, acentos dorados).
+// /acceso — Login del panel de cliente (misma paleta clara de la web
+// pública: marfil, tinta #292522, acentos dorados auditados, 041).
 // ------------------------------------------------------------
 // Dos vías de ingreso:
 //  1. «Continuar con Google» (si hay GOOGLE_CLIENT_ID en
@@ -20,7 +20,9 @@
 //       (comportamiento de 034).
 //  2. Email + contraseña (PBKDF2 en el navegador, WebCrypto),
 //     contra content/clientes.json (lectura anónima del repo).
-// Al ingresar crea la sesión (sessionStorage, 8 h) y entra a /dashboard.
+// Al ingresar crea la sesión (sessionStorage, 8 h) y vuelve a la
+// portada (041): el botón con el nombre del cliente en la navbar (040)
+// es el camino al panel — quedarse en la web, no saltar al panel.
 // ============================================================
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
@@ -80,11 +82,11 @@ export default function PaginaAcceso() {
 
   const ocupado = estado !== 'idle' || googleOcupado;
 
-  // Sesión ya activa (p. ej. «Volver a la web» desde el panel y regreso por
-  // «Panel de clientes»): directo al panel, sin pedir el login de nuevo (039).
-  // Para cambiar de cuenta, «Salir» en el panel cierra la sesión.
+  // Sesión ya activa: a la portada (041), no al panel. El botón con el
+  // nombre de la navbar (040) lleva al panel sin pedir login; para
+  // cambiar de cuenta, «Salir» en el panel cierra la sesión.
   useEffect(() => {
-    if (leerSesion()) router.replace('/dashboard/');
+    if (leerSesion()) router.replace('/');
   }, [router]);
 
   const manejarCredencial = useCallback(
@@ -118,7 +120,7 @@ export default function PaginaAcceso() {
       setGoogleOcupado(false);
 
       if (resultado.ok) {
-        router.replace('/dashboard/');
+        router.replace('/');
         return;
       }
       if (resultado.motivo === 'sin-cuenta') {
@@ -135,7 +137,7 @@ export default function PaginaAcceso() {
             if (mismoEmail) {
               const apertura = abrirSesionCliente(registro.email, registro.nombre, registro.slug);
               if (apertura.ok) {
-                router.replace('/dashboard/');
+                router.replace('/');
                 return;
               }
               setErrorGoogle('Tu cuenta se creó pero no se pudo abrir el panel. Probá de nuevo en unos segundos.');
@@ -237,11 +239,11 @@ export default function PaginaAcceso() {
       return;
     }
 
-    router.replace('/dashboard/');
+    router.replace('/');
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#241d12_0%,#131009_55%,#0b0906_100%)] px-4 py-10 text-[#f0e8da]">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#ffffff_0%,#faf8f4_55%,#f3ead9_100%)] px-4 py-10 text-[#292522]">
       <main className="w-full max-w-sm">
         <div className="mb-8 text-center">
           {/* Isotipo oficial LGS */}
@@ -250,10 +252,10 @@ export default function PaginaAcceso() {
             alt="Isotipo de Lumen Gala Studio"
             width={72}
             height={72}
-            className="mx-auto h-18 w-18 rounded-2xl object-cover shadow-[0_10px_30px_rgba(212,180,101,0.18)] ring-1 ring-[#d4b465]/40"
+            className="mx-auto h-18 w-18 rounded-2xl object-cover shadow-[0_10px_30px_rgba(138,101,52,0.14)] ring-1 ring-[#dfc9a4]"
           />
-          <h1 className="mt-4 font-serif text-2xl tracking-[0.14em] text-[#f0e8da]">LUMEN GALA</h1>
-          <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-[#b3a68f]">Panel de clientes</p>
+          <h1 className="mt-4 font-serif text-2xl tracking-[0.14em] text-[#292522]">LUMEN GALA</h1>
+          <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-[#716a63]">Panel de clientes</p>
         </div>
 
         {/* Vía rápida: Google (solo con Client ID configurado y widget cargado).
@@ -263,20 +265,20 @@ export default function PaginaAcceso() {
           <div className={googleListo ? 'mb-5' : 'h-0 overflow-hidden'} aria-hidden={!googleListo}>
             <div ref={contenedorGoogle} className="flex justify-center" />
             {googleOcupado && (
-              <p className="mt-3 flex items-center justify-center gap-2 text-xs text-[#b3a68f]" role="status">
+              <p className="mt-3 flex items-center justify-center gap-2 text-xs text-[#716a63]" role="status">
                 <Loader2 size={14} className="animate-spin" /> {registrando ? 'Creando tu acceso…' : 'Verificando tu identidad de Google…'}
               </p>
             )}
             {errorGoogle && (
-              <p role="alert" className="mt-3 rounded-xl border border-[#7a4034] bg-[#3a201a] px-3 py-2.5 text-xs leading-relaxed text-[#f2b8ad]">
+              <p role="alert" className="mt-3 rounded-xl border border-[#efc3b7] bg-[#fcefec] px-3 py-2.5 text-xs leading-relaxed text-[#b42318]">
                 {errorGoogle}
               </p>
             )}
             {sinCuenta && (
-              <div className="mt-3 rounded-xl border border-[#4a4230] bg-[#262017] px-3 py-3 text-xs leading-relaxed text-[#d8cbb2]">
+              <div className="mt-3 rounded-xl border border-[#e8e0d7] bg-white px-3 py-3 text-xs leading-relaxed text-[#54483e]">
                 <p>
                   Hola{sinCuenta.nombre ? ` ${sinCuenta.nombre}` : ''}: el email{' '}
-                  <span className="font-semibold text-[#f0e8da]">{sinCuenta.email}</span> todavía no tiene un panel
+                  <span className="font-semibold text-[#292522]">{sinCuenta.email}</span> todavía no tiene un panel
                   asignado. Te lo activamos nosotros:
                 </p>
                 <a
@@ -285,29 +287,29 @@ export default function PaginaAcceso() {
                   )}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 font-semibold text-[#d4b465] underline decoration-[#d4b465]/30 underline-offset-4 transition hover:text-[#e2c67c]"
+                  className="mt-2 inline-flex items-center gap-1.5 font-semibold text-[#8a6534] underline decoration-[#8a6534]/30 underline-offset-4 transition hover:text-[#6f5428]"
                 >
                   <MessageCircle size={14} /> Pedir mi acceso por WhatsApp
                 </a>
               </div>
             )}
             <div className="my-5 flex items-center gap-3" aria-hidden="true">
-              <span className="h-px flex-1 bg-[#3a3226]" />
-              <span className="text-[10px] uppercase tracking-[0.2em] text-[#8a7d67]">o con tu contraseña</span>
-              <span className="h-px flex-1 bg-[#3a3226]" />
+              <span className="h-px flex-1 bg-[#e8e0d7]" />
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#787168]">o con tu contraseña</span>
+              <span className="h-px flex-1 bg-[#e8e0d7]" />
             </div>
           </div>
         )}
 
         <form
           onSubmit={alEnviar}
-          className="rounded-2xl border border-[#3a3226] bg-[#1d1810] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+          className="rounded-2xl border border-[#e8e0d7] bg-white p-6 shadow-[0_20px_60px_rgba(88,63,32,0.14)]"
         >
-          <label htmlFor="email" className="block text-xs font-medium text-[#b3a68f]">
+          <label htmlFor="email" className="block text-xs font-medium text-[#716a63]">
             Email
           </label>
           <div className="relative mt-1.5">
-            <Mail size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8a7d67]" />
+            <Mail size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#787168]" />
             <input
               id="email"
               type="email"
@@ -317,15 +319,15 @@ export default function PaginaAcceso() {
               onChange={(e) => setEmail(e.target.value)}
               disabled={ocupado}
               placeholder="tu@email.com"
-              className="w-full rounded-xl border border-[#3a3226] bg-[#262017] py-2.5 pl-9 pr-3 text-sm text-[#f0e8da] placeholder-[#6f6552] outline-none transition focus:border-[#d4b465] disabled:opacity-60"
+              className="w-full rounded-xl border border-[#e8e0d7] bg-white py-2.5 pl-9 pr-3 text-sm text-[#292522] placeholder-[#787168] outline-none transition focus:border-[#8a6534] disabled:opacity-60"
             />
           </div>
 
-          <label htmlFor="password" className="mt-4 block text-xs font-medium text-[#b3a68f]">
+          <label htmlFor="password" className="mt-4 block text-xs font-medium text-[#716a63]">
             Contraseña
           </label>
           <div className="relative mt-1.5">
-            <Lock size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8a7d67]" />
+            <Lock size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#787168]" />
             <input
               id="password"
               type="password"
@@ -335,17 +337,17 @@ export default function PaginaAcceso() {
               onChange={(e) => setPassword(e.target.value)}
               disabled={ocupado}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-[#3a3226] bg-[#262017] py-2.5 pl-9 pr-3 text-sm text-[#f0e8da] placeholder-[#6f6552] outline-none transition focus:border-[#d4b465] disabled:opacity-60"
+              className="w-full rounded-xl border border-[#e8e0d7] bg-white py-2.5 pl-9 pr-3 text-sm text-[#292522] placeholder-[#787168] outline-none transition focus:border-[#8a6534] disabled:opacity-60"
             />
           </div>
 
           {error && (
-            <p role="alert" className="mt-4 rounded-xl border border-[#7a4034] bg-[#3a201a] px-3 py-2.5 text-xs leading-relaxed text-[#f2b8ad]">
+            <p role="alert" className="mt-4 rounded-xl border border-[#efc3b7] bg-[#fcefec] px-3 py-2.5 text-xs leading-relaxed text-[#b42318]">
               {error}
             </p>
           )}
           {bloqueadaMinutos > 0 && (
-            <p className="mt-2 text-[11px] text-[#b3a68f]">
+            <p className="mt-2 text-[11px] text-[#716a63]">
               Bloqueo temporal por intentos fallidos: {bloqueadaMinutos} min. Podés entrar con Google mientras tanto.
             </p>
           )}
@@ -353,7 +355,7 @@ export default function PaginaAcceso() {
           <button
             type="submit"
             disabled={ocupado}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#d4b465] px-4 py-3 text-sm font-semibold text-[#201a0e] transition hover:bg-[#e2c67c] disabled:cursor-wait disabled:opacity-70"
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#26221d] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#3d3830] disabled:cursor-wait disabled:opacity-70"
           >
             {ocupado ? (
               <>
@@ -366,7 +368,7 @@ export default function PaginaAcceso() {
             )}
           </button>
 
-          <p className="mt-4 text-center text-[11px] leading-relaxed text-[#8a7d67]">
+          <p className="mt-4 text-center text-[11px] leading-relaxed text-[#787168]">
             {ENDPOINT_REGISTRO
               ? 'Con Google entrás siempre: si es tu primera vez, tu panel se crea automáticamente.'
               : 'Acceso exclusivo para clientes con invitación en producción.'}
@@ -378,11 +380,11 @@ export default function PaginaAcceso() {
             href={whatsappLink('Hola! Quiero gestionar mi invitación de Lumen Gala y no tengo usuario todavía.')}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#d4b465] underline decoration-[#d4b465]/30 underline-offset-4 transition hover:text-[#e2c67c]"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#8a6534] underline decoration-[#8a6534]/30 underline-offset-4 transition hover:text-[#6f5428]"
           >
             <MessageCircle size={14} /> No tengo cuenta — escribinos por WhatsApp
           </a>
-          <a href="/" className="mt-3 block text-[11px] text-[#8a7d67] transition hover:text-[#b3a68f]">
+          <a href="/" className="mt-3 block text-[11px] text-[#787168] transition hover:text-[#54483e]">
             ← Volver al sitio
           </a>
         </div>

@@ -283,8 +283,8 @@ export default function PanelEditar() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-serif text-2xl text-[#f0e8da]">Mi invitación</h1>
-        <p className="mt-1 text-xs text-[#b3a68f]">
+        <h1 className="font-serif text-2xl text-[#292522]">Mi invitación</h1>
+        <p className="mt-1 text-xs text-[#716a63]">
           Los datos que ves acá son los de tu invitación publicada. Cambialos y guardá: el diseño no se toca.
         </p>
       </div>
@@ -303,7 +303,7 @@ export default function PanelEditar() {
       <Tarjeta>
         <TituloSeccion>
           <span className="inline-flex items-center gap-2">
-            <CalendarDays size={17} className="text-[#d4b465]" /> Fecha, hora y lugar
+            <CalendarDays size={17} className="text-[#8a6534]" /> Fecha, hora y lugar
           </span>
         </TituloSeccion>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -315,7 +315,7 @@ export default function PanelEditar() {
             error={errores.nombre}
           />
           <div>
-            <label htmlFor="fecha" className="block text-xs font-medium text-[#b3a68f]">
+            <label htmlFor="fecha" className="block text-xs font-medium text-[#716a63]">
               Fecha y hora del evento
             </label>
             <input
@@ -324,14 +324,14 @@ export default function PanelEditar() {
               value={valorInputDesdeFecha(config.evento.fechaEvento)}
               onChange={(e) => alCambiarFecha(e.target.value)}
               aria-invalid={errores.fecha ? true : undefined}
-              className={`mt-1.5 w-full rounded-xl border bg-[#262017] px-3 py-2.5 text-sm text-[#f0e8da] outline-none transition focus:border-[#d4b465] ${
-                errores.fecha ? 'border-[#7a4034]' : 'border-[#3a3226]'
+              className={`mt-1.5 w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-[#292522] outline-none transition focus:border-[#8a6534] ${
+                errores.fecha ? 'border-[#efc3b7]' : 'border-[#e8e0d7]'
               }`}
             />
             {errores.fecha ? (
-              <p className="mt-1 text-[11px] text-[#f2b8ad]">{errores.fecha}</p>
+              <p className="mt-1 text-[11px] text-[#b42318]">{errores.fecha}</p>
             ) : (
-              <p className="mt-1 text-[11px] text-[#8a7d67]">Hora de Uruguay: la cuenta regresiva y el calendario se actualizan solos.</p>
+              <p className="mt-1 text-[11px] text-[#787168]">Hora de Uruguay: la cuenta regresiva y el calendario se actualizan solos.</p>
             )}
           </div>
           <CampoTexto
@@ -369,7 +369,7 @@ export default function PanelEditar() {
       <Tarjeta>
         <TituloSeccion>
           <span className="inline-flex items-center gap-2">
-            <Music2 size={17} className="text-[#d4b465]" /> Música
+            <Music2 size={17} className="text-[#8a6534]" /> Música
           </span>
         </TituloSeccion>
         <div className="mt-4">
@@ -383,7 +383,7 @@ export default function PanelEditar() {
             ayuda="Se convierte en reproductor dentro de la invitación."
           />
           {embed && (
-            <p className="mt-2 flex items-center gap-1.5 text-[11px] text-[#bfe3bf]">
+            <p className="mt-2 flex items-center gap-1.5 text-[11px] text-[#1e4620]">
               <ListMusic size={13} /> Reproductor listo: {embed}
             </p>
           )}
@@ -394,7 +394,7 @@ export default function PanelEditar() {
       <Tarjeta>
         <TituloSeccion>
           <span className="inline-flex items-center gap-2">
-            <ScrollText size={17} className="text-[#d4b465]" /> Frase de bienvenida
+            <ScrollText size={17} className="text-[#8a6534]" /> Frase de bienvenida
           </span>
         </TituloSeccion>
         <div className="mt-4 grid gap-4">
@@ -432,7 +432,7 @@ export default function PanelEditar() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <TituloSeccion>
             <span className="inline-flex items-center gap-2">
-              <PenLine size={17} className="text-[#d4b465]" /> Cronograma de la noche
+              <PenLine size={17} className="text-[#8a6534]" /> Cronograma de la noche
             </span>
           </TituloSeccion>
           <BotonSecundario onClick={agregarMomento} icono={Plus}>
@@ -441,14 +441,14 @@ export default function PanelEditar() {
         </div>
         <div className="mt-4 space-y-3">
           {config.timeline.eventos.map((momento, i) => (
-            <div key={i} className="rounded-xl border border-[#3a3226] bg-[#262017] p-3">
+            <div key={i} className="rounded-xl border border-[#e8e0d7] bg-white p-3">
               <div className="grid gap-2 sm:grid-cols-[5.5rem_1fr_auto]">
                 <input
                   type="time"
                   value={momento.hora}
                   onChange={(e) => editarMomento(i, { hora: e.target.value })}
                   aria-label={`Hora del momento ${i + 1}`}
-                  className="rounded-lg border border-[#3a3226] bg-[#1d1810] px-2 py-2 text-sm text-[#f0e8da] outline-none focus:border-[#d4b465]"
+                  className="rounded-lg border border-[#e8e0d7] bg-white px-2 py-2 text-sm text-[#292522] outline-none focus:border-[#8a6534]"
                 />
                 <input
                   value={momento.titulo}
@@ -456,13 +456,13 @@ export default function PanelEditar() {
                   placeholder={`Momento ${i + 1} (ej.: Recepción)`}
                   aria-label={`Título del momento ${i + 1}`}
                   maxLength={60}
-                  className="rounded-lg border border-[#3a3226] bg-[#1d1810] px-3 py-2 text-sm text-[#f0e8da] placeholder-[#6f6552] outline-none focus:border-[#d4b465]"
+                  className="rounded-lg border border-[#e8e0d7] bg-white px-3 py-2 text-sm text-[#292522] placeholder-[#787168] outline-none focus:border-[#8a6534]"
                 />
                 <button
                   type="button"
                   onClick={() => quitarMomento(i)}
                   aria-label={`Quitar momento ${i + 1}`}
-                  className="inline-flex items-center justify-center rounded-lg border border-[#7a4034] px-2.5 py-2 text-[#f2b8ad] transition hover:bg-[#3a201a]"
+                  className="inline-flex items-center justify-center rounded-lg border border-[#efc3b7] px-2.5 py-2 text-[#b42318] transition hover:bg-[#fcefec]"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -473,12 +473,12 @@ export default function PanelEditar() {
                 placeholder="Detalle (opcional)"
                 aria-label={`Detalle del momento ${i + 1}`}
                 maxLength={140}
-                className="mt-2 w-full rounded-lg border border-[#3a3226] bg-[#1d1810] px-3 py-2 text-xs text-[#f0e8da] placeholder-[#6f6552] outline-none focus:border-[#d4b465]"
+                className="mt-2 w-full rounded-lg border border-[#e8e0d7] bg-white px-3 py-2 text-xs text-[#292522] placeholder-[#787168] outline-none focus:border-[#8a6534]"
               />
             </div>
           ))}
           {config.timeline.eventos.length === 0 && (
-            <p className="text-xs text-[#8a7d67]">Sin momentos: la sección de cronograma queda oculta en la invitación.</p>
+            <p className="text-xs text-[#787168]">Sin momentos: la sección de cronograma queda oculta en la invitación.</p>
           )}
         </div>
       </Tarjeta>
@@ -499,7 +499,7 @@ export default function PanelEditar() {
             Restaurar publicada
           </BotonSecundario>
         </div>
-        <p className="mt-3 text-[11px] leading-relaxed text-[#8a7d67]">
+        <p className="mt-3 text-[11px] leading-relaxed text-[#787168]">
           Los cambios se guardan como borrador en este navegador. Para publicarlos, envianoslos por WhatsApp o
           descargá el JSON y enviaselo al estudio: los publicamos por vos y el enlace se actualiza solo (≈2-3 minutos).
         </p>

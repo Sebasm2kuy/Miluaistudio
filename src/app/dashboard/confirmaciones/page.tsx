@@ -137,8 +137,8 @@ export default function PanelConfirmaciones() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl text-[#f0e8da]">Confirmaciones</h1>
-          <p className="mt-1 text-xs text-[#b3a68f]">Se actualiza sola cada 25 segundos mientras esta pestaña esté abierta.</p>
+          <h1 className="font-serif text-2xl text-[#292522]">Confirmaciones</h1>
+          <p className="mt-1 text-xs text-[#716a63]">Se actualiza sola cada 25 segundos mientras esta pestaña esté abierta.</p>
         </div>
         <BotonSecundario onClick={() => void cargar(true)} ocupado={actualizando} icono={RefreshCw}>
           Actualizar
@@ -165,8 +165,8 @@ export default function PanelConfirmaciones() {
             { etiqueta: 'No asisten', valor: resumen.noAsisten },
           ].map(({ etiqueta, valor }) => (
             <Tarjeta key={etiqueta} className="!p-4 text-center">
-              <p className="font-serif text-2xl text-[#d4b465]">{valor}</p>
-              <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-[#8a7d67]">{etiqueta}</p>
+              <p className="font-serif text-2xl text-[#8a6534]">{valor}</p>
+              <p className="mt-0.5 text-[10px] uppercase tracking-[0.16em] text-[#787168]">{etiqueta}</p>
             </Tarjeta>
           ))}
         </div>
@@ -188,21 +188,21 @@ export default function PanelConfirmaciones() {
               onClick={() => setFiltro(clave)}
               className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
                 filtro === clave
-                  ? 'border-[#d4b465] bg-[#d4b465]/10 text-[#d4b465]'
-                  : 'border-[#3a3226] text-[#b3a68f] hover:border-[#57503f] hover:text-[#f0e8da]'
+                  ? 'border-[#8a6534] bg-[#8a6534]/10 text-[#8a6534]'
+                  : 'border-[#e8e0d7] text-[#716a63] hover:border-[#dfc9a4] hover:text-[#292522]'
               }`}
             >
               {etiqueta}
             </button>
           ))}
           <div className="relative">
-            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8a7d67]" />
+            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#787168]" />
             <input
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar nombre o código…"
               aria-label="Buscar confirmaciones"
-              className="w-56 rounded-full border border-[#3a3226] bg-[#262017] py-2 pl-8 pr-3 text-xs text-[#f0e8da] placeholder-[#6f6552] outline-none transition focus:border-[#d4b465]"
+              className="w-56 rounded-full border border-[#e8e0d7] bg-white py-2 pl-8 pr-3 text-xs text-[#292522] placeholder-[#787168] outline-none transition focus:border-[#8a6534]"
             />
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function PanelConfirmaciones() {
         </div>
       ) : visibles.length === 0 ? (
         <Tarjeta className="text-center">
-          <p className="text-sm text-[#b3a68f]">
+          <p className="text-sm text-[#716a63]">
             {rsvps.length === 0
               ? 'Todavía no hay confirmaciones registradas. Cuando tus invitados confirmen en la invitación, aparecen solas acá.'
               : 'Ninguna confirmación coincide con el filtro o la búsqueda.'}
@@ -236,25 +236,25 @@ export default function PanelConfirmaciones() {
           {visibles.map((r) => (
             <div
               key={r.codigo}
-              className="flex flex-col gap-3 rounded-2xl border border-[#3a3226] bg-[#1d1810] px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-2xl border border-[#e8e0d7] bg-white px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
                       r.asistencia === 'si'
-                        ? 'border-[#3f5b3f] bg-[#1c2b1c] text-[#bfe3bf]'
-                        : 'border-[#7a4034] bg-[#3a201a] text-[#f2b8ad]'
+                        ? 'border-[#bcdcc1] bg-[#edf7ef] text-[#1e4620]'
+                        : 'border-[#efc3b7] bg-[#fcefec] text-[#b42318]'
                     }`}
                   >
                     {r.asistencia === 'si' ? <Check size={11} /> : <X size={11} />}
                     {r.asistencia === 'si' ? 'Asiste' : 'No asiste'}
                   </span>
-                  <span className="font-mono text-[10px] text-[#8a7d67]">{r.codigo}</span>
-                  <span className="text-[10px] text-[#6f6552]">· {fechaCorta(r.fecha)}</span>
+                  <span className="font-mono text-[10px] text-[#787168]">{r.codigo}</span>
+                  <span className="text-[10px] text-[#787168]">· {fechaCorta(r.fecha)}</span>
                 </div>
-                <p className="mt-1.5 truncate text-sm text-[#f0e8da]">{r.invitados.join(', ')}</p>
-                <p className="mt-0.5 text-[11px] text-[#8a7d67]">
+                <p className="mt-1.5 truncate text-sm text-[#292522]">{r.invitados.join(', ')}</p>
+                <p className="mt-0.5 text-[11px] text-[#787168]">
                   {r.cantidad} persona{r.cantidad === 1 ? '' : 's'}
                   {r.cancion ? ` · canción: ${r.cancion}` : ''}
                   {r.origen === 'manual' ? ' · registrada a mano' : r.origen === 'whatsapp' ? ' · vía WhatsApp' : ''}

@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
  *
  * Zona privada: noindex (área operativa, no comercial). La página en sí
  * es un componente cliente (form + WebCrypto); el layout solo aporta la
- * metadata y el fondo oscuro de marca.
+ * metadata y el fondo marfil de marca (041: misma paleta que la web).
  */
 export const metadata: Metadata = {
   /* title.absolute: evita que el template raíz duplique la marca
@@ -18,5 +18,5 @@ export const metadata: Metadata = {
 };
 
 export default function AccesoLayout({ children }: { children: React.ReactNode }) {
-  return <div className="min-h-screen bg-[#131009]">{children}</div>;
+  return <div className="min-h-screen bg-[#faf8f4]">{children}</div>;
 }
