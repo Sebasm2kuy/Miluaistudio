@@ -110,7 +110,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                   nombre (040). */}
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 rounded-full bg-[#26221d] px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3d3830] sm:px-5"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#26221d] px-3 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#3d3830] sm:px-5 sm:text-sm"
               >
                 <Globe size={15} /> Volver a la web
               </Link>
