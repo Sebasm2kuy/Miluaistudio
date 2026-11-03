@@ -85,8 +85,8 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
       <div className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
         {/* Barra superior */}
         <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/90 backdrop-blur">
-          <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-            <Link href="/dashboard/" className="flex items-center gap-2.5">
+          <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6">
+            <Link href="/dashboard/" className="flex shrink-0 items-center gap-2.5">
               <img
                 src="/logo-lgs.png"
                 alt=""
@@ -101,7 +101,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 </span>
               </span>
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Volver a la web (041): botón PRIMARIO, grande y primero —
                   el camino de vuelta a la web es lo más importante para
                   alguien que entra por primera vez. Enlace común: NO
@@ -128,7 +128,7 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
                 <Link
                   href="/estudio/"
                   aria-label="Ir al panel del estudio"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-3 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-2.5 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
                 >
                   <Sparkles size={15} />{' '}
                   <span className="hidden sm:inline">Panel del estudio</span>
