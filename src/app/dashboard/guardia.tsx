@@ -17,8 +17,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Globe, LogOut, PenLine, ShieldCheck, Users, LayoutGrid } from 'lucide-react';
+import { Globe, LogOut, PenLine, ShieldCheck, Sparkles, Users, LayoutGrid } from 'lucide-react';
 import { cerrarSesion, leerSesion, type SesionCliente } from '@/lib/auth-cliente';
+import { esEmailDelEstudio } from '@/lib/admin-auth';
 import { Esqueleto } from '@/components/dashboard/ui';
 
 const ContextoSesion = createContext<SesionCliente | null>(null);
@@ -113,6 +114,27 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
               >
                 <Globe size={15} /> Volver a la web
               </Link>
+              {/* Acceso directo al panel del estudio (043): SOLO para la sesión
+                  con el email del estudio (visibilidad decidida por
+                  esEmailDelEstudio; para cualquier otro cliente el enlace no se
+                  renderiza). Es una comodidad de navegación, no una capa de
+                  seguridad: /estudio/ sigue protegida por su propia puerta
+                  fail-closed. Enlace común <Link>: no toca sessionStorage, así
+                  que la sesión de cliente sigue viva al ir y volver, y la sesión
+                  de administrador (≈1 h desde el ingreso Google, 042) se usa
+                  intacta si sigue vigente — si venció, /estudio/ pide la cuenta
+                  de nuevo, tal como sucede entrando por URL directa. */}
+              {esEmailDelEstudio(sesion.email) && (
+                <Link
+                  href="/estudio/"
+                  aria-label="Ir al panel del estudio"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#e8e0d7] bg-white px-3 py-2.5 text-sm font-medium text-[#54483e] transition hover:border-[#dfc9a4] hover:bg-[#f6efe2] sm:px-3.5"
+                >
+                  <Sparkles size={15} />{' '}
+                  <span className="hidden sm:inline">Panel del estudio</span>
+                  <span className="sm:hidden">Estudio</span>
+                </Link>
+              )}
               <span className="hidden text-xs text-[#716a63] sm:block">{sesion.nombre}</span>
               <button
                 type="button"

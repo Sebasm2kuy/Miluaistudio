@@ -32,6 +32,18 @@ import { almacenPorDefecto } from './auth-cliente';
 /** Única cuenta autorizada a entrar al panel del estudio. */
 export const EMAIL_ADMIN = 'sebacabrera1982@gmail.com';
 
+/**
+ * ¿El email corresponde a la cuenta del estudio? Comparación normalizada
+ * (recorte de espacios + minúsculas), igual que la que hace el panel al
+ * leer la sesión. Es la condición de VISIBILIDAD del acceso directo desde
+ * el panel de cliente (iteración 043): decide si se muestra el enlace,
+ * nunca la seguridad de /estudio/, que sigue protegida por su propia
+ * puerta fail-closed (claims de Google + verificación del backend).
+ */
+export function esEmailDelEstudio(email: string | null | undefined): boolean {
+  return String(email || '').trim().toLowerCase() === EMAIL_ADMIN;
+}
+
 /** Clave de la sesión del panel en sessionStorage. */
 export const CLAVE_SESION_ADMIN = 'lgs_sesion_admin';
 
