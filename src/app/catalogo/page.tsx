@@ -252,7 +252,9 @@ export default function CatalogoPage() {
       </div>
 
       <footer className="bg-[#292522] text-white">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-24 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
+        {/* pb-32 en móvil (044): aire para la franja del botón flotante de
+            WhatsApp con safe-area (~110 px en iPhone). */}
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 pb-32 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:pb-6 lg:px-8">
           <span className="font-serif tracking-[0.12em] text-white/85">LUMEN GALA</span>
           <span className="text-white/50">Tu historia, en formato digital.</span>
           <a href="/acceso/" className="text-white/50 underline decoration-white/20 underline-offset-4 transition hover:text-white">Panel de clientes</a>

@@ -437,7 +437,10 @@ export default function Home() {
 
       {/* ===== Pie ===== */}
       <footer className="relative z-10 bg-[#292522] text-[#d8d0c5]">
-        <div className="mx-auto max-w-7xl px-4 pb-28 pt-10 sm:px-6 sm:pb-10 lg:px-8">
+        {/* pb-32 en móvil (044): con el safe-area del botón flotante de
+            WhatsApp la franja inferior llega a ~110 px en iPhone; 128 px
+            de aire evitan que el pie quede pegado o tapado. */}
+        <div className="mx-auto max-w-7xl px-4 pb-32 pt-10 sm:px-6 sm:pb-10 lg:px-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-serif text-lg tracking-[0.08em] text-[#f0e8da]">Lumen Gala Studio</h2>
