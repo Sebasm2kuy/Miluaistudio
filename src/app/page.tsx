@@ -88,7 +88,7 @@ export default function Home() {
             Se abre en cualquier celular, sin instalar aplicaciones
           </div>
           <h1 className="store-hero-in-2 mt-6 max-w-xl font-serif text-[2.3rem] font-medium leading-[1.1] tracking-tight sm:text-6xl sm:leading-[1.06]">
-            Invitaciones web <em className="italic" style={{ color: GOLD }}>elegantes</em> y personalizadas para fiestas de 15 y bodas.
+            Tarjetas digitales e invitaciones <em className="italic" style={{ color: GOLD }}>elegantes</em> para fiestas de 15 y bodas.
           </h1>
           <p className="store-hero-in-2 mt-6 max-w-lg text-base leading-relaxed text-[#716a63] sm:text-lg">
             Cada detalle de tu celebración, en un solo enlace: música, galería de fotos, cuenta regresiva, ubicación y confirmación de asistencia. Todo listo para compartir por WhatsApp.
@@ -283,7 +283,7 @@ export default function Home() {
             {[
               { number: '1', icon: Search, title: 'Elegís el diseño y lo personalizás', text: 'Abrís el personalizador, cargás tu nombre, fecha y lugar, y ves tu invitación al instante.' },
               { number: '2', icon: MessageSquareText, title: 'Nos pasás los detalles finales', text: 'Fotos, música y ajustes finos: lo que falte lo resolvemos juntos por WhatsApp.' },
-              { number: '3', icon: Share2, title: 'Recibís tu enlace listo para compartir', text: 'Te entregamos la invitación web para reenviarla por WhatsApp a tus invitados.' },
+              { number: '3', icon: Share2, title: 'Recibís tu enlace listo para compartir', text: 'Te entregamos la invitación digital para reenviarla por WhatsApp a tus invitados.' },
             ].map((step, index) => (
               <Reveal key={step.number} delay={index * 90}>
                 <article className="relative h-full rounded-2xl border border-[#e8e0d7] bg-white p-6 text-center shadow-[0_4px_16px_rgba(88,63,32,0.05)] sm:p-7">
@@ -379,7 +379,7 @@ export default function Home() {
             <div className="relative mx-auto max-w-2xl text-center">
               <p className="font-serif text-xl italic sm:text-2xl" style={{ color: GOLD }}>Tu celebración empieza acá</p>
               <h2 className="mt-3 font-serif text-3xl leading-[1.15] tracking-tight sm:text-4xl">
-                Elegí un diseño y <em className="italic" style={{ color: GOLD }}>hacelo tuyo</em>.
+                Elegí tu tarjeta digital y <em className="italic" style={{ color: GOLD }}>hacela tuya</em>.
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#716a63] sm:text-base">
                 Explorá la colección, probá las demostraciones y consultá las condiciones de personalización antes de comprar.
@@ -411,7 +411,7 @@ export default function Home() {
           </p>
           <div className="mt-9 space-y-3">
             {[
-              { q: '¿Es una imagen o una página web?', a: 'Es una invitación web personalizada que se abre desde un enlace y puede reunir la información y las funciones acordadas para tu celebración.' },
+              { q: '¿Es una imagen o una página web?', a: 'Es una invitación digital personalizada que se abre desde un enlace y puede reunir la información y las funciones acordadas para tu celebración.' },
               { q: '¿Puedo probar la invitación con mis datos antes de comprar?', a: 'Sí. En la sección Personalizar elegís el diseño, cargás nombre, fecha, lugar y música, y la invitación se actualiza al instante con tu información. Después nos enviás esa configuración por WhatsApp y la dejamos lista.' },
               { q: '¿Mis invitados necesitan instalar una aplicación?', a: 'No. La invitación se abre desde un navegador compatible en el celular o la computadora.' },
               { q: '¿Puedo elegir los colores y el estilo?', a: 'Sí. El diseño se personaliza según tus preferencias y las opciones disponibles para el modelo elegido.' },
@@ -444,7 +444,7 @@ export default function Home() {
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-serif text-lg tracking-[0.08em] text-[#f0e8da]">Lumen Gala Studio</h2>
-              <p className="mt-2 text-[#a1988a]">Invitaciones web elegantes y personalizadas para fiestas de 15 y bodas · Montevideo, Uruguay</p>
+              <p className="mt-2 text-[#a1988a]">Invitaciones digitales y tarjetas virtuales para fiestas de 15 y bodas · Montevideo, Uruguay</p>
               <a
                 href="mailto:lumengala.studio@gmail.com"
                 className="mt-1.5 inline-block text-[#a1988a] underline decoration-[#4a4239] underline-offset-4 transition hover:text-white"

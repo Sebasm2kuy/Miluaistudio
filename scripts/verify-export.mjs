@@ -301,13 +301,15 @@ if (existsSync(INDEX_MARCA)) {
       .match(new RegExp('<meta [^>]*property="' + propiedad + '"[^>]*>'))?.[0]
       ?.match(/content="([^"]*)"/)?.[1] ?? '';
   const ogTitle = metaContenido('og:title');
-  /* Iteración 033: el propietario cambió el mensaje de portada de «alta
-     gama» a «elegantes y personalizadas» («fiestas de 15» en vez de «15s»).
-     La verificación se actualiza al copy nuevo — sigue exigiendo marca. */
-  if (/lumen gala studio/i.test(ogTitle) && /elegantes/i.test(ogTitle) && /fiestas de 15/i.test(ogTitle)) {
-    ok('og:title de portada con la identidad LGS: ' + ogTitle);
+  /* Iteración SEO (2026-11): el propietario alineó el <head> con cómo buscan
+     los clientes en Uruguay («tarjetas digitales» / «invitaciones digitales»
+     en vez de «invitaciones web») y acortó el título para que no se corte
+     en resultados móviles. La verificación exige los términos nuevos y
+     sigue exigiendo la marca Lumen Gala. */
+  if (/tarjetas digitales/i.test(ogTitle) && /invitaciones/i.test(ogTitle) && /lumen gala/i.test(ogTitle) && /15/i.test(ogTitle)) {
+    ok('og:title de portada con los términos SEO nuevos y la marca: ' + ogTitle);
   } else {
-    fail('OG DESACTUALIZADO: el og:title de la portada debe decir «Lumen Gala Studio | Invitaciones web elegantes para fiestas de 15 y bodas» (' + ogTitle + ')');
+    fail('OG DESACTUALIZADO: el og:title de la portada debe decir «Tarjetas Digitales e Invitaciones de 15 y Bodas | Lumen Gala» (' + ogTitle + ')');
   }
   const ogImage = metaContenido('og:image');
   if (ogImage === 'https://lumengala.site/lgs-preview.jpg') {
