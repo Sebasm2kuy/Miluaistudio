@@ -5,6 +5,7 @@
   "actualizadoEn": "2026-10-28T12:00:00.000Z",
   "disenoBase": "rosa-romantica",
   "config": {
+    "bienvenidaMarca": true,
     "evento": {
       "tipo": "Mis XV años",
       "nombre": "Ejemplo Quince",
