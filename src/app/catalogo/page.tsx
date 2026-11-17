@@ -134,7 +134,7 @@ export default function CatalogoPage() {
             <em className="italic text-[#7d746a]">La invitación perfecta para tu gran momento</em>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#716a63] sm:text-base">
-            Elegí el estilo que más te guste y hacé de tu fiesta un evento inolvidable. Cada diseño incluye una invitación web completa con cuenta regresiva, galería, música y confirmación de asistencia.
+            Elegí el estilo que más te guste y hacé de tu fiesta un evento inolvidable. Cada diseño incluye una invitación digital completa con cuenta regresiva, galería, música y confirmación de asistencia.
           </p>
           <a
             href="/personalizar/"

@@ -14,7 +14,7 @@ import GuardiaDashboard from './guardia';
  */
 export const metadata: Metadata = {
   title: { absolute: 'Panel de cliente | Lumen Gala' },
-  description: 'Gestión de tu invitación web: estado, datos del evento y confirmaciones.',
+  description: 'Gestión de tu invitación digital: estado, datos del evento y confirmaciones.',
   robots: { index: false, follow: false },
   /* Zona privada: sin canonical (no heredar el «/» del layout raíz, 032). */
   alternates: { canonical: null },

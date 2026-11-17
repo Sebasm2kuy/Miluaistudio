@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   /* title.absolute: evita que el template raíz duplique la marca
      («…| Lumen Gala | Lumen Gala Studio»). */
   title: { absolute: 'Panel de clientes | Lumen Gala' },
-  description: 'Panel privado para gestionar tu invitación web de Lumen Gala Studio.',
+  description: 'Panel privado para gestionar tu invitación digital de Lumen Gala Studio.',
   robots: { index: false, follow: false },
   /* Zona privada: sin canonical (no heredar el «/» del layout raíz, 032). */
   alternates: { canonical: null },

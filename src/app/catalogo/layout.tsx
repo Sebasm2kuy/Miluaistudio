@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://lumengala.site/catalogo/' },
   openGraph: {
     title: 'Invitaciones digitales personalizadas | Lumen Gala Studio',
-    description: 'Diseños web personalizados para compartir los detalles de tu celebración en un solo enlace.',
+    description: 'Diseños digitales personalizados para compartir los detalles de tu celebración en un solo enlace.',
     type: 'website',
     locale: 'es_UY',
     siteName: 'Lumen Gala Studio',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Invitaciones digitales personalizadas | Lumen Gala Studio',
-    description: 'Explorá diseños web personalizados para tus celebraciones.',
+    description: 'Explorá diseños digitales personalizados para tus celebraciones.',
     images: ['https://lumengala.site/lgs-preview.jpg'],
   },
 };
