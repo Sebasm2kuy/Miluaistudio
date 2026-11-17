@@ -5,6 +5,7 @@
   "actualizadoEn": "2026-10-28T12:00:00.000Z",
   "disenoBase": "geometria-moderna",
   "config": {
+    "bienvenidaMarca": true,
     "evento": {
       "tipo": "Nuestra boda",
       "nombre": "Ejemplo Boda",

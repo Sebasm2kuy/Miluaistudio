@@ -48,6 +48,8 @@ export interface SiteConfig {
   modoDemo?: boolean;
   /** Solo demos: nombre del diseño del catálogo, mostrado en la pantalla de carga. */
   demoNombreDiseno?: string;
+  /** Bienvenida de marca: la precarga muestra «Lumen Gala» en vez del nombre del evento (demos publicadas). */
+  bienvenidaMarca?: boolean;
   /** Secciones prendidas/apagadas (ausente = todas prendidas) */
   secciones?: SeccionesConfig;
   /** Apertura animada elegida (id de APERTURAS_META; ausente = sobre clásico) */

@@ -11,6 +11,15 @@ const STATIC_ASSETS = [
   '/invitacion-vertical.webp',
 ]
 
+// Tope absoluto de espera: aunque un activo se cuelgue (red intermitente,
+// CDN lento), la bienvenida siempre termina y la invitación siempre arranca.
+// (Antes la barra topaba en 82% mientras las imágenes cargaban y podía
+// quedarse ahí para siempre.)
+const TOPE_ACTIVOS_MS = 9000
+
+// La bienvenida respira un instante antes de desvanecerse (nunca un flash).
+const MOSTRADO_MINIMO_MS = 1100
+
 function preloadImages(urls: string[]): Promise<void> {
   return Promise.all(
     urls.map(
@@ -34,11 +43,19 @@ function waitForFonts(timeoutMs = 5000): Promise<void> {
   ])
 }
 
+// Resuelve siempre: la promesa original o el tope de tiempo, lo que ocurra primero.
+function conTope<T>(promesa: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([promesa, new Promise<never>((r) => setTimeout(r, ms))])
+}
+
 export default function LoadingScreen({ onDone }: LoadingScreenProps) {
   const cfg = useConfig()
-  const [progress, setProgress] = useState(0)
   const [fading, setFading] = useState(false)
   const doneRef = useRef(false)
+  const onDoneRef = useRef(onDone)
+  useEffect(() => {
+    onDoneRef.current = onDone
+  })
 
   // Build the asset list from the live config so we only preload
   // photos that will actually be displayed (no removed gallery photos).
@@ -50,81 +67,37 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
 
   useEffect(() => {
     let cancelled = false
+    const timers: ReturnType<typeof setTimeout>[] = []
+    const montaje = performance.now()
 
-    let target = 0       // where the bar WANTS to be
-    let displayed = 0    // where the bar actually is
-    let lastTick = performance.now()
-    let imagesLoaded = false
-    let fontsLoaded = false
-
-    // Real asset loading — these confirm real progress
-    preloadImages(ASSETS).then(() => {
-      if (!cancelled) imagesLoaded = true
-    })
-    waitForFonts(5000).then(() => {
-      if (!cancelled) fontsLoaded = true
-    })
-
-    const TICK = 50
-
-    const interval = setInterval(() => {
+    conTope(
+      Promise.all([preloadImages(ASSETS), waitForFonts(5000)]),
+      TOPE_ACTIVOS_MS,
+    ).then(() => {
       if (cancelled) return
-
-      const now = performance.now()
-      const dt = Math.min((now - lastTick) / 1000, 0.15)
-      lastTick = now
-
-      // --- Update target based on real load state ---
-
-      if (!imagesLoaded) {
-        // Images still loading: ramp slowly (10%/s)
-        target = Math.min(target + 10 * dt, 82)
-      } else if (!fontsLoaded) {
-        // Images done, fonts pending: ramp moderately (8%/s)
-        target = Math.max(target, 85)
-        target = Math.min(target + 8 * dt, 92)
-      } else {
-        // Everything loaded: sprint to 100 (20%/s)
-        target = Math.max(target, 93)
-        target = Math.min(target + 20 * dt, 100)
-      }
-
-      // --- Smooth display: catch up to target without jumping ---
-      // Per-tick: min 0.08%, proportional to gap (4%), max 2%
-      // CSS transition (0.2s) smooths these into fluid visual movement
-
-      const gap = target - displayed
-      if (gap > 0) {
-        const catchUp = Math.max(0.08, Math.min(gap * 0.04, 2))
-        displayed = Math.min(displayed + catchUp, target)
-      }
-
-      setProgress(Math.min(Math.round(displayed), 100))
-
-      // Done?
-      if (displayed >= 99.5 && imagesLoaded && fontsLoaded) {
-        setProgress(100)
-        clearInterval(interval)
-      }
-    }, TICK)
+      const espera = Math.max(
+        0,
+        MOSTRADO_MINIMO_MS - (performance.now() - montaje),
+      )
+      timers.push(setTimeout(() => setFading(true), espera))
+      timers.push(
+        setTimeout(() => {
+          if (cancelled || doneRef.current) return
+          doneRef.current = true
+          onDoneRef.current()
+        }, espera + 900),
+      )
+    })
 
     return () => {
       cancelled = true
-      clearInterval(interval)
+      timers.forEach(clearTimeout)
     }
   }, [ASSETS.join(',')])
 
-  useEffect(() => {
-    if (progress >= 100 && !doneRef.current) {
-      doneRef.current = true
-      const t1 = setTimeout(() => setFading(true), 600)
-      const t2 = setTimeout(onDone, 1500)
-      return () => {
-        clearTimeout(t1)
-        clearTimeout(t2)
-      }
-    }
-  }, [progress, onDone])
+  // Bienvenida de marca (demos publicadas): «Lumen Gala» en vez del nombre
+  // del evento. Las invitaciones reales siguen abriendo con los nombres.
+  const titulo = cfg.bienvenidaMarca ? 'Lumen Gala' : cfg.evento.nombre
 
   return (
     <div
@@ -141,39 +114,31 @@ export default function LoadingScreen({ onDone }: LoadingScreenProps) {
         height: 'calc(100% + 10px)',
       }}
     >
+      <style>{`@keyframes bienvenida-aparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      <style>{`@keyframes bienvenida-linea { 0% { transform: translateX(-120%); } 100% { transform: translateX(340%); } }`}</style>
       <p
-        className="font-cursive text-7xl sm:text-6xl mb-12 sm:mb-12"
-        style={{ color: cfg.estilos.modoClaro ? cfg.colores.dorado : '#d4af37' }}
+        className="font-cursive text-7xl sm:text-6xl mb-10 sm:mb-10"
+        style={{
+          color: cfg.estilos.modoClaro ? cfg.colores.dorado : '#d4af37',
+          animation: 'bienvenida-aparecer 1.1s ease both',
+        }}
       >
-        {cfg.evento.nombre}
+        {titulo}
       </p>
       <div className="w-48 sm:w-64 md:w-72">
         <div
-          className="h-[2px] rounded-full overflow-hidden"
+          className="h-[2px] overflow-hidden rounded-full"
           style={{ background: 'rgba(184,134,11,0.15)' }}
         >
           <div
-            className="h-full rounded-full"
+            className="h-full w-[30%] rounded-full"
             style={{
-              width: `${progress}%`,
-              background:
-                'linear-gradient(90deg, #b38728, #d4af37, #fcf6ba)',
-              transition: 'width 0.2s linear',
+              background: 'linear-gradient(90deg, #b38728, #d4af37, #fcf6ba)',
+              animation: 'bienvenida-linea 1.7s ease-in-out infinite',
             }}
           />
         </div>
-        <p className="text-center mt-4 sm:mt-4 text-xs sm:text-sm tracking-[0.3em] font-light tabular-nums" style={{ color: 'color-mix(in srgb, var(--theme-accent) 55%, transparent)' }}>
-          {progress}%
-        </p>
       </div>
-      {cfg.modoDemo && cfg.demoNombreDiseno && (
-        <p
-          className="mt-8 text-center text-[10px] uppercase tracking-[0.28em] sm:text-[11px]"
-          style={{ color: 'color-mix(in srgb, var(--theme-accent) 60%, transparent)' }}
-        >
-          Diseño {cfg.demoNombreDiseno}
-        </p>
-      )}
     </div>
   )
 }
