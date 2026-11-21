@@ -34,6 +34,11 @@
 // registro_cliente con credencial inválida → {"success":false,"error":
 // "Credencial de Google inválida."} (fail-closed, sin crear nada). Para
 // DESACTIVAR: vaciar la constante (volver a '') y pushear.
+//
+// URL actualizada el 2026-11-21 (iteración 045b): nueva implementación del
+// mismo proyecto con el código 045 (métricas tolerantes a las coerciones de
+// la hoja + diagnostico en metricas_admin). La implementación vieja queda
+// activa como rollback hasta verificar RSVP/registro/visitas en la nueva.
 // ============================================================
 
-export const ENDPOINT_REGISTRO = 'https://script.google.com/macros/s/AKfycbyplrOmZ3wXj7e_Fk9vkhidzAj3F-MZUgooNJBwnUNsRLDB2V5IxB1Cur-dDdA6uZVh1A/exec';
+export const ENDPOINT_REGISTRO = 'https://script.google.com/macros/s/AKfycbx_eHCjU4zXRQKteZCl15PVlqjx5kg0oRE9wVJkko-_qgEqehpl0Vic83SP9O2mnwk2iQ/exec';
