@@ -656,3 +656,11 @@ Stage Summary:
 **Cambios:** `metricas-esquema.ts` — lectura normalizante: `normalizarInstante` (ISO, epoch ms/seg en número o texto, con separadores de miles; ventana 2020-2100) y `normalizarDia` (formato estricto, texto de celda fecha, ISO con hora, epoch → día Montevideo), sesión de lectura tolerante a ceros perdidos (4-64; la escritura del backend sigue exigiendo 8-64). `admin-backend.ts` — el resultado ok expone `filasRecibidas` (crudo antes de validar). Panel — estado ok lleva `entregadas` y, si el backend entregó más filas de las validadas, aviso ámbar honesto con el paso a seguir (nunca ceros inventados ni silencio). `gallery-server.gs` — `epochDeCelda`/`diaDeCelda` en la lectura y la purga de `metricas_admin` + `diagnostico {filasEnHoja, filasEntregadas}` en la respuesta (para pegar en el Web App, misma URL).
 
 **Pruebas:** 266/266 tests (3 nuevos: coerciones de Sheets contadas, epoch con miles + ISO con hora, rechazos conservados), lint 0, typecheck 0, build + verify-export + verify-privacy OK. E2E de verificación sobre el panel desplegado con las formas coercidas → ahora cuentan. Instrucción de despliegue del .gs en docs/METRICAS-ADMIN.md (pegar el código actualizado en el Web App, misma URL).
+
+## Iteración 045b — Web App con nueva implementación (045) conectado al sitio (fix/045b-endpoint-webapp-nuevo)
+
+**Pedido:** el estudio desplegó el código 045 en el Web App de Apps Script y dio la URL de la nueva implementación (AKfycbx_eHCjU4…): conectarla al sitio y verificar.
+
+**Cambios:** única constante del sitio `ENDPOINT_REGISTRO` (src/data/registro-auto.ts) → nueva URL. Cubre los tres consumidores: registro automático (/acceso/), tracker de visitas (registro-visitas.tsx) y métricas del panel (/estudio/). RSVP no cambia de código: va por `cfg.rsvp.googleSheetUrl` que carga el estudio en /admin/ — las invitaciones de ejemplo la tienen vacía y ninguna publica la URL vieja. Sondas en vivo: nuevo GET ?action=metricas → {"ok":true,"message":"Metricas backend activo"} y default → RSVP backend activo; la implementación vieja sigue activa como rollback (mismo proyecto, mismas Propiedades del script → misma hoja).
+
+**Pruebas:** 266/266 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. Verificación en producción tras el deploy: bundle con el ID nuevo y metricas_admin sin credencial → fail-closed esperado.
