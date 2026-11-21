@@ -82,7 +82,9 @@ export default function GuardiaDashboard({ children }: { children: ReactNode }) 
 
   return (
     <ContextoSesion.Provider value={sesion}>
-      <div className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
+      {/* data-page="panel" (045c): desbloquea el scroll nativo de html/body
+          en globals.css — sin él el panel queda clavado (contenido recortado). */}
+      <div data-page="panel" className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
         {/* Barra superior */}
         <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/90 backdrop-blur">
           <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6">

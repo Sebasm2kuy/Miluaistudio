@@ -664,3 +664,13 @@ Stage Summary:
 **Cambios:** única constante del sitio `ENDPOINT_REGISTRO` (src/data/registro-auto.ts) → nueva URL. Cubre los tres consumidores: registro automático (/acceso/), tracker de visitas (registro-visitas.tsx) y métricas del panel (/estudio/). RSVP no cambia de código: va por `cfg.rsvp.googleSheetUrl` que carga el estudio en /admin/ — las invitaciones de ejemplo la tienen vacía y ninguna publica la URL vieja. Sondas en vivo: nuevo GET ?action=metricas → {"ok":true,"message":"Metricas backend activo"} y default → RSVP backend activo; la implementación vieja sigue activa como rollback (mismo proyecto, mismas Propiedades del script → misma hoja).
 
 **Pruebas:** 266/266 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. Verificación en producción tras el deploy: bundle con el ID nuevo y metricas_admin sin credencial → fail-closed esperado.
+
+## Iteración 045c — Scroll roto en las páginas privadas: desbloqueo data-page="panel" (fix/045c-scroll-paneles)
+
+**Pedido:** «no puedo hacer scroll en el menú de usuario en todos; la web sí funciona bien». Reproducido en vivo: /estudio/, /acceso/ y /dashboard/ quedan clavadas (window.scrollY 0, contenido recortado, html y body con overflow hidden).
+
+**Causa raíz:** globals.css bloquea html/body (overflow hidden, height 100%) para la experiencia de invitación iOS-safe (scroll-container fijo). El desbloqueo existía solo para data-page="storefront" (portada, catálogo, personalizador). Las páginas privadas no tenían el atributo NI contenedor de scroll propio → contenido inalcanzable. /editar se desbloquea por JS y /admin scrollea en contenedor interno — por eso no se habían quejado de esas.
+
+**Cambios:** nuevo atributo data-page="panel" + reglas html:has extendidas en globals.css (overflow/height y overscroll marfil). Atributo agregado en: guardia del dashboard (cubre /dashboard, /dashboard/confirmaciones, /dashboard/editar), /estudio (root principal y pantalla verificando), PantallaAcceso/PantallaBloqueado de estudio y /acceso. La invitación (/i/...) y /previsualizar conservan el bloqueo a propósito; /editar y /admin quedan como están.
+
+**Pruebas:** 266/266 tests, lint 0, typecheck 0, build + verify-export + verify-privacy OK. Verificación en vivo tras deploy: /estudio y /acceso scrollean (scrollY > 0), la invitación sigue con su scroll-container intacto.

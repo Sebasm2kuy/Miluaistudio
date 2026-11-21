@@ -322,7 +322,7 @@ export default function PaginaEstudio() {
 
   if (fase.fase === 'verificando') {
     return (
-      <div className="min-h-screen bg-[#faf8f4] px-4 py-10 text-[#292522]">
+      <div data-page="panel" className="min-h-screen bg-[#faf8f4] px-4 py-10 text-[#292522]">
         <div className="mx-auto max-w-3xl">
           <Esqueleto className="h-10 w-56" />
           <Esqueleto className="mt-6 h-28" />
@@ -358,7 +358,7 @@ export default function PaginaEstudio() {
   const hoyIso = diaMontevideo(ahora);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
+    <div data-page="panel" className="flex min-h-screen flex-col bg-[#faf8f4] text-[#292522]">
       {/* Barra superior — misma línea del panel de cliente (041): «Volver a la
           web» primario y primero, el camino de vuelta nunca falta. */}
       <header className="sticky top-0 z-40 border-b border-[#e8e0d7] bg-white/90 backdrop-blur">

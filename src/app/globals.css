@@ -108,19 +108,26 @@
     overflow: hidden;
     height: 100%;
   }
-  /* Las páginas de tienda (portada y catálogo) necesitan scroll normal;
-     el overflow hidden es solo para la experiencia de invitación (iOS-safe).
+  /* Las páginas de tienda (portada y catálogo) y las de paneles privados
+     (/dashboard, /estudio, /acceso) necesitan scroll normal; el overflow
+     hidden es solo para la experiencia de invitación (iOS-safe).
      El scroll real ocurre en html y el body NO debe ser contenedor de scroll:
      si lo fuera (overflow-y auto + height creciente), position:sticky —vista
      previa del personalizador y encabezados— quedaría pegado a un contenedor
-     que nunca se desplaza y dejaría de acompañar el scroll. */
-  html:has([data-page="storefront"]) {
+     que nunca se desplaza y dejaría de acompañar el scroll.
+     045c: sin el atributo panel, esas páginas quedaban clavadas (html/body
+     con overflow hidden y sin scroll-container propio: contenido recortado,
+     imposible llegar al pie). /editar se desbloquea sola por JS y /admin
+     scrollea en su propio contenedor interno. */
+  html:has([data-page="storefront"]),
+  html:has([data-page="panel"]) {
     overflow-x: hidden;
     overflow-y: auto;
     height: auto;
     min-height: 100%;
   }
-  html:has([data-page="storefront"]) body {
+  html:has([data-page="storefront"]) body,
+  html:has([data-page="panel"]) body {
     overflow-x: clip;
     overflow-y: visible;
     height: auto;
@@ -513,8 +520,9 @@
    Canvas marfil cálido, tinta, oro y rosa; serif Playfair.
    ============================================================ */
 
-/* El overscroll de la tienda se ve marfil, no negro */
-html:has([data-page="storefront"]) body {
+/* El overscroll de la tienda y de los paneles se ve marfil, no negro */
+html:has([data-page="storefront"]) body,
+html:has([data-page="panel"]) body {
   background-color: #f7f4ef;
   color: #29241f;
 }
@@ -577,8 +585,9 @@ html:has([data-page="storefront"]) body {
   --store-accent-soft: #F3EAD9;
 }
 
-/* El overscroll de la tienda se ve marfil, no negro */
-html:has([data-page="storefront"]) body {
+/* El overscroll de la tienda se ve marfil, no negro (paneles incluidos) */
+html:has([data-page="storefront"]) body,
+html:has([data-page="panel"]) body {
   background-color: var(--store-bg);
   color: var(--store-ink);
 }
