@@ -739,6 +739,36 @@ function diaMontevideoGas(ahoraMs) {
   return new Date(ahoraMs - 3 * 3600 * 1000).toISOString().slice(0, 10);
 }
 
+/**
+ * Epoch ms desde la celda «fecha»: getValues() puede devolver NUMBER, Date
+ * (columna con formato de fecha) o TEXT (con separadores de miles si la
+ * columna se mostró formateada). Todo se normaliza; NaN si nada sirve.
+ */
+function epochDeCelda(valor) {
+  if (typeof valor === 'number' && isFinite(valor)) return valor;
+  if (Object.prototype.toString.call(valor) === '[object Date]' && !isNaN(valor.getTime())) {
+    return valor.getTime();
+  }
+  var limpio = String(valor == null ? '' : valor).replace(/[\s.]/g, '');
+  if (/^\d{10,17}$/.test(limpio)) return Number(limpio);
+  var t = Date.parse(String(valor == null ? '' : valor));
+  return isFinite(t) ? t : NaN;
+}
+
+/**
+ * Día "YYYY-MM-DD" desde la celda `dia`: acepta el formato estricto y
+ * también celdas tipadas como fecha (getValues devuelve un objeto Date,
+ * cuyo String() NO es ISO). Conserva el texto original si nada parsea.
+ */
+function diaDeCelda(valor) {
+  var texto = String(valor == null ? '' : valor).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) return texto;
+  var ms = (Object.prototype.toString.call(valor) === '[object Date]')
+    ? valor.getTime()
+    : Date.parse(texto);
+  return isFinite(ms) ? diaMontevideoGas(ms) : texto;
+}
+
 /** Pestaña «Metricas» de la hoja existente (la crea si falta). */
 function getOrCreateMetricasSheet() {
   var props = PropertiesService.getScriptProperties();
@@ -882,13 +912,13 @@ function handleMetricasAdmin(data) {
     var filas = [];
     for (var i = 0; i < valores.length; i++) {
       var fila = valores[i];
-      var epoch = Number(fila[0]);
+      var epoch = epochDeCelda(fila[0]);
       if (!isFinite(epoch) || epoch < limiteEntregaMs) continue;
       if (filas.length >= METRICAS_MAX_FILAS_RESPUESTA) break;
       filas.push({
         clase: String(fila[1]) === 'latido' ? 'latido' : 'visita',
         fecha: new Date(epoch).toISOString(),
-        dia: String(fila[2] || ''),
+        dia: diaDeCelda(fila[2]),
         pagina: String(fila[3] || ''),
         sesion: String(fila[4] || ''),
         nuevaSesionDia: Number(fila[5]) === 1,
@@ -900,14 +930,19 @@ function handleMetricasAdmin(data) {
     var limiteGuardadoMs = Date.now() - METRICAS_DIAS_GUARDADO * 86400000;
     var viejas = 0;
     for (var j = 0; j < valores.length; j++) {
-      if (Number(valores[j][0]) < limiteGuardadoMs) viejas++;
+      if (epochDeCelda(valores[j][0]) < limiteGuardadoMs) viejas++;
       else break; // ordenadas por tiempo: al pasar el límite, el resto es reciente
     }
     if (viejas > 0) {
       try { sheet.deleteRows(2, viejas); } catch (ePurga) { console.warn('metricas-purga: ' + ePurga.message); }
     }
 
-    return jsonResponse({ success: true, filas: filas, generadoEn: new Date().toISOString() });
+    return jsonResponse({
+      success: true,
+      filas: filas,
+      diagnostico: { filasEnHoja: valores.length, filasEntregadas: filas.length },
+      generadoEn: new Date().toISOString()
+    });
   } catch (error) {
     console.warn('metricas-admin: ' + error.message);
     return jsonResponse({ success: false, error: 'Error al consultar las métricas: ' + error.message });

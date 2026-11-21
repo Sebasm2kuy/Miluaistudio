@@ -53,10 +53,48 @@ test('validarFilaMetrica rechaza filas con clase/fecha/día/sesión inválidos',
   assert.equal(validarFilaMetrica({ ...FILA_BASE, clase: 'otra' }), null);
   assert.equal(validarFilaMetrica({ ...FILA_BASE, fecha: 'ayer' }), null);
   assert.equal(validarFilaMetrica({ ...FILA_BASE, dia: '2026-13-40' }), null);
-  assert.equal(validarFilaMetrica({ ...FILA_BASE, sesion: 'corta' }), null);
+  // Sesión irrecuperable: menos de 4 caracteres (la lectura tolera la pérdida
+  // de ceros iniciales por coerción numérica de la hoja, pero no vacíos).
+  assert.equal(validarFilaMetrica({ ...FILA_BASE, sesion: 'abc' }), null);
+  assert.equal(validarFilaMetrica({ ...FILA_BASE, sesion: '' }), null);
   // Pathnames con query o protocolo no pasan (no viajan datos de query).
   assert.equal(validarFilaMetrica({ ...FILA_BASE, pagina: '/i/x?invitado=Juan' }), null);
   assert.equal(validarFilaMetrica({ ...FILA_BASE, pagina: 'https://maliciosa.com' }), null);
+});
+
+test('validarFilaMetrica normaliza coerciones de Google Sheets: fecha epoch y día con formato de fecha', () => {
+  // La celda «fecha» puede leerse como número (epoch ms) y la celda «dia»
+  // como Date cuyo String() NO es ISO. Antes ambas filas se descartaban en
+  // silencio y el panel mostraba 0 visitas con la hoja llena.
+  const fila = validarFilaMetrica({
+    ...FILA_BASE,
+    fecha: 1795271400000, // 2026-11-21T14:30:00.000Z
+    dia: 'Fri Nov 21 2026 03:00:00 GMT+0000 (UTC)', // celda fecha con tz del script (UY)
+    sesion: 1234567, // coerción numérica perdió ceros iniciales (7 dígitos ≥ 4)
+  });
+  assert.ok(fila);
+  assert.equal(fila.fecha, '2026-11-21T14:30:00.000Z');
+  assert.equal(fila.dia, '2026-11-21');
+  assert.equal(fila.sesion, '1234567');
+});
+
+test('validarFilaMetrica normaliza epoch con separadores de miles y día ISO con hora', () => {
+  const fila = validarFilaMetrica({
+    ...FILA_BASE,
+    fecha: '1.795.286.700.000', // 2026-11-21T18:45:00.000Z con separador de miles
+    dia: '2026-11-21T00:00:00.000Z',
+  });
+  assert.ok(fila);
+  assert.equal(fila.fecha, '2026-11-21T18:45:00.000Z');
+  // Medianoche UTC de la celda bucketeada a Montevideo cae el día anterior
+  // (sin zona conocida de la hoja, el instante manda): 00:00Z → 20/11 21:00.
+  assert.equal(fila.dia, '2026-11-20');
+});
+
+test('validarFilaMetrica sigue rechazando instantes fuera de rango razonable', () => {
+  assert.equal(validarFilaMetrica({ ...FILA_BASE, fecha: 17952714 }), null); // 8 dígitos: ni epoch ni fecha
+  assert.equal(validarFilaMetrica({ ...FILA_BASE, fecha: '99999999999999' }), null); // año lejano
+  assert.equal(validarFilaMetrica({ ...FILA_BASE, dia: 'texto-ni-fecha' }), null);
 });
 
 test('validarFilasMetricas filtra inválidas y ordena por fecha', () => {

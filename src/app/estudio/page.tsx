@@ -180,7 +180,10 @@ export default function PaginaEstudio() {
       const resultado = await consultarMetricasAdmin(credencial, { endpoint: ENDPOINT_REGISTRO });
       if (resultado.ok) {
         setFilasTrafico(resultado.filas);
-        setEstadoBackend({ estado: 'ok' });
+        setEstadoBackend({
+          estado: 'ok',
+          entregadas: resultado.filasRecibidas,
+        });
         return;
       }
       setFilasTrafico([]);
@@ -402,6 +405,7 @@ export default function PaginaEstudio() {
         <SeccionMetricas
           estadoBackend={estadoBackend}
           conTrafico={conTrafico}
+          filasValidas={filasTrafico.length}
           rangoValido={Boolean(rango)}
           rango={rango}
           visitas={trafico?.visitas || 0}
