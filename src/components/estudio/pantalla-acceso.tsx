@@ -86,7 +86,7 @@ export function PantallaAcceso({
   }, [onCredencial]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#ffffff_0%,#faf8f4_55%,#f3ead9_100%)] px-4 py-10 text-[#292522]">
+    <div data-page="panel" className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#ffffff_0%,#faf8f4_55%,#f3ead9_100%)] px-4 py-10 text-[#292522]">
       <main className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <img
@@ -149,7 +149,7 @@ export function PantallaAcceso({
 /** Pantalla de bloqueo: email ajeno o credencial inválida (sin datos del panel). */
 export function PantallaBloqueado({ motivo, onVolver }: { motivo: string; onVolver: () => void }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#ffffff_0%,#faf8f4_55%,#f3ead9_100%)] px-4 py-10 text-[#292522]">
+    <div data-page="panel" className="flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(120%_120%_at_50%_0%,#ffffff_0%,#faf8f4_55%,#f3ead9_100%)] px-4 py-10 text-[#292522]">
       <main className="w-full max-w-sm text-center">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-[#efc3b7] bg-[#fcefec]">
           <Lock size={26} className="text-[#b42318]" />
