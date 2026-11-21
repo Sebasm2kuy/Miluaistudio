@@ -20,7 +20,13 @@ import { validarFilasMetricas, type FilaMetrica } from '../data/metricas-esquema
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 export type ResultadoMetricasAdmin =
-  | { ok: true; filas: FilaMetrica[]; backendActivo: true }
+  | {
+      ok: true;
+      filas: FilaMetrica[];
+      /** Filas que el backend dijo entregar (antes de la validación del panel). */
+      filasRecibidas: number;
+      backendActivo: true;
+    }
   | {
       ok: false;
       motivo:
@@ -78,7 +84,12 @@ export async function consultarMetricasAdmin(
       return { ok: false, motivo: 'red', mensaje: MENSAJES_METRICAS.red };
     }
     if (data.success === true && Array.isArray(data.filas)) {
-      return { ok: true, filas: validarFilasMetricas(data.filas), backendActivo: true };
+      return {
+        ok: true,
+        filas: validarFilasMetricas(data.filas),
+        filasRecibidas: data.filas.length,
+        backendActivo: true,
+      };
     }
     // Web App viejo (sin la acción): doGet responde {ok:true,message:...} sin `success`.
     if (data.success === undefined && data.ok === true) {

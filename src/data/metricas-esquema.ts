@@ -49,21 +49,68 @@ export const VENTANA_ONLINE_MIN = 5;
 
 const MESES_VALIDOS = /^\d{4}-(0[1-9]|1[0-2])$/;
 const DIA_VALIDO = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-const SESION_VALIDA = /^[A-Za-z0-9_-]{8,64}$/;
+/** Lectura tolerante de `sesion`: la ESCRITURA exige 8-64 (backend), pero la
+ *  lectura admite 4-64 porque una coerción numérica de la hoja puede perder
+ *  ceros iniciales ("01234567" → 1234567). Sigue siendo un id anónimo. */
+const SESION_VALIDA_LECTURA = /^[A-Za-z0-9_-]{4,64}$/;
 const PAGINA_VALIDA = /^\/[A-Za-z0-9\-._~/]*$/;
 
-/** Fecha ISO razonable (parseable y entre 2020 y 2100). */
-function esFechaIsoRazonable(valor: string): boolean {
-  const t = Date.parse(valor);
-  if (!Number.isFinite(t)) return false;
-  const anio = new Date(t).getUTCFullYear();
-  return anio >= 2020 && anio <= 2100;
+/** Año razonable para un instante (entre 2020 y 2100). */
+function instanteValido(ms: number): string | null {
+  if (!Number.isFinite(ms)) return null;
+  const anio = new Date(ms).getUTCFullYear();
+  return anio >= 2020 && anio <= 2100 ? new Date(ms).toISOString() : null;
 }
 
 /**
- * Valida y normaliza una fila cruda del backend. Devuelve null si no
- * cumple el esquema (el agregador filtra filas inválidas en silencio,
- * igual que validarColeccionRsvps tolera entradas viejas).
+ * Normaliza el instante del backend a ISO UTC. Acepta fecha ISO, epoch ms
+ * (número o texto; también segundos de 10 dígitos) y texto con separadores
+ * de miles: Google Sheets puede entregar la celda "fecha (epoch ms)" como
+ * número, texto formateado o Date según cómo se creó/editó la columna.
+ */
+function normalizarInstante(valor: unknown): string | null {
+  if (typeof valor === 'number') return instanteValido(valor);
+  if (valor instanceof Date) return instanteValido(valor.getTime());
+  const texto = String(valor ?? '').trim();
+  if (!texto) return null;
+  if (/^\d{10,17}$/.test(texto)) {
+    const n = Number(texto);
+    return instanteValido(texto.length >= 13 ? n : n * 1000);
+  }
+  const limpio = texto.replace(/[.\s]/g, '');
+  if (/^\d{10,17}$/.test(limpio)) {
+    const n = Number(limpio);
+    return instanteValido(limpio.length >= 13 ? n : n * 1000);
+  }
+  const t = Date.parse(texto);
+  return Number.isFinite(t) ? instanteValido(t) : null;
+}
+
+/**
+ * Normaliza el día del backend a "YYYY-MM-DD" de Montevideo. Acepta el
+ * formato estricto y además los textos que devuelve una celda con formato
+ * de fecha ("Fri Nov 21 2026 00:00:00 GMT+0000 (UTC)"), ISO con hora y
+ * epoch: la columna `dia` de la hoja puede quedar tipada como fecha.
+ */
+function normalizarDia(valor: unknown): string | null {
+  if (valor instanceof Date) return diaMontevideo(valor);
+  if (typeof valor === 'number') {
+    return Number.isFinite(valor) ? diaMontevideo(new Date(valor)) : null;
+  }
+  const texto = String(valor ?? '').trim();
+  if (DIA_VALIDO.test(texto)) return texto;
+  if (!texto) return null;
+  const ms = Date.parse(texto);
+  return Number.isFinite(ms) ? diaMontevideo(new Date(ms)) : null;
+}
+
+/**
+ * Valida y normaliza una fila cruda del backend. La lectura es tolerante
+ * con las coerciones de Google Sheets (epoch como fecha, día como texto de
+ * fecha, sesión con ceros perdidos): normaliza antes de aplicar el esquema.
+ * Devuelve null solo si la fila no es recuperable (el agregador filtra
+ * filas inválidas en silencio, igual que validarColeccionRsvps tolera
+ * entradas viejas).
  */
 export function validarFilaMetrica(bruto: unknown): FilaMetrica | null {
   if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) return null;
@@ -72,14 +119,17 @@ export function validarFilaMetrica(bruto: unknown): FilaMetrica | null {
   const clase = b.clase === 'visita' || b.clase === 'latido' ? b.clase : null;
   if (!clase) return null;
 
-  const fecha = String(b.fecha || '').trim();
-  if (!esFechaIsoRazonable(fecha)) return null;
+  // Lectura normalizante: la fila puede venir con el instante como epoch y
+  // el día como texto de fecha (coerciones de Google Sheets al leer celdas
+  // con formato); se normaliza acá para no descartar registros reales.
+  const fecha = normalizarInstante(b.fecha);
+  if (!fecha) return null;
 
-  const dia = String(b.dia || '').trim();
-  if (!DIA_VALIDO.test(dia)) return null;
+  const dia = normalizarDia(b.dia);
+  if (!dia) return null;
 
-  const sesion = String(b.sesion || '').trim();
-  if (!SESION_VALIDA.test(sesion)) return null;
+  const sesion = String(b.sesion ?? '').trim();
+  if (!SESION_VALIDA_LECTURA.test(sesion)) return null;
 
   let pagina = '';
   if (clase === 'visita') {

@@ -16,7 +16,7 @@ import { GraficoBarras, type ParSerie } from './graficos';
 
 export type EstadoBackendMetricas =
   | { estado: 'cargando' }
-  | { estado: 'ok' }
+  | { estado: 'ok'; /** Filas que el backend entregó (antes de validar). */ entregadas: number }
   | { estado: 'error'; motivo: string; mensaje: string };
 
 const ETIQUETAS_PERIODO: Array<{ valor: PeriodoMetricas; etiqueta: string }> = [
@@ -121,6 +121,8 @@ export interface DatosSeccionMetricas {
   estadoBackend: EstadoBackendMetricas;
   /** true si hay filas de tráfico (backend activo y respondió). */
   conTrafico: boolean;
+  /** Filas validadas del período que el panel pudo usar (≤ entregadas). */
+  filasValidas: number;
   rangoValido: boolean;
   rango: RangoDias | null;
   visitas: number;
@@ -149,6 +151,7 @@ export function SeccionMetricas(datos: DatosSeccionMetricas) {
   const {
     estadoBackend,
     conTrafico,
+    filasValidas,
     rangoValido,
     visitas,
     unicas,
@@ -229,6 +232,22 @@ export function SeccionMetricas(datos: DatosSeccionMetricas) {
               icono={CalendarRange}
             />
           </div>
+
+          {/* Diagnóstico honesto: si el backend entregó más filas de las que
+              el panel pudo validar, no se oculta — la diferencia puede ser
+              una celda con formato inesperado en la pestaña «Metricas». */}
+          {estadoBackend.estado === 'ok' &&
+            estadoBackend.entregadas > filasValidas && (
+              <div
+                role="status"
+                className="rounded-xl border border-[#e7d3a2] bg-[#faf3e0] px-4 py-3 text-xs leading-relaxed text-[#6b4e16]"
+              >
+                El backend entregó {estadoBackend.entregadas} filas de métricas y el
+                panel pudo validar {filasValidas}. Si la diferencia no es cero,
+                revisá el formato de la pestaña «Metricas» (columnas de fecha y día)
+                y actualizá el código de Apps Script (docs/METRICAS-ADMIN.md).
+              </div>
+            )}
 
           <div className="grid gap-3 lg:grid-cols-2">
             <div className="rounded-2xl border border-[#e8e0d7] bg-white p-4 shadow-[0_4px_16px_rgba(34,26,19,0.04)]">
